@@ -1,0 +1,10 @@
+#
+# release configuration 
+#
+qualification:
+
+build:
+
+publish:
+  local.artifact.repository.root: ${M2}
+
