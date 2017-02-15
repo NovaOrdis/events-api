@@ -90,4 +90,20 @@ public interface Event {
      */
     Property setProperty(Property property);
 
+    // Typed accessors -------------------------------------------------------------------------------------------------
+
+    /**
+     * @return the line number associated with this event, where it makes sense. Internally, it is maintained
+     * as a Long property with the "line-number" name.
+     *
+     * If an internal value that cannot be converted to a long is found, the method returns null, and a warning
+     * is logged.
+     */
+    Long getLineNumber();
+
+    /**
+     * @param lineNumber may be null, in which case the line number information is removed.
+     */
+    void setLineNumber(Long lineNumber);
+
 }

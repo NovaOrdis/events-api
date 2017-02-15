@@ -16,6 +16,9 @@
 
 package io.novaordis.events.api.event;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -36,6 +39,8 @@ import java.util.Set;
 public class GenericEvent implements Event {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(GenericEvent.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -171,6 +176,7 @@ public class GenericEvent implements Event {
     public Property setProperty(Property property) {
 
         if (property == null) {
+
             throw new IllegalArgumentException("null property");
         }
 
@@ -209,6 +215,38 @@ public class GenericEvent implements Event {
         //
 
         return properties.put(propertyName, property);
+    }
+
+    @Override
+    public Long getLineNumber() {
+
+        Property p = getProperty(Event.LINE_NUMBER_PROPERTY_NAME);
+        if (p == null) {
+
+            return null;
+        }
+
+        if (!(p instanceof LongProperty)) {
+
+            log.warn("\"" + Event.LINE_NUMBER_PROPERTY_NAME + "\" exists, but it is not a Long: " + p.getValue());
+            return null;
+        }
+
+        LongProperty lp = (LongProperty)p;
+        return lp.getLong();
+    }
+
+    @Override
+    public void setLineNumber(Long lineNumber) {
+
+        if (lineNumber == null) {
+
+            removeLongProperty(Event.LINE_NUMBER_PROPERTY_NAME);
+        }
+        else {
+
+            setLongProperty(Event.LINE_NUMBER_PROPERTY_NAME, lineNumber);
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -280,6 +318,7 @@ public class GenericEvent implements Event {
     }
 
     public void removeListProperty(String name) {
+
         throw new RuntimeException("NOT YET IMPLEMENTED e58237");
     }
 

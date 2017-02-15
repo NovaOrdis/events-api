@@ -16,8 +16,6 @@
 
 package io.novaordis.events.api.event;
 
-import io.novaordis.events.api.event.GenericEvent;
-
 /**
  * Represents a line of text.
  *
@@ -33,12 +31,12 @@ public class LineEvent extends GenericEvent {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String s;
-    private long lineNumber;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public LineEvent(long lineNumber, String s) {
-        this.lineNumber = lineNumber;
+
+        setLineNumber(lineNumber);
         this.s = s;
     }
 
@@ -46,10 +44,6 @@ public class LineEvent extends GenericEvent {
 
     public String get() {
         return s;
-    }
-
-    public long getLineNumber() {
-        return lineNumber;
     }
 
     @Override

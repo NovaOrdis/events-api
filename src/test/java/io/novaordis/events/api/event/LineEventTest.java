@@ -34,13 +34,32 @@ public class LineEventTest extends GenericEventTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    /**
+     * We override because this event has a line number.
+     * @throws Exception
+     */
+    @Test
+    public void lineNumber() throws Exception {
+
+        Event e = getEventToTest();
+
+        assertEquals(1L, e.getLineNumber().longValue());
+
+        e.setProperty(new LongProperty(Event.LINE_NUMBER_PROPERTY_NAME, 7L));
+
+        assertEquals(7L, e.getLineNumber().longValue());
+    }
+
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
     public void constructor() throws Exception {
 
         LineEvent le = new LineEvent(7L, "test");
-        assertEquals(7L, le.getLineNumber());
+        assertEquals(7L, le.getLineNumber().longValue());
         assertEquals("test", le.get());
     }
 
@@ -50,6 +69,7 @@ public class LineEventTest extends GenericEventTest {
 
     @Override
     protected LineEvent getEventToTest() throws Exception {
+
         return new LineEvent(1, "test");
     }
 

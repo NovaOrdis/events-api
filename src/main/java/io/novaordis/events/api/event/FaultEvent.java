@@ -33,7 +33,6 @@ public class FaultEvent extends GenericEvent {
     private String message;
     private Throwable cause;
     private FaultType type;
-    private Long lineNumber;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -74,7 +73,9 @@ public class FaultEvent extends GenericEvent {
         this.cause = cause;
 
         if (cause instanceof LineNumberException) {
-            this.lineNumber = ((LineNumberException)cause).getLineNumber();
+
+            Long lineNumber = ((LineNumberException)cause).getLineNumber();
+            setLineNumber(lineNumber);
         }
     }
 
@@ -98,17 +99,14 @@ public class FaultEvent extends GenericEvent {
         return type;
     }
 
-    public Long getLineNumber() {
-        return lineNumber;
-    }
-
     @Override
     public String toString() {
 
         String s = "FAULT " + (type == null ? "(UNTYPED)" : type);
 
-        if (lineNumber != null) {
-            s += ", line " + lineNumber;
+        if (getLineNumber() != null) {
+
+            s += ", line " + getLineNumber();
         }
 
         String msg = getMessage();

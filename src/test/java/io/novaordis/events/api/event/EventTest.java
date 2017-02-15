@@ -21,12 +21,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.Map;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -52,14 +50,10 @@ public abstract class EventTest {
 
         Event event = getEventToTest();
 
-        assertTrue(event.getProperties().isEmpty());
-
         Property old = event.setProperty(new StringProperty("test", "test-value"));
         assertNull(old);
 
-        Set<Property> properties = event.getProperties();
-        assertEquals(1, properties.size());
-        StringProperty p = (StringProperty)properties.iterator().next();
+        StringProperty p = (StringProperty)event.getProperty("test");
         assertEquals("test", p.getName());
         assertEquals("test-value", p.getString());
 
@@ -68,15 +62,9 @@ public abstract class EventTest {
         assertEquals("test", old.getName());
         assertEquals("test-value", old.getValue());
 
-        properties = event.getProperties();
-        assertEquals(1, properties.size());
-        StringProperty p2 = (StringProperty)properties.iterator().next();
+        StringProperty p2 = (StringProperty)event.getProperty("test");
         assertEquals("test", p2.getName());
         assertEquals("test-value-2", p2.getString());
-
-        StringProperty sp = (StringProperty)event.getProperty("test");
-        assertEquals("test", sp.getName());
-        assertEquals("test-value-2", sp.getString());
     }
 
     @Test
@@ -194,7 +182,6 @@ public abstract class EventTest {
         assertEquals(lp, event.getProperty("test-property"));
     }
 
-
     @Test
     public void getIntegerProperty_NoSuchProperty() throws Exception {
 
@@ -255,6 +242,42 @@ public abstract class EventTest {
         event.setProperty(mp);
         assertEquals(mp, event.getMapProperty("test-property"));
         assertEquals(mp, event.getProperty("test-property"));
+    }
+
+    // line number -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void lineNumber() throws Exception {
+
+        Event e = getEventToTest();
+
+        assertNull(e.getLineNumber());
+
+        e.setProperty(new LongProperty(Event.LINE_NUMBER_PROPERTY_NAME, 7L));
+
+        assertEquals(7L, e.getLineNumber().longValue());
+    }
+
+    @Test
+    public void lineNumber_InvalidInternalValue() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setProperty(new StringProperty(Event.LINE_NUMBER_PROPERTY_NAME, "not a long value"));
+
+        assertNull(e.getLineNumber());
+    }
+
+    @Test
+    public void lineNumber_NullRemovesIt() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setLineNumber(78L);
+        assertEquals(78L, e.getLineNumber().longValue());
+
+        e.setLineNumber(null);
+        assertNull(e.getLineNumber());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

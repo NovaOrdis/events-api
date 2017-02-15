@@ -22,6 +22,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -75,7 +76,7 @@ public class GenericEventTest extends EventTest {
 
         List<Property> props = ge.getPropertyList();
 
-        assertEquals(0, props.size());
+        int initialSize = props.size();
 
         assertNull(ge.setProperty(new StringProperty("X", "val1")));
         assertNull(ge.setProperty(new StringProperty("I", "val2")));
@@ -83,13 +84,16 @@ public class GenericEventTest extends EventTest {
 
         props = ge.getPropertyList();
 
-        assertEquals(3, props.size());
-        assertEquals("X", props.get(0).getName());
-        assertEquals("val1", props.get(0).getValue());
-        assertEquals("I", props.get(1).getName());
-        assertEquals("val2", props.get(1).getValue());
-        assertEquals("A", props.get(2).getName());
-        assertEquals("val3", props.get(2).getValue());
+        assertEquals(initialSize + 3, props.size());
+
+        assertEquals("X", props.get(initialSize).getName());
+        assertEquals("val1", props.get(initialSize).getValue());
+
+        assertEquals("I", props.get(initialSize + 1).getName());
+        assertEquals("val2", props.get(initialSize + 1).getValue());
+
+        assertEquals("A", props.get(initialSize + 2).getName());
+        assertEquals("val3", props.get(initialSize + 2).getValue());
     }
 
     @Test
@@ -102,18 +106,14 @@ public class GenericEventTest extends EventTest {
         ge.setStringProperty("test-property", "value1");
         assertEquals("value1", ge.getStringProperty("test-property").getValue());
 
-        List<Property> pl = ge.getPropertyList();
-        assertEquals(1, pl.size());
-        StringProperty sp = (StringProperty)pl.get(0);
+        StringProperty sp = (StringProperty)ge.getProperty("test-property");
         assertEquals("test-property", sp.getName());
         assertEquals("value1", sp.getValue());
 
         ge.setStringProperty("test-property", "value2");
         assertEquals("value2", ge.getStringProperty("test-property").getValue());
 
-        List<Property> pl2 = ge.getPropertyList();
-        assertEquals(1, pl2.size());
-        StringProperty sp2 = (StringProperty)pl2.get(0);
+        StringProperty sp2 = (StringProperty)ge.getProperty("test-property");
         assertEquals("test-property", sp2.getName());
         assertEquals("value2", sp2.getValue());
     }
@@ -128,18 +128,14 @@ public class GenericEventTest extends EventTest {
         ge.setLongProperty("test-property", 7L);
         assertEquals(7L, ge.getLongProperty("test-property").getValue());
 
-        List<Property> pl = ge.getPropertyList();
-        assertEquals(1, pl.size());
-        LongProperty p = (LongProperty)pl.get(0);
+        LongProperty p = (LongProperty)ge.getProperty("test-property");
         assertEquals("test-property", p.getName());
         assertEquals(7L, p.getValue());
 
         ge.setLongProperty("test-property", 8L);
         assertEquals(8L, ge.getLongProperty("test-property").getValue());
 
-        List<Property> pl2 = ge.getPropertyList();
-        assertEquals(1, pl2.size());
-        LongProperty p2 = (LongProperty)pl2.get(0);
+        LongProperty p2 = (LongProperty)ge.getProperty("test-property");
         assertEquals("test-property", p2.getName());
         assertEquals(8L, p2.getValue());
     }
@@ -220,6 +216,33 @@ public class GenericEventTest extends EventTest {
         assertNull(ge.getBooleanProperty("test-name"));
 
         ge.removeBooleanProperty("test-name");
+    }
+
+    // setListProperty() -----------------------------------------------------------------------------------------------
+
+    @Test
+    public void setListProperty() throws Exception {
+
+        GenericEvent ge = getEventToTest();
+
+        List<String> list = new ArrayList<>();
+        list.add("A");
+        list.add("B");
+
+        ge.setListProperty("test", list);
+
+        ListProperty p = ge.getListProperty("test");
+
+        assertNotNull(p);
+
+        assertEquals("test", p.getName());
+
+        List list2 = p.getList();
+
+        assertEquals(2, list2.size());
+
+        assertEquals("A", list2.get(0));
+        assertEquals("B", list2.get(1));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
