@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.utilities.LineNumberException;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/24/16
@@ -71,9 +73,9 @@ public class FaultEvent extends GenericEvent {
         this.message = message;
         this.cause = cause;
 
-//        if (cause instanceof BusinessScenarioException) {
-//            this.lineNumber = ((BusinessScenarioException)cause).getLineNumber();
-//        }
+        if (cause instanceof LineNumberException) {
+            this.lineNumber = ((LineNumberException)cause).getLineNumber();
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -128,14 +130,7 @@ public class FaultEvent extends GenericEvent {
                 s += ": ";
             }
 
-            String exceptionToString;
-
-//            if (cause instanceof BusinessScenarioException) {
-//                exceptionToString = cause.getMessage();
-//            }
-//            else {
-                exceptionToString = cause.getClass().getSimpleName() + ": " + cause.getMessage();
-//            }
+            String exceptionToString = cause.getClass().getSimpleName() + ": " + cause.getMessage();
 
             s += exceptionToString;
         }

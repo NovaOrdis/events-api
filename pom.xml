@@ -18,7 +18,8 @@
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
-        <novaordis.utilities.version>4.5</novaordis.utilities.version>
+        <novaordis.utilities.version>4.6</novaordis.utilities.version>
+        <novaordis.jboss.cli>1.0.0-SNAPSHOT-19</novaordis.jboss.cli>
 
         <!---
                End of Dependency Versions
@@ -80,6 +81,11 @@
             <groupId>io.novaordis.utilities</groupId>
             <artifactId>novaordis-utilities</artifactId>
             <version>${novaordis.utilities.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.jboss.cli</groupId>
+            <artifactId>novaordis-jboss-cli</artifactId>
+            <version>${novaordis.jboss.cli}</version>
         </dependency>
 
         <dependency>
