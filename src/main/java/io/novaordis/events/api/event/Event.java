@@ -93,8 +93,9 @@ public interface Event {
     // Typed accessors -------------------------------------------------------------------------------------------------
 
     /**
-     * @return the line number associated with this event, where it makes sense. Internally, it is maintained
-     * as a Long property with the "line-number" name.
+     * @return the line number associated with this event, in case of a single-line event, or the line number of the
+     * first line of the event, in case of a multi-line event). Internally, it is maintained as a Long property with the
+     * "line-number" name.
      *
      * If an internal value that cannot be converted to a long is found, the method returns null, and a warning
      * is logged.
