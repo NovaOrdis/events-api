@@ -75,6 +75,20 @@ public class MegabyteTest extends MemoryMeasureUnitTest {
     }
 
     @Test
+    public void parse_M_Char() throws Exception {
+
+        MemoryMeasureUnit mmu = MemoryMeasureUnit.parse('M');
+        assertEquals(MemoryMeasureUnit.MEGABYTE, mmu);
+    }
+
+    @Test
+    public void parse_m_Char() throws Exception {
+
+        MemoryMeasureUnit mmu = MemoryMeasureUnit.parse('m');
+        assertEquals(MemoryMeasureUnit.MEGABYTE, mmu);
+    }
+
+    @Test
     public void parse_DeclaredUnit() throws Exception {
 
         MemoryMeasureUnit mmu = MemoryMeasureUnit.parse("MEGABYTE");

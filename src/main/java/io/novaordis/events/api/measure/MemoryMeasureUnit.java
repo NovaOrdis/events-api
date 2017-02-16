@@ -32,6 +32,8 @@ public enum MemoryMeasureUnit implements MeasureUnit {
     /**
      * Semantically equivalent with valueOf(), we just cannot override static functions.
      * If it cannot find a representation we know, it defaults to valueOf().
+     *
+     * @exception IllegalArgumentException on invalid string.
      */
     public static MemoryMeasureUnit parse(String s) {
 
@@ -55,6 +57,14 @@ public enum MemoryMeasureUnit implements MeasureUnit {
         }
 
         return MemoryMeasureUnit.valueOf(s);
+    }
+
+    /**
+     * @see MemoryMeasureUnit#parse(String)
+     */
+    public static MemoryMeasureUnit parse(char c) {
+
+        return parse("" + c);
     }
 
     // Static ----------------------------------------------------------------------------------------------------------
