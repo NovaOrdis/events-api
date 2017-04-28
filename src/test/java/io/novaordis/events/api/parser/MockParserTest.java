@@ -16,15 +16,11 @@
 
 package io.novaordis.events.api.parser;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 2/14/17
+ * @since 4/28/17
  */
-public class ParsingExceptionTest {
+public class MockParserTest extends ParserTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,20 +34,15 @@ public class ParsingExceptionTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void constructor() throws Exception {
-
-        RuntimeException cause = new RuntimeException();
-        ParsingException e = new ParsingException("test", cause, 10L, 11);
-        assertEquals("test", e.getMessage());
-        assertEquals(cause, e.getCause());
-        assertEquals(10L, e.getLineNumber().longValue());
-        assertEquals(11, e.getPositionInLine().intValue());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected MockParser getParserToTest() throws Exception {
+
+        return new MockParser();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

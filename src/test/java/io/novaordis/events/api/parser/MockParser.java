@@ -16,15 +16,16 @@
 
 package io.novaordis.events.api.parser;
 
-import org.junit.Test;
+import io.novaordis.events.api.event.Event;
 
-import static org.junit.Assert.assertEquals;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 2/14/17
+ * @since 4/28/17
  */
-public class ParsingExceptionTest {
+public class MockParser extends ParserBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,20 +35,21 @@ public class ParsingExceptionTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    // ParserBase overrides --------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+    @Override
+    protected List<Event> parseInternal(Long lineNumber, String line) throws ParsingException {
 
-    @Test
-    public void constructor() throws Exception {
-
-        RuntimeException cause = new RuntimeException();
-        ParsingException e = new ParsingException("test", cause, 10L, 11);
-        assertEquals("test", e.getMessage());
-        assertEquals(cause, e.getCause());
-        assertEquals(10L, e.getLineNumber().longValue());
-        assertEquals(11, e.getPositionInLine().intValue());
+        return Collections.emptyList();
     }
+
+    @Override
+    protected List<Event> closeInternal() throws ParsingException {
+
+        return Collections.emptyList();
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -16,15 +16,18 @@
 
 package io.novaordis.events.api.parser;
 
+import io.novaordis.events.api.event.Event;
 import org.junit.Test;
 
-import static org.junit.Assert.assertEquals;
+import java.util.List;
+
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 2/14/17
+ * @since 4/28/17
  */
-public class ParsingExceptionTest {
+public abstract class ParserTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,17 +42,44 @@ public class ParsingExceptionTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void constructor() throws Exception {
+    public void closeAnUnusedParser() throws Exception {
 
-        RuntimeException cause = new RuntimeException();
-        ParsingException e = new ParsingException("test", cause, 10L, 11);
-        assertEquals("test", e.getMessage());
-        assertEquals(cause, e.getCause());
-        assertEquals(10L, e.getLineNumber().longValue());
-        assertEquals(11, e.getPositionInLine().intValue());
+        //
+        // a parser on which no parse() invocation was called has no accumulated events
+        //
+
+        Parser p = getParserToTest();
+
+        List<Event> events = p.close();
+
+        assertTrue(events.isEmpty());
+    }
+
+    @Test
+    public void closedParserCannotBeUsed() throws Exception {
+
+        //
+        // a parser on which no parse() invocation was called has no accumulated events
+        //
+
+        Parser p = getParserToTest();
+
+        p.close();
+
+        try {
+
+            p.parse(1L, "something");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("closed"));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    protected abstract Parser getParserToTest() throws Exception;
 
     // Protected -------------------------------------------------------------------------------------------------------
 
