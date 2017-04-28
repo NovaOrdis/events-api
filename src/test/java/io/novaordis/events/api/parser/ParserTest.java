@@ -21,6 +21,7 @@ import org.junit.Test;
 
 import java.util.List;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -68,13 +69,33 @@ public abstract class ParserTest {
 
         try {
 
-            p.parse(1L, "something");
+            p.parse("something");
         }
         catch(IllegalStateException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("closed"));
         }
+    }
+
+    @Test
+    public void lineNumber() throws Exception {
+
+        Parser p = getParserToTest();
+
+        assertEquals(0L, p.getLineNumber());
+
+        p.parse("something");
+
+        assertEquals(1L, p.getLineNumber());
+
+        p.parse("something else");
+
+        assertEquals(2L, p.getLineNumber());
+
+        p.close();
+
+        assertEquals(2L, p.getLineNumber());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

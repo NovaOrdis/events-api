@@ -19,6 +19,7 @@ package io.novaordis.events.api.parser;
 import io.novaordis.events.api.event.Event;
 
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -34,29 +35,42 @@ public abstract class ParserBase implements Parser {
 
     private volatile boolean closed;
 
+    private AtomicLong lineNumber;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    protected ParserBase() {
+
+        lineNumber = new AtomicLong(0);
+    }
 
     // Parser implementation -------------------------------------------------------------------------------------------
 
     @Override
-    public List<Event> parse(Long lineNumber, String line) throws ParsingException {
+    public List<Event> parse(String line) throws ParsingException {
 
         if (closed) {
 
             throw new IllegalStateException(this + " is closed");
         }
 
-        return parseInternal(lineNumber, line);
+        return parse(lineNumber.incrementAndGet(), line);
     }
 
     @Override
     public List<Event> close() throws ParsingException {
 
-        List<Event> result = closeInternal();
+        List<Event> result = close(lineNumber.get());
 
         closed = true;
 
         return result;
+    }
+
+    @Override
+    public long getLineNumber() {
+
+        return lineNumber.get();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -74,18 +88,20 @@ public abstract class ParserBase implements Parser {
      *
      * The method will never be invoked on a closed parser instance.
      *
-     * @param lineNumber may be null if the line number cannot be provided.
+     * @param lineNumber the line number, as managed by superclass.
      */
-    protected abstract List<Event> parseInternal(Long lineNumber, String line) throws ParsingException;
+    protected abstract List<Event> parse(long lineNumber, String line) throws ParsingException;
 
     /**
      * Processes the remaining accumulated state. The super close() will actually close the parser.
      *
      * The invocation may return an empty list, but never null.
      *
+     * @param lineNumber the line number of the last line in the text stream, when close() is called externally.
+     *
      * @see Parser#close()
      */
-    protected abstract List<Event> closeInternal() throws ParsingException;
+    protected abstract List<Event> close(long lineNumber) throws ParsingException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

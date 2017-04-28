@@ -38,13 +38,13 @@ public class MockParser extends ParserBase {
     // ParserBase overrides --------------------------------------------------------------------------------------------
 
     @Override
-    protected List<Event> parseInternal(Long lineNumber, String line) throws ParsingException {
+    protected List<Event> parse(long lineNumber, String line) throws ParsingException {
 
         return Collections.emptyList();
     }
 
     @Override
-    protected List<Event> closeInternal() throws ParsingException {
+    protected List<Event> close(long lineNumber) throws ParsingException {
 
         return Collections.emptyList();
     }

@@ -29,6 +29,9 @@ import java.util.List;
  * An implementation should first consider extending ParserBase, where some of the expected generic behavior is already
  * implemented, and implement parseInternal() and closeInternal().
  *
+ * The implementations must count lines internally, and rely on the fact that *all* lines from the external text
+ * stream are being provided for processing via parse().
+ *
  * @see ParserBase
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -49,11 +52,9 @@ public interface Parser {
      *
      * The invocation may return an empty list, but never null.
      *
-     * @param lineNumber may be null if the line number cannot be provided.
-     *
      * @exception IllegalStateException if invoked on a closed parser.
      */
-    List<Event> parse(Long lineNumber, String line) throws ParsingException;
+    List<Event> parse(String line) throws ParsingException;
 
     /**
      * Processes the remaining accumulated state and closes the parser. A parser that was closed cannot be re-used,
@@ -62,5 +63,11 @@ public interface Parser {
      * The invocation may return an empty list, but never null.
      */
     List<Event> close() throws ParsingException;
+
+    /**
+     * @return the 1-based line number of the last successfully or unsuccessfully parsed line. Return 0 if no lines
+     * were processed yet. If the parser is closed, returns the number of the last line in the text stream.
+     */
+    long getLineNumber();
 
 }
