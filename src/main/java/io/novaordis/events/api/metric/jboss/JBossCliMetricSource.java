@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.event.IntegerProperty;
+import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.metric.MetricCollectionException;
@@ -173,6 +174,10 @@ public class JBossCliMetricSource implements MetricSource {
             else if (attributeValue instanceof Integer) {
 
                 p = new IntegerProperty(name, (Integer)attributeValue);
+            }
+            else if (attributeValue instanceof Long) {
+
+                p = new LongProperty(name, (Long)attributeValue);
             }
             else {
                 throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");

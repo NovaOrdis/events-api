@@ -37,6 +37,7 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     private boolean connected;
 
+    // paths are always maintained in absolute form, with a leading slash and no trailing slash
     private Map<String, Map<String, Object>> values;
 
     private JBossControllerAddress address;
@@ -112,7 +113,7 @@ public class MockJBossControllerClient implements JBossControllerClient {
     @Override
     public Object getAttributeValue(String path, String attributeName) throws JBossCliException {
 
-        Map<String, Object> attributes = values.get(path);
+        Map<String, Object> attributes = values.get(normalizePath(path));
 
         if (attributes == null) {
             return null;
@@ -130,12 +131,14 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     public void setAttributeValue(String path, String attributeName, Object value) {
 
+        String normalizedPath = normalizePath(path);
 
-        Map<String, Object> attributes = values.get(path);
+        Map<String, Object> attributes = values.get(normalizedPath);
 
         if (attributes == null) {
+
             attributes = new HashMap<>();
-            values.put(path, attributes);
+            values.put(normalizedPath, attributes);
         }
 
         attributes.put(attributeName, value);
@@ -154,6 +157,29 @@ public class MockJBossControllerClient implements JBossControllerClient {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    /**
+     * Turns a path into the internal storage format: leading slash, no trailing slash.
+     */
+    private static String normalizePath(String path) {
+
+        if (!path.startsWith("/")) {
+
+            path = "/" + path;
+        }
+
+        int i = path.length() - 1;
+
+        for(; i >= 0; i --) {
+
+            if (path.charAt(i) != '/') {
+
+                break;
+            }
+        }
+
+        return path.substring(0, i + 1);
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

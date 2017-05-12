@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.event.IntegerProperty;
+import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MockMetricDefinition;
@@ -266,6 +267,43 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         assertTrue(jbossSource.getControllerClient().isConnected());
 
         assertFalse(properties.isEmpty());
+    }
+
+    @Test
+    public void collectMetrics_Long() throws Exception {
+
+        //
+        // make sure the first collectMetrics() correctly initializes the internal client
+        //
+
+        JBossControllerAddress mockAddress = new JBossControllerAddress(
+                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+
+        MockJBossControllerClient mc = (MockJBossControllerClient)JBossControllerClient.getInstance(mockAddress);
+
+        //
+        // "install" a Long
+        //
+
+        mc.setAttributeValue("test-path", "test-attribute", 7L);
+
+        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        jbossSource.setControllerClient(mc);
+
+        List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(
+                "jboss:" + mc.getUsername() + ":mock-password" + "@" + mc.getHost() + ":" + mc.getPort() +
+                        "/test-path/test-attribute"));
+
+        // this should trigger initialization, even if no properties are read
+        List<Property> properties = jbossSource.collectMetrics(md);
+
+        assertEquals(1, properties.size());
+
+        LongProperty p = (LongProperty)properties.get(0);
+
+        assertEquals(7L, p.getLong().longValue());
+
+        assertEquals("MOCK-HOST:7777/test-path/test-attribute", p.getName());
     }
 
     // host, port and username support ---------------------------------------------------------------------------------
