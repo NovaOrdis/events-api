@@ -85,7 +85,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     // a JBoss CLI metric definition has only one source, irrespective of the OS
     //
 
-    private JBossCliMetricSource source;
+    private JBossController source;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -178,8 +178,8 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     @Override
     public boolean addSource(String osName, MetricSource source) {
 
-        if (!(source instanceof JBossCliMetricSource)) {
-            throw new IllegalArgumentException("the metric source not a JBossCliMetricSource");
+        if (!(source instanceof JBossController)) {
+            throw new IllegalArgumentException("the metric source not a JBossController");
         }
 
         //
@@ -190,7 +190,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
             log.warn("specifying an OS name is superfluous, " + osName + " will be ignored");
         }
 
-        this.source = (JBossCliMetricSource)source;
+        this.source = (JBossController)source;
         return true;
     }
 
@@ -217,7 +217,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     /**
      * The only source, OS-independent. Never returns null.
      */
-    public JBossCliMetricSource getSource() {
+    public JBossController getSource() {
 
         return source;
     }
@@ -286,7 +286,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
         // map storage
         //
         setSources(null);
-        addSource(null, new JBossCliMetricSource(controllerAddress));
+        addSource(null, new JBossController(controllerAddress));
 
         i = pathAndAttribute.lastIndexOf('/');
 

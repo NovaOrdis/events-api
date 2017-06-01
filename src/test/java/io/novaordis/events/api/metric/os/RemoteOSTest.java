@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,25 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.source;
+package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MockMetricDefinition;
-import org.junit.Test;
-
-import java.util.Arrays;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import io.novaordis.events.api.metric.source.MetricSourceTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/4/16
+ * @since 8/31/16
  */
-public abstract class MetricSourceTest {
+public class RemoteOSTest extends MetricSourceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -46,40 +36,27 @@ public abstract class MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public abstract void equalsTest() throws Exception;
+    // Overrides -------------------------------------------------------------------------------------------------------
 
-    @Test
-    public abstract void hashCodeTest() throws Exception;
+    @Override
+    public void equalsTest() throws Exception {
+        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+    }
 
-    // collectAllMetrics() ---------------------------------------------------------------------------------------------
-
-    // collectMetrics() ------------------------------------------------------------------------------------------------
-
-    @Test
-    public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
-
-        MetricSource s = getMetricSourceToTest();
-
-        MockMetricDefinition mmd = new MockMetricDefinition("MOCK");
-
-        //noinspection ArraysAsListWithZeroOrOneArgument
-        List<MetricDefinition> definitions = Arrays.asList(mmd);
-
-        List<Property> properties = s.collectMetrics(definitions);
-
-        assertNotNull(properties);
-        assertEquals(1, properties.size());
-
-        Property p = properties.get(0);
-        assertNull(p);
+    @Override
+    public void hashCodeTest() throws Exception {
+        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract MetricSource getMetricSourceToTest() throws Exception;
+    @Override
+    protected RemoteOS getMetricSourceToTest() throws Exception {
+
+        return new RemoteOS();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -22,7 +22,6 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.utilities.os.OS;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -51,22 +50,6 @@ public class MockMetricSource implements MetricSource {
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public List<Property> collectAllMetrics(OS os) throws MetricCollectionException {
-
-        if (breakOnCollect) {
-            throw new MetricCollectionException("SYNTHETIC");
-        }
-
-        List<Property> props = results.get(os);
-
-        if (props == null) {
-            return Collections.emptyList();
-        }
-
-        return props;
-    }
 
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {

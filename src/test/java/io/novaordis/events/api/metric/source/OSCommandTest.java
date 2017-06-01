@@ -107,8 +107,8 @@ public abstract class OSCommandTest extends MetricSourceTest {
 
     // equals() --------------------------------------------------------------------------------------------------------
 
-    @Test
-    public void equals() throws Exception {
+    @Override
+    public void equalsTest() throws Exception {
 
         OSCommand c = getMetricSourceToTest("arg1 arg2");
         OSCommand c2 = getMetricSourceToTest("arg1 arg2");

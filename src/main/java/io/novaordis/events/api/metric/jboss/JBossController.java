@@ -37,17 +37,17 @@ import java.util.List;
 /**
  * Represents a JBoss controller, bound to a specific host:port and accessible using a certain user account.
  *
- * A JBossCliMetricSource instance is equal with another JBossCliMetricSource instance if those instances have the
+ * A JBossController instance is equal with another JBossController instance if those instances have the
  * same hosts, ports and user.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JBossCliMetricSource implements MetricSource {
+public class JBossController implements MetricSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JBossCliMetricSource.class);
+    private static final Logger log = LoggerFactory.getLogger(JBossController.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -62,7 +62,7 @@ public class JBossCliMetricSource implements MetricSource {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JBossCliMetricSource(JBossControllerAddress controllerAddress) {
+    public JBossController(JBossControllerAddress controllerAddress) {
 
         this.controllerAddress = controllerAddress;
     }
@@ -70,23 +70,12 @@ public class JBossCliMetricSource implements MetricSource {
     /**
      * Uses the default controller address ("localhost:9999")
      */
-    public JBossCliMetricSource() {
+    public JBossController() {
 
         this(new JBossControllerAddress());
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public List<Property> collectAllMetrics(OS os) throws MetricCollectionException {
-
-        //
-        // this method won't be used with a JBoss CLI metric source, we need to pull individual metrics, so always
-        // return an empty list.
-        //
-
-        return Collections.emptyList();
-    }
 
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
@@ -104,7 +93,7 @@ public class JBossCliMetricSource implements MetricSource {
 
             JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition) md;
 
-            JBossCliMetricSource thatSource = jbmd.getSource();
+            JBossController thatSource = jbmd.getSource();
 
             if (!this.equals(thatSource)) {
 
@@ -214,11 +203,11 @@ public class JBossCliMetricSource implements MetricSource {
             return false;
         }
 
-        if (!(o instanceof JBossCliMetricSource)) {
+        if (!(o instanceof JBossController)) {
             return false;
         }
 
-        JBossCliMetricSource that = (JBossCliMetricSource)o;
+        JBossController that = (JBossController)o;
 
         return controllerAddress.equals(that.controllerAddress);
     }

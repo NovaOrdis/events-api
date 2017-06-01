@@ -19,14 +19,26 @@ package io.novaordis.events.api.metric.source;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricCollectionException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.utilities.os.OS;
 
 import java.util.List;
 
 /**
- * The source for metrics. Can represent a native O/S command, a file, etc.
+ * A source of metrics. Implies an underlying mechanism that can be exercised to obtain a set of values for a set of
+ * metric definitions, ideally in a single operation, for performance reasons. However, the implementations are free
+ * to define what "efficient reading" means. Example of metric sources:
  *
- * The implementations must correctly implement equals() and hashCode().
+ * 1. Local O/S instance can be queried for metrics such as free memory, CPU usage or disk space.
+ *
+ * 2. Remote O/S instance can be queried for metrics such as free memory, CPU usage or disk space over a SSH
+ *    connections (assuming credentials are available and the system is reachable).
+ *˙
+ * 3. The JMX bus of a local or remote Java virtual machine.
+ *
+ * 4. The management controller (standalone or domain) of a WildFly instance.
+ *
+ * Can represent a native O/S command, a file, etc.
+ *
+ * The implementations must correctly implement equals() and hashCode(), as metric sources will be used as map keys.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/4/16
@@ -38,14 +50,6 @@ public interface MetricSource {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    /**
-     * Collect all the possible metrics that can be collected in one invocation. Use this to optimize expensive
-     * invocations to sources.
-     *
-     * @return the complete list of properties. If no properties are collected, returns an empty list, but never null.
-     */
-    List<Property> collectAllMetrics(OS os) throws MetricCollectionException;
 
     /**
      * Collect the metrics for the given definitions, in one invocation.

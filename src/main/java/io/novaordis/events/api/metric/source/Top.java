@@ -41,12 +41,10 @@ import io.novaordis.events.api.metric.memory.PhysicalMemoryUsed;
 import io.novaordis.events.api.metric.memory.SwapFree;
 import io.novaordis.events.api.metric.memory.SwapTotal;
 import io.novaordis.events.api.metric.memory.SwapUsed;
-import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.StringTokenizer;
 
@@ -450,23 +448,23 @@ public class Top extends OSCommand {
 
     // OSCommand implementation ----------------------------------------------------------------------------------------
 
-    @Override
-    public List<Property> collectAllMetrics(OS os) throws MetricCollectionException {
-
-        String stdout = executeCommandAndReturnStdout(os);
-
-        if (OS.Linux.equals(os.getName())) {
-            return parseLinuxCommandOutput(stdout);
-        }
-        else if (OS.MacOS.equals(os.getName())) {
-            return parseMacCommandOutput(stdout);
-        }
-        else {
-
-            log.warn(os.toString() + " operating system not currently supported");
-            return Collections.emptyList();
-        }
-    }
+//    @Override
+//    public List<Property> collectAllMetrics(OS os) throws MetricCollectionException {
+//
+//        String stdout = executeCommandAndReturnStdout(os);
+//
+//        if (OS.Linux.equals(os.getName())) {
+//            return parseLinuxCommandOutput(stdout);
+//        }
+//        else if (OS.MacOS.equals(os.getName())) {
+//            return parseMacCommandOutput(stdout);
+//        }
+//        else {
+//
+//            log.warn(os.toString() + " operating system not currently supported");
+//            return Collections.emptyList();
+//        }
+//    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

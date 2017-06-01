@@ -104,7 +104,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
             String msg = e.getMessage();
             log.info(msg);
-            assertEquals("the metric source not a JBossCliMetricSource", msg);
+            assertEquals("the metric source not a JBossController", msg);
         }
     }
 
@@ -289,7 +289,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
 
-        JBossCliMetricSource source = d.getSource();
+        JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
 
@@ -315,7 +315,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
 
-        JBossCliMetricSource source = d.getSource();
+        JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
 
@@ -341,7 +341,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
 
-        JBossCliMetricSource source = d.getSource();
+        JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
 
@@ -367,7 +367,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
 
-        JBossCliMetricSource source = d.getSource();
+        JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
 
@@ -392,7 +392,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         String s = "jboss:blue:9999/a=b/c=d/f";
         JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
 
-        JBossCliMetricSource source = d.getSource();
+        JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
 
@@ -534,7 +534,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossCliMetricDefinition md = new JBossCliMetricDefinition("jboss:some-host:1000/a=b/c=d/f");
 
-        JBossCliMetricSource source = md.getSource();
+        JBossController source = md.getSource();
 
         List<MetricSource> sources = md.getSources(OS.Linux);
         assertEquals(1, sources.size());

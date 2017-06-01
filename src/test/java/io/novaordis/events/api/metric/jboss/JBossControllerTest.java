@@ -21,7 +21,6 @@ import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MockMetricDefinition;
-import io.novaordis.events.api.metric.MockOS;
 import io.novaordis.events.api.metric.source.MetricSourceTest;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
@@ -43,7 +42,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JBossCliMetricSourceTest extends MetricSourceTest {
+public class JBossControllerTest extends MetricSourceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -79,17 +78,6 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
-    @Override
-    @Test
-    public void collectAllMetrics() throws Exception {
-
-        JBossCliMetricSource s = getMetricSourceToTest();
-        MockOS mos = new MockOS();
-
-        List<Property> metrics =  s.collectAllMetrics(mos);
-        assertTrue(metrics.isEmpty());
-    }
-
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
     @Test
@@ -104,7 +92,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
         ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", 7);
 
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
         String host = client.getHost();
@@ -139,7 +127,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
         ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", 7);
 
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
         MockMetricDefinition mmd = new MockMetricDefinition("MOCK");
@@ -183,7 +171,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         // test-attribute-2 does not exist on the controller
         //
 
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
         JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
@@ -224,7 +212,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         //
         ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", null);
 
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
         JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
@@ -250,7 +238,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
         JBossControllerAddress mockAddress = new JBossControllerAddress(
                 "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
         JBossControllerClient client2 = jbossSource.getControllerClient();
@@ -287,7 +275,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
 
         mc.setAttributeValue("test-path", "test-attribute", 7L);
 
-        JBossCliMetricSource jbossSource = getMetricSourceToTest();
+        JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(mc);
 
         List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(
@@ -311,7 +299,7 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void defaultValues() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource();
+        JBossController s = new JBossController();
 
         JBossControllerAddress address = s.getControllerAddress();
 
@@ -326,8 +314,8 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void equals_DefaultController() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource();
-        JBossCliMetricSource s2 = new JBossCliMetricSource();
+        JBossController s = new JBossController();
+        JBossController s2 = new JBossController();
 
         assertEquals(s, s2);
         assertEquals(s2, s);
@@ -336,9 +324,9 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void equals_DefaultControllerPort() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s = new JBossController(new JBossControllerAddress(
                 null, null, "somehost", "somehost", JBossControllerClient.DEFAULT_PORT, null));
-        JBossCliMetricSource s2 = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s2 = new JBossController(new JBossControllerAddress(
                 null, null, "somehost", "somehost", JBossControllerClient.DEFAULT_PORT, null));
 
         assertEquals(s, s2);
@@ -348,9 +336,9 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void equals_SameControllerAddress() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s = new JBossController(new JBossControllerAddress(
                 null, null, "somehost", "somehost", 1234, "1234"));
-        JBossCliMetricSource s2 = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s2 = new JBossController(new JBossControllerAddress(
                 null, null, "somehost", "somehost", 1234, "1234"));
 
         assertEquals(s, s2);
@@ -360,9 +348,9 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void equals_SameControllerAddress2() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource(
+        JBossController s = new JBossController(
                 new JBossControllerAddress("someuser", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
-        JBossCliMetricSource s2 = new JBossCliMetricSource(
+        JBossController s2 = new JBossController(
                 new JBossControllerAddress("someuser", new char[] {'b'}, "somehost", "somehost", 1234, "1234"));
 
         assertEquals(s, s2);
@@ -372,9 +360,9 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void notEquals_DifferentUser() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource(
+        JBossController s = new JBossController(
                 new JBossControllerAddress("someuser", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
-        JBossCliMetricSource s2 = new JBossCliMetricSource(
+        JBossController s2 = new JBossController(
                 new JBossControllerAddress("someuser2", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
 
         assertFalse(s.equals(s2));
@@ -384,13 +372,27 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     @Test
     public void notEquals_DifferentPort() throws Exception {
 
-        JBossCliMetricSource s = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s = new JBossController(new JBossControllerAddress(
                 null, null, "localhost", null, 1234, "1234"));
-        JBossCliMetricSource s2 = new JBossCliMetricSource(new JBossControllerAddress(
+        JBossController s2 = new JBossController(new JBossControllerAddress(
                 null, null, "localhost", null, 1235, "1235"));
 
         assertFalse(s.equals(s2));
         assertFalse(s2.equals(s));
+    }
+
+    // equals() --------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void equalsTest() throws Exception {
+        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+    }
+
+    // hashCode() ------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void hashCodeTest() throws Exception {
+        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -398,9 +400,9 @@ public class JBossCliMetricSourceTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JBossCliMetricSource getMetricSourceToTest() throws Exception {
+    protected JBossController getMetricSourceToTest() throws Exception {
 
-        return new JBossCliMetricSource();
+        return new JBossController();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
