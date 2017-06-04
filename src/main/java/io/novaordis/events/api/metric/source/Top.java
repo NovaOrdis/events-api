@@ -22,25 +22,23 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricCollectionException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.cpu.CpuHardwareInterruptTime;
-import io.novaordis.events.api.metric.cpu.CpuIdleTime;
-import io.novaordis.events.api.metric.cpu.CpuIoWaitTime;
-import io.novaordis.events.api.metric.cpu.CpuKernelTime;
-import io.novaordis.events.api.metric.cpu.CpuMetricDefinition;
-import io.novaordis.events.api.metric.cpu.CpuNiceTime;
-import io.novaordis.events.api.metric.cpu.CpuSoftwareInterruptTime;
-import io.novaordis.events.api.metric.cpu.CpuStolenTime;
-import io.novaordis.events.api.metric.cpu.CpuUserTime;
-import io.novaordis.events.api.metric.loadavg.LoadAverageLastFiveMinutes;
-import io.novaordis.events.api.metric.loadavg.LoadAverageLastMinute;
-import io.novaordis.events.api.metric.loadavg.LoadAverageLastTenMinutes;
-import io.novaordis.events.api.metric.loadavg.LoadAverageMetricDefinition;
-import io.novaordis.events.api.metric.memory.PhysicalMemoryFree;
-import io.novaordis.events.api.metric.memory.PhysicalMemoryTotal;
-import io.novaordis.events.api.metric.memory.PhysicalMemoryUsed;
-import io.novaordis.events.api.metric.memory.SwapFree;
-import io.novaordis.events.api.metric.memory.SwapTotal;
-import io.novaordis.events.api.metric.memory.SwapUsed;
+import io.novaordis.events.api.metric.os.CpuHardwareInterruptTime;
+import io.novaordis.events.api.metric.os.CpuIdleTime;
+import io.novaordis.events.api.metric.os.CpuIoWaitTime;
+import io.novaordis.events.api.metric.os.CpuKernelTime;
+import io.novaordis.events.api.metric.os.CpuNiceTime;
+import io.novaordis.events.api.metric.os.CpuSoftwareInterruptTime;
+import io.novaordis.events.api.metric.os.CpuStolenTime;
+import io.novaordis.events.api.metric.os.CpuUserTime;
+import io.novaordis.events.api.metric.os.LoadAverageLastFiveMinutes;
+import io.novaordis.events.api.metric.os.LoadAverageLastMinute;
+import io.novaordis.events.api.metric.os.LoadAverageLastTenMinutes;
+import io.novaordis.events.api.metric.os.PhysicalMemoryFree;
+import io.novaordis.events.api.metric.os.PhysicalMemoryTotal;
+import io.novaordis.events.api.metric.os.PhysicalMemoryUsed;
+import io.novaordis.events.api.metric.os.SwapFree;
+import io.novaordis.events.api.metric.os.SwapTotal;
+import io.novaordis.events.api.metric.os.SwapUsed;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -68,13 +66,13 @@ public class Top extends OSCommand {
 
         List<Property> result = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(s, ", ");
-        LoadAverageMetricDefinition[] expected = new LoadAverageMetricDefinition[] {
+        MetricDefinition[] expected = new MetricDefinition[] {
                 new LoadAverageLastMinute(),
                 new LoadAverageLastFiveMinutes(),
                 new LoadAverageLastTenMinutes()
         };
 
-        for(LoadAverageMetricDefinition m: expected) {
+        for(MetricDefinition m: expected) {
             if (st.hasMoreTokens()) {
                 String tok = st.nextToken();
                 result.add(PropertyFactory.createInstance(m.getName(), m.getType(), tok, null, m.getMeasureUnit()));
@@ -93,7 +91,7 @@ public class Top extends OSCommand {
             String tok = st.nextToken();
             for (Object[] e : expectedLabelsAndMetrics) {
                 String label = (String) e[0];
-                CpuMetricDefinition m = (CpuMetricDefinition) e[1];
+                MetricDefinition m = (MetricDefinition) e[1];
                 int i = tok.indexOf(label);
                 if (i != -1) {
                     tok = tok.substring(0, i).replace("%", "").trim();

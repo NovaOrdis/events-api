@@ -67,9 +67,7 @@ public interface MetricDefinition {
 
         String[] packages = {
 
-                "io.novaordis.events.api.metric.cpu",
-                "io.novaordis.events.api.metric.memory",
-                "io.novaordis.events.api.metric.loadavg",
+                "io.novaordis.events.api.metric.os",
         };
 
         String fqcn = null;
