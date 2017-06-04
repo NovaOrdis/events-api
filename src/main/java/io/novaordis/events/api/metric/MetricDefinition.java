@@ -132,29 +132,20 @@ public interface MetricDefinition {
      */
     String getDefinition();
 
-
-    // to refactor -----------------------------------------------------------------------------------------------------
-
     /**
      * A human readable string, possibly space separated, that is used to represent the metric in user-facing
      * representations, such as a CSV file headers. The label includes, by default, the parantheses-enclosed measure
      * unit, if the metric has a measure unit. For example, PhysicalMemoryTotal's label is
      * "Total Physical Memory (bytes)"
      *
-     * @see MetricDefinition#getSimpleLabel()
+     * @param attributes different attributes to include within the label, such as measure unit, etc. If no label
+     *                   attributes are specified, a simple label is generated.
+     *
      * @see MeasureUnit#getLabel()
      */
-    String getLabel();
+    String getLabel(LabelAttribute ... attributes);
 
-    /**
-     * A human readable string, possibly space separated, that is used to represent the metric in user-facing
-     * representations, such as a CSV file headers, but without measure unit. To get a complete representation,
-     * including the measure unit, if available, use getLabel(). For example, PhysicalMemoryTotal's simple label is
-     * "Total Physical Memory".
-     *
-     * @see MetricDefinition#getLabel()
-     */
-    String getSimpleLabel();
+    // to refactor -----------------------------------------------------------------------------------------------------
 
     /**
      * @return a list of sources for this metric, in the descending order of their priority. The data collection layer

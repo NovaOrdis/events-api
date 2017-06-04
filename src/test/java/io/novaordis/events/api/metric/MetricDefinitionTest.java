@@ -72,11 +72,21 @@ public abstract class MetricDefinitionTest {
     // getLabel() ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getLabel() throws Exception {
+    public void getLabel_WithoutMeasureUnit() throws Exception {
 
         MetricDefinition d = getMetricDefinitionToTest();
 
         String label = d.getLabel();
+
+        assertNotNull(label);
+    }
+
+    @Test
+    public void getLabel_WithMeasureUnit() throws Exception {
+
+        MetricDefinition d = getMetricDefinitionToTest();
+
+        String label = d.getLabel(LabelAttribute.MEASURE_UNIT);
 
         assertNotNull(label);
 
@@ -95,27 +105,14 @@ public abstract class MetricDefinitionTest {
 
             assertFalse(label.contains("("));
             assertFalse(label.contains(")"));
-
-            assertEquals(label, d.getSimpleLabel());
+            assertEquals(label, d.getLabel());
         }
         else {
 
             String muLabelFragment = " (" + mu.getLabel() + ")";
             assertTrue(label.endsWith(muLabelFragment));
-            assertTrue(label.contains(d.getSimpleLabel()));
+            assertTrue(label.contains(d.getLabel()));
         }
-    }
-
-    @Test
-    public void getSimpleLabel() throws Exception {
-
-        MetricDefinition d = getMetricDefinitionToTest();
-
-        String label = d.getLabel();
-        String simpleLabel = d.getSimpleLabel();
-
-        assertNotNull(simpleLabel);
-        assertTrue(label.startsWith(simpleLabel));
     }
 
     // metric source tests ---------------------------------------------------------------------------------------------

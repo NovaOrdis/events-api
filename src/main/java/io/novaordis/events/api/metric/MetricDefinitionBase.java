@@ -50,22 +50,34 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
+    public final String getLabel(LabelAttribute... attributes) {
 
-        throw new RuntimeException("NYE");
-    }
+        String s = getSimpleLabel();
 
-    @Override
-    public final String getLabel() {
+        if (attributes.length == 1) {
 
-        MeasureUnit mu = getMeasureUnit();
-        String simpleLabel = getSimpleLabel();
+            LabelAttribute a = attributes[0];
 
-        if (mu == null) {
-            return simpleLabel;
+            if (LabelAttribute.MEASURE_UNIT.equals(a)) {
+
+                MeasureUnit mu = getMeasureUnit();
+
+                if (mu != null) {
+
+                    s += " (" + mu.getLabel() + ")";
+                }
+            }
+            else {
+
+                throw new RuntimeException("we don't know how to handle label attribute " + a);
+            }
+        }
+        else if (attributes.length > 1) {
+
+            throw new RuntimeException("we don't know yet how to handle multiple attributes");
         }
 
-        return simpleLabel + " (" + mu.getLabel() + ")";
+        return s;
     }
 
     /**
@@ -120,6 +132,13 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Return the simple label, without any attribute.
+     *
+     * @see MetricDefinition#getLabel(LabelAttribute...)
+     */
+    protected abstract String getSimpleLabel();
 
     /**
      * Used by the subclasses that need a finer grained control to the source storage.
