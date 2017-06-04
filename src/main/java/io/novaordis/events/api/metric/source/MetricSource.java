@@ -36,7 +36,7 @@ import java.util.List;
  *
  * 4. The management controller (standalone or domain) of a WildFly instance.
  *
- * Can represent a native O/S command, a file, etc.
+ * 5. etc.
  *
  * The implementations must correctly implement equals() and hashCode(), as metric sources will be used as map keys.
  *

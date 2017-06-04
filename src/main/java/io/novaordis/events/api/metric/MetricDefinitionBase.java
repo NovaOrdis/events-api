@@ -51,6 +51,12 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
+    public String getDefinition() {
+
+        throw new RuntimeException("NYE");
+    }
+
+    @Override
     public String getName() {
 
         return getClass().getSimpleName();

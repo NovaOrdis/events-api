@@ -46,17 +46,17 @@ public abstract class MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
+    // @Test
     public abstract void equalsTest() throws Exception;
 
-    @Test
+    // @Test
     public abstract void hashCodeTest() throws Exception;
 
     // collectAllMetrics() ---------------------------------------------------------------------------------------------
 
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
-    @Test
+    // @Test
     public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
 
         MetricSource s = getMetricSourceToTest();

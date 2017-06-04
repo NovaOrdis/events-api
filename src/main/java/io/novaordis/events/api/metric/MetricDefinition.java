@@ -108,10 +108,41 @@ public interface MetricDefinition {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
+     * May return null if the metric is non-dimensional (for example load average).
+     *
+     * @see MeasureUnit
+     */
+    MeasureUnit getMeasureUnit();
+
+    /**
+     * The human readable text that explains what this metric represents.
+     */
+    String getDescription();
+
+    /**
+     * The types for values corresponding to this metric definition. Typical: Integer, Long, Double.
+     */
+    Class getType();
+
+    // new -------------------------------------------------------------------------------------------------------------
+
+    /**
+     * The metric definition. Information that should be sufficient to a metric source to provide a value. For
+     * example "PhysicalMemoryTotal", "java.lang:type=Threading.ThreadCount",
+     * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count". The first makes sense within the
+     * context of local or remote OS, the second in the context of a JMX bus, and the third in the context of a
+     * JBoss management controller.
+     */
+    String getDefinition();
+
+    // to refactor -----------------------------------------------------------------------------------------------------
+
+    /**
      * The metric name. Must not contain any spaces. It is used by the factory method getInstance() to create the
      * corresponding class instance, and usually, it is the simple name of the implementing class. Example:
      * "PhysicalMemoryTotal" or "jboss:localhost:9999/subsystem=test/test-attribute.
      */
+    @Deprecated
     String getName();
 
     /**
@@ -134,23 +165,6 @@ public interface MetricDefinition {
      * @see MetricDefinition#getLabel()
      */
     String getSimpleLabel();
-
-    /**
-     * May return null if the metric is non-dimensional (for example load average).
-     *
-     * @see MeasureUnit
-     */
-    MeasureUnit getMeasureUnit();
-
-    /**
-     * The human readable text that explains what this metric represents.
-     */
-    String getDescription();
-
-    /**
-     * The types for values corresponding to this metric definition. Typical: Integer, Long, Double.
-     */
-    Class getType();
 
     /**
      * @return a list of sources for this metric, in the descending order of their priority. The data collection layer
