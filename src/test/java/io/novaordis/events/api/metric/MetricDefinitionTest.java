@@ -22,8 +22,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
@@ -113,75 +111,6 @@ public abstract class MetricDefinitionTest {
             assertTrue(label.endsWith(muLabelFragment));
             assertTrue(label.contains(d.getLabel()));
         }
-    }
-
-    // metric source tests ---------------------------------------------------------------------------------------------
-
-    @Test
-    public void getSources_NullOSName() throws Exception {
-
-        MetricDefinition d = getMetricDefinitionToTest();
-
-        try {
-            d.getSources(null);
-            fail("should throw exception");
-        }
-        catch(IllegalArgumentException iae) {
-            log.info(iae.getMessage());
-        }
-    }
-
-    @Test
-    public void getSources_UnknownOS() throws Exception {
-
-        MetricDefinition d = getMetricDefinitionToTest();
-
-        List<MetricSource> sources = d.getSources(MockOS.NAME);
-
-        assertTrue(sources.isEmpty());
-    }
-
-    @Test
-    public void addSource() throws Exception {
-
-        MetricDefinition d = getMetricDefinitionToTest();
-
-        MockOS mos = new MockOS();
-
-        assertTrue(d.getSources(mos.getName()).isEmpty());
-
-        MetricSource source = new MockMetricSource();
-
-        assertTrue(d.addSource(mos.getName(), source));
-
-        List<MetricSource> sources = d.getSources(mos.getName());
-
-        assertEquals(1, sources.size());
-        assertEquals(source, sources.get(0));
-
-        MetricSource source2 = new MockMetricSource();
-
-        assertTrue(d.addSource(mos.getName(), source2));
-
-        //
-        // make sure the order is preserved
-        //
-
-        List<MetricSource> sources2 = d.getSources(mos.getName());
-        assertEquals(2, sources2.size());
-        assertEquals(source, sources2.get(0));
-        assertEquals(source2, sources2.get(1));
-
-        //
-        // attempt to add a duplicate
-        //
-
-        assertFalse(d.addSource(mos.getName(), source));
-
-        List<MetricSource> sources3 = d.getSources(mos.getName());
-        assertEquals(2, sources3.size());
-        assertEquals(source, sources3.get(0));
-        assertEquals(source2, sources3.get(1));
     }
 
     // getInstance() ---------------------------------------------------------------------------------------------------

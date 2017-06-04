@@ -99,7 +99,7 @@ public class JBossControllerTest extends MetricSourceTest {
         String otherHost = "OTHER-" + host;
 
         JBossCliMetricDefinition jbossCliMetricWithOtherSource =
-                new JBossCliMetricDefinition("jboss:" + otherHost + "/test-path/test-attribute");
+                new JBossCliMetricDefinition(null, "jboss:" + otherHost + "/test-path/test-attribute");
 
         //noinspection ArraysAsListWithZeroOrOneArgument
         List<MetricDefinition> definitions = Arrays.asList(jbossCliMetricWithOtherSource);
@@ -132,7 +132,7 @@ public class JBossControllerTest extends MetricSourceTest {
 
         MockMetricDefinition mmd = new MockMetricDefinition("MOCK");
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(null,
                 "jboss:" + client.getUsername() + ":mock-password" + "@" +
                         client.getHost() + ":" + client.getPort() + "/test-path/test-attribute");
 
@@ -174,11 +174,11 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(null,
                 "jboss:" + client.getUsername() + ":mock-password" + "@" +
                         client.getHost() + ":" + client.getPort() + "/test-path/test-attribute-1");
 
-        JBossCliMetricDefinition jbmd2 = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition jbmd2 = new JBossCliMetricDefinition(null,
                 "jboss:" + client.getUsername() + ":mock-password" + "@" +
                         client.getHost() + ":" + client.getPort() + "/test-path/test-attribute-2");
 
@@ -215,7 +215,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(null,
                 "jboss:" + client.getUsername() + ":mock-password" + "@" +
                         client.getHost() + ":" + client.getPort() + "/test-path/test-attribute");
 
@@ -245,7 +245,7 @@ public class JBossControllerTest extends MetricSourceTest {
         assertNotNull(client2);
         assertFalse(client2.isConnected());
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(null,
                 "jboss:" + client.getUsername() + ":mock-password" + "@" +
                         client.getHost() + ":" + client.getPort() + "/test-path/test-attribute");
 
@@ -278,7 +278,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(mc);
 
-        List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(
+        List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(null,
                 "jboss:" + mc.getUsername() + ":mock-password" + "@" + mc.getHost() + ":" + mc.getPort() +
                         "/test-path/test-attribute"));
 

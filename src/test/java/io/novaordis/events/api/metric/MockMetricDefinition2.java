@@ -31,6 +31,13 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param source must always have a non-null source.
+     */
+    protected MockMetricDefinition2(MetricSource source) {
+        super(source);
+    }
+
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override

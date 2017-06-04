@@ -20,8 +20,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.source.Top;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSource;
 
 /**
  * See https://kb.novaordis.com/index.php/Proc-meminfo#MemTotal
@@ -39,9 +38,9 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements MetricD
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public PhysicalMemoryTotal() {
+    public PhysicalMemoryTotal(MetricSource s) {
 
-        addSource(OS.Linux, new Top("-b -n 1 -p 0"));
+        super(s);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

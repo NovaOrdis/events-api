@@ -19,8 +19,7 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.source.Top;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSource;
 
 /**
  * See https://kb.novaordis.com/index.php/Vmstat#us
@@ -38,10 +37,9 @@ public class CpuUserTime extends MetricDefinitionBase implements MetricDefinitio
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuUserTime() {
+    public CpuUserTime(MetricSource s) {
 
-        addSource(OS.Linux, new Top("-b -n 1 -p 0"));
-        addSource(OS.MacOS, new Top("-l 1 -n 0"));
+        super(s);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

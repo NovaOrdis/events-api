@@ -20,12 +20,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -82,31 +77,8 @@ public class CpuNiceTimeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuNiceTime m = new CpuNiceTime();
+        CpuNiceTime m = new CpuNiceTime(null);
         assertEquals("CPU Nice Time", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        CpuNiceTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        CpuNiceTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        // TODO this will probably change
-        assertEquals(0, macSources.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -116,7 +88,7 @@ public class CpuNiceTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuNiceTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuNiceTime();
+        return new CpuNiceTime(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

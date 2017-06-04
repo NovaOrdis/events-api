@@ -82,31 +82,8 @@ public class CpuSoftwareInterruptTimeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime();
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(null);
         assertEquals("CPU Software Interrupt Time", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        CpuSoftwareInterruptTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        CpuSoftwareInterruptTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        // TODO this will probably change
-        assertEquals(0, macSources.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -116,7 +93,7 @@ public class CpuSoftwareInterruptTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuSoftwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuSoftwareInterruptTime();
+        return new CpuSoftwareInterruptTime(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

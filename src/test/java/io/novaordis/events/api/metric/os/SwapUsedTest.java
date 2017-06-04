@@ -80,31 +80,8 @@ public class SwapUsedTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        SwapUsed m = new SwapUsed();
+        SwapUsed m = new SwapUsed(null);
         assertEquals("Used Swap", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        SwapUsed m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        SwapUsed m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        // TODO this will probably change
-        assertEquals(0, macSources.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -113,7 +90,7 @@ public class SwapUsedTest extends MetricDefinitionTest {
 
     @Override
     protected SwapUsed getMetricDefinitionToTest() throws Exception {
-        return new SwapUsed();
+        return new SwapUsed(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

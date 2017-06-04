@@ -77,32 +77,8 @@ public class LoadAverageLastMinuteTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute();
+        LoadAverageLastMinute m = new LoadAverageLastMinute(null);
         assertEquals("Last Minute Load Average", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        LoadAverageLastMinute m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        LoadAverageLastMinute m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        assertEquals(1, macSources.size());
-        OSCommand c = (OSCommand) macSources.get(0);
-         assertEquals("top", c.getCommand());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -111,7 +87,7 @@ public class LoadAverageLastMinuteTest extends MetricDefinitionTest {
 
     @Override
     protected LoadAverageLastMinute getMetricDefinitionToTest() throws Exception {
-        return new LoadAverageLastMinute();
+        return new LoadAverageLastMinute(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

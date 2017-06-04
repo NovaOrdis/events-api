@@ -18,12 +18,6 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
 /**
  * Not thread-safe, access synchronization must be implemented externally.
  *
@@ -38,13 +32,21 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    // <String (os name), List<MetricSource>>
-    private Map<String, List<MetricSource>> sources;
+    private MetricSource source;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MetricDefinitionBase() {
-        this.sources = new HashMap<>();
+    /**
+     * @param source must always have a non-null source.
+     */
+    protected MetricDefinitionBase(MetricSource source) {
+
+        if (source == null) {
+
+            throw new IllegalArgumentException("null source");
+        }
+
+        this.source = source;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
@@ -80,46 +82,10 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
         return s;
     }
 
-    /**
-     * The implementation returns a copy of the internal list.
-     */
     @Override
-    public List<MetricSource> getSources(String  osName) {
+    public MetricSource getSource() {
 
-        if (osName == null) {
-            throw new IllegalArgumentException("null OS name");
-        }
-
-        List<MetricSource> sl = sources.get(osName);
-
-        if (sl == null) {
-            return Collections.emptyList();
-        }
-
-        return new ArrayList<>(sl);
-    }
-
-    /**
-     * Not thread safe.
-     */
-    @Override
-    public boolean addSource(String osName, MetricSource source) {
-
-        List<MetricSource> sl = sources.get(osName);
-
-        if (sl == null) {
-
-            sl = new ArrayList<>();
-            sources.put(osName, sl);
-        }
-
-        if (sl.contains(source)) {
-            return false;
-        }
-
-        sl.add(source);
-
-        return true;
+        return source;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -139,14 +105,6 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
      * @see MetricDefinition#getLabel(LabelAttribute...)
      */
     protected abstract String getSimpleLabel();
-
-    /**
-     * Used by the subclasses that need a finer grained control to the source storage.
-     */
-    protected void setSources(Map<String, List<MetricSource>> sources) {
-
-        this.sources = sources;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

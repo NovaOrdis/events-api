@@ -23,9 +23,6 @@ import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 
-import java.util.Collections;
-import java.util.List;
-
 /**
  * A metric that can be read from a JBoss controller.
  *
@@ -90,14 +87,16 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param definition a string metric definition similar to
-     *                   "jboss:username1:password1@localhost/subsystem=remoting/worker-task-core-threads"
+     * @param definition the metric definition similar to "/subsystem=remoting/worker-task-core-threads". Must NOT
+     *                   include the metric source, which must be parsed separately and provided.
      *
      * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
-     * must be human-readable, as it will most likely end up in error messages.
+     *  must be human-readable, as it will most likely end up in error messages.
      * @throws IllegalArgumentException
      */
-    public JBossCliMetricDefinition(String definition) throws MetricDefinitionException {
+    public JBossCliMetricDefinition(MetricSource source, String definition) throws MetricDefinitionException {
+
+        super(source);
 
         if (definition == null) {
 
@@ -111,9 +110,11 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
 
         parse(definition.substring(PREFIX.length()));
 
-        // cache the name, to "freeze" as soon as possible; the source, which otherwise would be the name originator,
-        // may change in subtle ways
-        this.definition = toLiteralName(source.getControllerAddress(), path, attribute);
+        throw new RuntimeException("RETURN HERE");
+
+//        // cache the name, to "freeze" as soon as possible; the source, which otherwise would be the name originator,
+//        // may change in subtle ways
+//        this.definition = toLiteralName(source.getControllerAddress(), path, attribute);
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
@@ -165,34 +166,6 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     //
     // we need to override all source-related methods, as we override the storage
     //
-
-    /**
-     * Base override, we only have just one source.
-     */
-    @Override
-    public List<MetricSource> getSources(String osName) {
-
-        return Collections.singletonList(source);
-    }
-
-    @Override
-    public boolean addSource(String osName, MetricSource source) {
-
-        if (!(source instanceof JBossController)) {
-            throw new IllegalArgumentException("the metric source not a JBossController");
-        }
-
-        //
-        // osName does not matter, we're ignoring it, warn if we're seeing a non-null one
-        //
-
-        if (osName != null) {
-            log.warn("specifying an OS name is superfluous, " + osName + " will be ignored");
-        }
-
-        this.source = (JBossController)source;
-        return true;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -281,17 +254,19 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
             pathAndAttribute = definition;
         }
 
-        //
-        // we don't need a map storage in the superclass, we have one source for any OS, so we simply get rid of the
-        // map storage
-        //
-        setSources(null);
-        addSource(null, new JBossController(controllerAddress));
+        throw new RuntimeException("RETURN HERE");
 
-        i = pathAndAttribute.lastIndexOf('/');
-
-        this.path = new CliPath(pathAndAttribute.substring(0, i));
-        this.attribute = new CliAttribute(pathAndAttribute.substring(i + 1));
+//        //
+//        // we don't need a map storage in the superclass, we have one source for any OS, so we simply get rid of the
+//        // map storage
+//        //
+//        setSources(null);
+//        addSource(null, new JBossController(controllerAddress));
+//
+//        i = pathAndAttribute.lastIndexOf('/');
+//
+//        this.path = new CliPath(pathAndAttribute.substring(0, i));
+//        this.attribute = new CliAttribute(pathAndAttribute.substring(i + 1));
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

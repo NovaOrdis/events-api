@@ -19,8 +19,7 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.source.Top;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSource;
 
 /**
  * See https://kb.novaordis.com/index.php/Vmstat#hi
@@ -38,9 +37,9 @@ public class CpuHardwareInterruptTime extends MetricDefinitionBase implements Me
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuHardwareInterruptTime() {
+    public CpuHardwareInterruptTime(MetricSource s) {
 
-        addSource(OS.Linux, new Top("-b -n 1 -p 0"));
+        super(s);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

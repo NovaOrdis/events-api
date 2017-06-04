@@ -81,33 +81,8 @@ public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal();
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(null);
         assertEquals("Total Physical Memory", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        PhysicalMemoryTotal m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        PhysicalMemoryTotal m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-
-        // we don't know yet, this will change
-        assertTrue(macSources.isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -116,7 +91,7 @@ public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryTotal getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryTotal();
+        return new PhysicalMemoryTotal(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

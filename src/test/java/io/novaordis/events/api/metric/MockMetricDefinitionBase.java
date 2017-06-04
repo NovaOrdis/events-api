@@ -33,6 +33,13 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase implements 
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param source must always have a non-null source.
+     */
+    protected MockMetricDefinitionBase(MetricSource source) {
+        super(source);
+    }
+
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override

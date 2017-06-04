@@ -80,32 +80,8 @@ public class PhysicalMemoryUsedTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed();
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(null);
         assertEquals("Used Physical Memory", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        PhysicalMemoryUsed m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        PhysicalMemoryUsed m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        assertEquals(1, macSources.size());
-        OSCommand c = (OSCommand) macSources.get(0);
-         assertEquals("top", c.getCommand());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -114,7 +90,7 @@ public class PhysicalMemoryUsedTest extends MetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryUsed getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryUsed();
+        return new PhysicalMemoryUsed(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

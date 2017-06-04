@@ -67,9 +67,9 @@ public class Top extends OSCommand {
         List<Property> result = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(s, ", ");
         MetricDefinition[] expected = new MetricDefinition[] {
-                new LoadAverageLastMinute(),
-                new LoadAverageLastFiveMinutes(),
-                new LoadAverageLastTenMinutes()
+                new LoadAverageLastMinute(null),
+                new LoadAverageLastFiveMinutes(null),
+                new LoadAverageLastTenMinutes(null)
         };
 
         for(MetricDefinition m: expected) {
@@ -165,14 +165,14 @@ public class Top extends OSCommand {
     public static List<Property> parseLinuxCpuInfo(String s) throws MetricCollectionException {
 
         Object[][] expected = new Object[][] {
-                { "us", new CpuUserTime()},
-                { "sy",  new CpuKernelTime()},
-                { "ni",  new CpuNiceTime()},
-                { "id", new CpuIdleTime()},
-                { "wa", new CpuIoWaitTime()},
-                { "hi", new CpuHardwareInterruptTime()},
-                { "si", new CpuSoftwareInterruptTime()},
-                { "st", new CpuStolenTime()},
+                { "us", new CpuUserTime(null)},
+                { "sy",  new CpuKernelTime(null)},
+                { "ni",  new CpuNiceTime(null)},
+                { "id", new CpuIdleTime(null)},
+                { "wa", new CpuIoWaitTime(null)},
+                { "hi", new CpuHardwareInterruptTime(null)},
+                { "si", new CpuSoftwareInterruptTime(null)},
+                { "st", new CpuStolenTime(null)},
         };
 
         return parseCpuInfo(s, expected);
@@ -199,7 +199,7 @@ public class Top extends OSCommand {
             String tok = st.nextToken();
             int i;
             if ((i = tok.indexOf("total")) != -1) {
-                PhysicalMemoryTotal m = new PhysicalMemoryTotal();
+                PhysicalMemoryTotal m = new PhysicalMemoryTotal(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -215,7 +215,7 @@ public class Top extends OSCommand {
                         m.getDefinition(), m.getType(), tok, conversionFactor, defaultMeasureUnit));
             }
             else if ((i = tok.indexOf("free")) != -1) {
-                PhysicalMemoryFree m = new PhysicalMemoryFree();
+                PhysicalMemoryFree m = new PhysicalMemoryFree(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -231,7 +231,7 @@ public class Top extends OSCommand {
                         m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
             }
             else if ((i = tok.indexOf("used")) != -1) {
-                PhysicalMemoryUsed m = new PhysicalMemoryUsed();
+                PhysicalMemoryUsed m = new PhysicalMemoryUsed(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -275,7 +275,7 @@ public class Top extends OSCommand {
             String tok = st.nextToken();
             int i;
             if ((i = tok.indexOf("total")) != -1) {
-                SwapTotal m = new SwapTotal();
+                SwapTotal m = new SwapTotal(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -291,7 +291,7 @@ public class Top extends OSCommand {
                         m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
             }
             else if ((i = tok.indexOf("free")) != -1) {
-                SwapFree m = new SwapFree();
+                SwapFree m = new SwapFree(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -307,7 +307,7 @@ public class Top extends OSCommand {
                         m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
             }
             else if ((i = tok.indexOf("used")) != -1) {
-                SwapUsed m = new SwapUsed();
+                SwapUsed m = new SwapUsed(null);
                 tok = tok.substring(0, i).trim();
                 MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
                 double conversionFactor;
@@ -360,9 +360,9 @@ public class Top extends OSCommand {
     public static List<Property> parseMacCpuInfo(String s) throws MetricCollectionException {
 
         Object[][] expected = new Object[][] {
-                { "user", new CpuUserTime()},
-                { "sys",  new CpuKernelTime()},
-                { "idle", new CpuIdleTime()},
+                { "user", new CpuUserTime(null)},
+                { "sys",  new CpuKernelTime(null)},
+                { "idle", new CpuIdleTime(null)},
         };
         return parseCpuInfo(s, expected);
     }
@@ -374,8 +374,8 @@ public class Top extends OSCommand {
 
         List<Property> result = new ArrayList<>();
         Object[][] expected = new Object[][] {
-                { "used", new PhysicalMemoryUsed()},
-                { "unused",  new PhysicalMemoryFree()},
+                { "used", new PhysicalMemoryUsed(null)},
+                { "unused",  new PhysicalMemoryFree(null)},
         };
 
         for(Object[] e: expected) {

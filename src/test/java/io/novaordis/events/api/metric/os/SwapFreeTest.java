@@ -80,31 +80,8 @@ public class SwapFreeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        SwapFree m = new SwapFree();
+        SwapFree m = new SwapFree(null);
         assertEquals("Free Swap", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        SwapFree m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        SwapFree m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        // TODO this will probably change
-        assertEquals(0, macSources.size());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -113,7 +90,7 @@ public class SwapFreeTest extends MetricDefinitionTest {
 
     @Override
     protected SwapFree getMetricDefinitionToTest() throws Exception {
-        return new SwapFree();
+        return new SwapFree(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

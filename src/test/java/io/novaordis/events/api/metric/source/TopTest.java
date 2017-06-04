@@ -74,21 +74,21 @@ public class TopTest extends OSCommandTest {
         List<Property> props = Top.parseLoadAverage(" 1.11, 2.22, 3.33");
         assertEquals(3, props.size());
 
-        LoadAverageLastMinute metric = new LoadAverageLastMinute();
+        LoadAverageLastMinute metric = new LoadAverageLastMinute(null);
         FloatProperty p = (FloatProperty)props.get(0);
         assertNull(p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1.11d, p.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p.getType());
 
-        LoadAverageLastFiveMinutes metric2 = new LoadAverageLastFiveMinutes();
+        LoadAverageLastFiveMinutes metric2 = new LoadAverageLastFiveMinutes(null);
         FloatProperty p2 = (FloatProperty)props.get(1);
         assertNull(p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(2.22d, p2.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p2.getType());
 
-        LoadAverageLastTenMinutes metric3 = new LoadAverageLastTenMinutes();
+        LoadAverageLastTenMinutes metric3 = new LoadAverageLastTenMinutes(null);
         FloatProperty p3 = (FloatProperty)props.get(2);
         assertNull(p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -112,71 +112,71 @@ public class TopTest extends OSCommandTest {
         assertEquals(3 + 8 + 3 + 3, ps.size());
 
         int i = 0;
-        assertEquals(new LoadAverageLastMinute().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastMinute(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.11f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 1;
-        assertEquals(new LoadAverageLastFiveMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastFiveMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.22f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 2;
-        assertEquals(new LoadAverageLastTenMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastTenMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.33f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 3;
-        assertEquals(new CpuUserTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuUserTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.0f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 4;
-        assertEquals(new CpuKernelTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuKernelTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.1f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 5;
-        assertEquals(new CpuNiceTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuNiceTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.2f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 6;
-        assertEquals(new CpuIdleTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuIdleTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(99.8f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 7;
-        assertEquals(new CpuIoWaitTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuIoWaitTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.3f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 8;
-        assertEquals(new CpuHardwareInterruptTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuHardwareInterruptTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.4f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 9;
-        assertEquals(new CpuSoftwareInterruptTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuSoftwareInterruptTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.5f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 10;
-        assertEquals(new CpuStolenTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuStolenTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.6f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 11;
-        assertEquals(new PhysicalMemoryTotal().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryTotal(null).getDefinition(), ps.get(i).getName());
         assertEquals(1040326656L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 12;
-        assertEquals(new PhysicalMemoryFree().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryFree(null).getDefinition(), ps.get(i).getName());
         assertEquals(821522432L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 13;
-        assertEquals(new PhysicalMemoryUsed().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryUsed(null).getDefinition(), ps.get(i).getName());
         assertEquals(88944640L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 14;
-        assertEquals(new SwapTotal().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapTotal(null).getDefinition(), ps.get(i).getName());
         assertEquals(3072L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 15;
-        assertEquals(new SwapFree().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapFree(null).getDefinition(), ps.get(i).getName());
         assertEquals(2048L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 16;
-        assertEquals(new SwapUsed().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapUsed(null).getDefinition(), ps.get(i).getName());
         assertEquals(1024L, ((Long) ps.get(i).getValue()).longValue());
     }
 
@@ -188,56 +188,56 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(8, props.size());
 
-        CpuUserTime metric = new CpuUserTime();
+        CpuUserTime metric = new CpuUserTime(null);
         FloatProperty p = (FloatProperty)props.get(0);
         assertEquals(Percentage.getInstance(), p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1.1f, p.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p.getType());
 
-        CpuKernelTime metric2 = new CpuKernelTime();
+        CpuKernelTime metric2 = new CpuKernelTime(null);
         FloatProperty p2 = (FloatProperty)props.get(1);
         assertEquals(Percentage.getInstance(), p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(2.2f, p2.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p2.getType());
 
-        CpuNiceTime metric3 = new CpuNiceTime();
+        CpuNiceTime metric3 = new CpuNiceTime(null);
         FloatProperty p3 = (FloatProperty)props.get(2);
         assertEquals(Percentage.getInstance(), p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
         assertEquals(3.3f, p3.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p3.getType());
 
-        CpuIdleTime metric4 = new CpuIdleTime();
+        CpuIdleTime metric4 = new CpuIdleTime(null);
         FloatProperty p4 = (FloatProperty)props.get(3);
         assertEquals(Percentage.getInstance(), p4.getMeasureUnit());
         assertEquals(metric4.getDefinition(), p4.getName());
         assertEquals(44.4f, p4.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p4.getType());
 
-        CpuIoWaitTime metric5 = new CpuIoWaitTime();
+        CpuIoWaitTime metric5 = new CpuIoWaitTime(null);
         FloatProperty p5 = (FloatProperty)props.get(4);
         assertEquals(Percentage.getInstance(), p5.getMeasureUnit());
         assertEquals(metric5.getDefinition(), p5.getName());
         assertEquals(5.5f, p5.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p5.getType());
 
-        CpuHardwareInterruptTime metric6 = new CpuHardwareInterruptTime();
+        CpuHardwareInterruptTime metric6 = new CpuHardwareInterruptTime(null);
         FloatProperty p6 = (FloatProperty)props.get(5);
         assertEquals(Percentage.getInstance(), p6.getMeasureUnit());
         assertEquals(metric6.getDefinition(), p6.getName());
         assertEquals(6.6f, p6.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p6.getType());
 
-        CpuSoftwareInterruptTime metric7 = new CpuSoftwareInterruptTime();
+        CpuSoftwareInterruptTime metric7 = new CpuSoftwareInterruptTime(null);
         FloatProperty p7 = (FloatProperty)props.get(6);
         assertEquals(Percentage.getInstance(), p7.getMeasureUnit());
         assertEquals(metric7.getDefinition(), p7.getName());
         assertEquals(7.7f, p7.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p7.getType());
 
-        CpuStolenTime metric8 = new CpuStolenTime();
+        CpuStolenTime metric8 = new CpuStolenTime(null);
         FloatProperty p8 = (FloatProperty)props.get(7);
         assertEquals(Percentage.getInstance(), p8.getMeasureUnit());
         assertEquals(metric8.getDefinition(), p8.getName());
@@ -253,21 +253,21 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(3, props.size());
 
-        PhysicalMemoryTotal metric = new PhysicalMemoryTotal();
+        PhysicalMemoryTotal metric = new PhysicalMemoryTotal(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1015944l * 1024, p.getLong().longValue());
         assertEquals(Long.class, p.getType());
 
-        PhysicalMemoryFree metric2 = new PhysicalMemoryFree();
+        PhysicalMemoryFree metric2 = new PhysicalMemoryFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(802268L * 1024, p2.getLong().longValue());
         assertEquals(Long.class, p2.getType());
 
-        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed();
+        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed(null);
         LongProperty p3 = (LongProperty)props.get(2);
         assertEquals(MemoryMeasureUnit.BYTE, p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -283,21 +283,21 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(3, props.size());
 
-        PhysicalMemoryTotal metric = new PhysicalMemoryTotal();
+        PhysicalMemoryTotal metric = new PhysicalMemoryTotal(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1015944L, p.getLong().longValue());
         assertEquals(Long.class, p.getType());
 
-        PhysicalMemoryFree metric2 = new PhysicalMemoryFree();
+        PhysicalMemoryFree metric2 = new PhysicalMemoryFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(802268L, p2.getLong().longValue());
         assertEquals(Long.class, p2.getType());
 
-        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed();
+        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed(null);
         LongProperty p3 = (LongProperty)props.get(2);
         assertEquals(MemoryMeasureUnit.BYTE, p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -313,21 +313,21 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(3, props.size());
 
-        PhysicalMemoryTotal metric = new PhysicalMemoryTotal();
+        PhysicalMemoryTotal metric = new PhysicalMemoryTotal(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1015945l * 1024, p.getLong().longValue());
         assertEquals(Long.class, p.getType());
 
-        PhysicalMemoryFree metric2 = new PhysicalMemoryFree();
+        PhysicalMemoryFree metric2 = new PhysicalMemoryFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(802269L * 1024, p2.getLong().longValue());
         assertEquals(Long.class, p2.getType());
 
-        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed();
+        PhysicalMemoryUsed metric3 = new PhysicalMemoryUsed(null);
         LongProperty p3 = (LongProperty)props.get(2);
         assertEquals(MemoryMeasureUnit.BYTE, p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -343,21 +343,21 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(3, props.size());
 
-        SwapTotal metric = new SwapTotal();
+        SwapTotal metric = new SwapTotal(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(100L * 1024, p.getLong().longValue());
         assertEquals(Long.class, p.getType());
 
-        SwapFree metric2 = new SwapFree();
+        SwapFree metric2 = new SwapFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(80L * 1024, p2.getLong().longValue());
         assertEquals(Long.class, p2.getType());
 
-        SwapUsed metric3 = new SwapUsed();
+        SwapUsed metric3 = new SwapUsed(null);
         LongProperty p3 = (LongProperty)props.get(2);
         assertEquals(MemoryMeasureUnit.BYTE, p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -373,21 +373,21 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(3, props.size());
 
-        SwapTotal metric = new SwapTotal();
+        SwapTotal metric = new SwapTotal(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(100L * 1024 * 1024 * 1024, p.getLong().longValue());
         assertEquals(Long.class, p.getType());
 
-        SwapFree metric2 = new SwapFree();
+        SwapFree metric2 = new SwapFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(80L * 1024 * 1024 * 1024, p2.getLong().longValue());
         assertEquals(Long.class, p2.getType());
 
-        SwapUsed metric3 = new SwapUsed();
+        SwapUsed metric3 = new SwapUsed(null);
         LongProperty p3 = (LongProperty)props.get(2);
         assertEquals(MemoryMeasureUnit.BYTE, p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
@@ -409,71 +409,71 @@ public class TopTest extends OSCommandTest {
         assertEquals(3 + 8 + 3 + 3, ps.size());
 
         int i = 0;
-        assertEquals(new LoadAverageLastMinute().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastMinute(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.24f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 1;
-        assertEquals(new LoadAverageLastFiveMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastFiveMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.35f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 2;
-        assertEquals(new LoadAverageLastTenMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastTenMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.43f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 3;
-        assertEquals(new CpuUserTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuUserTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.5f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 4;
-        assertEquals(new CpuKernelTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuKernelTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.1f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 5;
-        assertEquals(new CpuNiceTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuNiceTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.0f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 6;
-        assertEquals(new CpuIdleTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuIdleTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(99.2f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 7;
-        assertEquals(new CpuIoWaitTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuIoWaitTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.1f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 8;
-        assertEquals(new CpuHardwareInterruptTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuHardwareInterruptTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.0f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 9;
-        assertEquals(new CpuSoftwareInterruptTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuSoftwareInterruptTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.0f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 10;
-        assertEquals(new CpuStolenTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuStolenTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(0.0f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 11;
-        assertEquals(new PhysicalMemoryTotal().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryTotal(null).getDefinition(), ps.get(i).getName());
         assertEquals(24607916L * 1024, ((Long) ps.get(i).getValue()).longValue());
 
         i = 12;
-        assertEquals(new PhysicalMemoryUsed().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryUsed(null).getDefinition(), ps.get(i).getName());
         assertEquals(9873232L * 1024, ((Long) ps.get(i).getValue()).longValue());
 
         i = 13;
-        assertEquals(new PhysicalMemoryFree().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryFree(null).getDefinition(), ps.get(i).getName());
         assertEquals(14734684L * 1024, ((Long) ps.get(i).getValue()).longValue());
 
         i = 14;
-        assertEquals(new SwapTotal().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapTotal(null).getDefinition(), ps.get(i).getName());
         assertEquals(4194300L * 1024, ((Long) ps.get(i).getValue()).longValue());
 
         i = 15;
-        assertEquals(new SwapUsed().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapUsed(null).getDefinition(), ps.get(i).getName());
         assertEquals(0L, ((Long) ps.get(i).getValue()).longValue());
 
         i = 16;
-        assertEquals(new SwapFree().getDefinition(), ps.get(i).getName());
+        assertEquals(new SwapFree(null).getDefinition(), ps.get(i).getName());
         assertEquals(4194300L * 1024, ((Long) ps.get(i).getValue()).longValue());
     }
 
@@ -485,56 +485,56 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(8, props.size());
 
-        CpuUserTime metric = new CpuUserTime();
+        CpuUserTime metric = new CpuUserTime(null);
         FloatProperty p = (FloatProperty)props.get(0);
         assertEquals(Percentage.getInstance(), p.getMeasureUnit());
         assertEquals(metric.getDefinition(), p.getName());
         assertEquals(1.1f, p.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p.getType());
 
-        CpuKernelTime metric2 = new CpuKernelTime();
+        CpuKernelTime metric2 = new CpuKernelTime(null);
         FloatProperty p2 = (FloatProperty)props.get(1);
         assertEquals(Percentage.getInstance(), p2.getMeasureUnit());
         assertEquals(metric2.getDefinition(), p2.getName());
         assertEquals(2.2f, p2.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p2.getType());
 
-        CpuNiceTime metric3 = new CpuNiceTime();
+        CpuNiceTime metric3 = new CpuNiceTime(null);
         FloatProperty p3 = (FloatProperty)props.get(2);
         assertEquals(Percentage.getInstance(), p3.getMeasureUnit());
         assertEquals(metric3.getDefinition(), p3.getName());
         assertEquals(3.3f, p3.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p3.getType());
 
-        CpuIdleTime metric4 = new CpuIdleTime();
+        CpuIdleTime metric4 = new CpuIdleTime(null);
         FloatProperty p4 = (FloatProperty)props.get(3);
         assertEquals(Percentage.getInstance(), p4.getMeasureUnit());
         assertEquals(metric4.getDefinition(), p4.getName());
         assertEquals(44.4f, p4.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p4.getType());
 
-        CpuIoWaitTime metric5 = new CpuIoWaitTime();
+        CpuIoWaitTime metric5 = new CpuIoWaitTime(null);
         FloatProperty p5 = (FloatProperty)props.get(4);
         assertEquals(Percentage.getInstance(), p5.getMeasureUnit());
         assertEquals(metric5.getDefinition(), p5.getName());
         assertEquals(5.5f, p5.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p5.getType());
 
-        CpuHardwareInterruptTime metric6 = new CpuHardwareInterruptTime();
+        CpuHardwareInterruptTime metric6 = new CpuHardwareInterruptTime(null);
         FloatProperty p6 = (FloatProperty)props.get(5);
         assertEquals(Percentage.getInstance(), p6.getMeasureUnit());
         assertEquals(metric6.getDefinition(), p6.getName());
         assertEquals(6.6f, p6.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p6.getType());
 
-        CpuSoftwareInterruptTime metric7 = new CpuSoftwareInterruptTime();
+        CpuSoftwareInterruptTime metric7 = new CpuSoftwareInterruptTime(null);
         FloatProperty p7 = (FloatProperty)props.get(6);
         assertEquals(Percentage.getInstance(), p7.getMeasureUnit());
         assertEquals(metric7.getDefinition(), p7.getName());
         assertEquals(7.7f, p7.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p7.getType());
 
-        CpuStolenTime metric8 = new CpuStolenTime();
+        CpuStolenTime metric8 = new CpuStolenTime(null);
         FloatProperty p8 = (FloatProperty)props.get(7);
         assertEquals(Percentage.getInstance(), p8.getMeasureUnit());
         assertEquals(metric8.getDefinition(), p8.getName());
@@ -616,35 +616,35 @@ public class TopTest extends OSCommandTest {
         assertEquals(3 + 3 + 2, ps.size());
 
         int i = 0;
-        assertEquals(new LoadAverageLastMinute().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastMinute(null).getDefinition(), ps.get(i).getName());
         assertEquals(1.57f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 1;
-        assertEquals(new LoadAverageLastFiveMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastFiveMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(1.59f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 2;
-        assertEquals(new LoadAverageLastTenMinutes().getDefinition(), ps.get(i).getName());
+        assertEquals(new LoadAverageLastTenMinutes(null).getDefinition(), ps.get(i).getName());
         assertEquals(1.69f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 3;
-        assertEquals(new CpuUserTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuUserTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(2.94f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 4;
-        assertEquals(new CpuKernelTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuKernelTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(10.29f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 5;
-        assertEquals(new CpuIdleTime().getDefinition(), ps.get(i).getName());
+        assertEquals(new CpuIdleTime(null).getDefinition(), ps.get(i).getName());
         assertEquals(86.76f, (Float)ps.get(i).getValue(), 0.0001);
 
         i = 6;
-        assertEquals(new PhysicalMemoryUsed().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryUsed(null).getDefinition(), ps.get(i).getName());
         assertEquals(13L * 1024 * 1024 * 1024, ((Long) ps.get(i).getValue()).longValue());
 
         i = 7;
-        assertEquals(new PhysicalMemoryFree().getDefinition(), ps.get(i).getName());
+        assertEquals(new PhysicalMemoryFree(null).getDefinition(), ps.get(i).getName());
         assertEquals(2563L * 1024 * 1024, ((Long) ps.get(i).getValue()).longValue());
     }
 
@@ -654,21 +654,21 @@ public class TopTest extends OSCommandTest {
         List<Property> props = Top.parseMacCpuInfo(" 2.94% user, 10.29% sys, 86.76% idle");
         assertEquals(3, props.size());
 
-        CpuUserTime m = new CpuUserTime();
+        CpuUserTime m = new CpuUserTime(null);
         FloatProperty p = (FloatProperty)props.get(0);
         assertEquals(Percentage.getInstance(), p.getMeasureUnit());
         assertEquals(m.getDefinition(), p.getName());
         assertEquals(2.94f, p.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p.getType());
 
-        CpuKernelTime m2 = new CpuKernelTime();
+        CpuKernelTime m2 = new CpuKernelTime(null);
         FloatProperty p2 = (FloatProperty)props.get(1);
         assertEquals(Percentage.getInstance(), p2.getMeasureUnit());
         assertEquals(m2.getDefinition(), p2.getName());
         assertEquals(10.29f, p2.getFloat().floatValue(), 0.00001);
         assertEquals(Float.class, p2.getType());
 
-        CpuIdleTime m3 = new CpuIdleTime();
+        CpuIdleTime m3 = new CpuIdleTime(null);
         FloatProperty p3 = (FloatProperty)props.get(2);
         assertEquals(Percentage.getInstance(), p3.getMeasureUnit());
         assertEquals(m3.getDefinition(), p3.getName());
@@ -683,7 +683,7 @@ public class TopTest extends OSCommandTest {
 
         assertEquals(2, props.size());
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed();
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(null);
         LongProperty p = (LongProperty)props.get(0);
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(m.getDefinition(), p.getName());
@@ -691,7 +691,7 @@ public class TopTest extends OSCommandTest {
         assertEquals(Long.class, p.getType());
 
 
-        PhysicalMemoryFree m2 = new PhysicalMemoryFree();
+        PhysicalMemoryFree m2 = new PhysicalMemoryFree(null);
         LongProperty p2 = (LongProperty)props.get(1);
         assertEquals(MemoryMeasureUnit.BYTE, p2.getMeasureUnit());
         assertEquals(m2.getDefinition(), p2.getName());

@@ -38,6 +38,9 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
     }
 
     public MockMetricDefinition(String definition) {
+
+        super(null);
+
         this.definition = definition;
     }
 

@@ -78,32 +78,8 @@ public class LoadAverageLastTenMinutesTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes();
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(null);
         assertEquals("Last Ten Minutes Load Average", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        LoadAverageLastTenMinutes m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        LoadAverageLastTenMinutes m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        assertEquals(1, macSources.size());
-        OSCommand c = (OSCommand) macSources.get(0);
-         assertEquals("top", c.getCommand());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -112,7 +88,7 @@ public class LoadAverageLastTenMinutesTest extends MetricDefinitionTest {
 
     @Override
     protected LoadAverageLastTenMinutes getMetricDefinitionToTest() throws Exception {
-        return new LoadAverageLastTenMinutes();
+        return new LoadAverageLastTenMinutes(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

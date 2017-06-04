@@ -19,14 +19,10 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MockOS;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MockMetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.UserErrorException;
-import io.novaordis.utilities.os.OS;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -57,56 +53,6 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Overrides -------------------------------------------------------------------------------------------------------
-
-    /**
-     * The OS makes no difference for this metric definition.
-     * @throws Exception
-     */
-    @Override
-    @Test
-    public void getSources_UnknownOS() throws Exception {
-
-        MetricDefinition d = getMetricDefinitionToTest();
-
-        List<MetricSource> sources = d.getSources(MockOS.NAME);
-
-        assertEquals(1, sources.size());
-
-        assertTrue(sources.contains(((JBossCliMetricDefinition) d).getSource()));
-    }
-
-    /**
-     * The OS makes no difference for this metric definition.
-     * @throws Exception
-     */
-    @Override
-    @Test
-    public void getSources_NullOSName() throws Exception {
-
-        JBossCliMetricDefinition d = getMetricDefinitionToTest();
-
-        List<MetricSource> sources = d.getSources(null);
-        assertEquals(1, sources.size());
-        assertEquals(sources.get(0), d.getSource());
-    }
-
-    @Override
-    @Test
-    public void addSource() throws Exception {
-
-        JBossCliMetricDefinition d = getMetricDefinitionToTest();
-
-        try {
-            d.addSource(null, new MockMetricSource());
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("the metric source not a JBossController", msg);
-        }
-    }
 
     @Override
     @Test
@@ -195,7 +141,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_EmptyLiteral() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:/test-path/test-attribute");
         String definition = d.getDefinition();
         assertEquals("/test-path/test-attribute", definition);
     }
@@ -203,7 +149,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_LocalhostNoPort() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:localhost/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:localhost/test-path/test-attribute");
         String definition = d.getDefinition();
         assertEquals("localhost/test-path/test-attribute", definition);
     }
@@ -211,7 +157,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_LocalhostDefaultPort() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:localhost:9999/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:localhost:9999/test-path/test-attribute");
         String definition = d.getDefinition();
         assertEquals("localhost:9999/test-path/test-attribute", definition);
     }
@@ -219,7 +165,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_OtherHostNoPort() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:somehost/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:somehost/test-path/test-attribute");
         String definition = d.getDefinition();
         assertEquals("somehost/test-path/test-attribute", definition);
     }
@@ -227,7 +173,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_OtherHostOtherPort() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:somehost:1111/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:somehost:1111/test-path/test-attribute");
         String name = d.getDefinition();
         assertEquals("somehost:1111/test-path/test-attribute", name);
     }
@@ -235,7 +181,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_LocalhostUsername() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null,
                 "jboss:testuser:blah@localhost/test-path/test-attribute");
 
         String definition = d.getDefinition();
@@ -245,7 +191,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_OtherHostUsername() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null,
                 "jboss:testuser:blah@somehost/test-path/test-attribute");
 
         String definition = d.getDefinition();
@@ -257,7 +203,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String def = "jboss:test:test123!@localhost/subsystem=remoting/worker-task-core-threads";
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(def);
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, def);
 
         String definition = d.getDefinition();
 
@@ -271,7 +217,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String def = "jboss:test:test123!@localhost:9999/subsystem=remoting/worker-task-core-threads";
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(def);
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, def);
 
         String definition = d.getDefinition();
 
@@ -434,7 +380,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void constructor_NullArgument() throws Exception {
 
         try {
-            new JBossCliMetricDefinition(null);
+            new JBossCliMetricDefinition(null, null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -449,7 +395,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void constructor_NoPrefix() throws Exception {
 
         try {
-            new JBossCliMetricDefinition("something");
+            new JBossCliMetricDefinition(null, "something");
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -464,7 +410,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void constructor_NoPathSeparator() throws Exception {
 
         try {
-            new JBossCliMetricDefinition("jboss:something");
+            new JBossCliMetricDefinition(null, "jboss:something");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -479,7 +425,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void constructor_InvalidPort() throws Exception {
 
         try {
-            new JBossCliMetricDefinition("jboss:some-host:70000/a=b/c=d/f");
+            new JBossCliMetricDefinition(null, "jboss:some-host:70000/a=b/c=d/f");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -496,7 +442,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void constructor_And_Accessors() throws Exception {
 
-        JBossCliMetricDefinition md = new JBossCliMetricDefinition("jboss:some-host:1000/a=b/c=d/f");
+        JBossCliMetricDefinition md = new JBossCliMetricDefinition(null, "jboss:some-host:1000/a=b/c=d/f");
 
         CliAttribute attribute = md.getAttribute();
         assertEquals("f", attribute.getName());
@@ -514,7 +460,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jboss:some-user:some-password@some-host:1000/a=b/c=d/f";
 
-        JBossCliMetricDefinition md = new JBossCliMetricDefinition(s);
+        JBossCliMetricDefinition md = new JBossCliMetricDefinition(null, s);
 
         CliAttribute attribute = md.getAttribute();
         assertEquals("f", attribute.getName());
@@ -527,29 +473,6 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         assertEquals("/a=b/c=d", path);
     }
 
-    // getSource() -----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getSource() throws Exception {
-
-        JBossCliMetricDefinition md = new JBossCliMetricDefinition("jboss:some-host:1000/a=b/c=d/f");
-
-        JBossController source = md.getSource();
-
-        List<MetricSource> sources = md.getSources(OS.Linux);
-        assertEquals(1, sources.size());
-        assertTrue(sources.contains(source));
-
-        md.getSources(OS.MacOS);
-        assertEquals(1, sources.size());
-        assertTrue(sources.contains(source));
-
-        md.getSources(OS.Windows);
-        assertEquals(1, sources.size());
-        assertTrue(sources.contains(source));
-    }
-
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -557,7 +480,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JBossCliMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JBossCliMetricDefinition("jboss:/name");
+        return new JBossCliMetricDefinition(null, "jboss:/name");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -78,32 +78,8 @@ public class PhysicalMemoryFreeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree();
+        PhysicalMemoryFree m = new PhysicalMemoryFree(null);
         assertEquals("Free Physical Memory", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        PhysicalMemoryFree m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        PhysicalMemoryFree m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        assertEquals(1, macSources.size());
-        OSCommand c = (OSCommand) macSources.get(0);
-        assertEquals("top", c.getCommand());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -112,7 +88,7 @@ public class PhysicalMemoryFreeTest extends MetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryFree getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryFree();
+        return new PhysicalMemoryFree(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

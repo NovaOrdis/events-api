@@ -82,32 +82,8 @@ public class CpuKernelTimeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuKernelTime m = new CpuKernelTime();
+        CpuKernelTime m = new CpuKernelTime(null);
         assertEquals("CPU Kernel Time", m.getSimpleLabel());
-    }
-
-    // sources ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void sourcesLinux() throws Exception {
-
-        CpuKernelTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> linuxSources = m.getSources(OS.Linux);
-        assertEquals(1, linuxSources.size());
-        OSCommand c = (OSCommand) linuxSources.get(0);
-        assertEquals("top", c.getCommand());
-    }
-
-    @Test
-    public void sourcesMac() throws Exception {
-
-        CpuKernelTime m = getMetricDefinitionToTest();
-
-        List<MetricSource> macSources = m.getSources(OS.MacOS);
-        assertEquals(1, macSources.size());
-        OSCommand c = (OSCommand) macSources.get(0);
-         assertEquals("top", c.getCommand());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -117,7 +93,7 @@ public class CpuKernelTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuKernelTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuKernelTime();
+        return new CpuKernelTime(null);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
