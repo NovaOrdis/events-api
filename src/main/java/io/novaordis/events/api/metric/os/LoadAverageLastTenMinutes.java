@@ -44,7 +44,13 @@ public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
         addSource(OS.MacOS, new Top("-l 1 -n 0"));
     }
 
-    // LoadAverageMetricDefinition implementation ----------------------------------------------------------------------
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getDefinition() {
+
+        return getClass().getSimpleName();
+    }
 
     @Override
     public MeasureUnit getMeasureUnit() {

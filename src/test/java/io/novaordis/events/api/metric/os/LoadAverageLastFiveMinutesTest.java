@@ -18,8 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.os.LoadAverageLastFiveMinutes;
-import io.novaordis.events.api.metric.source.MetricSource;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.source.OSCommand;
 import io.novaordis.utilities.os.OS;
 import org.junit.Test;

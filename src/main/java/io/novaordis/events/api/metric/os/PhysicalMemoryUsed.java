@@ -45,7 +45,13 @@ public class PhysicalMemoryUsed extends MetricDefinitionBase implements MetricDe
         addSource(OS.MacOS, new Top("-l 1 -n 0"));
     }
 
-    // MemoryMetricDefinition implementation ---------------------------------------------------------------------------
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getDefinition() {
+
+        return getClass().getSimpleName();
+    }
 
     /**
      * All memory metrics are by default expressed in bytes.

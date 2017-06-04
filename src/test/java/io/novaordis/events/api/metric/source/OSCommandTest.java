@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.source;
 
 import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.MockOS;
 import io.novaordis.utilities.os.NativeExecutionException;
 import org.junit.Test;

@@ -16,7 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.metric.source.MetricSourceTest;
+import io.novaordis.events.api.metric.MetricSourceTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

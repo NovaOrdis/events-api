@@ -44,7 +44,13 @@ public class CpuUserTime extends MetricDefinitionBase implements MetricDefinitio
         addSource(OS.MacOS, new Top("-l 1 -n 0"));
     }
 
-    // CpuMetricDefinition implementation ------------------------------------------------------------------------------
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getDefinition() {
+
+        return getClass().getSimpleName();
+    }
 
     @Override
     public Percentage getMeasureUnit() {

@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.source.MetricSource;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 
@@ -79,7 +79,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     // we preserve the original name because the underlying source (which otherwise would be the originator for
     // name) might change in subtle ways
     //
-    private String name;
+    private String definition;
 
     //
     // a JBoss CLI metric definition has only one source, irrespective of the OS
@@ -113,15 +113,15 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
 
         // cache the name, to "freeze" as soon as possible; the source, which otherwise would be the name originator,
         // may change in subtle ways
-        this.name = toLiteralName(source.getControllerAddress(), path, attribute);
+        this.definition = toLiteralName(source.getControllerAddress(), path, attribute);
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
 
     @Override
-    public String getName() {
+    public String getDefinition() {
 
-        return name;
+        return definition;
     }
 
     @Override

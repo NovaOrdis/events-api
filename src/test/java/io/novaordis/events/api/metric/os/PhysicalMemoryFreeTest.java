@@ -20,7 +20,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.source.MetricSource;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.source.OSCommand;
 import io.novaordis.utilities.os.OS;
 import org.junit.Test;

@@ -14,11 +14,9 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.source;
+package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MockMetricDefinition;
 import org.junit.Test;
 
 import java.util.Arrays;

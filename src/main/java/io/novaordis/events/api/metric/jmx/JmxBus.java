@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.jmx;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricCollectionException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.source.MetricSource;
+import io.novaordis.events.api.metric.MetricSource;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

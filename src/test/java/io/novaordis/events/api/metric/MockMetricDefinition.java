@@ -29,7 +29,7 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String name;
+    private String definition;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -37,15 +37,15 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
         this("Mock Metric Definition");
     }
 
-    public MockMetricDefinition(String name) {
-        this.name = name;
+    public MockMetricDefinition(String definition) {
+        this.definition = definition;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getName() {
-        return name;
+    public String getDefinition() {
+        return definition;
     }
 
     @Override
@@ -55,8 +55,8 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setName(String s) {
-        this.name = s;
+    public void setDefinition(String s) {
+        this.definition = s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -18,7 +18,6 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinition;
-import io.novaordis.events.api.metric.source.MetricSource;
 import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -125,23 +124,16 @@ public interface MetricDefinition {
     // new -------------------------------------------------------------------------------------------------------------
 
     /**
-     * The metric definition. Information that should be sufficient to a metric source to provide a value. For
-     * example "PhysicalMemoryTotal", "java.lang:type=Threading.ThreadCount",
+     * The metric definition, as string. Information that should be sufficient to a metric source to provide a value.
+     * Examples: "PhysicalMemoryTotal", "java.lang:type=Threading.ThreadCount",
      * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count". The first makes sense within the
      * context of local or remote OS, the second in the context of a JMX bus, and the third in the context of a
      * JBoss management controller.
      */
     String getDefinition();
 
-    // to refactor -----------------------------------------------------------------------------------------------------
 
-    /**
-     * The metric name. Must not contain any spaces. It is used by the factory method getInstance() to create the
-     * corresponding class instance, and usually, it is the simple name of the implementing class. Example:
-     * "PhysicalMemoryTotal" or "jboss:localhost:9999/subsystem=test/test-attribute.
-     */
-    @Deprecated
-    String getName();
+    // to refactor -----------------------------------------------------------------------------------------------------
 
     /**
      * A human readable string, possibly space separated, that is used to represent the metric in user-facing

@@ -17,8 +17,6 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.metric.source.MetricSource;
-import io.novaordis.events.api.metric.source.MockMetricSource;
 import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
 import org.slf4j.Logger;
@@ -51,14 +49,14 @@ public abstract class MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getName() throws Exception {
+    public void getDefinition() throws Exception {
 
         MetricDefinition d = getMetricDefinitionToTest();
 
         //
         // default behavior
         //
-        assertEquals(d.getClass().getSimpleName(), d.getName());
+        assertEquals(d.getClass().getSimpleName(), d.getDefinition());
     }
 
     @Test

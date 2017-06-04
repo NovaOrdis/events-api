@@ -20,8 +20,8 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.MockOS;
-import io.novaordis.events.api.metric.source.MetricSource;
-import io.novaordis.events.api.metric.source.MockMetricSource;
+import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MockMetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
@@ -110,10 +110,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
     @Override
     @Test
-    public void getName() throws Exception {
+    public void getDefinition() throws Exception {
 
         JBossCliMetricDefinition d = getMetricDefinitionToTest();
-        assertEquals("/name", d.getName());
+        assertEquals("/name", d.getDefinition());
     }
 
     // toLiteralName() -------------------------------------------------------------------------------------------------
@@ -190,94 +190,94 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         assertEquals("localhost:9999/a=b/c", name);
     }
 
-    // getName() -------------------------------------------------------------------------------------------------------
+    // getDefinition() -------------------------------------------------------------------------------------------------
 
     @Test
-    public void getName_EmptyLiteral() throws Exception {
+    public void getDefinition_EmptyLiteral() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:/test-path/test-attribute");
-        String name = d.getName();
-        assertEquals("/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName_LocalhostNoPort() throws Exception {
+    public void getDefinition_LocalhostNoPort() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:localhost/test-path/test-attribute");
-        String name = d.getName();
-        assertEquals("localhost/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("localhost/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName_LocalhostDefaultPort() throws Exception {
+    public void getDefinition_LocalhostDefaultPort() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:localhost:9999/test-path/test-attribute");
-        String name = d.getName();
-        assertEquals("localhost:9999/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("localhost:9999/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName_OtherHostNoPort() throws Exception {
+    public void getDefinition_OtherHostNoPort() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:somehost/test-path/test-attribute");
-        String name = d.getName();
-        assertEquals("somehost/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("somehost/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName_OtherHostOtherPort() throws Exception {
+    public void getDefinition_OtherHostOtherPort() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition("jboss:somehost:1111/test-path/test-attribute");
-        String name = d.getName();
+        String name = d.getDefinition();
         assertEquals("somehost:1111/test-path/test-attribute", name);
     }
 
     @Test
-    public void getName_LocalhostUsername() throws Exception {
+    public void getDefinition_LocalhostUsername() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(
                 "jboss:testuser:blah@localhost/test-path/test-attribute");
 
-        String name = d.getName();
-        assertEquals("localhost/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("localhost/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName_OtherHostUsername() throws Exception {
+    public void getDefinition_OtherHostUsername() throws Exception {
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(
                 "jboss:testuser:blah@somehost/test-path/test-attribute");
 
-        String name = d.getName();
-        assertEquals("somehost/test-path/test-attribute", name);
+        String definition = d.getDefinition();
+        assertEquals("somehost/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getName2() throws Exception {
+    public void getDefinition2() throws Exception {
 
         String def = "jboss:test:test123!@localhost/subsystem=remoting/worker-task-core-threads";
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(def);
 
-        String name = d.getName();
+        String definition = d.getDefinition();
 
-        log.info(name);
+        log.info(definition);
 
-        assertEquals("localhost/subsystem=remoting/worker-task-core-threads", name);
+        assertEquals("localhost/subsystem=remoting/worker-task-core-threads", definition);
     }
 
     @Test
-    public void getName3() throws Exception {
+    public void getDefinition3() throws Exception {
 
         String def = "jboss:test:test123!@localhost:9999/subsystem=remoting/worker-task-core-threads";
 
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(def);
 
-        String name = d.getName();
+        String definition = d.getDefinition();
 
-        log.info(name);
+        log.info(definition);
 
-        assertEquals("localhost:9999/subsystem=remoting/worker-task-core-threads", name);
+        assertEquals("localhost:9999/subsystem=remoting/worker-task-core-threads", definition);
     }
 
     // getInstance() ---------------------------------------------------------------------------------------------------

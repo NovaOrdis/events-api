@@ -44,7 +44,13 @@ public class SwapUsed extends MetricDefinitionBase implements MetricDefinition {
         addSource(OS.Linux, new Top("-b -n 1 -p 0"));
     }
 
-    // MemoryMetricDefinition implementation ---------------------------------------------------------------------------
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getDefinition() {
+
+        return getClass().getSimpleName();
+    }
 
     /**
      * All memory metrics are by default expressed in bytes.

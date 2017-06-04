@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.metric.source.MetricSource;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -54,12 +53,6 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     public String getDefinition() {
 
         throw new RuntimeException("NYE");
-    }
-
-    @Override
-    public String getName() {
-
-        return getClass().getSimpleName();
     }
 
     @Override
@@ -121,7 +114,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     @Override
     public String toString() {
-        return getName();
+        return getDefinition();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

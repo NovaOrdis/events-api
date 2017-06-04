@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric.source;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricCollectionException;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.OS;

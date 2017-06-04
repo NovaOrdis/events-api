@@ -43,7 +43,13 @@ public class CpuIoWaitTime extends MetricDefinitionBase implements MetricDefinit
         addSource(OS.Linux, new Top("-b -n 1 -p 0"));
     }
 
-    // CpuMetricDefinition implementation ------------------------------------------------------------------------------
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getDefinition() {
+
+        return getClass().getSimpleName();
+    }
 
     @Override
     public Percentage getMeasureUnit() {

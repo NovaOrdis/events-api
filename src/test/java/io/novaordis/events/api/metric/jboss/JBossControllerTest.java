@@ -21,7 +21,7 @@ import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MockMetricDefinition;
-import io.novaordis.events.api.metric.source.MetricSourceTest;
+import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.After;

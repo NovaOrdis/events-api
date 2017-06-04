@@ -22,16 +22,14 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.metric.MetricCollectionException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.source.MetricSource;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
-import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 
 /**
@@ -91,7 +89,7 @@ public class JBossController implements MetricSource {
                 continue;
             }
 
-            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition) md;
+            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
 
             JBossController thatSource = jbmd.getSource();
 
@@ -153,7 +151,8 @@ public class JBossController implements MetricSource {
                 continue;
             }
 
-            String name = jbmd.getName();
+            String name = jbmd.getDefinition();
+
             Property p;
 
             if (attributeValue instanceof String) {
