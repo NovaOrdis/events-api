@@ -18,17 +18,16 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -47,6 +46,21 @@ public class SwapTotalTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        SwapTotal m = (SwapTotal)MetricDefinitionParser.parse(r, "SwapTotal");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
+
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -68,19 +82,10 @@ public class SwapTotalTest extends MetricDefinitionTest {
         assertEquals(Long.class, c);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        SwapTotal m = (SwapTotal) MetricDefinition.getInstance("SwapTotal");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        SwapTotal m = new SwapTotal(null);
+        SwapTotal m = new SwapTotal(new LocalOS());
         assertEquals("Total Swap", m.getSimpleLabel());
     }
 
@@ -90,7 +95,7 @@ public class SwapTotalTest extends MetricDefinitionTest {
 
     @Override
     protected SwapTotal getMetricDefinitionToTest() throws Exception {
-        return new SwapTotal(null);
+        return new SwapTotal(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

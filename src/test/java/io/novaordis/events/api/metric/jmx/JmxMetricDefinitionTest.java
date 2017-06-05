@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,15 +14,21 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric;
+package io.novaordis.events.api.metric.jmx;
+
+import io.novaordis.events.api.metric.MetricDefinitionTest;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/20/16
+ * @since 8/3/16
  */
-public class MetricCollectionException extends Exception {
+public class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JmxMetricDefinitionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -30,22 +36,19 @@ public class MetricCollectionException extends Exception {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param message must be human readable, as it will be displayed in logs.
-     */
-    public MetricCollectionException(String message) {
-        super(message);
-    }
-
-    public MetricCollectionException(Throwable cause) {
-        super(cause);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected JmxMetricDefinition getMetricDefinitionToTest() throws Exception {
+
+        return new JmxMetricDefinition(null, "?");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

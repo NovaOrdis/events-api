@@ -16,7 +16,9 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.metric.MetricDefinitionException;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -30,42 +32,55 @@ class CliPath {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String path;
+    private List<String> pathElements;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param literal - expected format /a=b/c=d/
-     */
-    public CliPath(String literal) throws MetricDefinitionException {
+    public CliPath() {
 
-        this.path = literal;
+        this(new String[0]);
+    }
 
-        //
-        // get rid of trailing slashes
-        //
+    public CliPath(String... pes) {
 
-        int i = this.path.length() - 1;
+        this.pathElements = new ArrayList<>();
 
-        for(; i >= 0; i --) {
+        for(String pe: pes) {
 
-            if (this.path.charAt(i) != '/') {
-                break;
-            }
+            addPathElement(pe);
         }
-
-        this.path = this.path.substring(0, i + 1);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * A path element in the "a=b" format.
+     */
+    public void addPathElement(String pathElement) {
+
+        pathElements.add(pathElement);
+    }
+
     public String getPath() {
-        return path;
+
+        String s = "/";
+
+        for(Iterator<String> i = pathElements.iterator(); i.hasNext(); ) {
+
+            s += i.next();
+
+            if (i.hasNext()) {
+
+                s += "/";
+            }
+        }
+
+        return s;
     }
 
     @Override
     public String toString() {
-        return path == null ? "null" : path;
+        return getPath();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

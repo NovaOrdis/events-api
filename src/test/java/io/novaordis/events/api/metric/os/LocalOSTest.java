@@ -17,6 +17,9 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricSourceTest;
+import org.junit.Test;
+
+import static org.junit.Assert.assertNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -46,6 +49,16 @@ public class LocalOSTest extends MetricSourceTest {
     @Override
     public void hashCodeTest() throws Exception {
         throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
+    }
+
+    // getAddress() ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getAddressIsNull() throws Exception {
+
+        LocalOS os = new LocalOS();
+
+        assertNull(os.getAddress());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

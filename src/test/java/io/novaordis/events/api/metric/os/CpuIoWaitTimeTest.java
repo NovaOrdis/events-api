@@ -18,17 +18,16 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -47,6 +46,20 @@ public class CpuIoWaitTimeTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        CpuIoWaitTime m = (CpuIoWaitTime)MetricDefinitionParser.parse(r, "CpuIoWaitTime");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -72,19 +85,10 @@ public class CpuIoWaitTimeTest extends MetricDefinitionTest {
         assertEquals(Float.class, t);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        CpuIoWaitTime m = (CpuIoWaitTime) MetricDefinition.getInstance("CpuIoWaitTime");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuIoWaitTime m = new CpuIoWaitTime(null);
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
         assertEquals("CPU I/O Wait Time", m.getSimpleLabel());
     }
 
@@ -95,7 +99,7 @@ public class CpuIoWaitTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuIoWaitTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuIoWaitTime(null);
+        return new CpuIoWaitTime(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

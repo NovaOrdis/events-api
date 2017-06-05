@@ -18,17 +18,14 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -45,6 +42,20 @@ public class CpuStolenTimeTest extends MetricDefinitionTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        CpuStolenTime m = (CpuStolenTime)MetricDefinitionParser.parse(r, "CpuStolenTime");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -70,19 +81,10 @@ public class CpuStolenTimeTest extends MetricDefinitionTest {
         assertEquals(Float.class, t);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        CpuStolenTime m = (CpuStolenTime) MetricDefinition.getInstance("CpuStolenTime");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuStolenTime m = new CpuStolenTime(null);
+        CpuStolenTime m = new CpuStolenTime(new LocalOS());
         assertEquals("CPU Stolen Time", m.getSimpleLabel());
     }
 
@@ -93,7 +95,7 @@ public class CpuStolenTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuStolenTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuStolenTime(null);
+        return new CpuStolenTime(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

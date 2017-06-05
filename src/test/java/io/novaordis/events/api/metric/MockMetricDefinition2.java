@@ -38,6 +38,7 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
         super(source);
     }
 
+
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override

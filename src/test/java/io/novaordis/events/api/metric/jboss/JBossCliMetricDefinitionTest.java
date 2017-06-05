@@ -16,18 +16,12 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.jboss.cli.JBossCliException;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -41,8 +35,6 @@ import static org.junit.Assert.fail;
 public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(JBossCliMetricDefinitionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -59,182 +51,60 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void getDefinition() throws Exception {
 
         JBossCliMetricDefinition d = getMetricDefinitionToTest();
-        assertEquals("/name", d.getDefinition());
+        assertEquals("/test=test/test", d.getDefinition());
     }
 
-    // toLiteralName() -------------------------------------------------------------------------------------------------
+    // constructor -----------------------------------------------------------------------------------------------------
 
     @Test
-    public void toLiteralName_EmptyLiteral() throws Exception {
+    public void constructor_NullArgument() throws Exception {
 
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("/a=b/c", name);
-    }
+        try {
 
-    @Test
-    public void toLiteralName_LocalhostNoPort() throws Exception {
+            new JBossCliMetricDefinition(null, null, null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
 
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("localhost");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("localhost/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName_LocalhostDefaultPort() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("localhost:9999");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("localhost:9999/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName_OtherHostNoPort() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("somehost");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("somehost/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName_OtherHostOtherPort() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("somehost:1111");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("somehost:1111/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName_LocalhostUsername() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("testuser:blah@localhost");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("localhost/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName_OtherHostUsername() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("testuser:blah@somehost");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("somehost/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName2() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("test:test123!@localhost");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("localhost/a=b/c", name);
-    }
-
-    @Test
-    public void toLiteralName3() throws Exception {
-
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("test:test123!@localhost:9999");
-        String name = JBossCliMetricDefinition.toLiteralName(a, new CliPath("/a=b/"), new CliAttribute("c"));
-        assertEquals("localhost:9999/a=b/c", name);
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null"));
+        }
     }
 
     // getDefinition() -------------------------------------------------------------------------------------------------
 
     @Test
-    public void getDefinition_EmptyLiteral() throws Exception {
+    public void getDefinition_DefaultController() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+                new JBossController(), new CliPath("test-path"), new CliAttribute("test-attribute"));
+
         String definition = d.getDefinition();
         assertEquals("/test-path/test-attribute", definition);
     }
 
     @Test
-    public void getDefinition_LocalhostNoPort() throws Exception {
+    public void getDefinition_NonDefaultController() throws Exception {
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:localhost/test-path/test-attribute");
-        String definition = d.getDefinition();
-        assertEquals("localhost/test-path/test-attribute", definition);
-    }
-
-    @Test
-    public void getDefinition_LocalhostDefaultPort() throws Exception {
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:localhost:9999/test-path/test-attribute");
-        String definition = d.getDefinition();
-        assertEquals("localhost:9999/test-path/test-attribute", definition);
-    }
-
-    @Test
-    public void getDefinition_OtherHostNoPort() throws Exception {
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:somehost/test-path/test-attribute");
-        String definition = d.getDefinition();
-        assertEquals("somehost/test-path/test-attribute", definition);
-    }
-
-    @Test
-    public void getDefinition_OtherHostOtherPort() throws Exception {
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, "jboss:somehost:1111/test-path/test-attribute");
-        String name = d.getDefinition();
-        assertEquals("somehost:1111/test-path/test-attribute", name);
-    }
-
-    @Test
-    public void getDefinition_LocalhostUsername() throws Exception {
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null,
-                "jboss:testuser:blah@localhost/test-path/test-attribute");
+        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+                new JBossController(JBossControllerAddress.parseAddress("admin:adminp@1.2.3.4:8888")),
+                new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         String definition = d.getDefinition();
-        assertEquals("localhost/test-path/test-attribute", definition);
+        assertEquals("/test-path/test-attribute", definition);
     }
 
-    @Test
-    public void getDefinition_OtherHostUsername() throws Exception {
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null,
-                "jboss:testuser:blah@somehost/test-path/test-attribute");
-
-        String definition = d.getDefinition();
-        assertEquals("somehost/test-path/test-attribute", definition);
-    }
+    // parse() ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getDefinition2() throws Exception {
+    public void parse_JBoss_NoHostNoPort() throws Exception {
 
-        String def = "jboss:test:test123!@localhost/subsystem=remoting/worker-task-core-threads";
+        String s = "jbosscli:///a=b/c=d/f";
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, def);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
 
-        String definition = d.getDefinition();
-
-        log.info(definition);
-
-        assertEquals("localhost/subsystem=remoting/worker-task-core-threads", definition);
-    }
-
-    @Test
-    public void getDefinition3() throws Exception {
-
-        String def = "jboss:test:test123!@localhost:9999/subsystem=remoting/worker-task-core-threads";
-
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(null, def);
-
-        String definition = d.getDefinition();
-
-        log.info(definition);
-
-        assertEquals("localhost:9999/subsystem=remoting/worker-task-core-threads", definition);
-    }
-
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance_JBoss_NoHostNoPort() throws Exception {
-
-        String s = "jboss:/a=b/c=d/f";
-
-        JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
-
+        assertNotNull(d);
+        
         JBossController source = d.getSource();
 
         JBossControllerAddress controllerAddress = source.getControllerAddress();
@@ -255,11 +125,13 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void getInstance_JBoss_LocalhostNoPort() throws Exception {
+    public void parse_JBoss_LocalhostNoPort() throws Exception {
 
-        String s = "jboss:localhost/a=b/c=d/f";
+        String s = "jbosscli://localhost/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+
+        assertNotNull(d);
 
         JBossController source = d.getSource();
 
@@ -281,11 +153,13 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void getInstance_JBoss_HostNoPort() throws Exception {
+    public void parse_JBoss_HostNoPort() throws Exception {
 
-        String s = "jboss:blue/a=b/c=d/f";
+        String s = "jbosscli://blue/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+
+        assertNotNull(d);
 
         JBossController source = d.getSource();
 
@@ -307,11 +181,13 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void getInstance_JBoss_LocalhostAndPort() throws Exception {
+    public void parse_JBoss_LocalhostAndPort() throws Exception {
 
-        String s = "jboss:localhost:9999/a=b/c=d/f";
+        String s = "jbosscli://localhost:9999/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+
+        assertNotNull(d);
 
         JBossController source = d.getSource();
 
@@ -333,10 +209,13 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void getInstance_JBoss_HostAndPort() throws Exception {
+    public void parse_JBoss_HostAndPort() throws Exception {
 
-        String s = "jboss:blue:9999/a=b/c=d/f";
-        JBossCliMetricDefinition d = (JBossCliMetricDefinition)MetricDefinition.getInstance(s);
+        String s = "jbosscli://blue:9999/a=b/c=d/f";
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+
+        assertNotNull(d);
 
         JBossController source = d.getSource();
 
@@ -358,119 +237,20 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void getInstance_InvalidMetricDefinition() throws Exception {
+    public void parse_InvalidMetricDefinition() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
 
         try {
-            MetricDefinition.getInstance("jboss:this-should-fail");
-            fail("should have thrown exception");
-        }
-        catch(UserErrorException e) {
 
-            String msg = e.getMessage();
-            MetricDefinitionException cause = (MetricDefinitionException)e.getCause();
-            assertNotNull(cause);
-            log.info(msg);
-            assertTrue(msg.startsWith("invalid jboss metric definition: "));
-        }
-    }
-
-    // constructor -----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void constructor_NullArgument() throws Exception {
-
-        try {
-            new JBossCliMetricDefinition(null, null);
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("null jboss CLI metric definition", msg);
-        }
-    }
-
-    @Test
-    public void constructor_NoPrefix() throws Exception {
-
-        try {
-            new JBossCliMetricDefinition(null, "something");
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertEquals("invalid jboss CLI metric, no prefix: \"something\"", msg);
-        }
-    }
-
-    @Test
-    public void constructor_NoPathSeparator() throws Exception {
-
-        try {
-            new JBossCliMetricDefinition(null, "jboss:something");
+            JBossCliMetricDefinitionParser.parse(r, "jbosscli:///this-should-fail");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.startsWith("the jboss CLI metric definition does not contain a path: \""));
+            assertTrue(msg.contains("invalid jboss CLI metric"));
         }
-    }
-
-    @Test
-    public void constructor_InvalidPort() throws Exception {
-
-        try {
-            new JBossCliMetricDefinition(null, "jboss:some-host:70000/a=b/c=d/f");
-            fail("should have thrown exception");
-        }
-        catch(MetricDefinitionException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.startsWith("invalid jboss CLI metric definition: invalid port value 70000"));
-
-            JBossCliException cause = (JBossCliException)e.getCause();
-            assertNotNull(cause);
-        }
-    }
-
-    @Test
-    public void constructor_And_Accessors() throws Exception {
-
-        JBossCliMetricDefinition md = new JBossCliMetricDefinition(null, "jboss:some-host:1000/a=b/c=d/f");
-
-        CliAttribute attribute = md.getAttribute();
-        assertEquals("f", attribute.getName());
-        assertEquals("f", md.getAttributeName());
-
-        CliPath pathInstance = md.getPathInstance();
-        assertEquals("/a=b/c=d", pathInstance.getPath());
-
-        String path = md.getPath();
-        assertEquals("/a=b/c=d", path);
-    }
-
-    @Test
-    public void constructor_UsernameAndPassword() throws Exception {
-
-        String s = "jboss:some-user:some-password@some-host:1000/a=b/c=d/f";
-
-        JBossCliMetricDefinition md = new JBossCliMetricDefinition(null, s);
-
-        CliAttribute attribute = md.getAttribute();
-        assertEquals("f", attribute.getName());
-        assertEquals("f", md.getAttributeName());
-
-        CliPath pathInstance = md.getPathInstance();
-        assertEquals("/a=b/c=d", pathInstance.getPath());
-
-        String path = md.getPath();
-        assertEquals("/a=b/c=d", path);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -480,7 +260,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JBossCliMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JBossCliMetricDefinition(null, "jboss:/name");
+        return new JBossCliMetricDefinition(new JBossController(), new CliPath("test=test"), new CliAttribute("test") );
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

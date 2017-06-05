@@ -20,7 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.os.CpuHardwareInterruptTime;
 import io.novaordis.events.api.metric.os.CpuIdleTime;
@@ -62,7 +62,7 @@ public class Top extends OSCommand {
      * Works both on Linux and Mac.
      * @param s - expected format " 1.57, 1.59, 1.69"
      */
-    public static List<Property> parseLoadAverage(String s) throws MetricCollectionException {
+    public static List<Property> parseLoadAverage(String s) throws MetricException {
 
         List<Property> result = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(s, ", ");
@@ -82,7 +82,7 @@ public class Top extends OSCommand {
     }
 
     private static List<Property> parseCpuInfo(String s, Object[][] expectedLabelsAndMetrics)
-            throws MetricCollectionException {
+            throws MetricException {
 
         List<Property> result = new ArrayList<>();
         StringTokenizer st = new StringTokenizer(s, ",");
@@ -102,7 +102,7 @@ public class Top extends OSCommand {
         return result;
     }
 
-    public static List<Property> parseLinuxCommandOutput(String output) throws MetricCollectionException {
+    public static List<Property> parseLinuxCommandOutput(String output) throws MetricException {
 
         List<Property> result = new ArrayList<>();
 
@@ -162,7 +162,7 @@ public class Top extends OSCommand {
         return result;
     }
 
-    public static List<Property> parseLinuxCpuInfo(String s) throws MetricCollectionException {
+    public static List<Property> parseLinuxCpuInfo(String s) throws MetricException {
 
         Object[][] expected = new Object[][] {
                 { "us", new CpuUserTime(null)},
@@ -188,7 +188,7 @@ public class Top extends OSCommand {
      *            string
      */
     public static List<Property> parseLinuxMemoryInfo(String s, MemoryMeasureUnit mmu)
-            throws MetricCollectionException {
+            throws MetricException {
 
         List<Property> result = new ArrayList<>();
 
@@ -262,7 +262,7 @@ public class Top extends OSCommand {
      * @param mmu - optional, null is acceptable, in which case the memory measure unit should be inferable from the
      *            string
      */
-    public static List<Property> parseLinuxSwapInfo(String s, MemoryMeasureUnit mmu) throws MetricCollectionException {
+    public static List<Property> parseLinuxSwapInfo(String s, MemoryMeasureUnit mmu) throws MetricException {
 
         List<Property> result = new ArrayList<>();
 
@@ -332,7 +332,7 @@ public class Top extends OSCommand {
     }
 
 
-    public static List<Property> parseMacCommandOutput(String output) throws MetricCollectionException {
+    public static List<Property> parseMacCommandOutput(String output) throws MetricException {
 
         List<Property> result = new ArrayList<>();
 
@@ -357,7 +357,7 @@ public class Top extends OSCommand {
     /**
      * @param s expected format "2.94% user, 10.29% sys, 86.76% idle"
      */
-    public static List<Property> parseMacCpuInfo(String s) throws MetricCollectionException {
+    public static List<Property> parseMacCpuInfo(String s) throws MetricException {
 
         Object[][] expected = new Object[][] {
                 { "user", new CpuUserTime(null)},
@@ -370,7 +370,7 @@ public class Top extends OSCommand {
     /**
      * Parses "13G used (1470M wired), 2563M unused"
      */
-    public static List<Property> parseMacMemoryInfo(String s) throws MetricCollectionException {
+    public static List<Property> parseMacMemoryInfo(String s) throws MetricException {
 
         List<Property> result = new ArrayList<>();
         Object[][] expected = new Object[][] {
@@ -444,10 +444,20 @@ public class Top extends OSCommand {
         super("top", arguments);
     }
 
+    @Override
+    public String getAddress() {
+        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
+    }
+
     // OSCommand implementation ----------------------------------------------------------------------------------------
 
 //    @Override
-//    public List<Property> collectAllMetrics(OS os) throws MetricCollectionException {
+//    public List<Property> collectAllMetrics(OS os) throws MetricException {
 //
 //        String stdout = executeCommandAndReturnStdout(os);
 //

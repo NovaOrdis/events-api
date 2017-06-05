@@ -18,12 +18,14 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,6 +44,20 @@ public class CpuIdleTimeTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        CpuIdleTime m = (CpuIdleTime)MetricDefinitionParser.parse(r, "CpuIdleTime");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -67,19 +83,10 @@ public class CpuIdleTimeTest extends MetricDefinitionTest {
         assertEquals(Float.class, t);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        CpuIdleTime m = (CpuIdleTime) MetricDefinition.getInstance("CpuIdleTime");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuIdleTime m = new CpuIdleTime(null);
+        CpuIdleTime m = new CpuIdleTime(new LocalOS());
         assertEquals("CPU Idle Time", m.getSimpleLabel());
     }
 
@@ -90,7 +97,7 @@ public class CpuIdleTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuIdleTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuIdleTime(null);
+        return new CpuIdleTime(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

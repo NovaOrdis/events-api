@@ -20,7 +20,7 @@ import io.novaordis.events.api.event.IntegerProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.StringProperty;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.jboss.cli.JBossCliException;
@@ -62,6 +62,11 @@ public class JBossController implements MetricSource {
 
     public JBossController(JBossControllerAddress controllerAddress) {
 
+        if (controllerAddress == null) {
+
+            throw new IllegalArgumentException("null controller address");
+        }
+
         this.controllerAddress = controllerAddress;
     }
 
@@ -76,7 +81,7 @@ public class JBossController implements MetricSource {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         List<Property> properties = new ArrayList<>();
 
@@ -175,6 +180,19 @@ public class JBossController implements MetricSource {
         }
 
         return properties;
+    }
+
+    @Override
+    public String getAddress() {
+
+        return controllerAddress.getLiteral();
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+
+        String thisAddress = controllerAddress.getLiteral();
+        return thisAddress.equals(address);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

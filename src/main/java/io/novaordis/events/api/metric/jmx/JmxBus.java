@@ -17,7 +17,7 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import org.slf4j.Logger;
@@ -46,10 +46,20 @@ public class JmxBus implements MetricSource {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         throw new RuntimeException("not yet implemented");
 
+    }
+
+    @Override
+    public String getAddress() {
+        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

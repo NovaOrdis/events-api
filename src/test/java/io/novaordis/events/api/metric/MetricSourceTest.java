@@ -23,8 +23,10 @@ import java.util.Arrays;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -50,7 +52,33 @@ public abstract class MetricSourceTest {
     // @Test
     public abstract void hashCodeTest() throws Exception;
 
-    // collectAllMetrics() ---------------------------------------------------------------------------------------------
+    // hasAddress() ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void hasAddress_DoesNotHaveTheAddress() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        assertFalse(s.hasAddress("I am sure the metric does not have this address"));
+    }
+
+    @Test
+    public void hasAddress_Identity() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+
+        String address = s.getAddress();
+
+        if (address != null) {
+            assertTrue(s.hasAddress(address));
+        }
+    }
+
+    @Test
+    public void hasAddress_Null() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        assertFalse(s.hasAddress(null));
+    }
 
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
@@ -59,7 +87,7 @@ public abstract class MetricSourceTest {
 
         MetricSource s = getMetricSourceToTest();
 
-        MockMetricDefinition mmd = new MockMetricDefinition("MOCK");
+        MockMetricDefinition mmd = new MockMetricDefinition(s);
 
         //noinspection ArraysAsListWithZeroOrOneArgument
         List<MetricDefinition> definitions = Arrays.asList(mmd);

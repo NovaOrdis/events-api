@@ -50,8 +50,18 @@ public class MockMetricSource implements MetricSource {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
         throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getAddress() {
+        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -56,8 +56,20 @@ public interface MetricSource {
      * if a property for a specific metric definition cannot be collected, or it does not apply to this specific source,
      * the list will contain a null on the respective position.
      *
-     * @exception MetricCollectionException if metric definitions do not list this source among their sources.
+     * @exception MetricException if metric definitions do not list this source among their sources.
      */
-    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException;
+    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
+
+    /**
+     * @return the address of this metric source, as string, or null if it does not apply to this metric source (for
+     * example, LocalOS). If a non-null string is returned hasAddress() invoked on this string will always return
+     * true.
+     */
+    String getAddress();
+
+    /**
+     * @return true if this metric source has the specified address, false otherwise.
+     */
+    boolean hasAddress(String address);
 
 }

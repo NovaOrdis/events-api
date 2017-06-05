@@ -16,15 +16,16 @@
 
 package io.novaordis.events.api.metric.os;
 
-
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -43,6 +44,21 @@ public class CpuHardwareInterruptTimeTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        CpuHardwareInterruptTime m =
+                (CpuHardwareInterruptTime)MetricDefinitionParser.parse(r, "CpuHardwareInterruptTime");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -68,14 +84,6 @@ public class CpuHardwareInterruptTimeTest extends MetricDefinitionTest {
         assertEquals(Float.class, t);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        CpuHardwareInterruptTime m = (CpuHardwareInterruptTime) MetricDefinition.getInstance("CpuHardwareInterruptTime");
-        assertNotNull(m);
-    }
 
     @Test
     public void getSimpleLabel() throws Exception {
@@ -91,7 +99,7 @@ public class CpuHardwareInterruptTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuHardwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuHardwareInterruptTime(null);
+        return new CpuHardwareInterruptTime(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

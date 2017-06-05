@@ -16,7 +16,7 @@
 
 package io.novaordis.events.api.metric.source;
 
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.MockOS;
 import io.novaordis.utilities.os.NativeExecutionException;
@@ -59,7 +59,7 @@ public abstract class OSCommandTest extends MetricSourceTest {
             c.executeCommandAndReturnStdout(mos);
             fail("should throw exception");
         }
-        catch(MetricCollectionException e) {
+        catch(MetricException e) {
 
             NativeExecutionException nee = (NativeExecutionException)e.getCause();
             String msg = nee.getMessage();
@@ -83,7 +83,7 @@ public abstract class OSCommandTest extends MetricSourceTest {
             c.executeCommandAndReturnStdout(mos);
             fail("should throw exception");
         }
-        catch(MetricCollectionException e) {
+        catch(MetricException e) {
 
             String msg = e.getMessage();
             log.info(msg);

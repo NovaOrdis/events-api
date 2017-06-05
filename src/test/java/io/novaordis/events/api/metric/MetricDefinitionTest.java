@@ -17,10 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.utilities.UserErrorException;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -35,8 +32,6 @@ import static org.junit.Assert.fail;
 public abstract class MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(MetricDefinitionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -113,19 +108,25 @@ public abstract class MetricDefinitionTest {
         }
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
+    // parse() ---------------------------------------------------------------------------------------------------------
 
     @Test
     public void getInstance_UnknownInstance() throws Exception {
 
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+
         try {
-            MetricDefinition.getInstance("we are pretty sure there's no such metric");
+
+            MetricDefinitionParser.parse(r, "we are pretty sure there's no such metric");
             fail("should throw exception");
         }
-        catch(UserErrorException e) {
+        catch(MetricDefinitionException e) {
+
             String msg = e.getMessage();
-            log.info(msg);
+            assertTrue(msg.contains("no known parser can understand"));
         }
+
+        assertTrue(r.isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

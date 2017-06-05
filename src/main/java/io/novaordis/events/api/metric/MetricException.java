@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,19 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
-
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
+package io.novaordis.events.api.metric;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 8/20/16
  */
-public class RemoteOSTest extends MetricSourceTest {
+public class MetricException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,33 +30,27 @@ public class RemoteOSTest extends MetricSourceTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param message must be human readable, as it will be displayed in logs.
+     */
+    public MetricException(String message) {
+        super(message);
+    }
+
+    public MetricException(Throwable cause) {
+        super(cause);
+    }
+
+    public MetricException(String message, Throwable cause) {
+        super(message, cause);
+    }
+
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // Overrides -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    // hasAddress() ----------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected RemoteOS getMetricSourceToTest() throws Exception {
-
-        return new RemoteOS("ssh://127.0.0.1");
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

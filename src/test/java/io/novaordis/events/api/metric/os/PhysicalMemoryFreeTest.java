@@ -19,9 +19,10 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.utilities.os.OS;
 import org.junit.Test;
 
@@ -29,6 +30,7 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -45,6 +47,21 @@ public class PhysicalMemoryFreeTest extends MetricDefinitionTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        PhysicalMemoryFree m =
+                (PhysicalMemoryFree)MetricDefinitionParser.parse(r, "PhysicalMemoryFree");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -66,19 +83,10 @@ public class PhysicalMemoryFreeTest extends MetricDefinitionTest {
         assertEquals(Long.class, c);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        PhysicalMemoryFree m = (PhysicalMemoryFree) MetricDefinition.getInstance("PhysicalMemoryFree");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(null);
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
         assertEquals("Free Physical Memory", m.getSimpleLabel());
     }
 
@@ -88,7 +96,7 @@ public class PhysicalMemoryFreeTest extends MetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryFree getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryFree(null);
+        return new PhysicalMemoryFree(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

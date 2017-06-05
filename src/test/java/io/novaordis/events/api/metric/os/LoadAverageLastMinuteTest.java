@@ -16,11 +16,9 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import java.util.List;
@@ -28,6 +26,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -47,6 +46,22 @@ public class LoadAverageLastMinuteTest extends MetricDefinitionTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        LoadAverageLastMinute m =
+                (LoadAverageLastMinute)MetricDefinitionParser.parse(r, "LoadAverageLastMinute");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
+
+
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
     @Test
@@ -65,19 +80,10 @@ public class LoadAverageLastMinuteTest extends MetricDefinitionTest {
         assertEquals(Float.class, m.getType());
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        LoadAverageLastMinute m = (LoadAverageLastMinute) MetricDefinition.getInstance("LoadAverageLastMinute");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(null);
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOS());
         assertEquals("Last Minute Load Average", m.getSimpleLabel());
     }
 
@@ -87,7 +93,7 @@ public class LoadAverageLastMinuteTest extends MetricDefinitionTest {
 
     @Override
     protected LoadAverageLastMinute getMetricDefinitionToTest() throws Exception {
-        return new LoadAverageLastMinute(null);
+        return new LoadAverageLastMinute(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

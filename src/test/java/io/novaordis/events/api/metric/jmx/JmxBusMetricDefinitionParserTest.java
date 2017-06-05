@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.events.api.metric.jmx;
 
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceTest;
 import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 6/4/17
  */
-public class RemoteOSTest extends MetricSourceTest {
+public class JmxBusMetricDefinitionParserTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -40,29 +36,15 @@ public class RemoteOSTest extends MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // Overrides -------------------------------------------------------------------------------------------------------
+    @Test
+    public void returnHere() {
 
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+        throw new RuntimeException("Return here");
     }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    // hasAddress() ----------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected RemoteOS getMetricSourceToTest() throws Exception {
-
-        return new RemoteOS("ssh://127.0.0.1");
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

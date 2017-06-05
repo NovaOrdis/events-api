@@ -17,13 +17,16 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricDefinitionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 
 import java.util.List;
 
 /**
+ * See https://kb.novaordis.com/index.php/Events-api_Concepts#Remote_OS
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
@@ -35,16 +38,51 @@ public class RemoteOS implements MetricSource {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String address;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public RemoteOS(String address) throws MetricDefinitionException {
+
+        if (address == null) {
+
+            throw new IllegalArgumentException("null address");
+        }
+
+        this.address = address;
+    }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+
         throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public String getAddress() {
+
+        return address;
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+
+        //
+        // TODO more complete implementation to follow
+        //
+
+        return this.address.equals(address);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return address;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -34,72 +34,6 @@ public interface MetricDefinition {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * So far, we support metrics that are implemented in two different ways:
-     *
-     * 1. Class based - if the name of the class is found in the classpath, it is loaded
-     * 2. Type based (like jboss:)
-     */
-    static MetricDefinition getInstance(String s) throws UserErrorException {
-
-        log.debug("parsing metric definition \"" + s + "\"");
-
-        if (s.startsWith(JBossCliMetricDefinition.PREFIX)) {
-
-            try {
-
-                return new JBossCliMetricDefinition(null, s);
-            }
-            catch (Exception e) {
-
-                String msg = "invalid jboss metric definition";
-                msg = e.getMessage() == null ? msg : msg + ": " + e.getMessage();
-                throw new UserErrorException(msg, e);
-            }
-        }
-
-        //
-        // TODO naive implementation, come up with something better
-        //
-
-        String[] packages = {
-
-                "io.novaordis.events.api.metric.os",
-        };
-
-        String fqcn = null;
-        Class c = null;
-
-        for(String p : packages) {
-
-            fqcn = p + "." + s;
-
-            try {
-
-                c = Class.forName(fqcn);
-                if (c != null) {
-                    break;
-                }
-            }
-            catch (Exception e) {
-
-                log.debug("no such metric implementation: " + fqcn);
-            }
-        }
-
-        if (c == null) {
-            throw new UserErrorException("unknown metric " + s);
-        }
-
-        try {
-            return (MetricDefinition)c.newInstance();
-        }
-        catch(Exception e) {
-
-            throw new UserErrorException(fqcn + " exists, but it cannot be instantiated", e);
-        }
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
@@ -119,13 +53,19 @@ public interface MetricDefinition {
      */
     Class getType();
 
-    // new -------------------------------------------------------------------------------------------------------------
-
     /**
-     * The metric definition, as string. Information that should be sufficient to a metric source to provide a value.
-     * Examples: "PhysicalMemoryTotal", "java.lang:type=Threading.ThreadCount",
-     * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count". The first makes sense within the
-     * context of local or remote OS, the second in the context of a JMX bus, and the third in the context of a
+     * The metric definition, as string.
+     *
+     * Information return by the method should be sufficient for a metric source to look up the corresponding metric
+     * and provide a value for it.
+     *
+     * The definition does not include metric source information.
+     *
+     * Examples:
+     *
+     * "PhysicalMemoryTotal" - makes sense in the context of a local or remote OS.
+     * "java.lang:type=Threading.ThreadCount" - makes sense in the context of a JMX bus.
+     * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count" - makes sense in the context of a
      * JBoss management controller.
      */
     String getDefinition();

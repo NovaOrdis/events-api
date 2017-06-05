@@ -20,7 +20,7 @@ package io.novaordis.events.api.metric;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/20/16
  */
-public class MetricDefinitionException extends Exception {
+public class MetricDefinitionException extends MetricException {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

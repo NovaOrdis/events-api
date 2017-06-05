@@ -17,7 +17,7 @@
 package io.novaordis.events.api.metric.source;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.utilities.os.NativeExecutionException;
@@ -71,7 +71,7 @@ public abstract class OSCommand implements MetricSource {
      * noop implementation, override in subclasses if you need a more specific behavior.
      */
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         List<Property> result = new ArrayList<>();
 
@@ -170,7 +170,7 @@ public abstract class OSCommand implements MetricSource {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected String executeCommandAndReturnStdout(OS os) throws MetricCollectionException {
+    protected String executeCommandAndReturnStdout(OS os) throws MetricException {
 
         String commandAndArguments = command + " " + arguments;
 
@@ -181,7 +181,7 @@ public abstract class OSCommand implements MetricSource {
             r = os.execute(commandAndArguments);
         }
         catch(NativeExecutionException e) {
-            throw new MetricCollectionException(e);
+            throw new MetricException(e);
         }
 
         if (r.isSuccess()) {
@@ -191,7 +191,7 @@ public abstract class OSCommand implements MetricSource {
         String msg = command + " execution failed";
         String stderr = r.getStderr();
         msg = stderr == null || stderr.isEmpty() ? msg : msg + ": " + stderr;
-        throw new MetricCollectionException(msg);
+        throw new MetricException(msg);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

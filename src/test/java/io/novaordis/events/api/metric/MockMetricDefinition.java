@@ -27,21 +27,22 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    public static boolean FAIL_IN_CONSTRUCTOR = false;
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String definition;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMetricDefinition() {
-        this("Mock Metric Definition");
-    }
+    public MockMetricDefinition(MetricSource s) {
 
-    public MockMetricDefinition(String definition) {
+        super(s);
 
-        super(null);
+        if (FAIL_IN_CONSTRUCTOR) {
 
-        this.definition = definition;
+            throw new RuntimeException("SYNTHETIC");
+        }
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

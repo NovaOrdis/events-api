@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.jboss;
+package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
@@ -22,12 +22,12 @@ import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSource;
 
 /**
- * A metric that can be read from a JBoss controller.
+ * A metric acquired from a JMX bus.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JBossCliMetricDefinition extends MetricDefinitionBase {
+public class JmxMetricDefinition extends MetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,77 +37,55 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private CliPath path;
-    private CliAttribute attribute;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * @param definition the metric definition similar to
+     *                   "jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ.messageCount". Must NOT
+     *                   include the metric source, which must be parsed separately and provided.
+     *
      * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
      *  must be human-readable, as it will most likely end up in error messages.
      *
      * @throws IllegalArgumentException
      */
-    public JBossCliMetricDefinition(MetricSource source, CliPath path, CliAttribute attribute)
-            throws MetricDefinitionException {
+    public JmxMetricDefinition(MetricSource source, String definition) throws MetricDefinitionException {
 
         super(source);
 
-        this.path = path;
-        this.attribute = attribute;
+        throw new RuntimeException("NYE");
+
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
 
     @Override
-    public JBossController getSource() {
-
-        return (JBossController)super.getSource();
-    }
-
-    @Override
     public String getDefinition() {
 
-        return path.getPath() + "/" + attribute.getName();
+        throw new RuntimeException("NYE");
     }
 
     @Override
     public String getSimpleLabel() {
 
-        //
-        // it would be nice if we could come up with a human readable label - we'll see how we do that; in the mean
-        // time, we'll just report path and attribute
-        //
-
-        return path.getPath() + "/" + attribute.getName();
+        throw new RuntimeException("NYE");
     }
 
     @Override
     public MeasureUnit getMeasureUnit() {
 
-        //
-        // it would be nice if we could come up with a valid value - we'll see how we do that; in the mean
-        // time, we'll just return null
-        //
-
-        return null;
+        throw new RuntimeException("NYE");
     }
 
     @Override
     public String getDescription() {
 
-        //
-        // it would be nice if we could come up with a description - we'll see how we do that; in the mea time, we'll
-        // just return the simple label
-        //
-
-        return getSimpleLabel();
+        throw new RuntimeException("NYE");
     }
 
     @Override
     public Class getType() {
-
-        return null;
+        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
     }
 
     //
@@ -116,42 +94,13 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String getPath() {
-
-        if (path == null) {
-
-            return null;
-        }
-
-        return path.getPath();
-    }
-
-    public String getAttributeName() {
-
-        if (attribute == null) {
-
-            return null;
-        }
-
-        return attribute.getName();
-    }
-
     @Override
     public String toString() {
 
-        //return PREFIX + source + ":" + path + "/" + attribute;
         return "?";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    CliAttribute getAttribute() {
-        return attribute;
-    }
-
-    CliPath getPathInstance() {
-        return path;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

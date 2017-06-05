@@ -17,9 +17,10 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricCollectionException;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.utilities.os.OS;
 
 import java.util.List;
 
@@ -40,11 +41,29 @@ public class LocalOS implements MetricSource {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricCollectionException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+
         throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    public String getAddress() {
+
+        return null;
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+
+        return false;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public OS getOS() {
+
+        throw new RuntimeException("NYE");
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

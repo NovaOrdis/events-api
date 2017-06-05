@@ -18,14 +18,10 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -49,6 +45,21 @@ public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        PhysicalMemoryTotal m =
+                (PhysicalMemoryTotal)MetricDefinitionParser.parse(r, "PhysicalMemoryTotal");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
+
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
     @Test
@@ -69,19 +80,10 @@ public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
         assertEquals(Long.class, c);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        PhysicalMemoryTotal m = (PhysicalMemoryTotal) MetricDefinition.getInstance("PhysicalMemoryTotal");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(null);
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
         assertEquals("Total Physical Memory", m.getSimpleLabel());
     }
 
@@ -91,7 +93,7 @@ public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryTotal getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryTotal(null);
+        return new PhysicalMemoryTotal(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

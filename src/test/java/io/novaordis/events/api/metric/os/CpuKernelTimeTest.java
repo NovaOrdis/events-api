@@ -18,17 +18,16 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.source.OSCommand;
-import io.novaordis.utilities.os.OS;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -45,6 +44,20 @@ public class CpuKernelTimeTest extends MetricDefinitionTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        CpuKernelTime m = (CpuKernelTime)MetricDefinitionParser.parse(r, "CpuKernelTime");
+
+        assertNotNull(m);
+        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
+    }
 
     // getMeasureUnit() ------------------------------------------------------------------------------------------------
 
@@ -70,19 +83,10 @@ public class CpuKernelTimeTest extends MetricDefinitionTest {
         assertEquals(Float.class, t);
     }
 
-    // getInstance() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getInstance() throws Exception {
-
-        CpuKernelTime m = (CpuKernelTime) MetricDefinition.getInstance("CpuKernelTime");
-        assertNotNull(m);
-    }
-
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuKernelTime m = new CpuKernelTime(null);
+        CpuKernelTime m = new CpuKernelTime(new LocalOS());
         assertEquals("CPU Kernel Time", m.getSimpleLabel());
     }
 
@@ -93,7 +97,7 @@ public class CpuKernelTimeTest extends MetricDefinitionTest {
     @Override
     protected CpuKernelTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuKernelTime(null);
+        return new CpuKernelTime(new LocalOS());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
