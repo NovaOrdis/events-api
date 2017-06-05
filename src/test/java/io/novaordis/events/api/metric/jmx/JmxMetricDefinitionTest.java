@@ -47,7 +47,7 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JmxMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JmxMetricDefinition(null, "?");
+        return new JmxMetricDefinition(new JmxBus(), "?");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

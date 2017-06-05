@@ -88,7 +88,7 @@ public class CpuHardwareInterruptTimeTest extends MetricDefinitionTest {
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(null);
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
         assertEquals("CPU Hardware Interrupt Time", m.getSimpleLabel());
     }
 

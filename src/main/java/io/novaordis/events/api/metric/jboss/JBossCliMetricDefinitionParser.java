@@ -130,7 +130,7 @@ public class JBossCliMetricDefinitionParser {
             }
             catch(JBossCliException e) {
 
-                String msg = "cannot get a JBoss controller address from \"" + controllerAddress + "\"";
+                String msg = "cannot get a jboss controller address from \"" + controllerAddress + "\"";
 
                 if (thisIsAJBossCliMetric) {
 

@@ -131,7 +131,7 @@ public class MetricDefinitionParserTest {
         assertTrue(controllers.isEmpty());
 
         String mds =
-                "jbosscli://admin@1.2.3.4:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
+                "jbosscli://admin:passwd@1.2.3.4:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
         MetricDefinition d = MetricDefinitionParser.parse(mr, mds);
 

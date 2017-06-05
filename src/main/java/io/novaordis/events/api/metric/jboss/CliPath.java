@@ -58,6 +58,15 @@ class CliPath {
      */
     public void addPathElement(String pathElement) {
 
+        //
+        // skip leading slash
+        //
+
+        if (pathElement.startsWith("/")) {
+
+            pathElement = pathElement.substring(1);
+        }
+
         pathElements.add(pathElement);
     }
 

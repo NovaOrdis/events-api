@@ -95,14 +95,6 @@ public class FaultEventTest extends EventTest {
         assertNull(e.getLineNumber());
     }
 
-//    @Test
-//    public void getLineNumber_FromBusinessScenarioException() throws Exception {
-//
-//        long lineNumber = 7L;
-//        FaultEvent e = new FaultEvent(new BusinessScenarioException(lineNumber, "something"));
-//        assertEquals(7L, e.getLineNumber().longValue());
-//    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

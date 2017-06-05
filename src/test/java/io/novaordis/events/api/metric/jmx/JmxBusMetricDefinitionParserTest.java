@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric.jmx;
 
 import org.junit.Test;
 
+import static org.junit.Assert.fail;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17
@@ -39,7 +41,7 @@ public class JmxBusMetricDefinitionParserTest {
     @Test
     public void returnHere() {
 
-        throw new RuntimeException("Return here");
+        fail("Return here");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

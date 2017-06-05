@@ -46,10 +46,10 @@ public abstract class MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // @Test
+    //@Test
     public abstract void equalsTest() throws Exception;
 
-    // @Test
+    //@Test
     public abstract void hashCodeTest() throws Exception;
 
     // hasAddress() ----------------------------------------------------------------------------------------------------
@@ -82,24 +82,24 @@ public abstract class MetricSourceTest {
 
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
-    // @Test
-    public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
-
-        MetricSource s = getMetricSourceToTest();
-
-        MockMetricDefinition mmd = new MockMetricDefinition(s);
-
-        //noinspection ArraysAsListWithZeroOrOneArgument
-        List<MetricDefinition> definitions = Arrays.asList(mmd);
-
-        List<Property> properties = s.collectMetrics(definitions);
-
-        assertNotNull(properties);
-        assertEquals(1, properties.size());
-
-        Property p = properties.get(0);
-        assertNull(p);
-    }
+//    @Test
+//    public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
+//
+//        MetricSource s = getMetricSourceToTest();
+//
+//        MockMetricDefinition mmd = new MockMetricDefinition(s);
+//
+//        //noinspection ArraysAsListWithZeroOrOneArgument
+//        List<MetricDefinition> definitions = Arrays.asList(mmd);
+//
+//        List<Property> properties = s.collectMetrics(definitions);
+//
+//        assertNotNull(properties);
+//        assertEquals(1, properties.size());
+//
+//        Property p = properties.get(0);
+//        assertNull(p);
+//    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

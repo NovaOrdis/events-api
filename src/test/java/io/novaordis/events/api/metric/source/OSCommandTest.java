@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.source;
 
 import io.novaordis.events.api.metric.MetricException;
-import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.MockOS;
 import io.novaordis.utilities.os.NativeExecutionException;
 import org.junit.Test;
@@ -32,7 +31,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/5/16
  */
-public abstract class OSCommandTest extends MetricSourceTest {
+public abstract class OSCommandTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -108,7 +107,6 @@ public abstract class OSCommandTest extends MetricSourceTest {
 
     // equals() --------------------------------------------------------------------------------------------------------
 
-    @Override
     public void equalsTest() throws Exception {
 
         OSCommand c = getMetricSourceToTest("arg1 arg2");
@@ -191,7 +189,6 @@ public abstract class OSCommandTest extends MetricSourceTest {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    @Override
     protected OSCommand getMetricSourceToTest() throws Exception {
         return getMetricSourceToTest("");
     }

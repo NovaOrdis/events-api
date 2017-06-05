@@ -81,6 +81,7 @@ public class JBossControllerTest extends MetricSourceTest {
 
     // constructor -----------------------------------------------------------------------------------------------------
 
+    @Test
     public void constructor_NullAddress() throws Exception {
 
         try {

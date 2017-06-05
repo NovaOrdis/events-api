@@ -45,10 +45,15 @@ public class CliPathTest {
         assertEquals("/a=b", p.getPath());
     }
 
-    @Test
-    public void constructor_TrailingPath() throws Exception {
+    // addPathElement() ------------------------------------------------------------------------------------------------
 
-        CliPath p = new CliPath("/a=b/");
+    @Test
+    public void addPathElement_LeadingSlash() {
+
+        CliPath p = new CliPath();
+
+        p.addPathElement("/a=b");
+
         assertEquals("/a=b", p.getPath());
     }
 

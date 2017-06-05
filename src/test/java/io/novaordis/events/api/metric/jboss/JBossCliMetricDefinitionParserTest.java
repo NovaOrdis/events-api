@@ -191,8 +191,12 @@ public class JBossCliMetricDefinitionParserTest {
         catch(MetricDefinitionException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("invalid"));
-            assertTrue(msg.contains("port"));
+            assertTrue(msg.contains("cannot get a jboss controller address from"));
+
+            Throwable cause = e.getCause();
+            String msg2 = cause.getMessage();
+            assertTrue(msg2.contains("invalid"));
+            assertTrue(msg2.contains("port"));
         }
 
         assertTrue(r.isEmpty());
