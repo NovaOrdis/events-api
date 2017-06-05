@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
@@ -125,29 +124,34 @@ public class OSMetricDefinitionParser {
         // if necessary
         //
 
-        MetricSource metricSource = null;
+        MetricSource metricSource;
 
-        if (local) {
+        try {
 
-            Set<LocalOS> sources = repository.getSources(LocalOS.class);
+            if (local) {
 
-            if (sources.isEmpty()) {
+                Set<LocalOS> sources = repository.getSources(LocalOS.class);
 
-                metricSource = new LocalOS();
-            }
-            else {
+                if (sources.isEmpty()) {
 
-                metricSource = sources.iterator().next();
+                    metricSource = new LocalOS();
+                } else {
+
+                    metricSource = sources.iterator().next();
+                }
+            } else {
+
+                metricSource = repository.getSource(RemoteOS.class, metricSourceAddress);
+
+                if (metricSource == null) {
+
+                    metricSource = new RemoteOS(metricSourceAddress);
+                }
             }
         }
-        else {
+        catch(Exception e) {
 
-            metricSource = repository.getSource(RemoteOS.class, metricSourceAddress);
-
-            if (metricSource == null) {
-
-                metricSource = new RemoteOS(metricSourceAddress);
-            }
+            throw new MetricDefinitionException("failed to instantiate metric source", e);
         }
 
         MetricDefinition md;

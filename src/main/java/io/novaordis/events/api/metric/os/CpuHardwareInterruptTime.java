@@ -16,17 +16,19 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.utilities.os.OS;
 
 /**
  * See https://kb.novaordis.com/index.php/Vmstat#hi
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuHardwareInterruptTime extends MetricDefinitionBase implements MetricDefinition {
+public class CpuHardwareInterruptTime extends MetricDefinitionBase implements OSMetricDefinition {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -69,6 +71,18 @@ public class CpuHardwareInterruptTime extends MetricDefinitionBase implements Me
     @Override
     public String getDescription() {
         return "Percentage of total CPU time spent time spent spent servicing hardware interrupts.";
+    }
+
+    // OSMetricDefinition implementation -------------------------------------------------------------------------------
+
+    @Override
+    public String getOSCommand(OS os) {
+        throw new RuntimeException("getOSCommand() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Property commandOutputToProperty(OS os, String commandOutput) {
+        throw new RuntimeException("commandOutputToProperty() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

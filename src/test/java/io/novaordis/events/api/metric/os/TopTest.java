@@ -14,35 +14,10 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.source;
+package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.event.FloatProperty;
-import io.novaordis.events.api.event.LongProperty;
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.os.CpuHardwareInterruptTime;
-import io.novaordis.events.api.metric.os.CpuIdleTime;
-import io.novaordis.events.api.metric.os.CpuIoWaitTime;
-import io.novaordis.events.api.metric.os.CpuKernelTime;
-import io.novaordis.events.api.metric.os.CpuNiceTime;
-import io.novaordis.events.api.metric.os.CpuSoftwareInterruptTime;
-import io.novaordis.events.api.metric.os.CpuStolenTime;
-import io.novaordis.events.api.metric.os.CpuUserTime;
-import io.novaordis.events.api.metric.os.LoadAverageLastFiveMinutes;
-import io.novaordis.events.api.metric.os.LoadAverageLastMinute;
-import io.novaordis.events.api.metric.os.LoadAverageLastTenMinutes;
-import io.novaordis.events.api.metric.os.PhysicalMemoryFree;
-import io.novaordis.events.api.metric.os.PhysicalMemoryTotal;
-import io.novaordis.events.api.metric.os.PhysicalMemoryUsed;
-import io.novaordis.events.api.metric.os.SwapFree;
-import io.novaordis.events.api.metric.os.SwapTotal;
-import io.novaordis.events.api.metric.os.SwapUsed;
-import io.novaordis.utilities.Files;
-import org.junit.Test;
-
-import java.io.File;
-import java.util.List;
+import io.novaordis.events.api.metric.os.Top;
+import io.novaordis.events.api.metric.source.OSCommandTest;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;

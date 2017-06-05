@@ -82,108 +82,6 @@ public class JBossController extends MetricSourceBase {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        List<Property> properties = new ArrayList<>();
-
-        for(MetricDefinition md : metricDefinitions) {
-
-            if (!(md instanceof JBossCliMetricDefinition)) {
-
-                log.debug(this + " does not handle non-jboss CLI metrics " + md);
-                properties.add(null);
-                continue;
-            }
-
-            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
-
-            JBossController thatSource = jbmd.getSource();
-
-            if (!this.equals(thatSource)) {
-
-                log.debug(jbmd + " has a different source than " + this + ", ignorning ...");
-                properties.add(null);
-                continue;
-            }
-
-            //
-            // lazy instantiation
-            //
-
-            if (controllerClient == null) {
-
-                JBossControllerAddress address = jbmd.getSource().getControllerAddress();
-                JBossControllerClient newClient = JBossControllerClient.getInstance(address);
-                setControllerClient(newClient);
-            }
-
-            //
-            // if the client is not connected, attempt to connect it, every time we collect metrics. This is useful if
-            // the JBoss instance is started after os-stats, or if the JBoss instance becomes inaccessible and then
-            // reappears
-            //
-
-            if (!controllerClient.isConnected()) {
-
-                try {
-
-                    log.debug("attempting to connect " + controllerClient);
-
-                    controllerClient.connect();
-                }
-                catch(Exception e) {
-
-                    log.warn(e.getMessage());
-                    log.debug("controller client connection failure", e);
-                    continue;
-                }
-            }
-
-            String path = jbmd.getPath();
-            String attributeName = jbmd.getAttributeName();
-            Object attributeValue = null;
-
-            try {
-
-                attributeValue = controllerClient.getAttributeValue(path, attributeName);
-            }
-            catch (JBossCliException e) {
-
-                log.warn(e.getMessage());
-            }
-
-            if (attributeValue == null) {
-                properties.add(null);
-                continue;
-            }
-
-            String name = jbmd.getDefinition();
-
-            Property p;
-
-            if (attributeValue instanceof String) {
-
-                p = new StringProperty(name, (String)attributeValue);
-            }
-            else if (attributeValue instanceof Integer) {
-
-                p = new IntegerProperty(name, (Integer)attributeValue);
-            }
-            else if (attributeValue instanceof Long) {
-
-                p = new LongProperty(name, (Long)attributeValue);
-            }
-            else {
-                throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");
-            }
-
-            properties.add(p);
-        }
-
-        return properties;
-    }
-
-    @Override
     public String getAddress() {
 
         return controllerAddress.getLiteral();
@@ -194,6 +92,110 @@ public class JBossController extends MetricSourceBase {
 
         String thisAddress = controllerAddress.getLiteral();
         return thisAddress.equals(address);
+    }
+
+    @Override
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+
+        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
+
+        List<Property> properties = new ArrayList<>();
+
+//        for(MetricDefinition md : metricDefinitions) {
+//
+//            if (!(md instanceof JBossCliMetricDefinition)) {
+//
+//                log.debug(this + " does not handle non-jboss CLI metrics " + md);
+//                properties.add(null);
+//                continue;
+//            }
+//
+//            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
+//
+//            JBossController thatSource = jbmd.getSource();
+//
+//            if (!this.equals(thatSource)) {
+//
+//                log.debug(jbmd + " has a different source than " + this + ", ignorning ...");
+//                properties.add(null);
+//                continue;
+//            }
+//
+//            //
+//            // lazy instantiation
+//            //
+//
+//            if (controllerClient == null) {
+//
+//                JBossControllerAddress address = jbmd.getSource().getControllerAddress();
+//                JBossControllerClient newClient = JBossControllerClient.getInstance(address);
+//                setControllerClient(newClient);
+//            }
+//
+//            //
+//            // if the client is not connected, attempt to connect it, every time we collect metrics. This is useful if
+//            // the JBoss instance is started after os-stats, or if the JBoss instance becomes inaccessible and then
+//            // reappears
+//            //
+//
+//            if (!controllerClient.isConnected()) {
+//
+//                try {
+//
+//                    log.debug("attempting to connect " + controllerClient);
+//
+//                    controllerClient.connect();
+//                }
+//                catch(Exception e) {
+//
+//                    log.warn(e.getMessage());
+//                    log.debug("controller client connection failure", e);
+//                    continue;
+//                }
+//            }
+//
+//            String path = jbmd.getPath();
+//            String attributeName = jbmd.getAttributeName();
+//            Object attributeValue = null;
+//
+//            try {
+//
+//                attributeValue = controllerClient.getAttributeValue(path, attributeName);
+//            }
+//            catch (JBossCliException e) {
+//
+//                log.warn(e.getMessage());
+//            }
+//
+//            if (attributeValue == null) {
+//                properties.add(null);
+//                continue;
+//            }
+//
+//            String name = jbmd.getDefinition();
+//
+//            Property p;
+//
+//            if (attributeValue instanceof String) {
+//
+//                p = new StringProperty(name, (String)attributeValue);
+//            }
+//            else if (attributeValue instanceof Integer) {
+//
+//                p = new IntegerProperty(name, (Integer)attributeValue);
+//            }
+//            else if (attributeValue instanceof Long) {
+//
+//                p = new LongProperty(name, (Long)attributeValue);
+//            }
+//            else {
+//                throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");
+//            }
+//
+//            properties.add(p);
+//        }
+
+        return properties;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -259,11 +261,6 @@ public class JBossController extends MetricSourceBase {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
-        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

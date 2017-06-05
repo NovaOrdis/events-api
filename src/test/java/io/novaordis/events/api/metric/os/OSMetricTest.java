@@ -17,11 +17,13 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.MetricSource;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
@@ -67,11 +69,11 @@ public abstract class OSMetricTest extends MetricDefinitionTest {
 
         Property p = measurements.get(0);
 
-        p.getName();
-        p.getValue();
-        p.getMeasureUnit();
-        p.getType();
-        p.getFormat();
+        assertEquals("TODO", p.getName());
+        assertEquals(1L, p.getValue());
+        assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
+        assertEquals(Long.class, p.getType());
+        assertEquals(new SimpleDateFormat(), p.getFormat());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

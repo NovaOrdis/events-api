@@ -57,7 +57,6 @@ public class LongProperty extends PropertyBase implements Property {
         }
     }
 
-
     // Public ----------------------------------------------------------------------------------------------------------
 
     public Long getLong() {

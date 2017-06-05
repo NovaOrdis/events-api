@@ -17,11 +17,8 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceBase;
+import io.novaordis.events.api.metric.MetricException;
 
 import java.util.List;
 
@@ -31,7 +28,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class RemoteOS extends MetricSourceBase {
+public class RemoteOS extends OSSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,7 +40,9 @@ public class RemoteOS extends MetricSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public RemoteOS(String address) throws MetricDefinitionException {
+    public RemoteOS(String address) throws Exception {
+
+        super();
 
         if (address == null) {
 
@@ -54,12 +53,6 @@ public class RemoteOS extends MetricSourceBase {
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
-    }
 
     @Override
     public String getAddress() {
@@ -77,6 +70,14 @@ public class RemoteOS extends MetricSourceBase {
         return this.address.equals(address);
     }
 
+    @Override
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+
+        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
+
+        throw new RuntimeException("NYE");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
@@ -88,11 +89,6 @@ public class RemoteOS extends MetricSourceBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
-        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

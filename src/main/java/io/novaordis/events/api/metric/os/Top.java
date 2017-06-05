@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.source;
+package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
@@ -22,23 +22,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.os.CpuHardwareInterruptTime;
-import io.novaordis.events.api.metric.os.CpuIdleTime;
-import io.novaordis.events.api.metric.os.CpuIoWaitTime;
-import io.novaordis.events.api.metric.os.CpuKernelTime;
-import io.novaordis.events.api.metric.os.CpuNiceTime;
-import io.novaordis.events.api.metric.os.CpuSoftwareInterruptTime;
-import io.novaordis.events.api.metric.os.CpuStolenTime;
-import io.novaordis.events.api.metric.os.CpuUserTime;
-import io.novaordis.events.api.metric.os.LoadAverageLastFiveMinutes;
-import io.novaordis.events.api.metric.os.LoadAverageLastMinute;
-import io.novaordis.events.api.metric.os.LoadAverageLastTenMinutes;
-import io.novaordis.events.api.metric.os.PhysicalMemoryFree;
-import io.novaordis.events.api.metric.os.PhysicalMemoryTotal;
-import io.novaordis.events.api.metric.os.PhysicalMemoryUsed;
-import io.novaordis.events.api.metric.os.SwapFree;
-import io.novaordis.events.api.metric.os.SwapTotal;
-import io.novaordis.events.api.metric.os.SwapUsed;
+import io.novaordis.events.api.metric.source.OSCommand;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -331,7 +315,6 @@ public class Top extends OSCommand {
         return result;
     }
 
-
     public static List<Property> parseMacCommandOutput(String output) throws MetricException {
 
         List<Property> result = new ArrayList<>();
@@ -400,7 +383,6 @@ public class Top extends OSCommand {
         }
         return result;
     }
-
 
     // Package protected static ----------------------------------------------------------------------------------------
 

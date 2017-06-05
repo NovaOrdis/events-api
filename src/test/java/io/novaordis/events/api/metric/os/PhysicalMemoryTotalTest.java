@@ -92,6 +92,7 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
 
     @Override
     protected PhysicalMemoryTotal getMetricDefinitionToTest() throws Exception {
+
         return new PhysicalMemoryTotal(new LocalOS());
     }
 

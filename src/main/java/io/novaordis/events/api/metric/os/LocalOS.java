@@ -16,20 +16,11 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricException;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceBase;
-import io.novaordis.utilities.os.OS;
-
-import java.util.List;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class LocalOS extends MetricSourceBase {
+public class LocalOS extends OSSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -39,13 +30,12 @@ public class LocalOS extends MetricSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // MetricSource implementation -------------------------------------------------------------------------------------
+    public LocalOS() throws Exception {
 
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
+        super();
     }
+
+    // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
     public String getAddress() {
@@ -61,19 +51,9 @@ public class LocalOS extends MetricSourceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public OS getOS() {
-
-        throw new RuntimeException("NYE");
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
-        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

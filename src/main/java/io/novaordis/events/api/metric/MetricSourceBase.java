@@ -16,9 +16,6 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.event.Property;
-
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -37,14 +34,14 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+    // Public ----------------------------------------------------------------------------------------------------------
 
-        //
-        // we make sure all the definitions list this as source, otherwise fail
-        //
+    // Package protected -----------------------------------------------------------------------------------------------
 
-        List<String> metricDefinitionsAsStrings = new ArrayList<>();
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)
+            throws MetricException {
 
         for(MetricDefinition d: metricDefinitions) {
 
@@ -52,20 +49,8 @@ public abstract class MetricSourceBase implements MetricSource {
 
                 throw new MetricException(d + " has a different source than " + this);
             }
-
-            metricDefinitionsAsStrings.add(d.getDefinition());
         }
-
-        return collect(metricDefinitionsAsStrings);
     }
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    // Package protected -----------------------------------------------------------------------------------------------
-
-    // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract List<Property> collect(List<String> metricDefinitions) throws MetricException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
