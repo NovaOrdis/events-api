@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.Property;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -27,6 +28,7 @@ import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -82,6 +84,25 @@ public abstract class MetricSourceTest {
     }
 
     // collectMetrics() ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void collectMetrics_DefinitionsHaveADifferentSource() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+
+        MockMetricDefinition md = new MockMetricDefinition(new MockMetricSource());
+
+        try {
+
+            s.collectMetrics(Collections.singletonList(md));
+            fail("should have thrown exception");
+        }
+        catch(MetricException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("has a different source than"));
+        }
+    }
 
 //    @Test
 //    public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {

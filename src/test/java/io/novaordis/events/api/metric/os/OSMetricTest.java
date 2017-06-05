@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -16,21 +16,23 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinitionParser;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
+import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricSource;
 import org.junit.Test;
 
+import java.util.Collections;
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/3/16
+ * @since 6/5/17
  */
-public class CpuNiceTimeTest extends OSMetricTest {
+public abstract class OSMetricTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -42,49 +44,34 @@ public class CpuNiceTimeTest extends OSMetricTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // parse() ---------------------------------------------------------------------------------------------------------
+    // Tests -----------------------------------------------------------------------------------------------------------
 
+    /**
+     * These tests will have different results depending on the operating system the test suite is executed on, but
+     * they all must pass.
+     */
     @Test
-    public void parse() throws Exception {
+    public void collectMetricOnTheLocalSystem() throws Exception {
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
+        MetricDefinition md = getMetricDefinitionToTest();
 
-        CpuNiceTime m = (CpuNiceTime)MetricDefinitionParser.parse(r, "CpuNiceTime");
+        MetricSource ms = md.getSource();
 
-        assertNotNull(m);
-        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
-    }
+        assertTrue(ms instanceof LocalOS);
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+        LocalOS os = (LocalOS)ms;
 
-    @Test
-    public void measureUnitIsPercentage() throws Exception {
+        List<Property> measurements = os.collectMetrics(Collections.singletonList(md));
 
-        CpuNiceTime m = getMetricDefinitionToTest();
+        assertEquals(1, measurements.size());
 
-        MeasureUnit mu = m.getMeasureUnit();
+        Property p = measurements.get(0);
 
-        assertEquals(Percentage.getInstance(), mu);
-    }
-
-    // getType() -------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void typeIsFloat() throws Exception {
-
-        CpuNiceTime m = getMetricDefinitionToTest();
-
-        Class t = m.getType();
-
-        assertEquals(Float.class, t);
-    }
-
-    @Test
-    public void getSimpleLabel() throws Exception {
-
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
-        assertEquals("CPU Nice Time", m.getSimpleLabel());
+        p.getName();
+        p.getValue();
+        p.getMeasureUnit();
+        p.getType();
+        p.getFormat();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -92,10 +79,7 @@ public class CpuNiceTimeTest extends OSMetricTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected CpuNiceTime getMetricDefinitionToTest() throws Exception {
-
-        return new CpuNiceTime(new LocalOS());
-    }
+    protected abstract MetricDefinition getMetricDefinitionToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

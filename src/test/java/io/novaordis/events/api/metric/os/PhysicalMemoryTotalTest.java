@@ -19,7 +19,6 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
-import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
@@ -31,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryTotalTest extends MetricDefinitionTest {
+public class PhysicalMemoryTotalTest extends OSMetricTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

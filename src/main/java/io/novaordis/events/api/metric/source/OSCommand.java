@@ -34,7 +34,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/5/16
  */
-public abstract class OSCommand implements MetricSource {
+public abstract class OSCommand {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -63,23 +63,6 @@ public abstract class OSCommand implements MetricSource {
 
         this.command = command;
         this.arguments = arguments;
-    }
-
-    // MetricSource implementation -------------------------------------------------------------------------------------
-
-    /**
-     * noop implementation, override in subclasses if you need a more specific behavior.
-     */
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        List<Property> result = new ArrayList<>();
-
-        for(int i = 0; i < metricDefinitions.size(); i ++) {
-            result.add(null);
-        }
-
-        return result;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

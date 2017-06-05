@@ -16,11 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceTest;
-import org.junit.Test;
-
-import static org.junit.Assert.assertFalse;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

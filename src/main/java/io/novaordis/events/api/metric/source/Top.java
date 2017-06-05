@@ -444,16 +444,6 @@ public class Top extends OSCommand {
         super("top", arguments);
     }
 
-    @Override
-    public String getAddress() {
-        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
-    }
-
     // OSCommand implementation ----------------------------------------------------------------------------------------
 
 //    @Override

@@ -23,6 +23,7 @@ import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
@@ -41,7 +42,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JBossController implements MetricSource {
+public class JBossController extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -258,6 +259,11 @@ public class JBossController implements MetricSource {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
+        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

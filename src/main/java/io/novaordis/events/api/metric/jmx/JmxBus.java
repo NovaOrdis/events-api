@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MetricSourceBase;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -31,7 +32,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JmxBus implements MetricSource {
+public class JmxBus extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -129,6 +130,11 @@ public class JmxBus implements MetricSource {
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
+        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -21,6 +21,7 @@ import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MetricSourceBase;
 
 import java.util.List;
 
@@ -30,7 +31,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class RemoteOS implements MetricSource {
+public class RemoteOS extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -87,6 +88,11 @@ public class RemoteOS implements MetricSource {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
+        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

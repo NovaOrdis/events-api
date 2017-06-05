@@ -14,22 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricException;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceBase;
-import io.novaordis.utilities.os.OS;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/1/17
+ * @since 6/5/17
  */
-public class LocalOS extends MetricSourceBase {
+public abstract class MetricSourceBase implements MetricSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -44,36 +40,32 @@ public class LocalOS extends MetricSourceBase {
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
-        throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
-    }
+        //
+        // we make sure all the definitions list this as source, otherwise fail
+        //
 
-    @Override
-    public String getAddress() {
+        List<String> metricDefinitionsAsStrings = new ArrayList<>();
 
-        return null;
-    }
+        for(MetricDefinition d: metricDefinitions) {
 
-    @Override
-    public boolean hasAddress(String address) {
+            if (!this.equals(d.getSource())) {
 
-        return false;
+                throw new MetricException(d + " has a different source than " + this);
+            }
+
+            metricDefinitionsAsStrings.add(d.getDefinition());
+        }
+
+        return collect(metricDefinitionsAsStrings);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public OS getOS() {
-
-        throw new RuntimeException("NYE");
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    @Override
-    protected List<Property> collect(List<String> metricDefinitions) throws MetricException {
-        throw new RuntimeException("collect() NOT YET IMPLEMENTED");
-    }
+    protected abstract List<Property> collect(List<String> metricDefinitions) throws MetricException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

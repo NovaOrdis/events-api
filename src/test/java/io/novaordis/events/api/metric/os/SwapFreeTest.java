@@ -19,11 +19,8 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
-import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
-
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -33,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class SwapFreeTest extends MetricDefinitionTest {
+public class SwapFreeTest extends OSMetricTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
