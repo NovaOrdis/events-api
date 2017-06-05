@@ -21,6 +21,9 @@ import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSource;
 
+import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
+
 /**
  * A metric acquired from a JMX bus.
  *
@@ -37,39 +40,66 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String originalDefinition;
+    private String domainName;
+    private String keyValuePairs;
+    private String attributeName;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param definition the metric definition similar to
-     *                   "jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ.messageCount". Must NOT
-     *                   include the metric source, which must be parsed separately and provided.
-     *
      * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
      *  must be human-readable, as it will most likely end up in error messages.
      *
      * @throws IllegalArgumentException
      */
-    public JmxMetricDefinition(MetricSource source, String definition) throws MetricDefinitionException {
+    public JmxMetricDefinition(MetricSource source, String objectNameDomain,
+                               String objectNameKeyValuePairs, String attributeName) throws MetricDefinitionException {
 
         super(source);
 
-        this.originalDefinition = definition;
+        //
+        // we use the ObjectName constructor to parse, but we don't cache it
+        //
+
+        String objectNameString = objectNameDomain + ":" + objectNameKeyValuePairs;
+
+        try {
+
+            ObjectName on = new ObjectName(objectNameString);
+            log.debug("ObjectName: " + on);
+        }
+        catch(MalformedObjectNameException e) {
+
+            throw new MetricDefinitionException("invalid ObjectName: \"" + objectNameString + "\"", e);
+        }
+
+        this.domainName = objectNameDomain;
+        this.keyValuePairs = objectNameKeyValuePairs;
+        this.attributeName = attributeName;
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
 
+
+    @Override
+    public JmxBus getSource() {
+
+        return (JmxBus)super.getSource();
+    }
+
+    /**
+     * @return the definition where keys are rendered in the order in which they were introduced
+     */
     @Override
     public String getDefinition() {
 
-        return originalDefinition;
+        return domainName + ":" + keyValuePairs + "/" + attributeName;
     }
 
     @Override
     public String getSimpleLabel() {
 
-        return originalDefinition;
+        return getDefinition();
     }
 
     @Override
@@ -81,7 +111,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String getDescription() {
 
-        return originalDefinition;
+        return getDefinition();
     }
 
     @Override
@@ -96,10 +126,15 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public String getAttributeName() {
+
+        return attributeName;
+    }
+
     @Override
     public String toString() {
 
-        return "?";
+        return getSource() + "/" + getDefinition();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -35,19 +35,32 @@ public class JmxBus implements MetricSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String DEFAULT_HOST = "localhost";
+    public static final int DEFAULT_PORT = 9999;
+
     private static final Logger log = LoggerFactory.getLogger(JmxBus.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address;
+    private String username;
+    private char[] password;
+    private String host;
+    private int port;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmxBus() {
+    public JmxBus() throws JmxException {
 
-        this.address = "localhost:9999";
+        this(DEFAULT_HOST + ":" + DEFAULT_PORT);
+    }
+
+    public JmxBus(String address) throws JmxException  {
+
+        parseAddress(address);
+
+        log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -61,34 +74,120 @@ public class JmxBus implements MetricSource {
     @Override
     public String getAddress() {
 
-        return address;
+        String s = "";
+
+        if (username != null) {
+
+            s += username + "@";
+        }
+
+        s += host + ":" + port;
+
+        return s;
     }
 
     @Override
     public boolean hasAddress(String address) {
 
-        return this.address.equals(address);
+        return getAddress().equals(address);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public String getHost() {
+
+        return host;
+    }
+
+    public int getPort() {
+
+        return port;
+    }
+
+    public String getUsername() {
+
+        return username;
+    }
+
     @Override
     public int hashCode() {
 
-        throw new RuntimeException("not yet implemented");
+        return getAddress().hashCode();
     }
 
     @Override
     public String toString() {
 
-        throw new RuntimeException("not yet implemented");
+        return getAddress();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    char[] getPassword() {
+
+        return password;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void parseAddress(String address) throws JmxException {
+
+        int i = address.indexOf('@');
+        String hostAndPort;
+
+        if (i != -1) {
+
+            //
+            // username and password
+            //
+
+            String usernameAndPassword = address.substring(0, i);
+            hostAndPort = address.substring(i + 1);
+
+            i = usernameAndPassword.indexOf(':');
+
+            if (i == -1) {
+
+                throw new JmxException("missing password");
+            }
+
+            this.username = usernameAndPassword.substring(0, i);
+            this.password = usernameAndPassword.substring(i + 1).toCharArray();
+        }
+        else {
+
+            hostAndPort = address;
+        }
+
+        i = hostAndPort.indexOf(':');
+
+        if (i == -1) {
+
+            //
+            // no port
+            //
+
+            host = hostAndPort;
+            port = DEFAULT_PORT;
+        }
+        else {
+
+            host = hostAndPort.substring(0, i);
+
+            String s = hostAndPort.substring(i + 1);
+
+            try {
+
+                port = Integer.parseInt(s);
+            }
+            catch(Exception e) {
+
+                throw new JmxException("invalid port \"" + s + "\"");
+            }
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

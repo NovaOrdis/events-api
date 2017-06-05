@@ -29,7 +29,6 @@ import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -153,26 +152,28 @@ public class MetricDefinitionParserTest {
     @Test
     public void parse_JmxBusMetricDefinition() throws Exception {
 
-        fail("return here");
-
         MetricSourceRepository mr = new MetricSourceRepositoryImpl();
 
         Set<JmxBus> buses = mr.getSources(JmxBus.class);
         assertTrue(buses.isEmpty());
 
-        MetricDefinition d = MetricDefinitionParser.parse(mr,
-                "jmx://admin@1.2.3.4:2345/jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ.messageCount");
+        String s =
+                "jmx://admin:adminpasswd@1.2.3.4:2345/jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount";
+
+        MetricDefinition d = MetricDefinitionParser.parse(mr, s);
 
         JmxMetricDefinition jmxm = (JmxMetricDefinition)d;
 
-        MetricSource s = jmxm.getSource();
-        JmxBus b = (JmxBus)s;
+        JmxBus b = jmxm.getSource();
 
         buses = mr.getSources(JmxBus.class);
         assertEquals(1, buses.size());
         JmxBus b2 = buses.iterator().next();
 
         assertEquals(b, b2);
+
+        String definition = jmxm.getDefinition();
+        assertEquals("jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount", definition);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,15 +16,11 @@
 
 package io.novaordis.events.api.metric.jmx;
 
-import org.junit.Test;
-
-import static org.junit.Assert.fail;
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17
  */
-public class JmxBusMetricDefinitionParserTest {
+public class JmxException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,15 +30,12 @@ public class JmxBusMetricDefinitionParserTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    public JmxException(String msg) {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void returnHere() {
-
-        fail("Return here");
+        super(msg);
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

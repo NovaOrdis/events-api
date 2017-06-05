@@ -69,6 +69,7 @@ public abstract class MetricSourceTest {
         String address = s.getAddress();
 
         if (address != null) {
+
             assertTrue(s.hasAddress(address));
         }
     }

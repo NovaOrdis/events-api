@@ -17,10 +17,16 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import org.junit.Test;
 
+import javax.management.MalformedObjectNameException;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -38,6 +44,8 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
     // Overrides -------------------------------------------------------------------------------------------------------
 
     @Test
@@ -45,7 +53,45 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     public void getDefinition() throws Exception {
 
         MetricDefinition d = getMetricDefinitionToTest();
-        assertEquals("?", d.getDefinition());
+        assertEquals("test.domain:service=TestService/testAttribute", d.getDefinition());
+    }
+
+    // getDefinition() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {
+
+        JmxMetricDefinition d = new JmxMetricDefinition(
+                new JmxBus(), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
+
+        String definition = d.getDefinition();
+
+        //
+        // we expect the keys to NOT be sorted in lexical order
+        //
+        assertEquals("test.domain:C=valC,B=valB,A=valA/testAttribute", definition);
+    }
+
+    // constructors ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void constructors_InvalidObjectName() throws Exception {
+
+        try {
+
+            new JmxMetricDefinition(new JmxBus(), "test.domain", "999999", "testAttribute");
+            fail("should have thrown exception");
+        }
+        catch(MetricDefinitionException e) {
+
+            String msg = e.getMessage();
+
+            assertTrue(msg.contains("invalid ObjectName"));
+
+            MalformedObjectNameException e2 = (MalformedObjectNameException)e.getCause();
+
+            assertNotNull(e2);
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -55,7 +101,7 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JmxMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JmxMetricDefinition(new JmxBus(), "?");
+        return new JmxMetricDefinition(new JmxBus(), "test.domain", "service=TestService", "testAttribute");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

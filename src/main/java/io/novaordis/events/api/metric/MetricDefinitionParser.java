@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinitionParser;
+import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionParser;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -66,7 +67,7 @@ public class MetricDefinitionParser {
         }
 
         //
-        // .... then assume we're a JBoss CLI metric ...
+        // ... then assume we're a JBoss CLI metric ...
         //
 
         d = JBossCliMetricDefinitionParser.parse(repository, metricSourceAndMetricDefinitionRepresentation);
@@ -75,6 +76,22 @@ public class MetricDefinitionParser {
 
             return d;
         }
+
+        //
+        // ... then assume we're a JMX metric ...
+        //
+
+        d = JmxMetricDefinitionParser.parse(repository, metricSourceAndMetricDefinitionRepresentation);
+
+        if (d != null) {
+
+            return d;
+        }
+
+        //
+        // ... then give up
+        //
+
 
         throw new MetricDefinitionException(
                 "no known parser can understand \"" + metricSourceAndMetricDefinitionRepresentation + "\"");
