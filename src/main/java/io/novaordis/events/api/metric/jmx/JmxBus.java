@@ -41,7 +41,14 @@ public class JmxBus implements MetricSource {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String address;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public JmxBus() {
+
+        this.address = "localhost:9999";
+    }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
@@ -49,17 +56,18 @@ public class JmxBus implements MetricSource {
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         throw new RuntimeException("not yet implemented");
-
     }
 
     @Override
     public String getAddress() {
-        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+
+        return address;
     }
 
     @Override
     public boolean hasAddress(String address) {
-        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
+
+        return this.address.equals(address);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

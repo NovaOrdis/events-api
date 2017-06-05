@@ -16,9 +16,11 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -27,8 +29,6 @@ import org.slf4j.LoggerFactory;
 public class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(JmxMetricDefinitionTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -39,6 +39,14 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void getDefinition() throws Exception {
+
+        MetricDefinition d = getMetricDefinitionToTest();
+        assertEquals("?", d.getDefinition());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

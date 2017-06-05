@@ -37,6 +37,8 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String originalDefinition;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
@@ -53,8 +55,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
 
         super(source);
 
-        throw new RuntimeException("NYE");
-
+        this.originalDefinition = definition;
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
@@ -62,30 +63,31 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String getDefinition() {
 
-        throw new RuntimeException("NYE");
+        return originalDefinition;
     }
 
     @Override
     public String getSimpleLabel() {
 
-        throw new RuntimeException("NYE");
+        return originalDefinition;
     }
 
     @Override
     public MeasureUnit getMeasureUnit() {
 
-        throw new RuntimeException("NYE");
+        return null;
     }
 
     @Override
     public String getDescription() {
 
-        throw new RuntimeException("NYE");
+        return originalDefinition;
     }
 
     @Override
     public Class getType() {
-        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
+
+        return null;
     }
 
     //
