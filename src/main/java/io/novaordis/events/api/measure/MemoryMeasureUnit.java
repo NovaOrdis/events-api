@@ -38,6 +38,7 @@ public enum MemoryMeasureUnit implements MeasureUnit {
     public static MemoryMeasureUnit parse(String s) {
 
         if (s == null) {
+
             throw new IllegalArgumentException("null memory measure unit string");
         }
 

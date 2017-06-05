@@ -14,25 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
-
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionTest;
-import org.junit.Test;
-
-import java.text.SimpleDateFormat;
-import java.util.Collections;
-import java.util.List;
-
-import static org.junit.Assert.assertEquals;
+package io.novaordis.events.api.measure;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/5/17
  */
-public abstract class OSMetricTest extends MetricDefinitionTest {
+public class MemoryArithmeticException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -42,39 +30,16 @@ public abstract class OSMetricTest extends MetricDefinitionTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    public MemoryArithmeticException(String msg) {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    /**
-     * These tests will have different results depending on the operating system the test suite is executed on, but
-     * they all must pass.
-     */
-    @Test
-    public void collectMetricOnTheLocalSystem() throws Exception {
-
-        MetricDefinition md = getMetricDefinitionToTest();
-
-        LocalOS localOs = (LocalOS)md.getSource();
-
-        List<Property> measurements = localOs.collectMetrics(Collections.singletonList(md));
-
-        assertEquals(1, measurements.size());
-
-        Property p = measurements.get(0);
-        assertEquals("TODO", p.getName());
-        assertEquals(1L, p.getValue());
-        assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
-        assertEquals(Long.class, p.getType());
-        assertEquals(new SimpleDateFormat(), p.getFormat());
+        super(msg);
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected abstract MetricDefinition getMetricDefinitionToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

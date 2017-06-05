@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
@@ -84,6 +85,68 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
 
         PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
         assertEquals("Total Physical Memory", m.getSimpleLabel());
+    }
+
+    // mac() -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void mac() throws Exception {
+
+        String output =
+
+                "Processes: 263 total, 2 running, 5 stuck, 256 sleeping, 1421 threads \n" +
+                "2017/06/05 15:04:51\n" +
+                "Load Avg: 2.29, 2.02, 1.90 \n" +
+                "CPU usage: 2.73% user, 10.95% sys, 86.30% idle \n" +
+                "SharedLibs: 13M resident, 18M data, 0B linkedit.\n" +
+                "MemRegions: 59430 total, 5948M resident, 147M private, 4665M shared.\n" +
+                "PhysMem: 15G used (1447M wired), 1424M unused.\n" +
+                "VM: 699G vsize, 1064M framework vsize, 0(0) swapins, 0(0) swapouts.\n" +
+                "Networks: packets: 224778/181M in, 135478/17M out.\n" +
+                "Disks: 229646/5001M read, 113968/3311M written.\n" +
+                "\n" +
+                "\n";
+
+        Property p = PhysicalMemoryTotal.mac(output);
+
+        String name = p.getName();
+        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
+
+        Class type = p.getType();
+        assertEquals(Long.class, type);
+
+        MeasureUnit u = p.getMeasureUnit();
+        assertEquals(MemoryMeasureUnit.BYTE, u);
+
+        //noinspection NumericOverflow
+        long expected = 15L * 1024 * 1024 * 1024 + 1424L * 1024 * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
+    }
+
+    // mac() -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void linux() throws Exception {
+
+        throw new RuntimeException("return  here");
+
+//        String output =
+//
+//                "Processes: 263 total, 2 running, 5 stuck, 256 sleeping, 1421 threads \n" +
+//                        "2017/06/05 15:04:51\n" +
+//                        "Load Avg: 2.29, 2.02, 1.90 \n" +
+//                        "CPU usage: 2.73% user, 10.95% sys, 86.30% idle \n" +
+//                        "SharedLibs: 13M resident, 18M data, 0B linkedit.\n" +
+//                        "MemRegions: 59430 total, 5948M resident, 147M private, 4665M shared.\n" +
+//                        "PhysMem: 15G used (1447M wired), 1424M unused.\n" +
+//                        "VM: 699G vsize, 1064M framework vsize, 0(0) swapins, 0(0) swapouts.\n" +
+//                        "Networks: packets: 224778/181M in, 135478/17M out.\n" +
+//                        "Disks: 229646/5001M read, 113968/3311M written.\n" +
+//                        "\n" +
+//                        "\n";
+//
+//        Property p = PhysicalMemoryTotal.mac(output);
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

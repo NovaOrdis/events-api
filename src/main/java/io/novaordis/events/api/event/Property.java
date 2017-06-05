@@ -19,9 +19,20 @@ package io.novaordis.events.api.event;
 import io.novaordis.events.api.measure.MeasureUnit;
 
 import java.text.Format;
+import java.util.List;
 
 /**
  * A typed key/value pair. Optionally, it can have a measure unit, a format, etc.
+ *
+ * Typically a Property is produced by a MetricSource when given a MetricDefinition to "collect". For conventions
+ * on what happens if the MetricSource cannot successfully collect the MetricDefinition
+ *
+ * @see io.novaordis.events.api.metric.MetricSource#collectMetrics(List)
+ *
+ * Also see:
+ *
+ * @see io.novaordis.events.api.metric.MetricSource
+ * @see io.novaordis.events.api.metric.MetricDefinition
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16

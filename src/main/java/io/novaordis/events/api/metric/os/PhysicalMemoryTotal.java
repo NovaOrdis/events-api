@@ -19,12 +19,16 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.utilities.os.LinuxOS;
 import io.novaordis.utilities.os.MacOS;
 import io.novaordis.utilities.os.OS;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * See https://kb.novaordis.com/index.php/Proc-meminfo#MemTotal
@@ -36,10 +40,60 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String MACOS_COMMAND = "top -l 1 -n 0";
-    public static final String LINUX_COMMAND = "top -b -n 1 -p 0";
+    public static final String MACOS_COMMAND = "/usr/bin/top -l 1 -n 0";
+
+    public static final Pattern MACOS_PATTERN = Pattern.compile(
+            "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
+
+    public static final String LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
+
+    public static final String DEFINITION = PhysicalMemoryTotal.class.getSimpleName();
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    public static Property mac(String commandOutput) {
+
+        LongProperty p = new LongProperty(DEFINITION);
+
+        Long value = null;
+
+        try {
+
+            Matcher m = MACOS_PATTERN.matcher(commandOutput);
+
+            if (m.find()) {
+
+                String usedMemory = m.group(1);
+                String usedMemoryUnit = m.group(2);
+                String unusedMemory = m.group(3);
+                String unusedMemoryUnit = m.group(4);
+
+                value = MemoryArithmetic.add(
+                        usedMemory, usedMemoryUnit,
+                        unusedMemory, unusedMemoryUnit,
+                        MemoryMeasureUnit.BYTE);
+            }
+        }
+        catch(Exception e) {
+
+            log.warn("failed to compute total memory from " + MACOS_COMMAND + " output: \n" + commandOutput, e);
+        }
+
+        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
+        p.setValue(value);
+
+        return p;
+    }
+
+    public static Property linux(String commandOutput) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    public static Property windows(String commandOutput) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -55,7 +109,7 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
     @Override
     public String getDefinition() {
 
-        return getClass().getSimpleName();
+        return DEFINITION;
     }
     /**
      * All memory metrics are by default expressed in bytes.
