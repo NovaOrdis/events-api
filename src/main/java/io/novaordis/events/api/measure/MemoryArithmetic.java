@@ -28,6 +28,57 @@ public class MemoryArithmetic {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * @param target if specified, the first occurrence is the memory measure unit we want the result converted to.
+     *               If more than one value is provide, an IllegalArgumentException will be thrown. If no target measure
+     *               unit is provide, the result will be provided in the source memory unit.
+     *
+     * @throws MemoryArithmeticException
+     */
+    public static long parse(String value, String sourceMemoryUnit, MemoryMeasureUnit... target)
+            throws MemoryArithmeticException {
+
+        if (target.length > 1) {
+
+            throw new IllegalArgumentException("multiple target units");
+        }
+
+        MemoryMeasureUnit sourceMu;
+
+        try {
+
+            sourceMu = MemoryMeasureUnit.parse(sourceMemoryUnit);
+        }
+        catch(IllegalArgumentException e) {
+
+            throw new MemoryArithmeticException("invalid source memory unit \"" + sourceMemoryUnit + "\"");
+        }
+
+        MemoryMeasureUnit targetMu;
+
+        if (target.length == 1) {
+
+            targetMu = target[0];
+        }
+        else {
+
+            targetMu = sourceMu;
+        }
+
+        long v;
+
+        try {
+
+            v = Long.parseLong(value);
+        }
+        catch(Exception e) {
+
+            throw new MemoryArithmeticException("invalid memory value \"" + value + "\"");
+        }
+
+        return (long)convert(v, sourceMu, targetMu);
+    }
+
     public static long add(
             String memoryQuantity, String memoryMeasureUnit,
             String memoryQuantity2, String memoryMeasureUnit2,

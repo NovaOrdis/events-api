@@ -102,6 +102,67 @@ public class MemoryArithmeticTest {
         assertEquals(1024d, r, 0.0000001);
     }
 
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        long result = MemoryArithmetic.parse("999936", "KiB", MemoryMeasureUnit.BYTE);
+        assertEquals(999936L * 1024, result);
+    }
+
+    @Test
+    public void parse_TargetSameAsSource() throws Exception {
+
+        long result = MemoryArithmetic.parse("10", "MB");
+        assertEquals(10L, result);
+    }
+
+    @Test
+    public void parse_MultipleTargetMeasureUnits() throws Exception {
+
+        try {
+
+            MemoryArithmetic.parse("1", "MB", MemoryMeasureUnit.BYTE, MemoryMeasureUnit.MEGABYTE);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("multiple target units", msg);
+        }
+    }
+
+    @Test
+    public void parse_InvalidSourceMeasureUnit() throws Exception {
+
+        try {
+
+            MemoryArithmetic.parse("1", "blah");
+            fail("should have thrown exception");
+        }
+        catch(MemoryArithmeticException e) {
+
+            String msg = e.getMessage();
+            assertEquals("invalid source memory unit \"blah\"", msg);
+        }
+    }
+
+    @Test
+    public void parse_InvalidMemoryValue() throws Exception {
+
+        try {
+
+            MemoryArithmetic.parse("blah", "GB");
+            fail("should have thrown exception");
+        }
+        catch(MemoryArithmeticException e) {
+
+            String msg = e.getMessage();
+            assertEquals("invalid memory value \"blah\"", msg);
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

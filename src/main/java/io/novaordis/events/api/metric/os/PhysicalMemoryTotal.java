@@ -26,6 +26,7 @@ import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.utilities.os.LinuxOS;
 import io.novaordis.utilities.os.MacOS;
 import io.novaordis.utilities.os.OS;
+import io.novaordis.utilities.os.WindowsOS;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -40,14 +41,21 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String MACOS_COMMAND = "/usr/bin/top -l 1 -n 0";
-
-    public static final Pattern MACOS_PATTERN = Pattern.compile(
-            "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
+    public static final String DEFINITION = PhysicalMemoryTotal.class.getSimpleName();
 
     public static final String LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
-    public static final String DEFINITION = PhysicalMemoryTotal.class.getSimpleName();
+    // matches
+    // KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache
+    public static final Pattern LINUX_PATTERN = Pattern.compile(
+            "([KMGiB]+) *Mem *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used, *([0-9]+) buff/cache");
+
+    public static final String MACOS_COMMAND = "/usr/bin/top -l 1 -n 0";
+
+    // matches:
+    // PhysMem: 12G used (2149M wired), 4305M unused.
+    public static final Pattern MACOS_PATTERN = Pattern.compile(
+            "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -87,7 +95,34 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
 
     public static Property linux(String commandOutput) {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        LongProperty p = new LongProperty(DEFINITION);
+
+        Long value = null;
+
+        try {
+            Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+            if (m.find()) {
+
+                String memoryUnit = m.group(1);
+
+                String totalMemory = m.group(2);
+//                String freeMemory = m.group(3);
+//                String usedMemory = m.group(4);
+//                String buffersCacheMemory = m.group(5);
+
+                value = MemoryArithmetic.parse(totalMemory, memoryUnit, MemoryMeasureUnit.BYTE);
+            }
+        }
+        catch(Exception e) {
+
+            log.warn("failed to compute total memory from " + MACOS_COMMAND + " output: \n" + commandOutput, e);
+        }
+
+        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
+        p.setValue(value);
+
+        return p;
     }
 
     public static Property windows(String commandOutput) {
@@ -162,13 +197,16 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
         if (os instanceof MacOS) {
 
             // MACOS_COMMAND output
-            long value = 1L;
-            return new LongProperty(getDefinition(), value);
+            return mac(commandOutput);
         }
         else if (os instanceof LinuxOS) {
 
             // LINUX_COMMAND output
-            throw new RuntimeException("NOT YET IMPLEMENTED");
+            return linux(commandOutput);
+        }
+        else if (os instanceof WindowsOS) {
+
+            return windows(commandOutput);
         }
         else {
             throw new RuntimeException(os + " NOT YET SUPPORTED");

@@ -27,6 +27,7 @@ import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -62,11 +63,13 @@ public abstract class OSMetricTest extends MetricDefinitionTest {
         assertEquals(1, measurements.size());
 
         Property p = measurements.get(0);
-        assertEquals("TODO", p.getName());
-        assertEquals(1L, p.getValue());
+
+        assertEquals(md.getDefinition(), p.getName());
         assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
         assertEquals(Long.class, p.getType());
-        assertEquals(new SimpleDateFormat(), p.getFormat());
+
+        Long value = (Long)p.getValue();
+        assertNotNull(value);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
