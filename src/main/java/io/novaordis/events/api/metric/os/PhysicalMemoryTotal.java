@@ -62,33 +62,36 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
     public static Property mac(String commandOutput) {
 
         LongProperty p = new LongProperty(DEFINITION);
+        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
 
-        Long value = null;
+        Matcher m = MACOS_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            log.warn("failed to extract " + DEFINITION + " from \"" + MACOS_COMMAND + "\" output: \n\n" +
+                    commandOutput + "\n");
+            return p;
+        }
 
         try {
 
-            Matcher m = MACOS_PATTERN.matcher(commandOutput);
+            String usedMemory = m.group(1);
+            String usedMemoryUnit = m.group(2);
+            String unusedMemory = m.group(3);
+            String unusedMemoryUnit = m.group(4);
 
-            if (m.find()) {
+            Long value = MemoryArithmetic.add(
+                    usedMemory, usedMemoryUnit,
+                    unusedMemory, unusedMemoryUnit,
+                    MemoryMeasureUnit.BYTE);
 
-                String usedMemory = m.group(1);
-                String usedMemoryUnit = m.group(2);
-                String unusedMemory = m.group(3);
-                String unusedMemoryUnit = m.group(4);
-
-                value = MemoryArithmetic.add(
-                        usedMemory, usedMemoryUnit,
-                        unusedMemory, unusedMemoryUnit,
-                        MemoryMeasureUnit.BYTE);
-            }
+            p.setValue(value);
         }
         catch(Exception e) {
 
-            log.warn("failed to compute total memory from " + MACOS_COMMAND + " output: \n" + commandOutput, e);
+            log.warn("failed to compute total memory from \"" + MACOS_COMMAND + "\" output: \n\n" +
+                    commandOutput + "\n", e);
         }
-
-        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
-        p.setValue(value);
 
         return p;
     }
@@ -100,16 +103,13 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
         Long value = null;
 
         try {
+
             Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
             if (m.find()) {
 
                 String memoryUnit = m.group(1);
-
                 String totalMemory = m.group(2);
-//                String freeMemory = m.group(3);
-//                String usedMemory = m.group(4);
-//                String buffersCacheMemory = m.group(5);
 
                 value = MemoryArithmetic.parse(totalMemory, memoryUnit, MemoryMeasureUnit.BYTE);
             }
@@ -127,7 +127,7 @@ public class PhysicalMemoryTotal extends MetricDefinitionBase implements OSMetri
 
     public static Property windows(String commandOutput) {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        throw new RuntimeException("NOT YET IMPLEMENTED: windows parsing for " + commandOutput);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

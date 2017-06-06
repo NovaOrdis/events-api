@@ -25,6 +25,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -123,6 +124,25 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
         assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
+    @Test
+    public void mac_invalidReading() throws Exception {
+
+        String output = "something that does not make any sense";
+
+        Property p = PhysicalMemoryTotal.mac(output);
+
+        String name = p.getName();
+        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
+
+        Class type = p.getType();
+        assertEquals(Long.class, type);
+
+        MeasureUnit u = p.getMeasureUnit();
+        assertEquals(MemoryMeasureUnit.BYTE, u);
+
+        assertNull(p.getValue());
+    }
+
     // linux() ---------------------------------------------------------------------------------------------------------
 
     @Test
@@ -150,7 +170,6 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
         MeasureUnit u = p.getMeasureUnit();
         assertEquals(MemoryMeasureUnit.BYTE, u);
 
-        //noinspection NumericOverflow
         long expected = 999936L * 1024;
         assertEquals(expected, ((Long) p.getValue()).longValue());
     }

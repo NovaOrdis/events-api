@@ -22,7 +22,6 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import org.junit.Test;
 
-import java.text.SimpleDateFormat;
 import java.util.Collections;
 import java.util.List;
 
