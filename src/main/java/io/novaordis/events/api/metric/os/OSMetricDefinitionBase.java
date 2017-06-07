@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.DoubleProperty;
+import io.novaordis.events.api.event.FloatProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
@@ -40,11 +41,11 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     protected String DESCRIPTION;
     protected MeasureUnit BASE_UNIT;
     protected String LABEL;
-    protected String LINUX_COMMAND;
+    protected String LINUX_COMMAND; // null means the metric is not available on Linux
     protected Pattern LINUX_PATTERN;
-    protected String MAC_COMMAND;
+    protected String MAC_COMMAND;  // null means the metric is not available on Mac
     protected Pattern MAC_PATTERN;
-    protected String WINDOWS_COMMAND;
+    protected String WINDOWS_COMMAND;  // null means the metric is not available on Windows
     protected Pattern WINDOWS_PATTERN;
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -133,6 +134,16 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
         Property result = getPropertyInstance(getId(), getType(), getBaseUnit());
 
+        if (commandExecutionStdout == null) {
+
+            //
+            // this means the metric is not available on the target system, and the method must be prepared to handle
+            // this situation by manufacturing a null-value property.
+            //
+
+            return result;
+        }
+
         String methodName = null;
         Object value = null;
         boolean knownOS = true;
@@ -208,6 +219,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * command output, the method must throw an exception containing a human readable message. Any exceptions, checked
      * or unchecked, should be thrown immediately - the calling layer will log appropriately.
      *
+     * If the metric is not available on MacOS, the calling layer must not invoke this method.
+     *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
      *
@@ -217,13 +230,15 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     /**
      * @return the value corresponding to this metric definition, as extracted from the output of the associated
-     * MacOS command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
+     * Linux command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
      * layer may throw an IllegalStateException. The value must be expressed in the BASE_UNIT declared above,
      * otherwise the calling layer may throw an IllegalStateException.
      *
      * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
      * command output, the method must throw an exception containing a human readable message. Any exceptions, checked
      * or unchecked, should be thrown immediately - the calling layer will log appropriately.
+     *
+     * If the metric is not available on Linux, the calling layer must not invoke this method.
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
@@ -234,13 +249,15 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     /**
      * @return the value corresponding to this metric definition, as extracted from the output of the associated
-     * MacOS command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
+     * Windows command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
      * layer may throw an IllegalStateException. The value must be expressed in the BASE_UNIT declared above,
      * otherwise the calling layer may throw an IllegalStateException.
      *
      * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
      * command output, the method must throw an exception containing a human readable message. Any exceptions, checked
      * or unchecked, should be thrown immediately - the calling layer will log appropriately.
+     *
+     * If the metric is not available on Windows, the calling layer must not invoke this method.
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
@@ -254,13 +271,19 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     private Property getPropertyInstance(String id, Class c, MeasureUnit u) {
 
         //
-        // TODO if I am ever in the situation to modify this, add a static Property.getInstance() to
+        // (.) TODO if I am ever in the situation to modify this, add a static Property.getInstance() to
         // io.novaordis.events.api.event.Property and fully implement there
         //
 
         if (Long.class.equals(c)) {
 
             LongProperty p = new LongProperty(id);
+            p.setMeasureUnit(u);
+            return p;
+        }
+        else if (Float.class.equals(c)) {
+
+            FloatProperty p = new FloatProperty(id);
             p.setMeasureUnit(u);
             return p;
         }

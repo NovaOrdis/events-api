@@ -22,8 +22,6 @@ import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
-import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

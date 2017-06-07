@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,63 +14,67 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.measure;
+package io.novaordis.events.api.metric.os;
 
 /**
+ * Simulates a metric that does not exits on the system.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/3/16
+ * @since 6/7/17
  */
-public class Percentage implements MeasureUnit {
+public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static final Percentage INSTANCE = new Percentage();
-
-    public static Percentage getInstance() {
-        return INSTANCE;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private Percentage() {
+    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(OSSource source) {
+
+        super(source);
+
+        this.TYPE = Long.class;
+
+        this.LABEL = "TEST";
+
+        this.BASE_UNIT = null;
+
+        this.DESCRIPTION = "test";
+
+        this.LINUX_COMMAND = null;
+
+        this.LINUX_PATTERN = null;
+
+        this.MAC_COMMAND = null;
+
+        this.MAC_PATTERN = null;
+
+        this.WINDOWS_COMMAND = null;
+
+        this.WINDOWS_PATTERN = null;
     }
 
-    // MeasureUnit implementation --------------------------------------------------------------------------------------
+    // OSMetricDefinitionBase overrides --------------------------------------------------------------------------------
 
     @Override
-    public String getLabel() {
-        return "%";
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public Double getConversionFactor(MeasureUnit that) {
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
 
-        if (that == null) {
-            throw new IllegalArgumentException("null measure unit");
-        }
-
-        if (!(that instanceof Percentage)) {
-            throw new IllegalArgumentException(that + " cannot be converted to " + this);
-        }
-
-        //
-        // no conversion
-        //
-
-        return null;
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-
-        return "%";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

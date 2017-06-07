@@ -17,8 +17,6 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.os.mdefs.LocalOS;
@@ -26,6 +24,8 @@ import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Collections;
 import java.util.List;
@@ -45,6 +45,8 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final Logger log = LoggerFactory.getLogger(OSMetricDefinitionTest.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -62,20 +64,33 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void collectMetricOnTheLocalSystem() throws Exception {
 
-        MetricDefinition md = getMetricDefinitionToTest();
+        MetricDefinition d = getMetricDefinitionToTest();
 
-        LocalOS localOs = (LocalOS)md.getSource();
+        LocalOS localOs = (LocalOS) d.getSource();
 
-        List<Property> measurements = localOs.collectMetrics(Collections.singletonList(md));
+        List<Property> measurements = localOs.collectMetrics(Collections.singletonList(d));
 
         assertEquals(1, measurements.size());
 
         Property p = measurements.get(0);
-        assertEquals(md.getId(), p.getName());
-        assertEquals(MemoryMeasureUnit.BYTE, p.getMeasureUnit());
-        assertEquals(Long.class, p.getType());
-        Long value = (Long)p.getValue();
-        assertNotNull(value);
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertEquals(d.getType(), p.getType());
+        Object value = p.getValue();
+
+        if (value == null) {
+
+            //
+            // this is a valid outcome, the metric may not be available on the local system and we're testing
+            // it explicitely with DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem; there are other as well
+            //
+
+            log.debug(d + " not available on the local system");
+        }
+        else {
+
+            assertEquals(value.getClass(), d.getType());
+        }
     }
 
     // static scope ----------------------------------------------------------------------------------------------------
@@ -123,22 +138,12 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         Class c = d.getType();
 
-        if (Integer.class.equals(c) || Long.class.equals(c) || Double.class.equals(c))  {
+        if (Integer.class.equals(c) || Long.class.equals(c) || Float.class.equals(c) || Double.class.equals(c))  {
 
             return;
         }
 
         fail("invalid type " + c);
-    }
-
-    @Test
-    public void getBaseUnit_NotNull() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        MeasureUnit u = d.getBaseUnit();
-
-        assertNotNull(u);
     }
 
     @Test
@@ -417,6 +422,75 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
+    public void parseCommandOutput_Null_Linux() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.LINUX;
+            p = d.parseCommandOutput(null);
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_Null_Mac() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.MAC;
+            p = d.parseCommandOutput(null);
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_Null_Windows() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.WINDOWS;
+            p = d.parseCommandOutput(null);
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
     public abstract void parseCommandOutput_ValidLinuxOutput() throws Exception;
 
     @Test
@@ -430,6 +504,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

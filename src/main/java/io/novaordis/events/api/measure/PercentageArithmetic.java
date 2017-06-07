@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,60 +17,38 @@
 package io.novaordis.events.api.measure;
 
 /**
+ * Percentage arithmetic.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/3/16
+ * @since 6/5/17
  */
-public class Percentage implements MeasureUnit {
+public class PercentageArithmetic {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static final Percentage INSTANCE = new Percentage();
+    public static float parse(String value) throws PercentageArithmeticException {
 
-    public static Percentage getInstance() {
-        return INSTANCE;
+        float f;
+
+        try {
+
+            f = Float.parseFloat(value);
+        }
+        catch(Exception e) {
+
+            throw new PercentageArithmeticException("invalid percentage value \"" + value + "\"");
+        }
+
+        return f;
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private Percentage() {
-    }
-
-    // MeasureUnit implementation --------------------------------------------------------------------------------------
-
-    @Override
-    public String getLabel() {
-        return "%";
-    }
-
-    @Override
-    public Double getConversionFactor(MeasureUnit that) {
-
-        if (that == null) {
-            throw new IllegalArgumentException("null measure unit");
-        }
-
-        if (!(that instanceof Percentage)) {
-            throw new IllegalArgumentException(that + " cannot be converted to " + this);
-        }
-
-        //
-        // no conversion
-        //
-
-        return null;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-
-        return "%";
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

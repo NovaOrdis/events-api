@@ -70,7 +70,20 @@ public abstract class OSSource extends MetricSourceBase {
 
             OSMetricDefinition osmd = (OSMetricDefinition)d;
             String command = osmd.getCommand();
-            commandOutputs.put(command, null);
+
+            //
+            // command may be null, when we know the metric definition is not available for a specific O/S
+            //
+
+            if (command == null) {
+
+                log.debug(d + " not available on " + OSType.getCurrent());
+            }
+            else {
+
+                commandOutputs.put(command, null);
+            }
+
             osMetricDefinitions.add(osmd);
         }
 
@@ -117,6 +130,11 @@ public abstract class OSSource extends MetricSourceBase {
         for(OSMetricDefinition osmd: osMetricDefinitions) {
 
             String commandOutput = commandOutputs.get(osmd.getCommand());
+
+            //
+            // the command output will be null in case the metric is not available on the current O/S so
+            // parseCommandOutput() implementations must be able to handle that
+            //
             Property p = osmd.parseCommandOutput(commandOutput);
             results.add(p);
         }
