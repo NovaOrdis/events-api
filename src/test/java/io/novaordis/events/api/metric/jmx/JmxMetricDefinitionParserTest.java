@@ -242,10 +242,10 @@ public class JmxMetricDefinitionParserTest {
         assertEquals(1, buses.size());
         assertTrue(buses.contains(b));
 
-        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDefinition());
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDescription());
-        assertNull(d.getMeasureUnit());
+        assertNull(d.getBaseUnit());
         assertNull(d.getType());
     }
 
@@ -267,10 +267,10 @@ public class JmxMetricDefinitionParserTest {
         assertEquals(1, buses.size());
         assertTrue(buses.contains(b));
 
-        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDefinition());
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDescription());
-        assertNull(d.getMeasureUnit());
+        assertNull(d.getBaseUnit());
         assertNull(d.getType());
     }
 

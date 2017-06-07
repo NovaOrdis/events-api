@@ -30,7 +30,7 @@ import io.novaordis.events.api.metric.MetricSource;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryFree extends MetricDefinitionBase implements MetricDefinition {
+public class PhysicalMemoryFree extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -40,24 +40,18 @@ public class PhysicalMemoryFree extends MetricDefinitionBase implements MetricDe
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public PhysicalMemoryFree(MetricSource s) {
+    public PhysicalMemoryFree(OSSource s) {
 
         super(s);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
-    @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
-    }
-
     /**
      * All memory metrics are by default expressed in bytes.
      */
     @Override
-    public MeasureUnit getMeasureUnit() {
+    public MeasureUnit getBaseUnit() {
         return MemoryMeasureUnit.BYTE;
     }
 
@@ -69,6 +63,21 @@ public class PhysicalMemoryFree extends MetricDefinitionBase implements MetricDe
     @Override
     public String getSimpleLabel() {
         return "Free Physical Memory";
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -78,11 +78,11 @@ public class JBossCliMetricDefinitionParserTest {
         assertEquals(1, controllers.size());
         assertTrue(controllers.contains(c));
 
-        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDefinition());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
-        assertNull(d.getMeasureUnit());
+        assertNull(d.getBaseUnit());
         assertNull(d.getType());
     }
 
@@ -105,11 +105,11 @@ public class JBossCliMetricDefinitionParserTest {
         assertEquals(1, controllers.size());
         assertTrue(controllers.contains(c));
 
-        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDefinition());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
-        assertNull(d.getMeasureUnit());
+        assertNull(d.getBaseUnit());
         assertNull(d.getType());
     }
 

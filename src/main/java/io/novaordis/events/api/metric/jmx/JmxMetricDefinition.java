@@ -91,7 +91,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
      * @return the definition where keys are rendered in the order in which they were introduced
      */
     @Override
-    public String getDefinition() {
+    public String getId() {
 
         return domainName + ":" + keyValuePairs + "/" + attributeName;
     }
@@ -99,11 +99,11 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String getSimpleLabel() {
 
-        return getDefinition();
+        return getId();
     }
 
     @Override
-    public MeasureUnit getMeasureUnit() {
+    public MeasureUnit getBaseUnit() {
 
         return null;
     }
@@ -111,7 +111,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String getDescription() {
 
-        return getDefinition();
+        return getId();
     }
 
     @Override
@@ -134,7 +134,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String toString() {
 
-        return getSource() + "/" + getDefinition();
+        return getSource() + "/" + getId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

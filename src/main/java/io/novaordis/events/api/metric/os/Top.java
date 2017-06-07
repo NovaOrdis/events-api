@@ -34,6 +34,7 @@ import java.util.StringTokenizer;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/6/16
  */
+@Deprecated
 public class Top extends OSCommand {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -59,7 +60,7 @@ public class Top extends OSCommand {
         for(MetricDefinition m: expected) {
             if (st.hasMoreTokens()) {
                 String tok = st.nextToken();
-                result.add(PropertyFactory.createInstance(m.getDefinition(), m.getType(), tok, null, m.getMeasureUnit()));
+                result.add(PropertyFactory.createInstance(m.getId(), m.getType(), tok, null, m.getBaseUnit()));
             }
         }
         return result;
@@ -79,7 +80,7 @@ public class Top extends OSCommand {
                 int i = tok.indexOf(label);
                 if (i != -1) {
                     tok = tok.substring(0, i).replace("%", "").trim();
-                    result.add(PropertyFactory.createInstance(m.getDefinition(), m.getType(), tok, null, m.getMeasureUnit()));
+                    result.add(PropertyFactory.createInstance(m.getId(), m.getType(), tok, null, m.getBaseUnit()));
                 }
             }
         }
@@ -185,7 +186,7 @@ public class Top extends OSCommand {
             if ((i = tok.indexOf("total")) != -1) {
                 PhysicalMemoryTotal m = new PhysicalMemoryTotal(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -196,12 +197,12 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, defaultMeasureUnit));
+                        m.getId(), m.getType(), tok, conversionFactor, defaultMeasureUnit));
             }
             else if ((i = tok.indexOf("free")) != -1) {
                 PhysicalMemoryFree m = new PhysicalMemoryFree(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -212,12 +213,12 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
+                        m.getId(), m.getType(), tok, conversionFactor, m.getBaseUnit()));
             }
             else if ((i = tok.indexOf("used")) != -1) {
                 PhysicalMemoryUsed m = new PhysicalMemoryUsed(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -228,7 +229,7 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
+                        m.getId(), m.getType(), tok, conversionFactor, m.getBaseUnit()));
             }
 
             //
@@ -261,7 +262,7 @@ public class Top extends OSCommand {
             if ((i = tok.indexOf("total")) != -1) {
                 SwapTotal m = new SwapTotal(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -272,12 +273,12 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
+                        m.getId(), m.getType(), tok, conversionFactor, m.getBaseUnit()));
             }
             else if ((i = tok.indexOf("free")) != -1) {
                 SwapFree m = new SwapFree(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -288,12 +289,12 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
+                        m.getId(), m.getType(), tok, conversionFactor, m.getBaseUnit()));
             }
             else if ((i = tok.indexOf("used")) != -1) {
                 SwapUsed m = new SwapUsed(null);
                 tok = tok.substring(0, i).trim();
-                MeasureUnit defaultMeasureUnit = m.getMeasureUnit();
+                MeasureUnit defaultMeasureUnit = m.getBaseUnit();
                 double conversionFactor;
                 if (mmu != null) {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(mmu);
@@ -304,7 +305,7 @@ public class Top extends OSCommand {
                     conversionFactor = defaultMeasureUnit.getConversionFactor(p.memoryMeasureUnit);
                 }
                 result.add(PropertyFactory.createInstance(
-                        m.getDefinition(), m.getType(), tok, conversionFactor, m.getMeasureUnit()));
+                        m.getId(), m.getType(), tok, conversionFactor, m.getBaseUnit()));
             }
 
             //
@@ -376,10 +377,10 @@ public class Top extends OSCommand {
             StringMeasureUnitPair p = extractMemoryMeasureUnitHeuristics(ms);
             ms = p.s;
             MemoryMeasureUnit mmu = p.memoryMeasureUnit;
-            MeasureUnit defaultMemoryUnit = m.getMeasureUnit();
+            MeasureUnit defaultMemoryUnit = m.getBaseUnit();
             double conversionFactor =  defaultMemoryUnit.getConversionFactor(mmu);
             result.add(PropertyFactory.createInstance(
-                    m.getDefinition(), m.getType(), ms, conversionFactor, defaultMemoryUnit));
+                    m.getId(), m.getType(), ms, conversionFactor, defaultMemoryUnit));
         }
         return result;
     }

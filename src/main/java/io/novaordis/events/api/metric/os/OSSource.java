@@ -76,9 +76,12 @@ public abstract class OSSource extends MetricSourceBase {
             }
 
             OSMetricDefinition osmd = (OSMetricDefinition)d;
-            String command = osmd.getOSCommand(os);
-            commandOutputs.put(command, null);
-            osMetricDefinitions.add(osmd);
+
+            throw new RuntimeException("RETURN HERE");
+
+//            String command = osmd.getCommand(os);
+//            commandOutputs.put(command, null);
+//            osMetricDefinitions.add(osmd);
         }
 
         //
@@ -123,9 +126,11 @@ public abstract class OSSource extends MetricSourceBase {
 
         for(OSMetricDefinition osmd: osMetricDefinitions) {
 
-            String commandOutput = commandOutputs.get(osmd.getOSCommand(os));
-            Property p = osmd.commandOutputToProperty(os, commandOutput);
-            results.add(p);
+//            String commandOutput = commandOutputs.get(osmd.getCommand(os));
+//            Property p = osmd.commandOutputToProperty(os, commandOutput);
+//            results.add(p);
+
+            throw new RuntimeException("RETURN HERE");
         }
 
         return results;

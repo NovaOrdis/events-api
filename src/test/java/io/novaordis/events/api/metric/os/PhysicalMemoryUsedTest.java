@@ -31,7 +31,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryUsedTest extends OSMetricTest {
+public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -66,7 +66,7 @@ public class PhysicalMemoryUsedTest extends OSMetricTest {
     public void getDefaultMeasureUnit() throws Exception {
 
         PhysicalMemoryUsed mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getMeasureUnit();
+        MeasureUnit mm = mmd.getBaseUnit();
         assertEquals(MemoryMeasureUnit.BYTE, mm);
     }
 
@@ -85,7 +85,7 @@ public class PhysicalMemoryUsedTest extends OSMetricTest {
         assertEquals("Used Physical Memory", m.getSimpleLabel());
     }
 
-    // mac() -----------------------------------------------------------------------------------------------------------
+    // parseMacCommandOutput() -----------------------------------------------------------------------------------------
 
     @Test
     public void mac_production1() throws Exception {
@@ -105,22 +105,26 @@ public class PhysicalMemoryUsedTest extends OSMetricTest {
                         "\n" +
                         "\n";
 
-        Property p = PhysicalMemoryUsed.mac(output);
+        PhysicalMemoryUsed d = getMetricDefinitionToTest();
 
-        String name = p.getName();
-        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
+        throw new RuntimeException("RETURN HERE");
 
-        Class type = p.getType();
-        assertEquals(Long.class, type);
-
-        MeasureUnit u = p.getMeasureUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, u);
-
-        long expected = 15L * 1024 * 1024 * 1024;
-        assertEquals(expected, ((Long) p.getValue()).longValue());
+//        Property p = d.parseMacCommandOutput(output);
+//
+//        String name = p.getName();
+//        assertEquals(getMetricDefinitionToTest().getId(), name);
+//
+//        Class type = p.getType();
+//        assertEquals(Long.class, type);
+//
+//        MeasureUnit u = p.getMeasureUnit();
+//        assertEquals(MemoryMeasureUnit.BYTE, u);
+//
+//        long expected = 15L * 1024 * 1024 * 1024;
+//        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
-    // linux() ---------------------------------------------------------------------------------------------------------
+    // parseLinuxCommandOutput() ---------------------------------------------------------------------------------------
 
     @Test
     public void linux_production1() throws Exception {
@@ -136,19 +140,23 @@ public class PhysicalMemoryUsedTest extends OSMetricTest {
                         "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
                         "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
 
-        Property p = PhysicalMemoryUsed.linux(output);
+        PhysicalMemoryUsed d = getMetricDefinitionToTest();
 
-        String name = p.getName();
-        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
+        throw new RuntimeException("RETURN HERE");
 
-        Class type = p.getType();
-        assertEquals(Long.class, type);
-
-        MeasureUnit u = p.getMeasureUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, u);
-
-        long expected = 117680L * 1024;
-        assertEquals(expected, ((Long) p.getValue()).longValue());
+//        Property p = d.parseLinuxCommandOutput(output);
+//
+//        String name = p.getName();
+//        assertEquals(getMetricDefinitionToTest().getId(), name);
+//
+//        Class type = p.getType();
+//        assertEquals(Long.class, type);
+//
+//        MeasureUnit u = p.getMeasureUnit();
+//        assertEquals(MemoryMeasureUnit.BYTE, u);
+//
+//        long expected = 117680L * 1024;
+//        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

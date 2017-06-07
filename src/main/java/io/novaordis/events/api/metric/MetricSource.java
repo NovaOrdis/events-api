@@ -64,16 +64,12 @@ public interface MetricSource {
     /**
      * Collect the metrics for the given definitions, in one invocation.
      *
-     * If a MetricDefinition cannot be successfully collected, a Property with the correct name and type is returned,
-     * but it value is null.
-     * Implementations should also log more details on why the collection failed, as WARN, in the logs?
+     * If a value corresponding to a specific MetricDefinition from the list cannot be successfully collected,
+     * a Property with the correct id, type and base unit must, but with a null value, be returned returned.
+     * Implementations should also log as WARN more details on why the collection failed.
      *
-     *
-     * @return the list of properties. If no properties are collected, returns an empty list, but never null. However,
-     * if a property for a specific metric definition cannot be collected, or it does not apply to this specific source,
-     * the list will contain a null on the respective position.
-     *
-     * @exception MetricException if metric definitions do not list this source among their sources.
+     * @exception MetricException if metric definitions do not list this source among their sources. This indicates
+     *      a programming error, not a runtime collection failure.
      */
     List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
 

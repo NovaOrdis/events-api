@@ -62,7 +62,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
             if (LabelAttribute.MEASURE_UNIT.equals(a)) {
 
-                MeasureUnit mu = getMeasureUnit();
+                MeasureUnit mu = getBaseUnit();
 
                 if (mu != null) {
 
@@ -92,7 +92,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     @Override
     public String toString() {
-        return getDefinition();
+        return getId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

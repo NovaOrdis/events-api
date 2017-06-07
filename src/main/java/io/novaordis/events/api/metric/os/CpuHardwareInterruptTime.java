@@ -18,8 +18,6 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.utilities.os.OS;
 
 /**
@@ -28,7 +26,7 @@ import io.novaordis.utilities.os.OS;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuHardwareInterruptTime extends MetricDefinitionBase implements OSMetricDefinition {
+public class CpuHardwareInterruptTime extends OSMetricDefinitionBase {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -39,7 +37,7 @@ public class CpuHardwareInterruptTime extends MetricDefinitionBase implements OS
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuHardwareInterruptTime(MetricSource s) {
+    public CpuHardwareInterruptTime(OSSource s) {
 
         super(s);
     }
@@ -47,13 +45,7 @@ public class CpuHardwareInterruptTime extends MetricDefinitionBase implements OS
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public Percentage getMeasureUnit() {
+    public Percentage getBaseUnit() {
 
         return Percentage.getInstance();
     }
@@ -69,20 +61,23 @@ public class CpuHardwareInterruptTime extends MetricDefinitionBase implements OS
     }
 
     @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public String getDescription() {
         return "Percentage of total CPU time spent time spent spent servicing hardware interrupts.";
-    }
-
-    // OSMetricDefinition implementation -------------------------------------------------------------------------------
-
-    @Override
-    public String getOSCommand(OS os) {
-        throw new RuntimeException("getOSCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Property commandOutputToProperty(OS os, String commandOutput) {
-        throw new RuntimeException("commandOutputToProperty() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

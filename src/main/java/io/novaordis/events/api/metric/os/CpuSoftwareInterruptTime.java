@@ -27,7 +27,7 @@ import io.novaordis.events.api.metric.MetricSource;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuSoftwareInterruptTime extends MetricDefinitionBase implements MetricDefinition {
+public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
 
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -38,7 +38,7 @@ public class CpuSoftwareInterruptTime extends MetricDefinitionBase implements Me
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuSoftwareInterruptTime(MetricSource s) {
+    public CpuSoftwareInterruptTime(OSSource s) {
 
         super(s);
     }
@@ -46,13 +46,7 @@ public class CpuSoftwareInterruptTime extends MetricDefinitionBase implements Me
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public Percentage getMeasureUnit() {
+    public Percentage getBaseUnit() {
 
         return Percentage.getInstance();
     }
@@ -65,6 +59,21 @@ public class CpuSoftwareInterruptTime extends MetricDefinitionBase implements Me
     @Override
     public String getSimpleLabel() {
         return "CPU Software Interrupt Time";
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override

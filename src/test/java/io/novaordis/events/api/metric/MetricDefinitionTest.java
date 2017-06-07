@@ -49,7 +49,7 @@ public abstract class MetricDefinitionTest {
         //
         // default behavior
         //
-        assertEquals(d.getClass().getSimpleName(), d.getDefinition());
+        assertEquals(d.getClass().getSimpleName(), d.getId());
     }
 
     @Test
@@ -88,7 +88,7 @@ public abstract class MetricDefinitionTest {
         // parantheses-enclosed
         //
 
-        MeasureUnit mu = d.getMeasureUnit();
+        MeasureUnit mu = d.getBaseUnit();
 
         if (mu == null) {
 

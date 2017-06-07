@@ -43,8 +43,8 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase implements 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public MeasureUnit getMeasureUnit() {
-        throw new RuntimeException("getMeasureUnit() NOT YET IMPLEMENTED");
+    public MeasureUnit getBaseUnit() {
+        throw new RuntimeException("getBaseUnit() NOT YET IMPLEMENTED");
     }
 
     @Override

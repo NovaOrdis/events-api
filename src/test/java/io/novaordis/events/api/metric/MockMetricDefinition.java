@@ -48,7 +48,7 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
+    public String getId() {
         return definition;
     }
 

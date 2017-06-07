@@ -27,11 +27,10 @@ import java.lang.reflect.Constructor;
 import java.util.Set;
 
 /**
- * OS metrics definition parser.
+ * The logic that parses the string representation of a metric definition, which optionally may include the metric
+ * source definition, and creates the corresponding MetricDefinition instance:
  *
- * It parses the string representation of a metric definition including optionally the metric source:
- *
- * [metric-source-representation:]<metric-definition>
+ *          [metric-source-representation:]<metric-definition>
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17

@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryFreeTest extends OSMetricTest {
+public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -57,13 +57,13 @@ public class PhysicalMemoryFreeTest extends OSMetricTest {
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefaultMeasureUnit() throws Exception {
 
         PhysicalMemoryFree mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getMeasureUnit();
+        MeasureUnit mm = mmd.getBaseUnit();
         assertEquals(MemoryMeasureUnit.BYTE, mm);
     }
 

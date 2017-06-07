@@ -66,7 +66,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     }
 
     @Override
-    public String getDefinition() {
+    public String getId() {
 
         return path.getPath() + "/" + attribute.getName();
     }
@@ -83,7 +83,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     }
 
     @Override
-    public MeasureUnit getMeasureUnit() {
+    public MeasureUnit getBaseUnit() {
 
         //
         // it would be nice if we could come up with a valid value - we'll see how we do that; in the mean

@@ -29,7 +29,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class LoadAverageLastFiveMinutesTest extends OSMetricTest {
+public class LoadAverageLastFiveMinutesTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -58,13 +58,13 @@ public class LoadAverageLastFiveMinutesTest extends OSMetricTest {
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void measureUnit() throws Exception {
 
         LoadAverageLastFiveMinutes m = getMetricDefinitionToTest();
-        assertNull(m.getMeasureUnit());
+        assertNull(m.getBaseUnit());
     }
 
     // getType() -------------------------------------------------------------------------------------------------------

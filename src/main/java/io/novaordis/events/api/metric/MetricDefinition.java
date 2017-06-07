@@ -17,8 +17,6 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinition;
-import io.novaordis.utilities.UserErrorException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -37,38 +35,44 @@ public interface MetricDefinition {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * May return null if the metric is non-dimensional (for example load average).
+     * The metric ID. It uniquely identifies a metric to a MetricSource so the MetricSource can provide a value
+     * (reading) for that metric. The ID does NOT include metric source information. The same ID can be provided to
+     * different MetricSources, and each MetricSource will return a different value of the metric.
      *
-     * @see MeasureUnit
+     * Examples:
+     *
+     * "PhysicalMemoryTotal" - uniquely identifies the total physical memory metric in the context of a local or remote
+     *      operating system instance.
+     *
+     * "java.lang:type=Threading.ThreadCount" - uniquely identifies the JVM thread count metric in the context of a
+     *      JVM's platform MBean server.
+     *
+     * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count" - uniquely identifies the DLQ queue
+     *      depth metric for a specific broker node, managed by a JBoss management controller.
      */
-    MeasureUnit getMeasureUnit();
+    String getId();
 
     /**
-     * The human readable text that explains what this metric represents.
+     * @return the source for this metric definition instance. Never returns null.
      */
-    String getDescription();
+    MetricSource getSource();
 
     /**
-     * The types for values corresponding to this metric definition. Typical: Integer, Long, Double.
+     * The types for values corresponding to this metric definition. Typically Integer, Long, Double.
      */
     Class getType();
 
     /**
-     * The metric definition, as string.
+     * The base measure unit for this metric definition. For example, the base measure unit for memory metrics is
+     * MemoryMeasureUnit.BYTE. Metric values corresponding to this metric definition may be expressed in multiples of
+     * the base unit. For example, in case of a memory metric definition, values may be expressed in
+     * MemoryMeasureUnit.BYTE, MemoryMeasureUnit.KILOBYTE, etc. May return null if the metric is non-dimensional (for
+     * example load average).
      *
-     * Information return by the method should be sufficient for a metric source to look up the corresponding metric
-     * and provide a value for it.
-     *
-     * The definition does not include metric source information.
-     *
-     * Examples:
-     *
-     * "PhysicalMemoryTotal" - makes sense in the context of a local or remote OS.
-     * "java.lang:type=Threading.ThreadCount" - makes sense in the context of a JMX bus.
-     * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count" - makes sense in the context of a
-     * JBoss management controller.
+     * @see MeasureUnit
+     * @see MetricDefinition#getBaseUnit()
      */
-    String getDefinition();
+    MeasureUnit getBaseUnit();
 
     /**
      * A human readable string, possibly space separated, that is used to represent the metric in user-facing
@@ -84,8 +88,7 @@ public interface MetricDefinition {
     String getLabel(LabelAttribute ... attributes);
 
     /**
-     * @return the source for this metric. Never returns null.
+     * The human readable text that explains what this metric represents.
      */
-    MetricSource getSource();
-
+    String getDescription();
 }

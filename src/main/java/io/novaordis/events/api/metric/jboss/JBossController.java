@@ -172,7 +172,7 @@ public class JBossController extends MetricSourceBase {
 //                continue;
 //            }
 //
-//            String name = jbmd.getDefinition();
+//            String name = jbmd.getId();
 //
 //            Property p;
 //

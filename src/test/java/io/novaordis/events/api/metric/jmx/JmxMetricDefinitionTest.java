@@ -53,10 +53,10 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     public void getDefinition() throws Exception {
 
         MetricDefinition d = getMetricDefinitionToTest();
-        assertEquals("test.domain:service=TestService/testAttribute", d.getDefinition());
+        assertEquals("test.domain:service=TestService/testAttribute", d.getId());
     }
 
-    // getDefinition() -------------------------------------------------------------------------------------------------
+    // getId() -------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {
@@ -64,7 +64,7 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
         JmxMetricDefinition d = new JmxMetricDefinition(
                 new JmxBus(), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
 
-        String definition = d.getDefinition();
+        String definition = d.getId();
 
         //
         // we expect the keys to NOT be sorted in lexical order

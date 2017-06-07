@@ -68,6 +68,10 @@ public interface Property extends Comparable<Property> {
      */
     MeasureUnit getMeasureUnit();
 
+    //
+    // TODO next time I need setMeasureUnit(), refactor.
+    //
+
     /**
      * May return null.
      */

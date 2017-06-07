@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class SwapUsedTest extends OSMetricTest {
+public class SwapUsedTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -59,13 +59,13 @@ public class SwapUsedTest extends OSMetricTest {
     }
 
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefaultMeasureUnit() throws Exception {
 
         SwapUsed mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getMeasureUnit();
+        MeasureUnit mm = mmd.getBaseUnit();
         assertEquals(MemoryMeasureUnit.BYTE, mm);
     }
 

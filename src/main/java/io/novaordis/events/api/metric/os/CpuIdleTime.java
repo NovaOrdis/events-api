@@ -26,7 +26,7 @@ import io.novaordis.events.api.metric.MetricSource;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuIdleTime extends MetricDefinitionBase implements MetricDefinition {
+public class CpuIdleTime extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,7 +36,7 @@ public class CpuIdleTime extends MetricDefinitionBase implements MetricDefinitio
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuIdleTime(MetricSource s) {
+    public CpuIdleTime(OSSource s) {
 
         super(s);
     }
@@ -44,13 +44,7 @@ public class CpuIdleTime extends MetricDefinitionBase implements MetricDefinitio
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
-    }
-
-    @Override
-    public Percentage getMeasureUnit() {
+    public Percentage getBaseUnit() {
 
         return Percentage.getInstance();
     }
@@ -63,6 +57,21 @@ public class CpuIdleTime extends MetricDefinitionBase implements MetricDefinitio
     @Override
     public String getSimpleLabel() {
         return "CPU Idle Time";
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override

@@ -117,7 +117,7 @@ public class MetricDefinitionParserTest {
 
         assertEquals(c, c2);
 
-        String definition = d.getDefinition();
+        String definition = d.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
     }
 
@@ -145,7 +145,7 @@ public class MetricDefinitionParserTest {
 
         assertEquals(c, c2);
 
-        String definition = d.getDefinition();
+        String definition = d.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
     }
 
@@ -172,7 +172,7 @@ public class MetricDefinitionParserTest {
 
         assertEquals(b, b2);
 
-        String definition = jmxm.getDefinition();
+        String definition = jmxm.getId();
         assertEquals("jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount", definition);
     }
 

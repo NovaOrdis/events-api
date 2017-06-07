@@ -111,7 +111,11 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * TODO this must be added to the Property interface.
+     */
     public void setMeasureUnit(MeasureUnit measureUnit) {
+
         this.measureUnit = measureUnit;
     }
 

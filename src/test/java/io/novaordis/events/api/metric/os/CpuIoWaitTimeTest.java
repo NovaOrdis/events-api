@@ -22,8 +22,6 @@ import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
@@ -32,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuIoWaitTimeTest extends OSMetricTest {
+public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -60,14 +58,14 @@ public class CpuIoWaitTimeTest extends OSMetricTest {
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void measureUnitIsPercentage() throws Exception {
 
         CpuIoWaitTime m = getMetricDefinitionToTest();
 
-        MeasureUnit mu = m.getMeasureUnit();
+        MeasureUnit mu = m.getBaseUnit();
 
         assertEquals(Percentage.getInstance(), mu);
     }

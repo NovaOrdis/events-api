@@ -37,11 +37,9 @@ import java.util.regex.Pattern;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryUsed extends MetricDefinitionBase implements OSMetricDefinition {
+public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final String DEFINITION = PhysicalMemoryUsed.class.getSimpleName();
 
     public static final String LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
@@ -59,98 +57,22 @@ public class PhysicalMemoryUsed extends MetricDefinitionBase implements OSMetric
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * The parsing logic that extracts the value from the output of the default reporting command on Mac.
-     */
-    public static Property mac(String commandOutput) {
-
-        LongProperty p = new LongProperty(DEFINITION);
-        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
-
-        Matcher m = MACOS_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            log.warn("failed to extract " + DEFINITION + " from \"" + MACOS_COMMAND + "\" output: \n\n" +
-                    commandOutput + "\n");
-            return p;
-        }
-
-        try {
-
-            String usedMemory = m.group(1);
-            String usedMemoryUnit = m.group(2);
-
-            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit) p.getMeasureUnit());
-            p.setValue(value);
-        }
-        catch(Exception e) {
-
-            log.warn("failed to compute " + DEFINITION + " from \"" + MACOS_COMMAND + "\" output: \n\n" +
-                    commandOutput + "\n", e);
-        }
-
-        return p;
-    }
-
-    public static Property linux(String commandOutput) {
-
-        LongProperty p = new LongProperty(DEFINITION);
-        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
-
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            log.warn("failed to extract " + DEFINITION + " from \"" + LINUX_PATTERN + "\" output: \n\n" +
-                    commandOutput + "\n");
-            return p;
-        }
-
-        try {
-
-            String usedMemoryUnit = m.group(1);
-            String usedMemory = m.group(4);
-
-            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)p.getMeasureUnit());
-            p.setValue(value);
-        }
-        catch(Exception e) {
-
-            log.warn("failed to compute " + DEFINITION + " from \"" + LINUX_PATTERN + "\" output: \n\n" +
-                    commandOutput + "\n", e);
-        }
-
-        return p;
-    }
-
-    public static Property windows(String commandOutput) {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED: windows parsing for " + commandOutput);
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public PhysicalMemoryUsed(MetricSource s) {
+    public PhysicalMemoryUsed(OSSource s) {
 
         super(s);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
-    @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
-    }
-
     /**
      * All memory metrics are by default expressed in bytes.
      */
     @Override
-    public MeasureUnit getMeasureUnit() {
+    public MeasureUnit getBaseUnit() {
         return MemoryMeasureUnit.BYTE;
     }
 
@@ -165,50 +87,82 @@ public class PhysicalMemoryUsed extends MetricDefinitionBase implements OSMetric
     }
 
     @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+
+//        LongProperty p = new LongProperty(DEFINITION);
+//        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
+//
+//        Matcher m = MACOS_PATTERN.matcher(commandOutput);
+//
+//        if (!m.find()) {
+//
+//            log.warn("failed to extract " + DEFINITION + " from \"" + MACOS_COMMAND + "\" output: \n\n" +
+//                    commandOutput + "\n");
+//            return p;
+//        }
+//
+//        try {
+//
+//            String usedMemory = m.group(1);
+//            String usedMemoryUnit = m.group(2);
+//
+//            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit) p.getMeasureUnit());
+//            p.setValue(value);
+//        }
+//        catch(Exception e) {
+//
+//            log.warn("failed to compute " + DEFINITION + " from \"" + MACOS_COMMAND + "\" output: \n\n" +
+//                    commandOutput + "\n", e);
+//        }
+//
+//        return p;
+
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+
+//        LongProperty p = new LongProperty(DEFINITION);
+//        p.setMeasureUnit(MemoryMeasureUnit.BYTE);
+//
+//        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+//
+//        if (!m.find()) {
+//
+//            log.warn("failed to extract " + DEFINITION + " from \"" + LINUX_PATTERN + "\" output: \n\n" +
+//                    commandOutput + "\n");
+//            return p;
+//        }
+//
+//        try {
+//
+//            String usedMemoryUnit = m.group(1);
+//            String usedMemory = m.group(4);
+//
+//            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)p.getMeasureUnit());
+//            p.setValue(value);
+//        }
+//        catch(Exception e) {
+//
+//            log.warn("failed to compute " + DEFINITION + " from \"" + LINUX_PATTERN + "\" output: \n\n" +
+//                    commandOutput + "\n", e);
+//        }
+//
+//        return p;
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public String getDescription() {
 
         return "The amount of physical memory used by the processes running on the system.";
-    }
-
-    // OSMetricDefinition implementation -------------------------------------------------------------------------------
-
-    @Override
-    public String getOSCommand(OS os) {
-
-        if (os instanceof MacOS) {
-
-            return MACOS_COMMAND;
-        }
-        else if (os instanceof LinuxOS) {
-
-            return LINUX_COMMAND;
-        }
-        else {
-
-            throw new RuntimeException(os + " NOT YET SUPPORTED");
-        }
-    }
-
-    @Override
-    public Property commandOutputToProperty(OS os, String commandOutput) {
-
-        if (os instanceof MacOS) {
-
-            // MACOS_COMMAND output
-            return mac(commandOutput);
-        }
-        else if (os instanceof LinuxOS) {
-
-            // LINUX_COMMAND output
-            return linux(commandOutput);
-        }
-        else if (os instanceof WindowsOS) {
-
-            return windows(commandOutput);
-        }
-        else {
-            throw new RuntimeException(os + " NOT YET SUPPORTED");
-        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -51,7 +51,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     public void getDefinition() throws Exception {
 
         JBossCliMetricDefinition d = getMetricDefinitionToTest();
-        assertEquals("/test=test/test", d.getDefinition());
+        assertEquals("/test=test/test", d.getId());
     }
 
     // constructor -----------------------------------------------------------------------------------------------------
@@ -71,7 +71,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         }
     }
 
-    // getDefinition() -------------------------------------------------------------------------------------------------
+    // getId() -------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefinition_DefaultController() throws Exception {
@@ -79,7 +79,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(
                 new JBossController(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
-        String definition = d.getDefinition();
+        String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
     }
 
@@ -90,7 +90,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
                 new JBossController(JBossControllerAddress.parseAddress("admin:adminp@1.2.3.4:8888")),
                 new CliPath("test-path"), new CliAttribute("test-attribute"));
 
-        String definition = d.getDefinition();
+        String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
     }
 

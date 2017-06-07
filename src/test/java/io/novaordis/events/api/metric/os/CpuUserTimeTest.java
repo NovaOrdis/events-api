@@ -30,7 +30,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class CpuUserTimeTest extends OSMetricTest {
+public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -56,14 +56,14 @@ public class CpuUserTimeTest extends OSMetricTest {
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void measureUnitIsPercentage() throws Exception {
 
         CpuUserTime m = getMetricDefinitionToTest();
 
-        MeasureUnit mu = m.getMeasureUnit();
+        MeasureUnit mu = m.getBaseUnit();
 
         assertEquals(Percentage.getInstance(), mu);
     }

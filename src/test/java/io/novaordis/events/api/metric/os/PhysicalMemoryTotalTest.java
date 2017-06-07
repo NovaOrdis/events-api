@@ -32,7 +32,7 @@ import static org.junit.Assert.assertTrue;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class PhysicalMemoryTotalTest extends OSMetricTest {
+public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -61,13 +61,13 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getMeasureUnit() ------------------------------------------------------------------------------------------------
+    // getBaseUnit() ------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefaultMeasureUnit() throws Exception {
 
         PhysicalMemoryTotal mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getMeasureUnit();
+        MeasureUnit mm = mmd.getBaseUnit();
         assertEquals(MemoryMeasureUnit.BYTE, mm);
     }
 
@@ -88,7 +88,7 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
         assertEquals("Total Physical Memory", m.getSimpleLabel());
     }
 
-    // mac() -----------------------------------------------------------------------------------------------------------
+    // parseMacCommandOutput() -----------------------------------------------------------------------------------------------------------
 
     @Test
     public void mac_production1() throws Exception {
@@ -108,20 +108,22 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
                 "\n" +
                 "\n";
 
-        Property p = PhysicalMemoryTotal.mac(output);
+        throw new Exception("RETURN HERE");
 
-        String name = p.getName();
-        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
-
-        Class type = p.getType();
-        assertEquals(Long.class, type);
-
-        MeasureUnit u = p.getMeasureUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, u);
-
-        //noinspection NumericOverflow
-        long expected = 15L * 1024 * 1024 * 1024 + 1424L * 1024 * 1024;
-        assertEquals(expected, ((Long) p.getValue()).longValue());
+//        Property p = PhysicalMemoryTotal.parseMacCommandOutput(output);
+//
+//        String name = p.getName();
+//        assertEquals(getMetricDefinitionToTest().getId(), name);
+//
+//        Class type = p.getType();
+//        assertEquals(Long.class, type);
+//
+//        MeasureUnit u = p.getMeasureUnit();
+//        assertEquals(MemoryMeasureUnit.BYTE, u);
+//
+//        //noinspection NumericOverflow
+//        long expected = 15L * 1024 * 1024 * 1024 + 1424L * 1024 * 1024;
+//        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     @Test
@@ -129,21 +131,23 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
 
         String output = "something that does not make any sense";
 
-        Property p = PhysicalMemoryTotal.mac(output);
+        throw new Exception("RETURN HERE");
 
-        String name = p.getName();
-        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
-
-        Class type = p.getType();
-        assertEquals(Long.class, type);
-
-        MeasureUnit u = p.getMeasureUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, u);
-
-        assertNull(p.getValue());
+//        Property p = PhysicalMemoryTotal.parseMacCommandOutput(output);
+//
+//        String name = p.getName();
+//        assertEquals(getMetricDefinitionToTest().getId(), name);
+//
+//        Class type = p.getType();
+//        assertEquals(Long.class, type);
+//
+//        MeasureUnit u = p.getMeasureUnit();
+//        assertEquals(MemoryMeasureUnit.BYTE, u);
+//
+//        assertNull(p.getValue());
     }
 
-    // linux() ---------------------------------------------------------------------------------------------------------
+    // parseLinuxCommandOutput() ---------------------------------------------------------------------------------------------------------
 
     @Test
     public void linux_production1() throws Exception {
@@ -159,19 +163,21 @@ public class PhysicalMemoryTotalTest extends OSMetricTest {
                         "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
                         "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
 
-        Property p = PhysicalMemoryTotal.linux(output);
+        throw new Exception("RETURN HERE");
 
-        String name = p.getName();
-        assertEquals(getMetricDefinitionToTest().getDefinition(), name);
-
-        Class type = p.getType();
-        assertEquals(Long.class, type);
-
-        MeasureUnit u = p.getMeasureUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, u);
-
-        long expected = 999936L * 1024;
-        assertEquals(expected, ((Long) p.getValue()).longValue());
+//        Property p = PhysicalMemoryTotal.parseLinuxCommandOutput(output);
+//
+//        String name = p.getName();
+//        assertEquals(getMetricDefinitionToTest().getId(), name);
+//
+//        Class type = p.getType();
+//        assertEquals(Long.class, type);
+//
+//        MeasureUnit u = p.getMeasureUnit();
+//        assertEquals(MemoryMeasureUnit.BYTE, u);
+//
+//        long expected = 999936L * 1024;
+//        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

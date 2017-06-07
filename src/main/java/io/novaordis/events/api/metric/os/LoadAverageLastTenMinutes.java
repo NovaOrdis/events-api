@@ -36,7 +36,7 @@ public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LoadAverageLastTenMinutes(MetricSource s) {
+    public LoadAverageLastTenMinutes(OSSource s) {
 
         super(s);
     }
@@ -44,14 +44,13 @@ public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getDefinition() {
-
-        return getClass().getSimpleName();
+    public MeasureUnit getBaseUnit() {
+        return null;
     }
 
     @Override
-    public MeasureUnit getMeasureUnit() {
-        return null;
+    public String getId() {
+        throw new RuntimeException("getId() NOT YET IMPLEMENTED");
     }
 
     @Override
