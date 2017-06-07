@@ -34,8 +34,9 @@ public enum OSType {
 
     public static final String OS_NAME_SYSTEM_PROPERTY = "os.name";
 
+    public static OSType current;
+
     protected static String value;
-    protected static OSType current;
 
     static {
 

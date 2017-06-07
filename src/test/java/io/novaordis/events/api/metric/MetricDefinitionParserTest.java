@@ -20,8 +20,8 @@ import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinition;
 import io.novaordis.events.api.metric.jboss.JBossController;
 import io.novaordis.events.api.metric.jmx.JmxBus;
 import io.novaordis.events.api.metric.jmx.JmxMetricDefinition;
-import io.novaordis.events.api.metric.os.LocalOS;
-import io.novaordis.events.api.metric.os.PhysicalMemoryFree;
+import io.novaordis.events.api.metric.os.mdefs.LocalOS;
+import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import org.junit.Test;
 

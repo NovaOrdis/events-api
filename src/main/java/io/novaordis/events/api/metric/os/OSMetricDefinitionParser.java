@@ -20,6 +20,7 @@ import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
+import io.novaordis.events.api.metric.os.mdefs.LocalOS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -82,7 +83,7 @@ public class OSMetricDefinitionParser {
 
         String[] packages = {
 
-                "io.novaordis.events.api.metric.os",
+                "io.novaordis.events.api.metric.os.mdefs",
                 "io.novaordis.events.api.metric",
         };
 

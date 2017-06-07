@@ -18,7 +18,7 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.metric.jboss.JBossController;
 import io.novaordis.events.api.metric.jmx.JmxBus;
-import io.novaordis.events.api.metric.os.LocalOS;
+import io.novaordis.events.api.metric.os.mdefs.LocalOS;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;

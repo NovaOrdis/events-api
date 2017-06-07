@@ -22,6 +22,8 @@ import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.MockMetricDefinition;
+import io.novaordis.events.api.metric.os.mdefs.LocalOS;
+import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;

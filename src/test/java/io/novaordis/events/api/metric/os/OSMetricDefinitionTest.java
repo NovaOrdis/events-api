@@ -21,6 +21,9 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.os.mdefs.LocalOS;
+import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
+import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;
 import org.junit.Test;
 

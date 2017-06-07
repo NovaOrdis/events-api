@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNull;
+import io.novaordis.events.api.metric.os.OSSource;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 6/1/17
  */
-public class LocalOSTest extends OSSourceTest {
+public class LocalOS extends OSSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,41 +32,30 @@ public class LocalOSTest extends OSSourceTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public LocalOS() throws Exception {
+
+        super();
+    }
+
+    // MetricSource implementation -------------------------------------------------------------------------------------
+
+    @Override
+    public String getAddress() {
+
+        return null;
+    }
+
+    @Override
+    public boolean hasAddress(String address) {
+
+        return false;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // Overrides -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    // getAddress() ----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getAddressIsNull() throws Exception {
-
-        LocalOS os = new LocalOS();
-
-        assertNull(os.getAddress());
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected LocalOS getMetricSourceToTest() throws Exception {
-
-        return new LocalOS();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

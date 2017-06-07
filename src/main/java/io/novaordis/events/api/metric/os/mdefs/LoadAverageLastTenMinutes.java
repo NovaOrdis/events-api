@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2017 Nova Ordis LLC
+ * Copyright (c) 2016 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,18 +14,18 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
-import org.junit.Test;
-
-import static org.junit.Assert.assertNull;
+import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.events.api.metric.MetricDefinitionBase;
+import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.os.OSSource;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 8/3/16
  */
-public class LocalOSTest extends OSSourceTest {
+public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,41 +35,46 @@ public class LocalOSTest extends OSSourceTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Constructors ----------------------------------------------------------------------------------------------------
+
+    public LoadAverageLastTenMinutes(OSSource s) {
+
+        super(s);
+    }
+
+    // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public MeasureUnit getBaseUnit() {
+        return null;
+    }
+
+    @Override
+    public String getId() {
+        throw new RuntimeException("getId() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Class getType() {
+        return Float.class;
+    }
+
+    @Override
+    public String getSimpleLabel() {
+        return "Last Ten Minutes Load Average";
+    }
+
+    @Override
+    public String getDescription() {
+
+        return "CPU and IO utilization during the last ten minutes.";
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // Overrides -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    // getAddress() ----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getAddressIsNull() throws Exception {
-
-        LocalOS os = new LocalOS();
-
-        assertNull(os.getAddress());
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected LocalOS getMetricSourceToTest() throws Exception {
-
-        return new LocalOS();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
