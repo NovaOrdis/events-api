@@ -36,16 +36,16 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    protected static Class TYPE;
-    protected static String DESCRIPTION;
-    protected static MeasureUnit BASE_UNIT;
-    protected static String LABEL;
-    protected static String LINUX_COMMAND;
-    protected static Pattern LINUX_PATTERN;
-    protected static String MAC_COMMAND;
-    protected static Pattern MAC_PATTERN;
-    protected static String WINDOWS_COMMAND;
-    protected static Pattern WINDOWS_PATTERN;
+    protected Class TYPE;
+    protected String DESCRIPTION;
+    protected MeasureUnit BASE_UNIT;
+    protected String LABEL;
+    protected String LINUX_COMMAND;
+    protected Pattern LINUX_PATTERN;
+    protected String MAC_COMMAND;
+    protected Pattern MAC_PATTERN;
+    protected String WINDOWS_COMMAND;
+    protected Pattern WINDOWS_PATTERN;
 
     // Attributes ------------------------------------------------------------------------------------------------------
 

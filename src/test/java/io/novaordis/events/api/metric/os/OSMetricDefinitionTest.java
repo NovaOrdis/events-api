@@ -75,6 +75,18 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         assertNotNull(value);
     }
 
+    // static scope ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void preRefactoring_StaticScopeAfterTwoDifferentClassesAreLoaded() throws Exception {
+
+        PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(new MockOSSource());
+        PhysicalMemoryUsed pmu = new PhysicalMemoryUsed(new MockOSSource());
+
+        assertEquals("Total Physical Memory", pmt.getLabel());
+        assertEquals("Used Physical Memory", pmu.getLabel());
+    }
+
     // accessors -------------------------------------------------------------------------------------------------------
 
     @Test
@@ -166,7 +178,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             OSType.current = OSType.LINUX;
 
             String s = d.getCommand();
-            assertEquals(OSMetricDefinitionBase.LINUX_COMMAND, s);
+            assertEquals(d.getLinuxCommand(), s);
 
         }
         finally {
@@ -193,7 +205,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             OSType.current = OSType.MAC;
 
             String s = d.getCommand();
-            assertEquals(OSMetricDefinitionBase.MAC_COMMAND, s);
+            assertEquals(d.getMacCommand(), s);
 
         }
         finally {
@@ -220,7 +232,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             OSType.current = OSType.WINDOWS;
 
             String s = d.getCommand();
-            assertEquals(OSMetricDefinitionBase.WINDOWS_COMMAND, s);
+            assertEquals(d.getWindowsCommand(), s);
 
         }
         finally {

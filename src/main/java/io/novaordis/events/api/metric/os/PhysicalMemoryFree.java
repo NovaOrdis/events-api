@@ -16,11 +16,12 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.parser.ParsingException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * See https://kb.novaordis.com/index.php/Proc-meminfo#MemFree
@@ -43,47 +44,34 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
     public PhysicalMemoryFree(OSSource s) {
 
         super(s);
-    }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+        this.TYPE = Long.class;
 
-    /**
-     * All memory metrics are by default expressed in bytes.
-     */
-    @Override
-    public MeasureUnit getBaseUnit() {
-        return MemoryMeasureUnit.BYTE;
-    }
+        this.LABEL = "Free Physical Memory";
 
-    @Override
-    public Class getType() {
-        return Long.class;
-    }
+        this.BASE_UNIT = MemoryMeasureUnit.BYTE;
 
-    @Override
-    public String getSimpleLabel() {
-        return "Free Physical Memory";
-    }
+        this.DESCRIPTION = "The amount of physical memory left unused by the system.";
 
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
-    }
+        this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
-    }
+        //
+        // KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache
+        //
+        this.LINUX_PATTERN = Pattern.compile(
+                "([KMGiB]+) *Mem *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used, *([0-9]+) buff/cache");
 
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
-    }
+        this.MAC_COMMAND = "/usr/bin/top -l 1 -n 0";
 
-    @Override
-    public String getDescription() {
+        //
+        // PhysMem: 12G used (2149M wired), 4305M unused.
+        //
+        this.MAC_PATTERN = Pattern.compile(
+                "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
-        return "The amount of physical memory left unused by the system.";
+        this.WINDOWS_COMMAND =  "typeperf -sc 1 \"\\Memory\\*\"";
+
+        this.WINDOWS_PATTERN = Pattern.compile("TBD");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -91,6 +79,55 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = MAC_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
+        }
+
+        String unusedMemory = m.group(3);
+        String unusedMemoryUnit = m.group(4);
+
+        //noinspection UnnecessaryLocalVariable
+        Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+        return value;
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+        }
+
+        String memoryUnit = m.group(1);
+        String freeMemory = m.group(3);
+
+        //noinspection UnnecessaryLocalVariable
+        Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+        return value;
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
+        }
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

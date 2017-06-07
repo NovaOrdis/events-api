@@ -33,40 +33,6 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    static {
-
-        TYPE = Long.class;
-
-        BASE_UNIT = MemoryMeasureUnit.BYTE;
-
-        LABEL = "Total Physical Memory";
-
-        DESCRIPTION =
-                "Total amount of usable physical memory, which is the amount of physical memory installed on the " +
-                        "system minus a number of reserved bits and the kernel binary code.";
-
-        LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
-
-        //
-        // KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache
-        //
-        LINUX_PATTERN = Pattern.compile(
-                "([KMGiB]+) *Mem *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used, *([0-9]+) buff/cache");
-
-        MAC_COMMAND = "/usr/bin/top -l 1 -n 0";
-
-        //
-        // PhysMem: 12G used (2149M wired), 4305M unused.
-        //
-        MAC_PATTERN = Pattern.compile(
-                "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
-
-
-        WINDOWS_COMMAND = "typeperf -sc 1 \"\\Memory\\*\"";
-
-        WINDOWS_PATTERN = null;
-    }
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -76,6 +42,36 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
     public PhysicalMemoryTotal(OSSource s) {
 
         super(s);
+        
+        this.TYPE = Long.class;
+
+        this.LABEL = "Total Physical Memory";
+
+        this.BASE_UNIT = MemoryMeasureUnit.BYTE;
+
+        this.DESCRIPTION =
+                "Total amount of usable physical memory, which is the amount of physical memory installed on the " +
+                        "system minus a number of reserved bits and the kernel binary code.";
+
+        this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
+
+        //
+        // KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache
+        //
+        this.LINUX_PATTERN = Pattern.compile(
+                "([KMGiB]+) *Mem *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used, *([0-9]+) buff/cache");
+
+        this.MAC_COMMAND = "/usr/bin/top -l 1 -n 0";
+
+        //
+        // PhysMem: 12G used (2149M wired), 4305M unused.
+        //
+        this.MAC_PATTERN = Pattern.compile(
+                "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
+
+        this.WINDOWS_COMMAND =  "typeperf -sc 1 \"\\Memory\\*\"";
+
+        this.WINDOWS_PATTERN = Pattern.compile("TBD");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -129,7 +125,14 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
     @Override
     protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED: windows parsing for " + commandOutput);
+        Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
+        }
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
