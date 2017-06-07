@@ -25,6 +25,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -82,6 +83,31 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
         PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
         assertEquals("Free Physical Memory", m.getSimpleLabel());
+    }
+
+    // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+
+        fail("parseCommandOutput_ValidLinuxOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidMacOutput() throws Exception {
+
+        fail("parseCommandOutput_ValidMacOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+
+        //
+        // TODO update this when implementing Windows support
+        //
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

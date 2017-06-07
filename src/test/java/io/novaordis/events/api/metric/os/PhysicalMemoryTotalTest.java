@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
@@ -25,7 +24,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -49,36 +47,40 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
     // parse() ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void parse() throws Exception {
+    public void metricDefinition_parse() throws Exception {
 
         MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+
         assertTrue(r.isEmpty());
 
-        PhysicalMemoryTotal m =
-                (PhysicalMemoryTotal)MetricDefinitionParser.parse(r, "PhysicalMemoryTotal");
+        PhysicalMemoryTotal m = (PhysicalMemoryTotal)MetricDefinitionParser.parse(r, "PhysicalMemoryTotal");
 
         assertNotNull(m);
+
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // getBaseUnit() ------------------------------------------------------------------------------------------------
+    // accessors -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getDefaultMeasureUnit() throws Exception {
+    public void getId() throws Exception {
 
-        PhysicalMemoryTotal mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getBaseUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, mm);
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals("PhysicalMemoryTotal", md.getId());
     }
 
-    // getDefaultType() ------------------------------------------------------------------------------------------------
+    @Test
+    public void getType() throws Exception {
+
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals(Long.class, md.getType());
+    }
 
     @Test
-    public void getDefaultType() throws Exception {
+    public void getBaseUnit() throws Exception {
 
-        PhysicalMemoryTotal mmd = getMetricDefinitionToTest();
-        Class c = mmd.getType();
-        assertEquals(Long.class, c);
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
@@ -88,69 +90,114 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
         assertEquals("Total Physical Memory", m.getSimpleLabel());
     }
 
-    // parseMacCommandOutput() -----------------------------------------------------------------------------------------------------------
-
     @Test
-    public void mac_production1() throws Exception {
+    public void getDescription() throws Exception {
 
-        String output =
-
-                "Processes: 263 total, 2 running, 5 stuck, 256 sleeping, 1421 threads \n" +
-                "2017/06/05 15:04:51\n" +
-                "Load Avg: 2.29, 2.02, 1.90 \n" +
-                "CPU usage: 2.73% user, 10.95% sys, 86.30% idle \n" +
-                "SharedLibs: 13M resident, 18M data, 0B linkedit.\n" +
-                "MemRegions: 59430 total, 5948M resident, 147M private, 4665M shared.\n" +
-                "PhysMem: 15G used (1447M wired), 1424M unused.\n" +
-                "VM: 699G vsize, 1064M framework vsize, 0(0) swapins, 0(0) swapouts.\n" +
-                "Networks: packets: 224778/181M in, 135478/17M out.\n" +
-                "Disks: 229646/5001M read, 113968/3311M written.\n" +
-                "\n" +
-                "\n";
-
-        throw new Exception("RETURN HERE");
-
-//        Property p = PhysicalMemoryTotal.parseMacCommandOutput(output);
-//
-//        String name = p.getName();
-//        assertEquals(getMetricDefinitionToTest().getId(), name);
-//
-//        Class type = p.getType();
-//        assertEquals(Long.class, type);
-//
-//        MeasureUnit u = p.getMeasureUnit();
-//        assertEquals(MemoryMeasureUnit.BYTE, u);
-//
-//        //noinspection NumericOverflow
-//        long expected = 15L * 1024 * 1024 * 1024 + 1424L * 1024 * 1024;
-//        assertEquals(expected, ((Long) p.getValue()).longValue());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
+        assertTrue(m.getDescription().toLowerCase().contains("physical"));
+        assertTrue(m.getDescription().toLowerCase().contains("memory"));
+        assertTrue(m.getDescription().toLowerCase().contains("total"));
     }
 
     @Test
-    public void mac_invalidReading() throws Exception {
+    public void getLinuxCommand() throws Exception {
 
-        String output = "something that does not make any sense";
+        String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        throw new Exception("RETURN HERE");
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals(expected, m.getLinuxCommand());
 
-//        Property p = PhysicalMemoryTotal.parseMacCommandOutput(output);
-//
-//        String name = p.getName();
-//        assertEquals(getMetricDefinitionToTest().getId(), name);
-//
-//        Class type = p.getType();
-//        assertEquals(Long.class, type);
-//
-//        MeasureUnit u = p.getMeasureUnit();
-//        assertEquals(MemoryMeasureUnit.BYTE, u);
-//
-//        assertNull(p.getValue());
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.LINUX;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
     }
 
-    // parseLinuxCommandOutput() ---------------------------------------------------------------------------------------------------------
+    @Test
+    public void getMacCommand() throws Exception {
+
+        String expected = "/usr/bin/top -l 1 -n 0";
+
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals(expected, m.getMacCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.MAC;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
 
     @Test
-    public void linux_production1() throws Exception {
+    public void getWindowsCommand() throws Exception {
+
+        String expected = "typeperf -sc 1 \"\\Memory\\*\"";
+
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOS());
+        assertEquals(expected, m.getWindowsCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.WINDOWS;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    //
+    // invalid readings are tested in superclass
+    //
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
 
         String output =
 
@@ -163,21 +210,147 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
                         "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
                         "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
 
-        throw new Exception("RETURN HERE");
+        PhysicalMemoryTotal d = getMetricDefinitionToTest();
 
-//        Property p = PhysicalMemoryTotal.parseLinuxCommandOutput(output);
-//
-//        String name = p.getName();
-//        assertEquals(getMetricDefinitionToTest().getId(), name);
-//
-//        Class type = p.getType();
-//        assertEquals(Long.class, type);
-//
-//        MeasureUnit u = p.getMeasureUnit();
-//        assertEquals(MemoryMeasureUnit.BYTE, u);
-//
-//        long expected = 999936L * 1024;
-//        assertEquals(expected, ((Long) p.getValue()).longValue());
+        Property p;
+
+        try {
+
+            OSType.current = OSType.LINUX;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 999936L * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidMacOutput() throws Exception {
+
+        String output =
+
+                "Processes: 263 total, 2 running, 5 stuck, 256 sleeping, 1421 threads \n" +
+                        "2017/06/05 15:04:51\n" +
+                        "Load Avg: 2.29, 2.02, 1.90 \n" +
+                        "CPU usage: 2.73% user, 10.95% sys, 86.30% idle \n" +
+                        "SharedLibs: 13M resident, 18M data, 0B linkedit.\n" +
+                        "MemRegions: 59430 total, 5948M resident, 147M private, 4665M shared.\n" +
+                        "PhysMem: 15G used (1447M wired), 1424M unused.\n" +
+                        "VM: 699G vsize, 1064M framework vsize, 0(0) swapins, 0(0) swapouts.\n" +
+                        "Networks: packets: 224778/181M in, 135478/17M out.\n" +
+                        "Disks: 229646/5001M read, 113968/3311M written.\n" +
+                        "\n" +
+                        "\n";
+
+        PhysicalMemoryTotal d = getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.MAC;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        //noinspection NumericOverflow
+        long expected = 15L * 1024 * 1024 * 1024 + 1424L * 1024 * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+
+        String output =
+
+                "\"(PDH-CSV 4.0)\",\"\\\\NOMBP2W10-1\\Memory\\Page Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Committed Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Commit Limit\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Write Copies/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Demand Zero Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Input/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Page Reads/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Output/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Page Writes/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Allocs\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Allocs\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Free System Page Table Entries\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes Peak\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Total Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Total Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Cache Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\% Committed Bytes In Use\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available KBytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available MBytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Pages RePurposed/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Free & Zero Page List Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Modified Page List Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Reserve Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Normal Priority Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Core Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Long-Term Average Standby Cache Lifetime (s)\"\n" +
+                        "\"06/06/2017 22:59:09.095\",\"352.723452\",\"7177633792.000000\",\"1294233600.000000\"," +
+                        "\"9931640832.000000\",\"0.000000\",\"62.245315\",\"0.000000\",\"303.322408\",\"0.000000\"," +
+                        "\"0.000000\",\"0.000000\",\"0.000000\",\"238923776.000000\",\"67751936.000000\"," +
+                        "\"0.000000\",\"263166.000000\",\"163590.000000\",\"12272334.000000\",\"52121600.000000\"," +
+                        "\"155287552.000000\",\"199090176.000000\",\"0.000000\",\"0.000000\",\"15192064.000000\"," +
+                        "\"11460608.000000\",\"0.000000\",\"13.031418\",\"7009408.000000\",\"6845.000000\"," +
+                        "\"0.000000\",\"4636155904.000000\",\"167489536.000000\",\"2065068032.000000\"," +
+                        "\"305713152.000000\",\"170696704.000000\",\"14400.000000\"\n";
+
+        PhysicalMemoryTotal d = getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.WINDOWS;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 1024L * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

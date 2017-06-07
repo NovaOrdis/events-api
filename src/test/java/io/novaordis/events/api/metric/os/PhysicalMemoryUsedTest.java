@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
@@ -48,34 +47,38 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
     // parse() ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void parse() throws Exception {
+    public void metricDefinition_parse() throws Exception {
 
         MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
         assertTrue(r.isEmpty());
 
-        PhysicalMemoryUsed m =
-                (PhysicalMemoryUsed)MetricDefinitionParser.parse(r, "PhysicalMemoryUsed");
+        PhysicalMemoryUsed m = (PhysicalMemoryUsed)MetricDefinitionParser.parse(r, "PhysicalMemoryUsed");
 
         assertNotNull(m);
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-    // defaults --------------------------------------------------------------------------------------------------------
+    // accessors -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getDefaultMeasureUnit() throws Exception {
+    public void getId() throws Exception {
 
-        PhysicalMemoryUsed mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getBaseUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, mm);
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals("PhysicalMemoryUsed", md.getId());
     }
 
     @Test
-    public void getDefaultType() throws Exception {
+    public void getType() throws Exception {
 
-        PhysicalMemoryUsed mmd = getMetricDefinitionToTest();
-        Class c = mmd.getType();
-        assertEquals(Long.class, c);
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals(Long.class, md.getType());
+    }
+
+    @Test
+    public void getBaseUnit() throws Exception {
+
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
@@ -85,10 +88,149 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
         assertEquals("Used Physical Memory", m.getSimpleLabel());
     }
 
-    // parseMacCommandOutput() -----------------------------------------------------------------------------------------
+    @Test
+    public void getDescription() throws Exception {
+
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOS());
+        assertTrue(m.getDescription().toLowerCase().contains("physical"));
+        assertTrue(m.getDescription().toLowerCase().contains("memory"));
+        assertTrue(m.getDescription().toLowerCase().contains("used"));
+    }
 
     @Test
-    public void mac_production1() throws Exception {
+    public void getLinuxCommand() throws Exception {
+
+        String expected = "/usr/bin/top -b -n 1 -p 0";
+
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals(expected, m.getLinuxCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.LINUX;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    @Test
+    public void getMacCommand() throws Exception {
+
+        String expected = "/usr/bin/top -l 1 -n 0";
+
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals(expected, m.getMacCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.MAC;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    @Test
+    public void getWindowsCommand() throws Exception {
+
+        String expected = "typeperf -sc 1 \"\\Memory\\*\"";
+
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOS());
+        assertEquals(expected, m.getWindowsCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.WINDOWS;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+
+        String output =
+
+                "top - 11:10:11 up 0 min,  1 user,  load average: 0.15, 0.04, 0.02\n" +
+                        "Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie\n" +
+                        "%Cpu(s):  2.8 us,  8.1 sy,  0.0 ni, 88.7 id,  0.4 wa,  0.0 hi,  0.1 si,  0.0 st\n" +
+                        "KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache\n" +
+                        "KiB Swap:        0 total,        0 free,        0 used.   715840 avail Mem\n" +
+                        "\n" +
+                        "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
+                        "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
+
+        PhysicalMemoryUsed d = getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.LINUX;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 117680L * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidMacOutput() throws Exception {
 
         String output =
 
@@ -107,56 +249,102 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
 
         PhysicalMemoryUsed d = getMetricDefinitionToTest();
 
-        throw new RuntimeException("RETURN HERE");
+        Property p;
 
-//        Property p = d.parseMacCommandOutput(output);
-//
-//        String name = p.getName();
-//        assertEquals(getMetricDefinitionToTest().getId(), name);
-//
-//        Class type = p.getType();
-//        assertEquals(Long.class, type);
-//
-//        MeasureUnit u = p.getMeasureUnit();
-//        assertEquals(MemoryMeasureUnit.BYTE, u);
-//
-//        long expected = 15L * 1024 * 1024 * 1024;
-//        assertEquals(expected, ((Long) p.getValue()).longValue());
+        try {
+
+            OSType.current = OSType.MAC;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 15L * 1024 * 1024 * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
-    // parseLinuxCommandOutput() ---------------------------------------------------------------------------------------
-
     @Test
-    public void linux_production1() throws Exception {
+    @Override
+    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
 
         String output =
 
-                "top - 11:10:11 up 0 min,  1 user,  load average: 0.15, 0.04, 0.02\n" +
-                        "Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie\n" +
-                        "%Cpu(s):  2.8 us,  8.1 sy,  0.0 ni, 88.7 id,  0.4 wa,  0.0 hi,  0.1 si,  0.0 st\n" +
-                        "KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache\n" +
-                        "KiB Swap:        0 total,        0 free,        0 used.   715840 avail Mem\n" +
-                        "\n" +
-                        "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
-                        "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
+                "\"(PDH-CSV 4.0)\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Page Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Committed Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Commit Limit\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Write Copies/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Demand Zero Faults/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Input/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Page Reads/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Output/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Page Writes/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Allocs\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Allocs\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Free System Page Table Entries\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes Peak\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Total Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Total Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\System Cache Resident Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\% Committed Bytes In Use\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available KBytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Available MBytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Pages RePurposed/sec\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Free & Zero Page List Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Modified Page List Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Reserve Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Normal Priority Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Core Bytes\"," +
+                        "\"\\\\NOMBP2W10-1\\Memory\\Long-Term Average Standby Cache Lifetime (s)\"\n" +
+                        "\"06/06/2017 22:59:09.095\",\"352.723452\",\"7177633792.000000\",\"1294233600.000000\"," +
+                        "\"9931640832.000000\",\"0.000000\",\"62.245315\",\"0.000000\",\"303.322408\",\"0.000000\"," +
+                        "\"0.000000\",\"0.000000\",\"0.000000\",\"238923776.000000\",\"67751936.000000\"," +
+                        "\"0.000000\",\"263166.000000\",\"163590.000000\",\"12272334.000000\",\"52121600.000000\"," +
+                        "\"155287552.000000\",\"199090176.000000\",\"0.000000\",\"0.000000\",\"15192064.000000\"," +
+                        "\"11460608.000000\",\"0.000000\",\"13.031418\",\"7009408.000000\",\"6845.000000\"," +
+                        "\"0.000000\",\"4636155904.000000\",\"167489536.000000\",\"2065068032.000000\"," +
+                        "\"305713152.000000\",\"170696704.000000\",\"14400.000000\"\n";
 
         PhysicalMemoryUsed d = getMetricDefinitionToTest();
 
-        throw new RuntimeException("RETURN HERE");
+        Property p;
 
-//        Property p = d.parseLinuxCommandOutput(output);
-//
-//        String name = p.getName();
-//        assertEquals(getMetricDefinitionToTest().getId(), name);
-//
-//        Class type = p.getType();
-//        assertEquals(Long.class, type);
-//
-//        MeasureUnit u = p.getMeasureUnit();
-//        assertEquals(MemoryMeasureUnit.BYTE, u);
-//
-//        long expected = 117680L * 1024;
-//        assertEquals(expected, ((Long) p.getValue()).longValue());
+        try {
+
+            OSType.current = OSType.WINDOWS;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 1024L * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

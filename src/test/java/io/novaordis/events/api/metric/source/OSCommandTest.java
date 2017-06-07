@@ -31,6 +31,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/5/16
  */
+@Deprecated
 public abstract class OSCommandTest {
 
     // Constants -------------------------------------------------------------------------------------------------------

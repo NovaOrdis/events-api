@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
+import io.novaordis.events.api.parser.ParsingException;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -61,7 +62,8 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
                 "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
 
-        WINDOWS_COMMAND = "TBD";
+        WINDOWS_COMMAND = "typeperf -sc 1 \"\\Memory\\*\"";
+
         WINDOWS_PATTERN = null;
     }
 
@@ -89,7 +91,7 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
 
         if (!m.find()) {
 
-            return null;
+            throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
         }
 
         String usedMemory = m.group(1);
@@ -113,7 +115,7 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
 
         if (!m.find()) {
 
-            return null;
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
         }
 
         String memoryUnit = m.group(1);

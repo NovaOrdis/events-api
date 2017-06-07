@@ -16,11 +16,17 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MetricSourceTest;
+import org.junit.Test;
+
+import static org.junit.Assert.fail;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 6/7/17
  */
-public class RemoteOSTest extends OSSourceTest {
+public abstract class OSSourceTest extends MetricSourceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,29 +40,20 @@ public class RemoteOSTest extends OSSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // Overrides -------------------------------------------------------------------------------------------------------
+    // collectMetrics() ------------------------------------------------------------------------------------------------
 
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+    @Test
+    public final void collectMetrics() throws Exception {
+
+        fail("return here");
     }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    // hasAddress() ----------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected RemoteOS getMetricSourceToTest() throws Exception {
-
-        return new RemoteOS("ssh://127.0.0.1");
-    }
+    protected abstract MetricSource getMetricSourceToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

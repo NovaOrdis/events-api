@@ -22,6 +22,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
+import io.novaordis.events.api.parser.ParsingException;
 
 import java.util.regex.Pattern;
 
@@ -110,6 +111,24 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     }
 
     @Override
+    public String getLinuxCommand() {
+
+        return LINUX_COMMAND;
+    }
+
+    @Override
+    public String getMacCommand() {
+
+        return MAC_COMMAND;
+    }
+
+    @Override
+    public String getWindowsCommand() {
+
+        return WINDOWS_COMMAND;
+    }
+
+    @Override
     public Property parseCommandOutput(String commandExecutionStdout) {
 
         Property result = getPropertyInstance(getId(), getType(), getBaseUnit());
@@ -149,8 +168,10 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
             if (knownOS && value == null) {
 
-                log.warn(getClass().getName() + "." + methodName + "(...) incorrectly implemented, returning null");
+                log.warn(getClass().getName() + "." + methodName + "(...) incorrectly implemented, it returns null");
             }
+
+            result.setValue(value);
 
         }
         catch(Exception e) {
@@ -189,6 +210,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException if the expected patters cannot be matched.
      */
     protected abstract Object parseMacCommandOutput(String commandOutput) throws Exception;
 
@@ -204,6 +227,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException if the expected patters cannot be matched.
      */
     protected abstract Object parseLinuxCommandOutput(String commandOutput) throws Exception;
 
@@ -219,6 +244,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException if the expected patters cannot be matched.
      */
     protected abstract Object parseWindowsCommandOutput(String commandOutput) throws Exception;
 

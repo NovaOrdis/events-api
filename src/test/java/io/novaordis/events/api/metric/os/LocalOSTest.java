@@ -16,7 +16,6 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.metric.MetricSourceTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNull;
@@ -25,7 +24,7 @@ import static org.junit.Assert.assertNull;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class LocalOSTest extends MetricSourceTest {
+public class LocalOSTest extends OSSourceTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

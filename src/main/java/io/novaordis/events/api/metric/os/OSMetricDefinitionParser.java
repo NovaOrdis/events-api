@@ -134,11 +134,13 @@ public class OSMetricDefinitionParser {
                 if (sources.isEmpty()) {
 
                     metricSource = new LocalOS();
-                } else {
+                }
+                else {
 
                     metricSource = sources.iterator().next();
                 }
-            } else {
+            }
+            else {
 
                 metricSource = repository.getSource(RemoteOS.class, metricSourceAddress);
 
@@ -157,7 +159,7 @@ public class OSMetricDefinitionParser {
 
         try {
 
-            Constructor<MetricSource> constructor = c.getConstructor(MetricSource.class);
+            Constructor<MetricSource> constructor = c.getConstructor(OSSource.class);
             md = (MetricDefinition)constructor.newInstance(metricSource);
 
         }

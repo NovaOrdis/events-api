@@ -34,6 +34,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/5/16
  */
+@Deprecated
 public abstract class OSCommand {
 
     // Constants -------------------------------------------------------------------------------------------------------

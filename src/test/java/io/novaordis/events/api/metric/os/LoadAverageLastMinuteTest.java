@@ -24,6 +24,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -82,6 +83,27 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
         LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOS());
         assertEquals("Last Minute Load Average", m.getSimpleLabel());
+    }
+
+    // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+
+        fail("parseCommandOutput_ValidLinuxOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidMacOutput() throws Exception {
+        fail("parseCommandOutput_ValidMacOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Test
+    @Override
+    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+        fail("parseCommandOutput_ValidWindowsOutput() NOT YET IMPLEMENTED");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
