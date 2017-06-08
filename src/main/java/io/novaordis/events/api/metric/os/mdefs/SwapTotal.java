@@ -16,13 +16,14 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.parser.ParsingException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * See https://kb.novaordis.com/index.php/Proc-meminfo#SwapTotal
@@ -43,47 +44,28 @@ public class SwapTotal extends OSMetricDefinitionBase {
     public SwapTotal(OSSource s) {
 
         super(s);
-    }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+        this.TYPE = Long.class;
 
-    /**
-     * All memory metrics are by default expressed in bytes.
-     */
-    @Override
-    public MeasureUnit getBaseUnit() {
-        return MemoryMeasureUnit.BYTE;
-    }
+        this.LABEL = "Total Swap";
 
-    @Override
-    public Class getType() {
-        return Long.class;
-    }
+        this.BASE_UNIT = MemoryMeasureUnit.BYTE;
 
-    @Override
-    public String getSimpleLabel() {
-        return "Total Swap";
-    }
+        this.DESCRIPTION = "The total amount of swap available.";
 
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
-    }
+        this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
-    }
+        //
+        // KiB Swap:       567 total,      321 free,        0 used.   715840 avail Mem
+        //
+        this.LINUX_PATTERN = Pattern.compile(
+                "([KMGiB]+) *Swap *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used\\.");
 
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
-    }
+        this.MAC_COMMAND = null;
+        this.MAC_PATTERN = null;
 
-    @Override
-    public String getDescription() {
-
-        return "The total amount of swap available.";
+        this.WINDOWS_COMMAND =  null;
+        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -91,6 +73,36 @@ public class SwapTotal extends OSMetricDefinitionBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+        }
+
+        String memoryUnit = m.group(1);
+        String s = m.group(2);
+
+        //noinspection UnnecessaryLocalVariable
+        Long value = MemoryArithmetic.parse(s, memoryUnit, (MemoryMeasureUnit) BASE_UNIT);
+        return value;
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+
+        throw new IllegalStateException(this + " not available on Mac");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
