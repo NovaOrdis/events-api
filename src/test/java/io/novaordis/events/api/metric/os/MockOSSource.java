@@ -42,6 +42,11 @@ public class MockOSSource extends OSSourceBase {
         throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
     }
 
+    @Override
+    protected String execute(String command) {
+        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+    }
+
 
     // Public ----------------------------------------------------------------------------------------------------------
 

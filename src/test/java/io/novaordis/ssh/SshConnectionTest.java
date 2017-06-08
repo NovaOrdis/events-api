@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os.mdefs;
-
-import io.novaordis.events.api.metric.os.OSSourceBase;
+package io.novaordis.ssh;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/1/17
+ * @since 6/8/17
  */
-public class LocalOS extends OSSourceBase {
+public abstract class SshConnectionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,30 +30,16 @@ public class LocalOS extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LocalOS() throws Exception {
-
-        super();
-    }
-
-    // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-
-        return null;
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-
-        return false;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+
+    public abstract SshConnection getSshConnectionToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -20,8 +20,6 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
-import io.novaordis.utilities.os.NativeExecutionResult;
-import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -50,6 +48,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
+    @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
@@ -101,24 +100,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
             // execute the command and associate the output with the command
             //
 
-            try {
-
-                NativeExecutionResult r = OS.getInstance().execute(command);
-
-                if (r.isSuccess()) {
-
-                    String stdout = r.getStdout();
-                    commandOutputs.put(command, stdout);
-                }
-                else {
-
-                    log.warn("\"" + command + "\" execution failed");
-                }
-            }
-            catch (Exception e) {
-
-                log.warn("\"" + command + "\" execution failed", e);
-            }
+            String stdout = execute(command);
+            commandOutputs.put(command, stdout);
         }
 
         //
@@ -147,6 +130,16 @@ public abstract class OSSourceBase extends MetricSourceBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Execute the command and return the execution stdout. It may be, and actually in most cases is, a multi-line
+     * string.
+     *
+     * If the execution fails, or no stdout is returned, return null and log human interpretable warnings.
+     *
+     * The method should not knowingly throw any unchecked exception.
+     */
+    protected abstract String execute(String command);
 
     // Private ---------------------------------------------------------------------------------------------------------
 

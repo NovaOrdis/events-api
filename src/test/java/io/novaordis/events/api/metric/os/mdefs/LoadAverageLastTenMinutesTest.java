@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
+import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import org.junit.Test;

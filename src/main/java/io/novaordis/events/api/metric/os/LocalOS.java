@@ -16,42 +16,32 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricException;
-import io.novaordis.ssh.SshConnection;
-
-import java.util.List;
+import io.novaordis.utilities.os.NativeExecutionResult;
+import io.novaordis.utilities.os.OS;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
- * See https://kb.novaordis.com/index.php/Events-api_Concepts#Remote_OS
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class RemoteOS extends OSSourceBase {
+public class LocalOS extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(LocalOS.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address;
-    private SshConnection sshConnection;
+    private OS os;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public RemoteOS(String address) throws Exception {
+    public LocalOS() throws Exception {
 
-        super();
-
-        if (address == null) {
-
-            throw new IllegalArgumentException("null address");
-        }
-
-        this.address = address;
+        this.os = OS.getInstance();
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -59,42 +49,59 @@ public class RemoteOS extends OSSourceBase {
     @Override
     public String getAddress() {
 
-        return address;
+        return null;
     }
 
     @Override
     public boolean hasAddress(String address) {
 
-        //
-        // TODO more complete implementation to follow
-        //
-
-        return this.address.equals(address);
-    }
-
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
-
-        throw new RuntimeException("NYE");
+        return false;
     }
 
     @Override
     protected String execute(String command) {
 
-        //sshConnection.execute(command);
+        String stdout = null;
 
-        throw new RuntimeException("NYE");
+        try {
+
+            NativeExecutionResult r = os.execute(command);
+
+            if (r.isSuccess()) {
+
+                stdout = r.getStdout();
+
+                if (stdout == null) {
+
+                    log.warn("");
+
+                }
+                else if (stdout.isEmpty()) {
+
+                    stdout = null;
+
+                    log.warn("");
+
+                }
+            }
+            else {
+
+                log.warn("\"" + command + "\" execution failed");
+            }
+        }
+        catch (Exception e) {
+
+            //
+            // command fails in an unusual way
+            //
+
+            log.warn("\"" + command + "\" execution failed", e);
+        }
+
+        return stdout;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public String toString() {
-
-        return address;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

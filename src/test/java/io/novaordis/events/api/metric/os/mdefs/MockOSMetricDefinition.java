@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 
+import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.LabelAttribute;
@@ -39,27 +40,40 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String id;
+    private OSSourceBase source;
+    private String command;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockOSMetricDefinition(OSSourceBase s) {
 
+        this(MockOSMetricDefinition.class.getSimpleName(), s, null);
+    }
+
+    public MockOSMetricDefinition(String id, OSSourceBase s, String command) {
+
         if (FAIL_IN_CONSTRUCTOR) {
 
             throw new RuntimeException("SYNTHETIC");
         }
+
+        this.id = id;
+        this.source = s;
+        this.command = command;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
     public String getId() {
+
         return id;
     }
 
     @Override
     public MetricSource getSource() {
-        throw new RuntimeException("getSource() NOT YET IMPLEMENTED");
+
+        return source;
     }
 
     @Override
@@ -82,15 +96,10 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
         throw new RuntimeException("getDescription() NOT YET IMPLEMENTED");
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setId(String s) {
-        this.id = s;
-    }
-
     @Override
     public String getCommand() {
-        throw new RuntimeException("getCommand() NOT YET IMPLEMENTED");
+
+        return command;
     }
 
     @Override
@@ -110,7 +119,23 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
 
     @Override
     public Property parseCommandOutput(String commandExecutionStdout) {
-        throw new RuntimeException("parseCommandOutput() NOT YET IMPLEMENTED");
+
+        //
+        // we return the command execution stdout as value of the property, to allow for extra consistency testing
+        //
+        return new MockProperty(getId(), commandExecutionStdout);
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setId(String s) {
+        this.id = s;
+    }
+
+    @Override
+    public String toString() {
+
+        return "" + getId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

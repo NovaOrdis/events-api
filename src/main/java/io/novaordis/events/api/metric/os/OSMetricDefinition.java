@@ -18,7 +18,6 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
 
 /**
  * Represents the definition of a metric whose values can be obtained by executing an external O/S command on an

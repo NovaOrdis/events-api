@@ -20,7 +20,7 @@ package io.novaordis.events.api.metric.os;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class RemoteOSTest extends OSSourceTest {
+public class RemoteOSTest extends OSSourceBaseTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

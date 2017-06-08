@@ -19,7 +19,6 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;

@@ -17,15 +17,12 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
-import io.novaordis.events.api.metric.os.mdefs.SwapFree;
+import io.novaordis.events.api.metric.os.LocalOS;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
