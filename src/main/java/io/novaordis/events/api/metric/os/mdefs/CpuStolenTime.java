@@ -17,11 +17,13 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.parser.ParsingException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * See https://kb.novaordis.com/index.php/Vmstat#st
@@ -42,44 +44,28 @@ public class CpuStolenTime extends OSMetricDefinitionBase {
     public CpuStolenTime(OSSource s) {
 
         super(s);
-    }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+        this.TYPE = Float.class;
 
-    @Override
-    public Percentage getBaseUnit() {
+        this.LABEL = "CPU Stolen Time";
 
-        return Percentage.getInstance();
-    }
+        this.BASE_UNIT = Percentage.getInstance();
 
-    @Override
-    public Class getType() {
-        return Float.class;
-    }
+        this.DESCRIPTION = "Percentages of total CPU time stolen from this vm by the hypervisor.";
 
-    @Override
-    public String getSimpleLabel() {
-        return "CPU Stolen Time";
-    }
+        this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
-    }
+        //
+        // %Cpu(s):  2.8 us,  8.1 sy,  0.0 ni, 88.7 id,  0.4 wa,  0.0 hi,  0.1 si,  0.0 st
+        //
+        this.LINUX_PATTERN = Pattern.compile(
+                "%Cpu.*: +([0-9]+\\.[0-9]) us, +([0-9]+\\.[0-9]) sy, +([0-9]+\\.[0-9]) ni, +([0-9]+\\.[0-9]) id, +([0-9]+\\.[0-9]) wa, +([0-9]+\\.[0-9]) hi, +([0-9]+\\.[0-9]) si, +([0-9]+\\.[0-9]) st");
 
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
-    }
+        this.MAC_COMMAND = null;
+        this.MAC_PATTERN = null;
 
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
-        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getDescription() {
-        return "Percentages of total CPU time stolen from this vm by the hypervisor.";
+        this.WINDOWS_COMMAND =  null;
+        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -87,6 +73,35 @@ public class CpuStolenTime extends OSMetricDefinitionBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+        }
+
+        String st = m.group(8);
+
+        //noinspection UnnecessaryLocalVariable
+        Float f = PercentageArithmetic.parse(st);
+        return f;
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+
+        throw new IllegalStateException(this + " not available on Mac");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
