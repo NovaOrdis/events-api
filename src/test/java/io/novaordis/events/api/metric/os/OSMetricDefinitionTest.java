@@ -290,9 +290,18 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void parseLinuxCommandOutput_InvalidReading() throws Exception {
 
-        String output = "invalid output";
-
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getLinuxCommand() == null) {
+
+            //
+            // we don't read this metric on Linux, parseLinuxCommandOutput() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid output";
 
         try {
 
@@ -309,9 +318,18 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void parseMacCommandOutput_InvalidReading() throws Exception {
 
-        String output = "invalid output";
-
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getMacCommand() == null) {
+
+            //
+            // we don't read this metric on Mac, getMacCommand() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid output";
 
         try {
 
@@ -328,9 +346,18 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void parseWindowsCommandOutput_InvalidReading() throws Exception {
 
-        String output = "invalid output";
-
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getWindowsCommand() == null) {
+
+            //
+            // we don't read this metric on Windows, getWindowsCommand() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid output";
 
         try {
 
