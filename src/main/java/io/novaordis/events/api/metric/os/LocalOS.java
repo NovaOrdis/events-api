@@ -16,7 +16,6 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -35,13 +34,13 @@ public class LocalOS extends OSSourceBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private OS os;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public LocalOS() throws Exception {
 
-        this.os = OS.getInstance();
+        setNativeExecutor(OS.getInstance());
+
+        log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -56,49 +55,6 @@ public class LocalOS extends OSSourceBase {
     public boolean hasAddress(String address) {
 
         return false;
-    }
-
-    @Override
-    protected String execute(String command) {
-
-        String stdout = null;
-
-        try {
-
-            NativeExecutionResult r = os.execute(command);
-
-            if (r.isSuccess()) {
-
-                stdout = r.getStdout();
-
-                if (stdout == null) {
-
-                    log.warn("");
-
-                }
-                else if (stdout.isEmpty()) {
-
-                    stdout = null;
-
-                    log.warn("");
-
-                }
-            }
-            else {
-
-                log.warn("\"" + command + "\" execution failed");
-            }
-        }
-        catch (Exception e) {
-
-            //
-            // command fails in an unusual way
-            //
-
-            log.warn("\"" + command + "\" execution failed", e);
-        }
-
-        return stdout;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

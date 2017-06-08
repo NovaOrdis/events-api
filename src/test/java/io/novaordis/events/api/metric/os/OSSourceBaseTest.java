@@ -21,6 +21,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
+import io.novaordis.utilities.os.NativeExecutionException;
 import org.junit.Test;
 
 import java.net.InetAddress;
@@ -32,7 +33,6 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -134,7 +134,54 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
     // execute() -------------------------------------------------------------------------------------------------------
 
     @Test
-    public final void execute_CommandFails() throws Exception {
+    public final void execute_executorThrowsUncheckedException_SyntheticExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        me.failWith(new RuntimeException("SYNTHETIC"));
+
+        oss.setNativeExecutor(me);
+
+        String stdout = oss.execute("mock-command");
+
+        assertNull(stdout);
+    }
+
+    @Test
+    public final void execute_executorThrowsCheckedException_SyntheticExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        me.failWith(new NativeExecutionException("SYNTHETIC"));
+
+        oss.setNativeExecutor(me);
+
+        String stdout = oss.execute("mock-command");
+
+        assertNull(stdout);
+    }
+
+    @Test
+    public final void execute_CommandFailsWithNonZeroExitCode_SyntheticExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        me.failWith(255);
+
+        oss.setNativeExecutor(me);
+
+        String stdout = oss.execute("mock-command");
+        assertNull(stdout);
+    }
+
+    @Test
+    public final void execute_CommandFailsWithNonZeroExitCode_ActualExecutor() throws Exception {
 
         OSSourceBase oss = getMetricSourceToTest();
 
@@ -143,7 +190,23 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
     }
 
     @Test
-    public final void execute_CommandDoesNotFailButReturnsNoStdout() throws Exception {
+    public final void execute_CommandDoesNotFailButReturnsNoStdout_SyntheticExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        me.setStdout(null);
+        me.setStderr(null);
+
+        oss.setNativeExecutor(me);
+
+        String stdout = oss.execute("mock-command");
+        assertNull(stdout);
+    }
+
+    @Test
+    public final void execute_CommandDoesNotFailButReturnsNoStdout_ActualExecutor() throws Exception {
 
         OSSourceBase oss = getMetricSourceToTest();
 
@@ -151,8 +214,28 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertNull(stdout);
     }
 
+
     @Test
-    public final void execute() throws Exception {
+    public final void execute_SyntheticExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        String stdoutContent = "blah";
+
+        me.setStdout(stdoutContent);
+        me.setStderr(null);
+
+        oss.setNativeExecutor(me);
+
+        String stdout = oss.execute("mock-command");
+
+        assertEquals(stdoutContent, stdout);
+    }
+
+    @Test
+    public final void execute_ActualExecutor() throws Exception {
 
         OSSourceBase oss = getMetricSourceToTest();
 

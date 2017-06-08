@@ -20,6 +20,8 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
+import io.novaordis.utilities.os.NativeExecutionResult;
+import io.novaordis.utilities.os.NativeExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,6 +45,11 @@ public abstract class OSSourceBase extends MetricSourceBase {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    //
+    // the local OS instance or an OS running on a remote host
+    //
+    protected NativeExecutor nativeExecutor;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -131,15 +138,76 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    void setNativeExecutor(NativeExecutor ne) {
+
+        this.nativeExecutor = ne;
+    }
+
     /**
-     * Execute the command and return the execution stdout. It may be, and actually in most cases is, a multi-line
-     * string.
-     *
-     * If the execution fails, or no stdout is returned, return null and log human interpretable warnings.
-     *
-     * The method should not knowingly throw any unchecked exception.
+     * Execute the command using the native executor and return the execution stdout. The stdout is in most cases a
+     * multi-line string. If the execution fails for any reason (native executor unchecked command, native executor
+     * checked command, non-zero exit code), or no stdout is returned, return null and log human interpretable
+     * warnings. The method mustn't knowingly throw any unchecked exception.
      */
-    protected abstract String execute(String command);
+    String execute(String command) {
+
+        String stdout = null;
+
+        try {
+
+            NativeExecutionResult r = nativeExecutor.execute(command);
+
+            stdout = r.getStdout();
+            String stderr = r.getStderr();
+
+            if (r.isSuccess()) {
+
+                if (stdout == null) {
+
+                    log.warn("\"" + command + "\" succeeded but returned no stdout");
+                }
+            }
+            else {
+
+                int exitCode = r.getExitCode();
+
+                String logStdout = stdout;
+                stdout = null;
+
+                String s = "\"" + command + "\" execution failed with exit code " + exitCode + ":";
+
+                if (logStdout == null) {
+
+                    s += "\n\nno stdout";
+                }
+                else {
+
+                    s += "\n\nstdout:\n\n" + logStdout;
+                }
+
+                if (stderr == null) {
+
+                    s += "\n\nno stderr";
+                }
+                else {
+
+                    s += "\n\nstderr:\n\n" + stderr;
+                }
+
+                log.warn(s);
+            }
+        }
+        catch (Exception e) {
+
+            //
+            // command fails in an unusual way
+            //
+
+            log.warn("\"" + command + "\" execution failed with exception (see below)", e);
+        }
+
+        return stdout;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
