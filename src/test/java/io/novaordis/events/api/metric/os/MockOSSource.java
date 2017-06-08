@@ -20,7 +20,7 @@ package io.novaordis.events.api.metric.os;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/7/17
  */
-public class MockOSSource extends OSSource {
+public class MockOSSource extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,7 +30,7 @@ public class MockOSSource extends OSSource {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // OSSource implementation -----------------------------------------------------------------------------------------
+    // OSSourceBase implementation -----------------------------------------------------------------------------------------
 
     @Override
     public String getAddress() {

@@ -22,10 +22,10 @@ import io.novaordis.events.api.metric.os.mdefs.LocalOS;
 
 /**
  * Represents the definition of a metric whose values can be obtained by executing an external O/S command on an
- * OSSource metric source and parsing the stdout of the command execution. These definitions are associated with
+ * OSSourceBase metric source and parsing the stdout of the command execution. These definitions are associated with
  * metrics that can be collected from LocalOS, RemoteOS, etc.
  *
- * @see OSSource
+ * @see OSSourceBase
  * @see LocalOS
  * @see RemoteOS
  *

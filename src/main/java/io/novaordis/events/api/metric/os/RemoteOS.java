@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class RemoteOS extends OSSource {
+public class RemoteOS extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

@@ -36,11 +36,11 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/5/17
  */
-public abstract class OSSource extends MetricSourceBase {
+public abstract class OSSourceBase extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(OSSource.class);
+    private static final Logger log = LoggerFactory.getLogger(OSSourceBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

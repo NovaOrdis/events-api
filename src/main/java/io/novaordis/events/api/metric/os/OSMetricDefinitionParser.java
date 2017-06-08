@@ -160,7 +160,7 @@ public class OSMetricDefinitionParser {
 
         try {
 
-            Constructor<MetricSource> constructor = c.getConstructor(OSSource.class);
+            Constructor<MetricSource> constructor = c.getConstructor(OSSourceBase.class);
             md = (MetricDefinition)constructor.newInstance(metricSource);
 
         }

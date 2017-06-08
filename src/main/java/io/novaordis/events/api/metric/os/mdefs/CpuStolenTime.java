@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
 
 import java.util.regex.Matcher;
@@ -41,7 +41,7 @@ public class CpuStolenTime extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuStolenTime(OSSource s) {
+    public CpuStolenTime(OSSourceBase s) {
 
         super(s);
 

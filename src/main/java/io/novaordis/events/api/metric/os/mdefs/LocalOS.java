@@ -16,13 +16,13 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.metric.os.OSSourceBase;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/1/17
  */
-public class LocalOS extends OSSource {
+public class LocalOS extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

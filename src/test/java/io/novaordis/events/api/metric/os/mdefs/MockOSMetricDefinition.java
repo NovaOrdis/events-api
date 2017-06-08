@@ -22,7 +22,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.LabelAttribute;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.os.OSMetricDefinition;
-import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.metric.os.OSSourceBase;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,7 +42,7 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockOSMetricDefinition(OSSource s) {
+    public MockOSMetricDefinition(OSSourceBase s) {
 
         if (FAIL_IN_CONSTRUCTOR) {
 

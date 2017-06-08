@@ -52,7 +52,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected OSMetricDefinitionBase(OSSource source) {
+    protected OSMetricDefinitionBase(OSSourceBase source) {
 
         super(source);
     }

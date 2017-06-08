@@ -18,11 +18,8 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
 
 import java.util.regex.Matcher;
@@ -44,7 +41,7 @@ public class CpuIoWaitTime extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuIoWaitTime(OSSource s) {
+    public CpuIoWaitTime(OSSourceBase s) {
 
         super(s);
 

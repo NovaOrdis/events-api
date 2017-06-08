@@ -32,7 +32,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(OSSource source) {
+    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(OSSourceBase source) {
 
         super(source);
 
