@@ -18,12 +18,13 @@ package io.novaordis.ssh;
 
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
+import io.novaordis.utilities.os.NativeExecutor;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/8/17
  */
-public interface SshConnection {
+public interface SshConnection extends NativeExecutor {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,5 +38,7 @@ public interface SshConnection {
      * @see io.novaordis.utilities.os.OS#execute(String)
      */
     NativeExecutionResult execute(String command) throws NativeExecutionException;
+
+    String getAddress();
 
 }

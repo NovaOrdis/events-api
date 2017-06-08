@@ -16,12 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.ssh.SshConnection;
-
-import java.util.List;
 
 /**
  * See https://kb.novaordis.com/index.php/Events-api_Concepts#Remote_OS
@@ -37,21 +32,26 @@ public class RemoteOS extends OSSourceBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address;
-    private SshConnection sshConnection;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public RemoteOS(String address) throws Exception {
-
-        super();
 
         if (address == null) {
 
             throw new IllegalArgumentException("null address");
         }
 
-        this.address = address;
+        initializeSshConnection(address);
+    }
+
+    public RemoteOS(SshConnection c) throws Exception {
+
+        if (c == null) {
+
+            throw new IllegalArgumentException("null connection");
+        }
+
+        setSshConnection(c);
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -59,7 +59,14 @@ public class RemoteOS extends OSSourceBase {
     @Override
     public String getAddress() {
 
-        return address;
+        SshConnection connection = (SshConnection)getNativeExecutor();
+
+        if (connection == null) {
+
+            return null;
+        }
+
+        return connection.getAddress();
     }
 
     @Override
@@ -69,29 +76,22 @@ public class RemoteOS extends OSSourceBase {
         // TODO more complete implementation to follow
         //
 
-        return this.address.equals(address);
-    }
+        String thisAddress = getAddress();
 
-    @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
-
-        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
-
-        throw new RuntimeException("NYE");
-    }
-
-    @Override
-    protected String execute(String command) {
-
-        //sshConnection.execute(command);
-
-        throw new RuntimeException("NYE");
+        return thisAddress != null && thisAddress.equals(address);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override
     public String toString() {
+
+        String address = getAddress();
+
+        if (address == null) {
+
+            return "null";
+        }
 
         return address;
     }
@@ -100,7 +100,19 @@ public class RemoteOS extends OSSourceBase {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    void setSshConnection(SshConnection c) {
+
+        setNativeExecutor(c);
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void initializeSshConnection(String address) {
+
+        SshConnection c = null; // build it here
+
+        setSshConnection(c);
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

@@ -16,15 +16,17 @@
 
 package io.novaordis.events.api.metric.os;
 
-import org.junit.Test;
+import io.novaordis.ssh.SshConnection;
+import io.novaordis.utilities.os.NativeExecutionException;
+import io.novaordis.utilities.os.NativeExecutionResult;
 
-import static org.junit.Assert.assertEquals;
+import java.io.File;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 6/8/17
  */
-public class RemoteOSTest extends OSSourceBaseTest {
+public class MockSshConnection implements SshConnection {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,56 +34,47 @@ public class RemoteOSTest extends OSSourceBaseTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String address = "mock-ssh-server";
+    private MockNativeExecutor delegate;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockSshConnection() {
+
+        this.delegate = new MockNativeExecutor();
+
+        //
+        // we teach the ssh server at the other end to respond to "hostname"
+        //
+
+        delegate.putNativeExecutionResult("hostname", new NativeExecutionResult(0, address, null, true, true));
+    }
+
+    // SshConnection implementation ------------------------------------------------------------------------------------
+
+    @Override
+    public NativeExecutionResult execute(String command) throws NativeExecutionException {
+
+        return delegate.execute(command);
+    }
+
+    @Override
+    public String getAddress() {
+
+        return address;
+    }
+
+    @Override
+    public NativeExecutionResult execute(File directory, String command) throws NativeExecutionException {
+
+        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // Tests -----------------------------------------------------------------------------------------------------------
-
-    // Overrides -------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
-    }
-
-    /**
-     * Will be overridden by the RemoteOSTest, as the execution result is a mock hostname.
-     */
-    @Test
-    @Override
-    public void execute_ActualExecutor() throws Exception {
-
-        OSSourceBase oss = getMetricSourceToTest();
-
-        //
-        // command will execute and will return non-empty string on all supported OSes
-        //
-        String stdout = oss.execute("hostname");
-
-        assertEquals("mock-ssh-server", stdout);
-    }
-
-    // hasAddress() ----------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected RemoteOS getMetricSourceToTest() throws Exception {
-
-        //
-        // we don't test with a real ssh server
-        //
-        MockSshConnection mc = new MockSshConnection();
-        return new RemoteOS(mc);
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

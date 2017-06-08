@@ -92,7 +92,6 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-
         String commandThatWorksOnAllSupportedOSes = "hostname";
         String otherCommandThatWorksOnAllSupportedOSes = "whoami";
 
@@ -214,7 +213,6 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertNull(stdout);
     }
 
-
     @Test
     public final void execute_SyntheticExecutor() throws Exception {
 
@@ -234,8 +232,11 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertEquals(stdoutContent, stdout);
     }
 
+    /**
+     * Will be overridden by the RemoteOSTest, as the execution result is a mock hostname.
+     */
     @Test
-    public final void execute_ActualExecutor() throws Exception {
+    public void execute_ActualExecutor() throws Exception {
 
         OSSourceBase oss = getMetricSourceToTest();
 
@@ -247,7 +248,6 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertNotNull(stdout);
 
         String hostname = InetAddress.getLocalHost().getHostName();
-
         assertTrue(stdout.startsWith(hostname));
     }
 

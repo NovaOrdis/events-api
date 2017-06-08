@@ -49,7 +49,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
     //
     // the local OS instance or an OS running on a remote host
     //
-    protected NativeExecutor nativeExecutor;
+    private NativeExecutor nativeExecutor;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -136,11 +136,16 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    // Protected -------------------------------------------------------------------------------------------------------
-
     void setNativeExecutor(NativeExecutor ne) {
 
         this.nativeExecutor = ne;
+    }
+
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    protected NativeExecutor getNativeExecutor() {
+
+        return nativeExecutor;
     }
 
     /**

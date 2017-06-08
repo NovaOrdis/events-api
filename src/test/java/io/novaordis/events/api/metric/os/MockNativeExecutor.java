@@ -21,6 +21,8 @@ import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.NativeExecutor;
 
 import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -41,7 +43,15 @@ public class MockNativeExecutor implements NativeExecutor {
     private String stdout;
     private String stderr;
 
+    // <command-NativeExecutionResult>
+    private Map<String, NativeExecutionResult> results;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockNativeExecutor() {
+        
+        this.results = new HashMap<>();
+    }
 
     // NativeExecutor implementation -----------------------------------------------------------------------------------
 
@@ -68,6 +78,13 @@ public class MockNativeExecutor implements NativeExecutor {
 
             return new NativeExecutionResult(
                     failureExitCode, "synthetic stdout content", "synthetic stderr content", true, true);
+        }
+
+        NativeExecutionResult result = results.get(command);
+
+        if (result!= null) {
+
+            return result;
         }
 
         return new NativeExecutionResult(0, stdout, stderr, true, true);
@@ -103,6 +120,11 @@ public class MockNativeExecutor implements NativeExecutor {
     public void setStderr(String s) {
 
         this.stderr = s;
+    }
+
+    public void putNativeExecutionResult(String command, NativeExecutionResult result) {
+
+        results.put(command, result);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
