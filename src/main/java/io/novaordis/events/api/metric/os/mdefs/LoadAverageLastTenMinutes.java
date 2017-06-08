@@ -16,16 +16,19 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.measure.PercentageArithmetic;
+import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.metric.os.OSSource;
+import io.novaordis.events.api.parser.ParsingException;
+
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
+public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,39 +38,36 @@ public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Constructors ----------------------------------------------------------------------------------------------------
-
     public LoadAverageLastTenMinutes(OSSource s) {
 
         super(s);
-    }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+        this.TYPE = Float.class;
 
-    @Override
-    public MeasureUnit getBaseUnit() {
-        return null;
-    }
+        this.LABEL = "Last Ten Minutes Load Average";
 
-    @Override
-    public String getId() {
-        throw new RuntimeException("getId() NOT YET IMPLEMENTED");
-    }
+        this.BASE_UNIT = null;
 
-    @Override
-    public Class getType() {
-        return Float.class;
-    }
+        this.DESCRIPTION = "CPU and IO utilization during the last ten minutes.";
 
-    @Override
-    public String getSimpleLabel() {
-        return "Last Ten Minutes Load Average";
-    }
+        this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
-    @Override
-    public String getDescription() {
+        //
+        // "... load average: 0.15, 0.04, 0.02\n" +
+        //
+        this.LINUX_PATTERN = Pattern.compile(
+                "load average: +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+)");
 
-        return "CPU and IO utilization during the last ten minutes.";
+        this.MAC_COMMAND = "/usr/bin/top -l 1 -n 0";
+
+        //
+        // "Load Avg: 2.29, 2.02, 1.90"
+        //
+        this.MAC_PATTERN = Pattern.compile(
+                "Load Avg: +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+)");
+
+        this.WINDOWS_COMMAND =  null;
+        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -75,6 +75,46 @@ public class LoadAverageLastTenMinutes extends MetricDefinitionBase  {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+        }
+
+        String s = m.group(3);
+
+        //noinspection UnnecessaryLocalVariable
+        Float f = PercentageArithmetic.parse(s);
+        return f;
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = MAC_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + MAC_PATTERN.pattern());
+        }
+
+        String s = m.group(3);
+
+        //noinspection UnnecessaryLocalVariable
+        Float f = PercentageArithmetic.parse(s);
+        return f;
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
