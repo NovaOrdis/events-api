@@ -100,13 +100,6 @@ public class CpuHardwareInterruptTime extends OSMetricDefinitionBase {
     @Override
     protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
 
-        Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
-        }
-
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
