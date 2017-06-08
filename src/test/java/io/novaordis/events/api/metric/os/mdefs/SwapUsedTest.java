@@ -16,19 +16,18 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.events.api.metric.os.mdefs.LocalOS;
-import io.novaordis.events.api.metric.os.mdefs.SwapUsed;
+import io.novaordis.events.api.metric.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -51,36 +50,40 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
     // parse() ---------------------------------------------------------------------------------------------------------
 
     @Test
-    public void parse() throws Exception {
+    public void metricDefinition_parse() throws Exception {
 
         MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+
         assertTrue(r.isEmpty());
 
         SwapUsed m = (SwapUsed)MetricDefinitionParser.parse(r, "SwapUsed");
 
         assertNotNull(m);
+
         assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
     }
 
-
-    // getBaseUnit() ------------------------------------------------------------------------------------------------
+    // accessors -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getDefaultMeasureUnit() throws Exception {
+    public void getId() throws Exception {
 
-        SwapUsed mmd = getMetricDefinitionToTest();
-        MeasureUnit mm = mmd.getBaseUnit();
-        assertEquals(MemoryMeasureUnit.BYTE, mm);
+        SwapUsed md = new SwapUsed(new LocalOS());
+        assertEquals("SwapUsed", md.getId());
     }
 
-    // getDefaultType() ------------------------------------------------------------------------------------------------
+    @Test
+    public void getType() throws Exception {
+
+        SwapUsed md = new SwapUsed(new LocalOS());
+        assertEquals(Long.class, md.getType());
+    }
 
     @Test
-    public void getDefaultType() throws Exception {
+    public void getBaseUnit() throws Exception {
 
-        SwapUsed mmd = getMetricDefinitionToTest();
-        Class c = mmd.getType();
-        assertEquals(Long.class, c);
+        SwapUsed md = new SwapUsed(new LocalOS());
+        assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
@@ -90,25 +93,180 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
         assertEquals("Used Swap", m.getSimpleLabel());
     }
 
+    @Test
+    public void getDescription() throws Exception {
+
+        SwapUsed m = new SwapUsed(new LocalOS());
+        assertTrue(m.getDescription().toLowerCase().contains("used"));
+        assertTrue(m.getDescription().toLowerCase().contains("swap"));
+    }
+
+    @Test
+    public void getLinuxCommand() throws Exception {
+
+        String expected = "/usr/bin/top -b -n 1 -p 0";
+
+        SwapUsed m = new SwapUsed(new LocalOS());
+        assertEquals(expected, m.getLinuxCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.LINUX;
+
+            String s = m.getCommand();
+            assertEquals(expected, s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    @Test
+    public void getMacCommand() throws Exception {
+
+        SwapUsed m = new SwapUsed(new LocalOS());
+
+        assertNull(m.getMacCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.MAC;
+
+            String s = m.getCommand();
+            assertNull(s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
+    @Test
+    public void getWindowsCommand() throws Exception {
+
+        SwapUsed m = new SwapUsed(new LocalOS());
+        assertNull(m.getWindowsCommand());
+
+        try {
+
+            //
+            // set the "current" OS to Mac
+            //
+
+            OSType.current = OSType.WINDOWS;
+
+            String s = m.getCommand();
+            assertNull(s);
+
+        }
+        finally {
+
+            //
+            // restore the "current" system
+            //
+
+            OSType.reset();
+        }
+    }
+
     // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    //
+    // invalid readings are tested in superclass
+    //
 
     @Test
     @Override
     public void parseCommandOutput_ValidLinuxOutput() throws Exception {
 
-        fail("parseCommandOutput_ValidLinuxOutput() NOT YET IMPLEMENTED");
+        String output =
+
+                "top - 11:10:11 up 0 min,  1 user,  load average: 0.15, 0.04, 0.02\n" +
+                        "Tasks:   1 total,   1 running,   0 sleeping,   0 stopped,   0 zombie\n" +
+                        "%Cpu(s):  1.1 us,  2.2 sy,  3.3 ni, 4.4 id,  5.5 wa,  6.6 hi,  7.7 si,  8.8 st\n" +
+                        "KiB Mem :   999936 total,   735636 free,   117680 used,   146620 buff/cache\n" +
+                        "KiB Swap:        0 total,      321 free,        5 used.   715840 avail Mem\n" +
+                        "\n" +
+                        "   PID USER      PR  NI    VIRT    RES    SHR S %CPU %MEM     TIME+ COMMAND\n" +
+                        "  1094 ansible   20   0  157440   1928   1484 R  0.0  0.2   0:00.00 top";
+
+        SwapUsed d = getMetricDefinitionToTest();
+
+        Property p;
+
+        try {
+
+            OSType.current = OSType.LINUX;
+
+            p = d.parseCommandOutput(output);
+
+        }
+        finally {
+
+            OSType.reset();
+        }
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+
+        long expected = 5L * 1024;
+        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     @Test
     @Override
     public void parseCommandOutput_ValidMacOutput() throws Exception {
-        fail("parseCommandOutput_ValidMacOutput() NOT YET IMPLEMENTED");
+
+        //
+        // there is no valid mac output
+        //
     }
 
     @Test
     @Override
     public void parseCommandOutput_ValidWindowsOutput() throws Exception {
-        fail("parseCommandOutput_ValidWindowsOutput() NOT YET IMPLEMENTED");
+
+        //
+        // TODO noop for the time being, revisit when implementing Windows support
+        //
+    }
+
+    @Test
+    @Override
+    public void parseMacCommandOutput_InvalidReading() throws Exception {
+
+        //
+        // TODO noop for the time being, revisit when implementing Windows support
+        //
+    }
+
+    @Test
+    @Override
+    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
+
+        //
+        // TODO noop for the time being, revisit when implementing Windows support
+        //
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
