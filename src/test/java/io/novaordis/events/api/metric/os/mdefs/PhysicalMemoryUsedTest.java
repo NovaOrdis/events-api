@@ -26,6 +26,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -162,10 +163,8 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        String expected = "typeperf -sc 1 \"\\Memory\\*\"";
-
         PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOS());
-        assertEquals(expected, m.getWindowsCommand());
+        assertNull(m.getWindowsCommand());
 
         try {
 
@@ -176,8 +175,7 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
             OSType.current = OSType.WINDOWS;
 
             String s = m.getCommand();
-            assertEquals(expected, s);
-
+            assertNull(s);
         }
         finally {
 
@@ -277,76 +275,79 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
     @Override
     public void parseCommandOutput_ValidWindowsOutput() throws Exception {
 
-        String output =
+        //
+        // TODO noop for the time being, revisit when implementing Windows support
+        //
 
-                "\"(PDH-CSV 4.0)\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Page Faults/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Available Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Committed Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Commit Limit\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Write Copies/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Faults/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Faults/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Demand Zero Faults/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pages/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Input/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Page Reads/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Output/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Page Writes/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Allocs\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Allocs\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Free System Page Table Entries\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes Peak\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Resident Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Total Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Resident Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Total Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Resident Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\System Cache Resident Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\% Committed Bytes In Use\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Available KBytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Available MBytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Pages RePurposed/sec\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Free & Zero Page List Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Modified Page List Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Reserve Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Normal Priority Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Core Bytes\"," +
-                        "\"\\\\NOMBP2W10-1\\Memory\\Long-Term Average Standby Cache Lifetime (s)\"\n" +
-                        "\"06/06/2017 22:59:09.095\",\"352.723452\",\"7177633792.000000\",\"1294233600.000000\"," +
-                        "\"9931640832.000000\",\"0.000000\",\"62.245315\",\"0.000000\",\"303.322408\",\"0.000000\"," +
-                        "\"0.000000\",\"0.000000\",\"0.000000\",\"238923776.000000\",\"67751936.000000\"," +
-                        "\"0.000000\",\"263166.000000\",\"163590.000000\",\"12272334.000000\",\"52121600.000000\"," +
-                        "\"155287552.000000\",\"199090176.000000\",\"0.000000\",\"0.000000\",\"15192064.000000\"," +
-                        "\"11460608.000000\",\"0.000000\",\"13.031418\",\"7009408.000000\",\"6845.000000\"," +
-                        "\"0.000000\",\"4636155904.000000\",\"167489536.000000\",\"2065068032.000000\"," +
-                        "\"305713152.000000\",\"170696704.000000\",\"14400.000000\"\n";
-
-        PhysicalMemoryUsed d = getMetricDefinitionToTest();
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.WINDOWS;
-
-            p = d.parseCommandOutput(output);
-
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-
-        long expected = 1024L * 1024;
-        assertEquals(expected, ((Long) p.getValue()).longValue());
+//        String output =
+//
+//                "\"(PDH-CSV 4.0)\",\"\\\\NOMBP2W10-1\\Memory\\Page Faults/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Available Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Committed Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Commit Limit\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Write Copies/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Faults/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Faults/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Demand Zero Faults/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pages/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Input/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Page Reads/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pages Output/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Page Writes/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Allocs\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Nonpaged Allocs\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Free System Page Table Entries\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Cache Bytes Peak\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Pool Paged Resident Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Total Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\System Code Resident Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Total Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\System Driver Resident Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\System Cache Resident Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\% Committed Bytes In Use\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Available KBytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Available MBytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Transition Pages RePurposed/sec\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Free & Zero Page List Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Modified Page List Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Reserve Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Normal Priority Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Standby Cache Core Bytes\"," +
+//                        "\"\\\\NOMBP2W10-1\\Memory\\Long-Term Average Standby Cache Lifetime (s)\"\n" +
+//                        "\"06/06/2017 22:59:09.095\",\"352.723452\",\"7177633792.000000\",\"1294233600.000000\"," +
+//                        "\"9931640832.000000\",\"0.000000\",\"62.245315\",\"0.000000\",\"303.322408\",\"0.000000\"," +
+//                        "\"0.000000\",\"0.000000\",\"0.000000\",\"238923776.000000\",\"67751936.000000\"," +
+//                        "\"0.000000\",\"263166.000000\",\"163590.000000\",\"12272334.000000\",\"52121600.000000\"," +
+//                        "\"155287552.000000\",\"199090176.000000\",\"0.000000\",\"0.000000\",\"15192064.000000\"," +
+//                        "\"11460608.000000\",\"0.000000\",\"13.031418\",\"7009408.000000\",\"6845.000000\"," +
+//                        "\"0.000000\",\"4636155904.000000\",\"167489536.000000\",\"2065068032.000000\"," +
+//                        "\"305713152.000000\",\"170696704.000000\",\"14400.000000\"\n";
+//
+//        PhysicalMemoryTotal d = getMetricDefinitionToTest();
+//
+//        Property p;
+//
+//        try {
+//
+//            OSType.current = OSType.WINDOWS;
+//
+//            p = d.parseCommandOutput(output);
+//
+//        }
+//        finally {
+//
+//            OSType.reset();
+//        }
+//
+//        assertEquals(d.getId(), p.getName());
+//        assertEquals(d.getType(), p.getType());
+//        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+//
+//        long expected = 1024L * 1024;
+//        assertEquals(expected, ((Long) p.getValue()).longValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

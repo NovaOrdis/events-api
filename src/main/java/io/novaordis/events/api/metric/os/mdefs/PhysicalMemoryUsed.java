@@ -70,8 +70,7 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
                 "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
 
-        this.WINDOWS_COMMAND = "typeperf -sc 1 \"\\Memory\\*\"";
-
+        this.WINDOWS_COMMAND = null;
         this.WINDOWS_PATTERN = null;
 
     }
