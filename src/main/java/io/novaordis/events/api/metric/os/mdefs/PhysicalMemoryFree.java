@@ -83,24 +83,6 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
-
-        Matcher m = MAC_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
-        }
-
-        String unusedMemory = m.group(3);
-        String unusedMemoryUnit = m.group(4);
-
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
-        return value;
-    }
-
-    @Override
     protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
@@ -115,6 +97,24 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
 
         //noinspection UnnecessaryLocalVariable
         Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+        return value;
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = MAC_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
+        }
+
+        String unusedMemory = m.group(3);
+        String unusedMemoryUnit = m.group(4);
+
+        //noinspection UnnecessaryLocalVariable
+        Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
         return value;
     }
 

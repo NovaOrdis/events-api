@@ -79,6 +79,25 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+
+        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+
+        if (!m.find()) {
+
+            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+        }
+
+        String usedMemoryUnit = m.group(1);
+        String usedMemory = m.group(4);
+
+        //noinspection UnnecessaryLocalVariable
+        Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
+        return value;
+    }
+
+
+    @Override
     protected Object parseMacCommandOutput(String commandOutput) throws Exception {
 
         Matcher m = MAC_PATTERN.matcher(commandOutput);
@@ -95,25 +114,6 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
         Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
 
         return value;
-    }
-
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
-
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
-        }
-
-        String usedMemoryUnit = m.group(1);
-        String usedMemory = m.group(4);
-
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
-        return value;
-
     }
 
     @Override
