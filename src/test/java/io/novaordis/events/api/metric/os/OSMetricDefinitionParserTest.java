@@ -23,6 +23,7 @@ import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.LocalOS;
+import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import org.junit.Test;
 
@@ -79,15 +80,15 @@ public class OSMetricDefinitionParserTest {
 
         try {
 
-            MockMetricDefinition.FAIL_IN_CONSTRUCTOR = true;
+            MockOSMetricDefinition.FAIL_IN_CONSTRUCTOR = true;
 
-            OSMetricDefinitionParser.parse(mr, "MockMetricDefinition");
+            OSMetricDefinitionParser.parse(mr, "MockOSMetricDefinition");
             fail("should have thrown exception");
         }
         catch(MetricException e) {
 
             String msg = e.getMessage();
-            assertEquals("failed to instantiate metric \"MockMetricDefinition\"", msg);
+            assertEquals("failed to instantiate metric \"MockOSMetricDefinition\"", msg);
 
             InvocationTargetException cause = (InvocationTargetException)e.getCause();
 
