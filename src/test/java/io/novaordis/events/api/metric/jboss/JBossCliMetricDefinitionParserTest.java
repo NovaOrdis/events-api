@@ -20,8 +20,6 @@ import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import org.junit.Test;
 
-import java.util.Set;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
@@ -61,6 +59,35 @@ public class JBossCliMetricDefinitionParserTest {
     }
 
     @Test
+    public void parse_NullRepository_NotAValidJBossCLIMetricDefinition() throws Exception {
+
+        String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+        assertNull(d);
+    }
+
+    @Test
+    public void parse_NullRepository_DefaultController() throws Exception {
+
+        String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+
+        assertNotNull(d);
+
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
+        assertEquals("message-count", d.getAttributeName());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
+        assertNull(d.getBaseUnit());
+        assertNull(d.getType());
+
+        JBossController c = d.getSource();
+        assertNotNull(c);
+    }
+
+    @Test
     public void parse_DefaultController() throws Exception {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
@@ -73,10 +100,30 @@ public class JBossCliMetricDefinitionParserTest {
         assertNotNull(d);
 
         JBossController c = d.getSource();
+        assertNotNull(c);
 
-        Set<JBossController> controllers= r.getSources(JBossController.class);
-        assertEquals(1, controllers.size());
-        assertTrue(controllers.contains(c));
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
+        assertEquals("message-count", d.getAttributeName());
+        assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
+        assertNull(d.getBaseUnit());
+        assertNull(d.getType());
+
+        assertTrue(r.isEmpty());
+    }
+
+    @Test
+    public void parse_NullRepository_ExplicitController() throws Exception {
+
+        String s =
+                "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+
+        assertNotNull(d);
+
+        JBossController c = d.getSource();
+        assertNotNull(c);
 
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
@@ -100,10 +147,7 @@ public class JBossCliMetricDefinitionParserTest {
         assertNotNull(d);
 
         JBossController c = d.getSource();
-
-        Set<JBossController> controllers = r.getSources(JBossController.class);
-        assertEquals(1, controllers.size());
-        assertTrue(controllers.contains(c));
+        assertNotNull(c);
 
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
@@ -111,6 +155,8 @@ public class JBossCliMetricDefinitionParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
+
+        assertTrue(r.isEmpty());
     }
 
     @Test

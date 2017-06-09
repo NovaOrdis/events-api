@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import org.junit.Test;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -42,12 +43,19 @@ public class LocalOSTest extends OSSourceBaseTest {
 
     @Override
     public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+
+        LocalOS los = new LocalOS();
+        LocalOS los2 = new LocalOS();
+
+        assertEquals(los, los2);
+        assertEquals(los2, los);
     }
 
     @Override
     public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
+
+        LocalOS los = new LocalOS();
+        assertEquals(1, los.hashCode());
     }
 
     // getAddress() ----------------------------------------------------------------------------------------------------

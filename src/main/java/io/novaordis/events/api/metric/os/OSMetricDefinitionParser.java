@@ -24,6 +24,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
+import java.util.Collections;
 import java.util.Set;
 
 /**
@@ -129,7 +130,8 @@ public class OSMetricDefinitionParser {
 
             if (local) {
 
-                Set<LocalOS> sources = repository.getSources(LocalOS.class);
+                Set<LocalOS> sources =
+                        repository == null ? Collections.emptySet() : repository.getSources(LocalOS.class);
 
                 if (sources.isEmpty()) {
 
@@ -142,7 +144,7 @@ public class OSMetricDefinitionParser {
             }
             else {
 
-                metricSource = repository.getSource(RemoteOS.class, metricSourceAddress);
+                metricSource =  repository == null ? null : repository.getSource(RemoteOS.class, metricSourceAddress);
 
                 if (metricSource == null) {
 
@@ -169,12 +171,10 @@ public class OSMetricDefinitionParser {
         }
 
         //
-        // add the source, if it already exists, it will be a noop, if it was just created, it will be added
+        // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
 
-        repository.add(metricSource);
         return md;
-
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

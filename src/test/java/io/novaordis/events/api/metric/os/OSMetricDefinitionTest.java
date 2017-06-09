@@ -18,7 +18,9 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;
@@ -90,6 +92,37 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
             assertEquals(value.getClass(), d.getType());
         }
+    }
+
+    // parse() ---------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void parse() throws Exception {
+
+        OSMetricDefinition osmd = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String literal = osmd.getClass().getSimpleName();
+
+
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(r, literal);
+
+        assertEquals(osmd2.getClass(), osmd.getClass());
+        assertTrue(r.isEmpty());
+    }
+
+    @Test
+    public void parse_NullRepository() throws Exception {
+
+        OSMetricDefinition osmd = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String literal = osmd.getClass().getSimpleName();
+
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(null, literal);
+
+        assertEquals(osmd2.getClass(), osmd.getClass());
     }
 
     // static scope ----------------------------------------------------------------------------------------------------
@@ -530,7 +563,6 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

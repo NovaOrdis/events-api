@@ -143,7 +143,8 @@ public class JBossCliMetricDefinitionParser {
                 }
             }
 
-            metricSource = repository.getSource(JBossController.class, ca.getLiteral());
+            String address = ca.getLiteral();
+            metricSource = repository == null ? null : repository.getSource(JBossController.class, address);
 
             if (metricSource == null) {
 
@@ -195,10 +196,8 @@ public class JBossCliMetricDefinitionParser {
         CliAttribute attribute = new CliAttribute(attributeName);
 
         //
-        // add the source, if it already exists, it will be a noop, if it was just created, it will be added
+        // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
-
-        repository.add(metricSource);
 
         return new JBossCliMetricDefinition(metricSource, path, attribute);
     }

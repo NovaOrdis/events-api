@@ -38,6 +38,28 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void parse() throws Exception {
+
+        //
+        // noop
+        //
+    }
+
+    @Test
+    @Override
+    public void parse_NullRepository() throws Exception {
+
+        //
+        // noop
+        //
+    }
+
+    // others ----------------------------------------------------------------------------------------------------------
+
     @Test
     public void getCommand_Linux() throws Exception {
 
@@ -66,7 +88,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     @Test
     public void getCommand_Mac() throws Exception {
 
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+        OSMetricDefinition d = getMetricDefinitionToTest();
 
         try {
 
@@ -91,7 +113,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     @Test
     public void getCommand_Windows() throws Exception {
 
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+        OSMetricDefinition d = getMetricDefinitionToTest();
 
         try {
 

@@ -47,22 +47,6 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // parse() ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void metricDefinition_parse() throws Exception {
-
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
-        assertTrue(r.isEmpty());
-
-        PhysicalMemoryFree m = (PhysicalMemoryFree)MetricDefinitionParser.parse(r, "PhysicalMemoryFree");
-
-        assertNotNull(m);
-
-        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
-    }
-
     // accessors -------------------------------------------------------------------------------------------------------
 
     @Test

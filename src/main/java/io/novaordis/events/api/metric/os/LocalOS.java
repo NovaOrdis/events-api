@@ -59,6 +59,18 @@ public class LocalOS extends OSSourceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public boolean equals(Object o) {
+
+        return o instanceof LocalOS;
+    }
+
+    @Override
+    public int hashCode() {
+
+        return 1;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

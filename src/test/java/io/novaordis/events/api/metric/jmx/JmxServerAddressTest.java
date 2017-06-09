@@ -16,7 +16,6 @@
 
 package io.novaordis.events.api.metric.jmx;
 
-import io.novaordis.events.api.metric.MetricSourceTest;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -27,9 +26,9 @@ import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/31/16
+ * @since 6/9/17
  */
-public class JmxBusTest extends MetricSourceTest {
+public class JmxServerAddressTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -43,49 +42,40 @@ public class JmxBusTest extends MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    // constructors ----------------------------------------------------------------------------------------------------
-
     @Test
     public void constructor_default() throws Exception {
 
-        JmxBus b = new JmxBus();
-
-        JmxServerAddress a = b.getJmxServerAddress();
+        JmxServerAddress a = new JmxServerAddress();
 
         assertEquals(JmxServerAddress.DEFAULT_HOST, a.getHost());
         assertEquals(JmxServerAddress.DEFAULT_PORT, a.getPort());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-
-        assertEquals(JmxServerAddress.DEFAULT_HOST + ":" + JmxServerAddress.DEFAULT_PORT, b.getAddress());
+        assertEquals(JmxServerAddress.DEFAULT_HOST + ":" + JmxServerAddress.DEFAULT_PORT, a.getLiteral());
     }
 
     @Test
     public void constructor_NoUsernamePassword() throws Exception {
 
-        JmxBus b = new JmxBus("1.2.3.4:8888");
-
-        JmxServerAddress a = b.getJmxServerAddress();
+        JmxServerAddress a = new JmxServerAddress("1.2.3.4:8888");
 
         assertEquals("1.2.3.4", a.getHost());
         assertEquals(8888, a.getPort());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4:8888", b.getAddress());
+        assertEquals("1.2.3.4:8888", a.getLiteral());
     }
 
     @Test
     public void constructor_NoUsernamePassword_NoPort() throws Exception {
 
-        JmxBus b = new JmxBus("1.2.3.4");
-
-        JmxServerAddress a = b.getJmxServerAddress();
+        JmxServerAddress a = new JmxServerAddress("1.2.3.4");
 
         assertEquals("1.2.3.4", a.getHost());
         assertEquals(JmxServerAddress.DEFAULT_PORT, a.getPort());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4", b.getAddress());
+        assertEquals("1.2.3.4", a.getLiteral());
     }
 
     @Test
@@ -93,7 +83,7 @@ public class JmxBusTest extends MetricSourceTest {
 
         try {
 
-            new JmxBus("1.2.3.4:blah");
+            new JmxServerAddress("1.2.3.4:blah");
             fail("should have thrown exception");
         }
         catch(JmxException e) {
@@ -108,7 +98,7 @@ public class JmxBusTest extends MetricSourceTest {
 
         try {
 
-            new JmxBus("admin:admin123@1.2.3.4:blah");
+            new JmxServerAddress("admin:admin123@1.2.3.4:blah");
             fail("should have thrown exception");
         }
         catch(JmxException e) {
@@ -123,7 +113,7 @@ public class JmxBusTest extends MetricSourceTest {
 
         try {
 
-            new JmxBus("admin@1.2.3.4:2222");
+            new JmxServerAddress("admin@1.2.3.4:2222");
             fail("should have thrown exception");
         }
         catch(JmxException e) {
@@ -136,30 +126,26 @@ public class JmxBusTest extends MetricSourceTest {
     @Test
     public void constructor() throws Exception {
 
-        JmxBus b = new JmxBus("admin:admin123@1.2.3.4:8888");
-
-        JmxServerAddress a = b.getJmxServerAddress();
+        JmxServerAddress a = new JmxServerAddress("admin:admin123@1.2.3.4:8888");
 
         assertEquals("1.2.3.4", a.getHost());
         assertEquals(8888, a.getPort());
         assertEquals("admin", a.getUsername());
         assertEquals("admin123", new String(a.getPassword()));
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        assertEquals("admin@1.2.3.4:8888", a.getLiteral());
     }
 
     @Test
     public void constructor_Protocol() throws Exception {
 
-        JmxBus b = new JmxBus("jmx://admin:adminpasswd@1.2.3.4:2345");
-
-        JmxServerAddress a = b.getJmxServerAddress();
+        JmxServerAddress a = new JmxServerAddress("jmx://admin:adminpasswd@1.2.3.4:2345");
 
         assertEquals("1.2.3.4", a.getHost());
         assertEquals(2345, a.getPort());
         assertEquals("adminpasswd", new String(a.getPassword()));
         assertEquals("admin", a.getUsername());
 
-        assertEquals("admin@1.2.3.4:2345", b.getAddress());
+        assertEquals("admin@1.2.3.4:2345", a.getLiteral());
     }
 
     @Test
@@ -167,7 +153,7 @@ public class JmxBusTest extends MetricSourceTest {
 
         try {
 
-            new JmxBus("http://admin:adminpasswd@1.2.3.4:2345");
+            new JmxServerAddress("http://admin:adminpasswd@1.2.3.4:2345");
         }
         catch(JmxException e) {
 
@@ -176,55 +162,51 @@ public class JmxBusTest extends MetricSourceTest {
         }
     }
 
+    // equals() --------------------------------------------------------------------------------------------------------
+
     @Test
-    @Override
-    public void equalsTest() throws Exception {
+    public void testEquals() throws Exception {
 
-        JmxBus b = new JmxBus("admin@1.2.3.4:567");
-        JmxBus b2 = new JmxBus("admin@1.2.3.4:567");
+        JmxServerAddress a = new JmxServerAddress("admin@somehost:1234");
+        JmxServerAddress a2 = new JmxServerAddress("admin@somehost:1234");
 
-        assertEquals(b, b2);
-        assertEquals(b2, b);
+        assertEquals(a, a2);
+        assertEquals(a2, a);
     }
 
     @Test
-    public void equalsTest2() throws Exception {
+    public void testEquals2() throws Exception {
 
-        JmxBus b = new JmxBus("admin@1.2.3.4:567");
+        JmxServerAddress a = new JmxServerAddress("somehost");
+        JmxServerAddress a2 = new JmxServerAddress("somehost");
+
+        assertEquals(a, a2);
+        assertEquals(a2, a);
+    }
+
+    @Test
+    public void testEquals3() throws Exception {
+
+        JmxServerAddress a = new JmxServerAddress("somehost");
+
         //noinspection ObjectEqualsNull
-        assertFalse(b.equals(null));
+        assertFalse(a.equals(null));
     }
+
+    // hashCode() ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void equalsTest3() throws Exception {
+    public void testHashCode() throws Exception {
 
-        JmxBus b = new JmxBus();
-        JmxBus b2 = new JmxBus();
+        JmxServerAddress a = new JmxServerAddress("admin@somehost:1234");
+        JmxServerAddress a2 = new JmxServerAddress("admin@somehost:1235");
 
-        assertEquals(b, b2);
-        assertEquals(b2, b);
+        assertTrue(a != a2);
     }
-
-    @Override
-    public void hashCodeTest() throws Exception {
-
-        JmxBus b = getMetricSourceToTest();
-        assertEquals(b.hashCode(), b.getJmxServerAddress().hashCode());
-    }
-
-    // Overrides -------------------------------------------------------------------------------------------------------
-
-    // collectMetrics() ------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected JmxBus getMetricSourceToTest() throws Exception {
-
-        return new JmxBus();
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

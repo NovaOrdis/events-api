@@ -48,10 +48,10 @@ public abstract class MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    //@Test
+    @Test
     public abstract void equalsTest() throws Exception;
 
-    //@Test
+    @Test
     public abstract void hashCodeTest() throws Exception;
 
     // hasAddress() ----------------------------------------------------------------------------------------------------

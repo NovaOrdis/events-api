@@ -104,7 +104,7 @@ public class JmxMetricDefinitionParser {
 
         String address = metricSourceAndMetricDefinitionRepresentation.substring(0, start);
 
-        JmxBus metricSource = repository.getSource(JmxBus.class, address);
+        JmxBus metricSource = repository == null ? null : repository.getSource(JmxBus.class, address);
 
         if (metricSource == null) {
 
@@ -169,10 +169,8 @@ public class JmxMetricDefinitionParser {
         }
 
         //
-        // add the source, if it already exists, it will be a noop, if it was just created, it will be added
+        // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
-
-        repository.add(metricSource);
 
         return d;
     }

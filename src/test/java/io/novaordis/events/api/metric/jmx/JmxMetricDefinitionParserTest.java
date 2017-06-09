@@ -61,6 +61,15 @@ public class JmxMetricDefinitionParserTest {
     }
 
     @Test
+    public void parse_NotAValidJBossCLIMetricDefinition_NullRepository() throws Exception {
+
+        String s = "I am pretty sure this is not a valid JMX metric definition";
+
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+        assertNull(d);
+    }
+
+    @Test
     public void parse_UnknownProtocol() throws Exception {
 
         String s = "something://admin:passwd@1.2.3.4:8888/test:service=Test/testAttribute";
@@ -225,6 +234,25 @@ public class JmxMetricDefinitionParserTest {
     }
 
     @Test
+    public void parse_ProtocolPrefixed_NullRepository() throws Exception {
+
+        String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
+
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+
+        assertNotNull(d);
+
+        JmxBus b = d.getSource();
+        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
+        assertEquals("testAttribute", d.getAttributeName());
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDescription());
+        assertNull(d.getBaseUnit());
+        assertNull(d.getType());
+    }
+
+    @Test
     public void parse_ProtocolPrefixed() throws Exception {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
@@ -237,10 +265,28 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         JmxBus b = d.getSource();
+        assertEquals("admin@1.2.3.4:8888", b.getAddress());
 
-        Set<JmxBus> buses = r.getSources(JmxBus.class);
-        assertEquals(1, buses.size());
-        assertTrue(buses.contains(b));
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
+        assertEquals("testAttribute", d.getAttributeName());
+        assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDescription());
+        assertNull(d.getBaseUnit());
+        assertNull(d.getType());
+
+        assertTrue(r.isEmpty());
+    }
+
+    @Test
+    public void parse_NotProtocolPrefixed_NullRepository() throws Exception {
+
+        String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
+
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+
+        assertNotNull(d);
+
+        JmxBus b = d.getSource();
+        assertEquals("admin@1.2.3.4:8888", b.getAddress());
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -262,10 +308,10 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         JmxBus b = d.getSource();
+        assertEquals("admin@1.2.3.4:8888", b.getAddress());
 
         Set<JmxBus> buses = r.getSources(JmxBus.class);
-        assertEquals(1, buses.size());
-        assertTrue(buses.contains(b));
+        assertTrue(buses.isEmpty());
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());

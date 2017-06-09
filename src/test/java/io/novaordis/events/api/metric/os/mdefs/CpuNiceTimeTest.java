@@ -18,15 +18,12 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.MetricDefinitionParser;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 
@@ -45,22 +42,6 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // parse() ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void metricDefinition_parse() throws Exception {
-
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
-        assertTrue(r.isEmpty());
-
-        CpuNiceTime m = (CpuNiceTime)MetricDefinitionParser.parse(r, "CpuNiceTime");
-
-        assertNotNull(m);
-
-        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
-    }
 
     // accessors -------------------------------------------------------------------------------------------------------
 

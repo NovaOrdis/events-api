@@ -20,8 +20,6 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -35,32 +33,22 @@ public class JmxBus extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String DEFAULT_HOST = "localhost";
-    public static final int DEFAULT_PORT = 9999;
-
-    private static final Logger log = LoggerFactory.getLogger(JmxBus.class);
-
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String username;
-    private char[] password;
-    private String host;
-    private int port;
+    private JmxServerAddress address;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public JmxBus() throws JmxException {
 
-        this(DEFAULT_HOST + ":" + DEFAULT_PORT);
+        this.address = new JmxServerAddress();
     }
 
     public JmxBus(String address) throws JmxException  {
 
-        parseAddress(address);
-
-        log.debug(this + " constructed");
+        this.address = new JmxServerAddress(address);
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -68,16 +56,7 @@ public class JmxBus extends MetricSourceBase {
     @Override
     public String getAddress() {
 
-        String s = "";
-
-        if (username != null) {
-
-            s += username + "@";
-        }
-
-        s += host + ":" + port;
-
-        return s;
+        return address.getLiteral();
     }
 
     @Override
@@ -96,100 +75,56 @@ public class JmxBus extends MetricSourceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public String getHost() {
+    public JmxServerAddress getJmxServerAddress() {
 
-        return host;
+        return address;
     }
 
-    public int getPort() {
+    @Override
+    public boolean equals(Object o) {
 
-        return port;
-    }
+        if (this == o) {
 
-    public String getUsername() {
+            return true;
+        }
 
-        return username;
+        if (address == null) {
+
+            return false;
+        }
+
+        if (!(o instanceof JmxBus)) {
+
+            return false;
+        }
+
+        JmxBus that = (JmxBus)o;
+
+        return address.equals(that.address);
     }
 
     @Override
     public int hashCode() {
 
-        return getAddress().hashCode();
+        if (address == null) {
+
+            return 0;
+        }
+
+        return address.hashCode();
     }
 
     @Override
     public String toString() {
 
-        return getAddress();
+        return "" + address;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    char[] getPassword() {
-
-        return password;
-    }
-
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
-
-    private void parseAddress(String address) throws JmxException {
-
-        int i = address.indexOf('@');
-        String hostAndPort;
-
-        if (i != -1) {
-
-            //
-            // username and password
-            //
-
-            String usernameAndPassword = address.substring(0, i);
-            hostAndPort = address.substring(i + 1);
-
-            i = usernameAndPassword.indexOf(':');
-
-            if (i == -1) {
-
-                throw new JmxException("missing password");
-            }
-
-            this.username = usernameAndPassword.substring(0, i);
-            this.password = usernameAndPassword.substring(i + 1).toCharArray();
-        }
-        else {
-
-            hostAndPort = address;
-        }
-
-        i = hostAndPort.indexOf(':');
-
-        if (i == -1) {
-
-            //
-            // no port
-            //
-
-            host = hostAndPort;
-            port = DEFAULT_PORT;
-        }
-        else {
-
-            host = hostAndPort.substring(0, i);
-
-            String s = hostAndPort.substring(i + 1);
-
-            try {
-
-                port = Integer.parseInt(s);
-            }
-            catch(Exception e) {
-
-                throw new JmxException("invalid port \"" + s + "\"");
-            }
-        }
-    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

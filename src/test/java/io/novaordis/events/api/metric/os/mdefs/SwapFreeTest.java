@@ -18,18 +18,14 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.MetricDefinitionParser;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import io.novaordis.events.api.metric.os.LocalOS;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -48,22 +44,6 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
-
-    // parse() ---------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void metricDefinition_parse() throws Exception {
-
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
-        assertTrue(r.isEmpty());
-
-        SwapFree m = (SwapFree)MetricDefinitionParser.parse(r, "SwapFree");
-
-        assertNotNull(m);
-
-        assertEquals(m.getSource(), r.getSources(LocalOS.class).iterator().next());
-    }
 
     // accessors -------------------------------------------------------------------------------------------------------
 
