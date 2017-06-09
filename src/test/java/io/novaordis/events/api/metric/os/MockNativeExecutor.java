@@ -21,7 +21,9 @@ import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.NativeExecutor;
 
 import java.io.File;
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -46,11 +48,14 @@ public class MockNativeExecutor implements NativeExecutor {
     // <command-NativeExecutionResult>
     private Map<String, NativeExecutionResult> results;
 
+    private List<String> commandExecutionHistory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockNativeExecutor() {
         
         this.results = new HashMap<>();
+        this.commandExecutionHistory = new ArrayList<>();
     }
 
     // NativeExecutor implementation -----------------------------------------------------------------------------------
@@ -63,6 +68,11 @@ public class MockNativeExecutor implements NativeExecutor {
 
     @Override
     public NativeExecutionResult execute(File directory, String command) throws NativeExecutionException {
+
+        synchronized(this) {
+
+            commandExecutionHistory.add(command);
+        }
 
         if (uncheckedCause != null) {
 
@@ -125,6 +135,11 @@ public class MockNativeExecutor implements NativeExecutor {
     public void putNativeExecutionResult(String command, NativeExecutionResult result) {
 
         results.put(command, result);
+    }
+
+    public List<String> getCommandExecutionHistory() {
+
+        return commandExecutionHistory;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

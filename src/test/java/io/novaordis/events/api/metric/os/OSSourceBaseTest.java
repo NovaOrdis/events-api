@@ -128,6 +128,62 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         String v3 = (String)p3.getValue();
 
         assertEquals(v, v3);
+
+        //
+        // insure that only two commands were executed about the source
+        //
+    }
+
+    @Test
+    public final void collectMetrics_InsureCommandsAreExecutedOnceAgainstTheExecutor() throws Exception {
+
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = new MockNativeExecutor();
+
+        oss.setNativeExecutor(me);
+
+        String command = "mock-command";
+        String command2 = "mock-command-2";
+        String command3 = "mock-command-3";
+
+        MockOSMetricDefinition md = new MockOSMetricDefinition("mock-metric", oss, command);
+        MockOSMetricDefinition md2 = new MockOSMetricDefinition("mock-metric-2", oss, command2);
+        MockOSMetricDefinition md3 = new MockOSMetricDefinition("mock-metric-3", oss, command3);
+        MockOSMetricDefinition md4 = new MockOSMetricDefinition("mock-metric-4", oss, command);
+        MockOSMetricDefinition md5 = new MockOSMetricDefinition("mock-metric-5", oss, command2);
+        MockOSMetricDefinition md6 = new MockOSMetricDefinition("mock-metric-6", oss, command);
+        MockOSMetricDefinition md7 = new MockOSMetricDefinition("mock-metric-7", oss, command2);
+
+        // md3/command3 is only requested once
+        List<MetricDefinition> mds = Arrays.asList(md, md2, md3, md4, md5, md6, md7, md, md2, md4, md5, md6, md7);
+
+        List<Property> result = oss.collectMetrics(mds);
+
+        assertEquals(13, result.size());
+
+        assertEquals("mock-metric", result.get(0).getName());
+        assertEquals("mock-metric-2", result.get(1).getName());
+        assertEquals("mock-metric-3", result.get(2).getName());
+        assertEquals("mock-metric-4", result.get(3).getName());
+        assertEquals("mock-metric-5", result.get(4).getName());
+        assertEquals("mock-metric-6", result.get(5).getName());
+        assertEquals("mock-metric-7", result.get(6).getName());
+        assertEquals("mock-metric", result.get(7).getName());
+        assertEquals("mock-metric-2", result.get(8).getName());
+        assertEquals("mock-metric-4", result.get(9).getName());
+        assertEquals("mock-metric-5", result.get(10).getName());
+        assertEquals("mock-metric-6", result.get(11).getName());
+        assertEquals("mock-metric-7", result.get(12).getName());
+
+        // make sure only three commands were execute
+
+        List<String> commands = me.getCommandExecutionHistory();
+        assertEquals(3, commands.size());
+        assertEquals("mock-command", commands.get(0));
+        assertEquals("mock-command-2", commands.get(1));
+        assertEquals("mock-command-3", commands.get(2));
+
     }
 
     // execute() -------------------------------------------------------------------------------------------------------

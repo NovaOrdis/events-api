@@ -141,13 +141,6 @@ public abstract class OSSourceBase extends MetricSourceBase {
         this.nativeExecutor = ne;
     }
 
-    // Protected -------------------------------------------------------------------------------------------------------
-
-    protected NativeExecutor getNativeExecutor() {
-
-        return nativeExecutor;
-    }
-
     /**
      * Execute the command using the native executor and return the execution stdout. The stdout is in most cases a
      * multi-line string. If the execution fails for any reason (native executor unchecked command, native executor
@@ -212,6 +205,13 @@ public abstract class OSSourceBase extends MetricSourceBase {
         }
 
         return stdout;
+    }
+
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    protected NativeExecutor getNativeExecutor() {
+
+        return nativeExecutor;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
