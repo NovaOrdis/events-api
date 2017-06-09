@@ -21,7 +21,6 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
-import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import org.junit.Test;
@@ -79,7 +78,7 @@ public class OSMetricDefinitionParserTest {
 
         try {
 
-            MockOSMetricDefinition.FAIL_IN_CONSTRUCTOR = true;
+            MockOSMetricDefinition.setFailInConstructor(true);
 
             OSMetricDefinitionParser.parse(mr, "MockOSMetricDefinition");
             fail("should have thrown exception");
@@ -96,7 +95,7 @@ public class OSMetricDefinitionParserTest {
         }
         finally {
 
-            MockMetricDefinition.FAIL_IN_CONSTRUCTOR = false;
+            MockOSMetricDefinition.setFailInConstructor(false);
         }
 
         localOses = mr.getSources(LocalOS.class);

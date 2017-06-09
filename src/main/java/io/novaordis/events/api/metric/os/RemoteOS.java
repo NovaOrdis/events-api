@@ -17,6 +17,8 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.ssh.SshConnection;
+import io.novaordis.ssh.SshConnectionImpl;
+import io.novaordis.utilities.os.NativeExecutor;
 
 /**
  * See https://kb.novaordis.com/index.php/Events-api_Concepts#Remote_OS
@@ -41,7 +43,7 @@ public class RemoteOS extends OSSourceBase {
             throw new IllegalArgumentException("null address");
         }
 
-        initializeSshConnection(address);
+        buildSshConnection(address);
     }
 
     public RemoteOS(SshConnection c) throws Exception {
@@ -83,6 +85,25 @@ public class RemoteOS extends OSSourceBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public void connect() {
+
+        throw new RuntimeException("NYE");
+
+//        SshConnection c = getSshConnection();
+//
+//        if (c == null) {
+//
+//            throw new IllegalArgumentException(this + " was not correctly initialized");
+//        }
+//
+//        c.connect();
+    }
+
+    public void disconnect() {
+
+        throw new RuntimeException("NYE");
+    }
+
     @Override
     public String toString() {
 
@@ -105,11 +126,33 @@ public class RemoteOS extends OSSourceBase {
         setNativeExecutor(c);
     }
 
+    SshConnection getSshConnection() {
+
+        NativeExecutor n = getNativeExecutor();
+
+        if (n == null) {
+
+            return null;
+        }
+
+        return (SshConnection)n;
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void initializeSshConnection(String address) {
+    /**
+     * Build the ssh connection, by parsing the address and creating the associated instances, but DO NOT implicitly
+     * connect.
+     *
+     * @see RemoteOS#connect()
+     */
+    private void buildSshConnection(String address) {
 
-        SshConnection c = null; // build it here
+        //
+        // do not connect yet
+        //
+
+        SshConnection c = new SshConnectionImpl(address);
 
         setSshConnection(c);
     }

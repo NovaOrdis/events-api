@@ -35,7 +35,12 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static boolean FAIL_IN_CONSTRUCTOR = false;
+    private static boolean FAIL_IN_CONSTRUCTOR = false;
+
+    public static void setFailInConstructor(boolean b) {
+
+        FAIL_IN_CONSTRUCTOR = b;
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -45,6 +50,10 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * Invoked by reflection.
+     */
+    @SuppressWarnings("unused")
     public MockOSMetricDefinition(OSSourceBase s) {
 
         this(MockOSMetricDefinition.class.getSimpleName(), s, null);

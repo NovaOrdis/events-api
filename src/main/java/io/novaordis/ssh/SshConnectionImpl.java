@@ -14,9 +14,8 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.ssh;
 
-import io.novaordis.ssh.SshConnection;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 
@@ -26,7 +25,7 @@ import java.io.File;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/8/17
  */
-public class MockSshConnection implements SshConnection {
+public class SshConnectionImpl implements SshConnection {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,29 +33,31 @@ public class MockSshConnection implements SshConnection {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address = "mock-ssh-server";
-    private MockNativeExecutor delegate;
+    private String address;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockSshConnection() {
+    /**
+     * @param address the address, including optionally the ssh:// protocol
+     */
+    public SshConnectionImpl(String address) {
 
-        this.delegate = new MockNativeExecutor();
-
-        //
-        // we teach the ssh server at the other end to respond to "hostname"
-        //
-
-        delegate.putNativeExecutionResult("hostname", new NativeExecutionResult(0, address, null, true, true));
+        this.address = address;
     }
 
-    // SshConnection implementation ------------------------------------------------------------------------------------
+    // NativeExecutor implementation -----------------------------------------------------------------------------------
 
     @Override
     public NativeExecutionResult execute(String command) throws NativeExecutionException {
-
-        return delegate.execute(command);
+        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
     }
+
+    @Override
+    public NativeExecutionResult execute(File directory, String command) throws NativeExecutionException {
+        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+    }
+
+    // SshConnection implementation ------------------------------------------------------------------------------------
 
     @Override
     public String getAddress() {
@@ -72,12 +73,6 @@ public class MockSshConnection implements SshConnection {
     @Override
     public void disconnect() {
         throw new RuntimeException("disconnect() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public NativeExecutionResult execute(File directory, String command) throws NativeExecutionException {
-
-        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -16,11 +16,15 @@
 
 package io.novaordis.ssh;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/8/17
  */
-public abstract class SshConnectionTest {
+public class SshConnectionImplTest extends SshConnectionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,12 +38,29 @@ public abstract class SshConnectionTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    /**
+     * We rely on this behavior, don't remove the test.
+     */
+    @Test
+    public void setAddress() throws Exception {
+
+        String address = "ssh://1.2.3.4";
+
+        SshConnectionImpl c = getSshConnectionToTest(address);
+
+        assertEquals(address, c.getAddress());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    @Override
+    public SshConnectionImpl getSshConnectionToTest(String address) throws Exception {
 
-    public abstract SshConnection getSshConnectionToTest(String address) throws Exception;
+        return new SshConnectionImpl(address);
+    }
+
 
     // Private ---------------------------------------------------------------------------------------------------------
 

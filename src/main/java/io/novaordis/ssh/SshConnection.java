@@ -41,4 +41,7 @@ public interface SshConnection extends NativeExecutor {
 
     String getAddress();
 
+    void connect();
+    void disconnect();
+
 }
