@@ -70,7 +70,7 @@ public class JmxBus extends MetricSourceBase {
 
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
 
-        throw new RuntimeException("NYE");
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

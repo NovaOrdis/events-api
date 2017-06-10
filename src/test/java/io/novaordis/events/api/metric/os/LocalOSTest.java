@@ -17,6 +17,8 @@
 package io.novaordis.events.api.metric.os;
 
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -28,6 +30,8 @@ import static org.junit.Assert.assertNull;
 public class LocalOSTest extends OSSourceBaseTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(LocalOSTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -41,6 +45,7 @@ public class LocalOSTest extends OSSourceBaseTest {
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
+    @Test
     @Override
     public void equalsTest() throws Exception {
 
@@ -51,11 +56,23 @@ public class LocalOSTest extends OSSourceBaseTest {
         assertEquals(los2, los);
     }
 
+    @Test
     @Override
     public void hashCodeTest() throws Exception {
 
         LocalOS los = new LocalOS();
         assertEquals(1, los.hashCode());
+    }
+
+    @Test
+    @Override
+    public void collectMetrics_DefinitionsHaveDifferentSources() throws Exception {
+
+        //
+        // this test does not make sense of LocalOS, all LocalOS instances are equivalent
+        //
+
+        log.info("noop override");
     }
 
     // getAddress() ----------------------------------------------------------------------------------------------------
@@ -73,7 +90,12 @@ public class LocalOSTest extends OSSourceBaseTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected LocalOS getMetricSourceToTest() throws Exception {
+    protected LocalOS getMetricSourceToTest(String... address) throws Exception {
+
+        if (address.length > 1) {
+            // at most one argument is expected
+            throw new IllegalArgumentException(address.length + " arguments");
+        }
 
         return new LocalOS();
     }

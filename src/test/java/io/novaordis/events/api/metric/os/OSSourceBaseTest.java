@@ -19,7 +19,9 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceTest;
+import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.utilities.os.NativeExecutionException;
 import org.junit.Test;
@@ -33,6 +35,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -312,7 +315,18 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected abstract OSSourceBase getMetricSourceToTest() throws Exception;
+    protected MockMetricDefinition getCorrespondingMockMetricDefinition(MetricSource source) {
+
+        if (source.getClass().isAssignableFrom(OSSourceBase.class)) {
+
+            fail("we expect an OSSourceBase but we got this: " + source);
+        }
+
+        return new MockOSMetricDefinition((OSSourceBase)source);
+    }
+
+    @Override
+    protected abstract OSSourceBase getMetricSourceToTest(String... addresses) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

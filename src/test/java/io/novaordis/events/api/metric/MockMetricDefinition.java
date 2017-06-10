@@ -16,7 +16,6 @@
 
 package io.novaordis.events.api.metric;
 
-
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -27,17 +26,24 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static boolean FAIL_IN_CONSTRUCTOR = false;
+    private static boolean FAIL_IN_CONSTRUCTOR = false;
+
+    public static void setFailInConstructor(boolean b) {
+
+        FAIL_IN_CONSTRUCTOR = b;
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String definition;
+    private String id;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockMetricDefinition(MetricSource s) {
 
         super(s);
+
+        setId(getClass().getSimpleName());
 
         if (FAIL_IN_CONSTRUCTOR) {
 
@@ -49,18 +55,27 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     @Override
     public String getId() {
-        return definition;
+
+        return id;
     }
 
     @Override
     public String getSimpleLabel() {
+
         throw new RuntimeException("getSimpleLabel() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setDefinition(String s) {
-        this.definition = s;
+    public void setId(String s) {
+
+        this.id = s;
+    }
+
+    @Override
+    public String toString() {
+
+        return "" + getId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

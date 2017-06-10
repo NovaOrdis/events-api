@@ -86,7 +86,7 @@ public class JBossControllerTest extends MetricSourceTest {
 
         try {
 
-            new JBossController(null);
+            new JBossController((JBossControllerAddress)null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -493,9 +493,23 @@ public class JBossControllerTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JBossController getMetricSourceToTest() throws Exception {
+    protected JBossController getMetricSourceToTest(String... addresses) throws Exception {
 
-        return new JBossController();
+        if (addresses.length == 0) {
+
+            return new JBossController();
+        }
+        else if (addresses.length == 1) {
+
+            String address = addresses[0];
+            address = "jbosscli://" + address;
+            return new JBossController(address);
+        }
+        else {
+
+            // at most one argument is expected
+            throw new IllegalArgumentException(addresses.length + " arguments");
+        }
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

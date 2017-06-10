@@ -16,13 +16,9 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.event.IntegerProperty;
-import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
@@ -30,7 +26,6 @@ import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -61,6 +56,19 @@ public class JBossController extends MetricSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * Uses the default controller address ("localhost:9999")
+     */
+    public JBossController() {
+
+        this(new JBossControllerAddress());
+    }
+
+    public JBossController(String address) throws JBossCliException {
+
+        this(JBossControllerAddress.parseAddress(address));
+    }
+
     public JBossController(JBossControllerAddress controllerAddress) {
 
         if (controllerAddress == null) {
@@ -69,14 +77,6 @@ public class JBossController extends MetricSourceBase {
         }
 
         this.controllerAddress = controllerAddress;
-    }
-
-    /**
-     * Uses the default controller address ("localhost:9999")
-     */
-    public JBossController() {
-
-        this(new JBossControllerAddress());
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -99,8 +99,10 @@ public class JBossController extends MetricSourceBase {
 
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
 
-        List<Property> properties = new ArrayList<>();
+        throw new RuntimeException("NOT YET IMPLEMENTED");
 
+//        List<Property> properties = new ArrayList<>();
+//
 //        for(MetricDefinition md : metricDefinitions) {
 //
 //            if (!(md instanceof JBossCliMetricDefinition)) {
@@ -194,8 +196,8 @@ public class JBossController extends MetricSourceBase {
 //
 //            properties.add(p);
 //        }
-
-        return properties;
+//
+//        return properties;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

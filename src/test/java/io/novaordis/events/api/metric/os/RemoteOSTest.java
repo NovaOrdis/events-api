@@ -81,13 +81,28 @@ public class RemoteOSTest extends OSSourceBaseTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected RemoteOS getMetricSourceToTest() throws Exception {
+    protected RemoteOS getMetricSourceToTest(String... addresses) throws Exception {
 
-        //
-        // we don't test with a real ssh server
-        //
-        MockSshConnection mc = new MockSshConnection();
-        return new RemoteOS(mc);
+        if (addresses.length == 0) {
+
+            //
+            // we don't test with a real ssh server
+            //
+            MockSshConnection mc = new MockSshConnection();
+            return new RemoteOS(mc);
+        }
+        else if (addresses.length == 1) {
+
+            String address = addresses[0];
+            address += "ssh://" + address;
+            MockSshConnection mc = new MockSshConnection(address);
+            return new RemoteOS(mc);
+        }
+        else {
+
+            // at most one argument is expected
+            throw new IllegalArgumentException(addresses.length + " arguments");
+        }
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

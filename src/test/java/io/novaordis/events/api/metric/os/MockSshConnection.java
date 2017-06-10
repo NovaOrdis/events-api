@@ -41,14 +41,28 @@ public class MockSshConnection implements SshConnection {
 
     public MockSshConnection() {
 
+        this("mock-ssh-server");
+    }
+
+    /**
+     * "host:port" or "host" expected.
+     */
+    public MockSshConnection(String address) {
+
+        if(address.startsWith("ssh://")) {
+
+            address = address.substring("ssh://".length());
+        }
+
+        this.address = address;
         this.delegate = new MockNativeExecutor();
 
         //
         // we teach the ssh server at the other end to respond to "hostname"
         //
-
         delegate.putNativeExecutionResult("hostname", new NativeExecutionResult(0, address, null, true, true));
     }
+
 
     // SshConnection implementation ------------------------------------------------------------------------------------
 

@@ -221,9 +221,23 @@ public class JmxBusTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JmxBus getMetricSourceToTest() throws Exception {
+    protected JmxBus getMetricSourceToTest(String... addresses) throws Exception {
 
-        return new JmxBus();
+        if (addresses.length == 0) {
+
+            return new JmxBus();
+        }
+        else if (addresses.length == 1) {
+
+            String address = addresses[0];
+            address = "jmx://" + address;
+            return new JmxBus(address);
+        }
+        else {
+
+            // at most one argument is expected
+            throw new IllegalArgumentException(addresses.length + " arguments");
+        }
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

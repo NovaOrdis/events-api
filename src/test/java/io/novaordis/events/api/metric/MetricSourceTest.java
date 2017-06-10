@@ -86,15 +86,19 @@ public abstract class MetricSourceTest {
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
     @Test
-    public void collectMetrics_DefinitionsHaveADifferentSource() throws Exception {
+    public void collectMetrics_DefinitionsHaveDifferentSources() throws Exception {
 
-        MetricSource s = getMetricSourceToTest();
+        MetricSource source = getMetricSourceToTest();
 
-        MockMetricDefinition md = new MockMetricDefinition(new MockMetricSource());
+        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source);
+
+        MetricSource source2 = getMetricSourceToTest("other-host");
+
+        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2);
 
         try {
 
-            s.collectMetrics(Collections.singletonList(md));
+            source.collectMetrics(Arrays.asList(md, md2));
             fail("should have thrown exception");
         }
         catch(MetricException e) {
@@ -105,14 +109,13 @@ public abstract class MetricSourceTest {
     }
 
     @Test
-    public void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
+    public final void collectMetrics_SourceDoesNotProduceMetricForADefinition() throws Exception {
 
         MetricSource s = getMetricSourceToTest();
 
-        MockMetricDefinition mmd = new MockMetricDefinition(s);
+        MockMetricDefinition mmd = getCorrespondingMockMetricDefinition(s);
 
-        //noinspection ArraysAsListWithZeroOrOneArgument
-        List<MetricDefinition> definitions = Arrays.asList(mmd);
+        List<MetricDefinition> definitions = Collections.singletonList(mmd);
 
         List<Property> properties = s.collectMetrics(definitions);
 
@@ -120,14 +123,32 @@ public abstract class MetricSourceTest {
         assertEquals(1, properties.size());
 
         Property p = properties.get(0);
-        assertNull(p);
+
+        //
+        // non-null property but with a null value
+        //
+        assertNotNull(p);
+        assertNull(p.getValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract MetricSource getMetricSourceToTest() throws Exception;
+    /**
+     * Gives the sub-classes a chance to provide more specialized mocks.
+     */
+    protected MockMetricDefinition getCorrespondingMockMetricDefinition(MetricSource source) {
+
+        return new MockMetricDefinition(source);
+    }
+
+    /**
+     * @param addresses needed to simulate "different" metric source. If not specified, the default metric source
+     *                is returned. Only the first argument is used, if more than one is sent, we will throw
+     *                IllegalArgumentException.
+     */
+    protected abstract MetricSource getMetricSourceToTest(String... addresses) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

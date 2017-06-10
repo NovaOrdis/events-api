@@ -16,12 +16,9 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.events.api.metric.LabelAttribute;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.OSMetricDefinition;
 import io.novaordis.events.api.metric.os.OSSourceBase;
 
@@ -29,23 +26,14 @@ import io.novaordis.events.api.metric.os.OSSourceBase;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class MockOSMetricDefinition implements OSMetricDefinition {
+public class MockOSMetricDefinition extends MockMetricDefinition implements OSMetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static boolean FAIL_IN_CONSTRUCTOR = false;
-
-    public static void setFailInConstructor(boolean b) {
-
-        FAIL_IN_CONSTRUCTOR = b;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String id;
-    private OSSourceBase source;
     private String command;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -61,49 +49,14 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
 
     public MockOSMetricDefinition(String id, OSSourceBase s, String command) {
 
-        if (FAIL_IN_CONSTRUCTOR) {
+        super(s);
 
-            throw new RuntimeException("SYNTHETIC");
-        }
+        setId(id);
 
-        this.id = id;
-        this.source = s;
         this.command = command;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
-
-    @Override
-    public String getId() {
-
-        return id;
-    }
-
-    @Override
-    public MetricSource getSource() {
-
-        return source;
-    }
-
-    @Override
-    public Class getType() {
-        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public MeasureUnit getBaseUnit() {
-        throw new RuntimeException("getBaseUnit() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getLabel(LabelAttribute... attributes) {
-        throw new RuntimeException("getLabel() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getDescription() {
-        throw new RuntimeException("getDescription() NOT YET IMPLEMENTED");
-    }
 
     @Override
     public String getCommand() {
@@ -136,16 +89,6 @@ public class MockOSMetricDefinition implements OSMetricDefinition {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setId(String s) {
-        this.id = s;
-    }
-
-    @Override
-    public String toString() {
-
-        return "" + getId();
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
