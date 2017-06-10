@@ -53,6 +53,8 @@ public abstract class MetricSourceRepositoryTest {
 
         MetricSourceRepository r = getMetricSourceRepositoryToTest();
 
+        assertTrue(r.isEmpty());
+
         Set<LocalOS> sources = r.getSources(LocalOS.class);
         assertTrue(sources.isEmpty());
 

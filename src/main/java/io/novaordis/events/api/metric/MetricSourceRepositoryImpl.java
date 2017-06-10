@@ -144,12 +144,13 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
         s.add(source);
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
+    @Override
     public boolean isEmpty() {
 
         return sources.isEmpty();
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

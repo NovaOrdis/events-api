@@ -56,4 +56,6 @@ public interface MetricSourceRepository {
 
     <T extends MetricSource> void add(T source);
 
+    boolean isEmpty();
+
 }
