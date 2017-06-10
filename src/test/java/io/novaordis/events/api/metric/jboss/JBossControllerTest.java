@@ -16,11 +16,6 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.event.IntegerProperty;
-import io.novaordis.events.api.event.LongProperty;
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
@@ -28,14 +23,8 @@ import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
 
-import java.util.Arrays;
-import java.util.Collections;
-import java.util.List;
-
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -438,6 +427,19 @@ public class JBossControllerTest extends MetricSourceTest {
     // equals() and hashCode() -----------------------------------------------------------------------------------------
 
     @Test
+    @Override
+    public void equalsTest() throws Exception {
+
+        JBossController s = new JBossController(new JBossControllerAddress(
+                "someuser", new char[] {'1'}, "somehost", "somehost", 1234, "1234"));
+        JBossController s2 = new JBossController(new JBossControllerAddress(
+                "someuser", new char[] {'2'}, "somehost", "somehost", 1234, "1234"));
+
+        assertEquals(s, s2);
+        assertEquals(s2, s);
+    }
+
+    @Test
     public void equals_DefaultController() throws Exception {
 
         JBossController s = new JBossController();
@@ -472,18 +474,6 @@ public class JBossControllerTest extends MetricSourceTest {
     }
 
     @Test
-    public void equals_SameControllerAddress2() throws Exception {
-
-        JBossController s = new JBossController(
-                new JBossControllerAddress("someuser", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
-        JBossController s2 = new JBossController(
-                new JBossControllerAddress("someuser", new char[] {'b'}, "somehost", "somehost", 1234, "1234"));
-
-        assertEquals(s, s2);
-        assertEquals(s2, s);
-    }
-
-    @Test
     public void notEquals_DifferentUser() throws Exception {
 
         JBossController s = new JBossController(
@@ -507,18 +497,16 @@ public class JBossControllerTest extends MetricSourceTest {
         assertFalse(s2.equals(s));
     }
 
-    // equals() --------------------------------------------------------------------------------------------------------
-
-    @Override
-    public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
-    }
-
     // hashCode() ------------------------------------------------------------------------------------------------------
 
     @Override
     public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
+
+        JBossController s = new JBossController(new JBossControllerAddress(
+                "someuser", new char[] {'1'}, "somehost", "somehost", 1234, "1234"));
+
+        JBossControllerAddress a = s.getControllerAddress();
+        assertEquals(a.hashCode(), s.hashCode());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

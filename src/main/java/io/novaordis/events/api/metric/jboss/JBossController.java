@@ -239,7 +239,7 @@ public class JBossController extends MetricSourceBase {
             return 0;
         }
 
-        return 7 + 11 * controllerAddress.hashCode();
+        return controllerAddress.hashCode();
     }
 
     @Override

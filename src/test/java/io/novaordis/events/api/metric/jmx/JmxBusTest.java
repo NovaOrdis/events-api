@@ -180,8 +180,8 @@ public class JmxBusTest extends MetricSourceTest {
     @Override
     public void equalsTest() throws Exception {
 
-        JmxBus b = new JmxBus("admin@1.2.3.4:567");
-        JmxBus b2 = new JmxBus("admin@1.2.3.4:567");
+        JmxBus b = new JmxBus("admin:sompass@1.2.3.4:567");
+        JmxBus b2 = new JmxBus("admin:someotherpass@1.2.3.4:567");
 
         assertEquals(b, b2);
         assertEquals(b2, b);
@@ -190,7 +190,7 @@ public class JmxBusTest extends MetricSourceTest {
     @Test
     public void equalsTest2() throws Exception {
 
-        JmxBus b = new JmxBus("admin@1.2.3.4:567");
+        JmxBus b = new JmxBus("admin:somepass@1.2.3.4:567");
         //noinspection ObjectEqualsNull
         assertFalse(b.equals(null));
     }

@@ -167,8 +167,8 @@ public class JmxServerAddressTest {
     @Test
     public void testEquals() throws Exception {
 
-        JmxServerAddress a = new JmxServerAddress("admin@somehost:1234");
-        JmxServerAddress a2 = new JmxServerAddress("admin@somehost:1234");
+        JmxServerAddress a = new JmxServerAddress("admin:passwd1@somehost:1234");
+        JmxServerAddress a2 = new JmxServerAddress("admin:passwd2@somehost:1234");
 
         assertEquals(a, a2);
         assertEquals(a2, a);
@@ -198,8 +198,8 @@ public class JmxServerAddressTest {
     @Test
     public void testHashCode() throws Exception {
 
-        JmxServerAddress a = new JmxServerAddress("admin@somehost:1234");
-        JmxServerAddress a2 = new JmxServerAddress("admin@somehost:1235");
+        JmxServerAddress a = new JmxServerAddress("admin:passwd1@somehost:1234");
+        JmxServerAddress a2 = new JmxServerAddress("admin:passwd2@somehost:1235");
 
         assertTrue(a != a2);
     }

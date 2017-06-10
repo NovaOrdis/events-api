@@ -42,12 +42,19 @@ public class RemoteOSTest extends OSSourceBaseTest {
 
     @Override
     public void equalsTest() throws Exception {
-        throw new RuntimeException("equalsTest() NOT YET IMPLEMENTED");
+
+        RemoteOS ros = new RemoteOS("ssh://1.2.3.4:55");
+        RemoteOS ros2 = new RemoteOS("ssh://1.2.3.4:55");
+
+        assertEquals(ros, ros2);
+        assertEquals(ros2, ros2);
     }
 
     @Override
     public void hashCodeTest() throws Exception {
-        throw new RuntimeException("hashCodeTest() NOT YET IMPLEMENTED");
+
+        RemoteOS ros = new RemoteOS("ssh://1.2.3.4:55");
+        assertEquals(ros.hashCode(), ros.getAddress().hashCode());
     }
 
     /**

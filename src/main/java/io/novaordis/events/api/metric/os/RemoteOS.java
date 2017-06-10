@@ -81,6 +81,8 @@ public class RemoteOS extends OSSourceBase {
         String thisAddress = getAddress();
 
         return thisAddress != null && thisAddress.equals(address);
+
+
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -102,6 +104,44 @@ public class RemoteOS extends OSSourceBase {
     public void disconnect() {
 
         throw new RuntimeException("NYE");
+    }
+
+    @Override
+    public boolean equals(Object o) {
+
+        if (this == o) {
+
+            return true;
+        }
+
+        String address = getAddress();
+
+        if (address == null) {
+
+            return false;
+        }
+
+        if (!(o instanceof RemoteOS)) {
+
+            return false;
+        }
+
+        RemoteOS that = (RemoteOS)o;
+
+        return getAddress().equals(that.getAddress());
+    }
+
+    @Override
+    public int hashCode() {
+
+        String address = getAddress();
+
+        if (address == null) {
+
+            return 0;
+        }
+
+        return address.hashCode();
     }
 
     @Override
