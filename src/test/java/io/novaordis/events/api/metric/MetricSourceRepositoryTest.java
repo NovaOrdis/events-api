@@ -55,6 +55,8 @@ public abstract class MetricSourceRepositoryTest {
 
         assertTrue(r.isEmpty());
 
+        assertTrue(r.getSources().isEmpty());
+
         Set<LocalOS> sources = r.getSources(LocalOS.class);
         assertTrue(sources.isEmpty());
 
@@ -98,6 +100,17 @@ public abstract class MetricSourceRepositoryTest {
         JBossController jbc = new JBossController();
         r.add(jbc);
 
+        JmxBus jmxb = new JmxBus("jmx://1.2.3.4/something");
+        r.add(jmxb);
+
+        Set<MetricSource> allSources = r.getSources();
+
+        assertEquals(4, allSources.size());
+        assertTrue(allSources.contains(jmxb));
+        assertTrue(allSources.contains(jbc));
+        assertTrue(allSources.contains(ros));
+        assertTrue(allSources.contains(los));
+
         Set<LocalOS> sources = r.getSources(LocalOS.class);
         assertEquals(1, sources.size());
         assertTrue(sources.contains(los));
@@ -109,6 +122,14 @@ public abstract class MetricSourceRepositoryTest {
         Set<JBossController> sources3 = r.getSources(JBossController.class);
         assertEquals(1, sources3.size());
         assertTrue(sources3.contains(jbc));
+
+        Set<JmxBus> sources4 = r.getSources(JmxBus.class);
+        assertEquals(1, sources4.size());
+        assertTrue(sources4.contains(jmxb));
+
+        Set<MockMetricSource> sources5 = r.getSources(MockMetricSource.class);
+        assertTrue(sources5.isEmpty());
+
     }
 
     // getSource() -----------------------------------------------------------------------------------------------------

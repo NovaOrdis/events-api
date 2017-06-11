@@ -34,6 +34,11 @@ public interface MetricSourceRepository {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
+     * @return all the metric sources in the repository. May return an empty set, but never nul.
+     */
+    Set<MetricSource> getSources();
+
+    /**
      * The set of metric sources ofa specific type. May be empty but never null.
      */
     <T extends MetricSource> Set<T> getSources(Class<T> t);

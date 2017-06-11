@@ -57,6 +57,11 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
 
     // MetricSourceRepository implementation ---------------------------------------------------------------------------
 
+    @Override
+    public Set<MetricSource> getSources() {
+        throw new RuntimeException("getSources() NOT YET IMPLEMENTED");
+    }
+
     /**
      * @return a copy of the set, if sources of type t exist.
      */
