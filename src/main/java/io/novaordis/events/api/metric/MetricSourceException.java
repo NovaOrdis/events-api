@@ -14,15 +14,13 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
-
-import io.novaordis.events.api.metric.MetricSourceException;
+package io.novaordis.events.api.metric;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/7/17
+ * @since 8/20/16
  */
-public class MockOSSource extends OSSourceBase {
+public class MetricSourceException extends Exception {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,36 +30,19 @@ public class MockOSSource extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // OSSourceBase implementation -----------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+    /**
+     * @param message must be human readable, as it will be displayed in logs.
+     */
+    public MetricSourceException(String message) {
+        super(message);
     }
 
-    @Override
-    public boolean hasAddress(String address) {
-        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
+    public MetricSourceException(Throwable cause) {
+        super(cause);
     }
 
-    @Override
-    public void start() throws MetricSourceException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected String execute(String command) {
-        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+    public MetricSourceException(String message, Throwable cause) {
+        super(message, cause);
     }
 
 

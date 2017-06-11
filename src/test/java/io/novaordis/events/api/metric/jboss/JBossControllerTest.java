@@ -101,7 +101,7 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_SomeOfTheDefinitionsAreNotJBossCliMetricDefinitions() throws Exception {
 
-        fail("return here");
+        fail("RETURN HERE");
 
         //
         // configure the internal client as a mock client and install state
@@ -142,7 +142,7 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_SomeOfTheDefinitionsDoNotExistOnController() throws Exception {
 
-        fail("return here");
+        fail("RETURN HERE");
 
         //
         // configure the internal client as a mock client and install state
@@ -182,7 +182,7 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_DefinitionDoesNotHaveCorrespondingValue() throws Exception {
 
-        fail("return here");
+        fail("RETURN HERE");
 
         //
         // configure the internal client as a mock client and install state
@@ -215,7 +215,7 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_LazyClientInitialization() throws Exception {
 
-        fail("return here");
+        fail("RETURN HERE");
 
         //
         // make sure the first collectMetrics() correctly initializes the internal client
@@ -245,7 +245,7 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_Long() throws Exception {
 
-        fail("return here");
+        fail("RETURN HERE");
 
         //
         // make sure the first collectMetrics() correctly initializes the internal client

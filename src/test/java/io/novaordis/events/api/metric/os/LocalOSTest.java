@@ -22,6 +22,7 @@ import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -83,6 +84,45 @@ public class LocalOSTest extends OSSourceBaseTest {
         LocalOS os = new LocalOS();
 
         assertNull(os.getAddress());
+    }
+
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void start() throws Exception {
+
+        //
+        // start operation is a noop for a LocalOS, a LocalOS is always "started"
+        //
+
+        LocalOS os = getMetricSourceToTest();
+
+        assertTrue(os.isStarted());
+
+        // noop
+        os.start();
+
+        assertTrue(os.isStarted());
+
+        // noop
+        os.start();
+
+        assertTrue(os.isStarted());
+    }
+
+    @Test
+    @Override
+    public void stop() throws Exception {
+
+        LocalOS os = getMetricSourceToTest();
+
+        assertTrue(os.isStarted());
+
+        // noop
+        os.stop();
+
+        assertTrue(os.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

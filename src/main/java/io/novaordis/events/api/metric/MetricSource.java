@@ -34,9 +34,12 @@ import java.util.List;
  *
  * 4. The management controller (standalone or domain) of a WildFly instance.
  *
- * 5. etc.
- *
  * The implementations must correctly implement equals() and hashCode(), as metric sources will be used as map keys.
+ *
+ * A metric source instance must be started before metrics can be collected from it. The start operation usually
+ * implies expensive remote connection creation, initial state verification, etc. so metric source implementations
+ * should be designed to be started once and then stay in that state indefinitely. However, the underlying connection
+ * may break for various reasons during the metric source life, so it may become necessary to re-start a metric source.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/4/16
@@ -72,5 +75,22 @@ public interface MetricSource {
      *      a programming error, not a runtime collection failure.
      */
     List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
+
+    //
+    // life cycle methods
+    //
+
+    /**
+     * A metric source instance must be started before metrics can be collected from it. The start operation usually
+     * implies expensive remote connection creation, initial state verification, etc. so metric source implementations
+     * should be designed to be started once and then stay in that state indefinitely. However, the underlying
+     * connection may break for various reasons during the metric source life, so it may become necessary to re-start a
+     * metric source.
+     */
+    void start() throws MetricSourceException;
+
+    boolean isStarted();
+
+    void stop();
 
 }

@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.ssh.SshConnection;
 import io.novaordis.ssh.SshConnectionImpl;
 import io.novaordis.utilities.os.NativeExecutor;
@@ -83,6 +84,21 @@ public class RemoteOS extends OSSourceBase {
         return thisAddress != null && thisAddress.equals(address);
 
 
+    }
+
+    @Override
+    public void start() throws MetricSourceException {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

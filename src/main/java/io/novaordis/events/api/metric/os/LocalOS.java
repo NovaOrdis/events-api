@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -55,6 +56,30 @@ public class LocalOS extends OSSourceBase {
     public boolean hasAddress(String address) {
 
         return false;
+    }
+
+    /**
+     * A LocalOS instance is always started, start() is a noop.
+     */
+    @Override
+    public void start() throws MetricSourceException {
+
+        log.debug("noop start");
+    }
+
+    @Override
+    public boolean isStarted() {
+
+        return true;
+    }
+
+    /**
+     * A LocalOS instance is always started, stop() is a noop.
+     */
+    @Override
+    public void stop() {
+
+        log.debug("noop stop, " + this + " will remain started");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

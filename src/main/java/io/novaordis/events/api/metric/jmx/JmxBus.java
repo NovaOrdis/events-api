@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
+import io.novaordis.events.api.metric.MetricSourceException;
 
 import java.util.List;
 
@@ -71,6 +72,21 @@ public class JmxBus extends MetricSourceBase {
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void start() throws MetricSourceException {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

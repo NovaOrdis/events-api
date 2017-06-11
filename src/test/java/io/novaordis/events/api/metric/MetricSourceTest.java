@@ -131,6 +131,20 @@ public abstract class MetricSourceTest {
         assertNull(p.getValue());
     }
 
+    // lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void start() throws Exception {
+
+        fail("RETURN HERE");
+    }
+
+    @Test
+    public void stop() throws Exception {
+
+        fail("RETURN HERE");
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
