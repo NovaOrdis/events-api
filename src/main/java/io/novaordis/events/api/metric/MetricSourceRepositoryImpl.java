@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Collection;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
@@ -59,7 +60,15 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
 
     @Override
     public Set<MetricSource> getSources() {
-        throw new RuntimeException("getSources() NOT YET IMPLEMENTED");
+
+        Set<MetricSource> result = new HashSet<>();
+
+        for(Collection<MetricSource> sourcesOfASpecificType: sources.values()) {
+
+            result.addAll(sourcesOfASpecificType);
+        }
+
+        return result;
     }
 
     /**
