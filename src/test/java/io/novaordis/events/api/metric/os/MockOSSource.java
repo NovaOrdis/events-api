@@ -44,7 +44,6 @@ public class MockOSSource extends OSSourceBase {
         super(new MockAddress());
     }
 
-
     // OSSourceBase implementation -------------------------------------------------------------------------------------
 
     @Override

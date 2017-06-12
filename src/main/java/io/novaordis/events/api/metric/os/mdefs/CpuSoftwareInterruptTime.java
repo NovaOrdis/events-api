@@ -22,6 +22,7 @@ import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.OSAddress;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -43,9 +44,9 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuSoftwareInterruptTime(Address metricSourceAddress) {
+    public CpuSoftwareInterruptTime(OSAddress osAddress) {
 
-        super(metricSourceAddress);
+        super(osAddress);
 
         this.TYPE = Float.class;
 
