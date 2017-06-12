@@ -113,9 +113,11 @@ public abstract class MetricSourceBase implements MetricSource {
     protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)
             throws MetricException {
 
+        Address thisAddress = getAddress();
+
         for(MetricDefinition d: metricDefinitions) {
 
-            if (!this.equals(d.getMetricSourceAddress())) {
+            if (!thisAddress.equals(d.getMetricSourceAddress())) {
 
                 throw new MetricException(d + " has a different source than " + this);
             }

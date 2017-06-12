@@ -14,18 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os;
+package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.events.api.metric.MockAddress;
-import io.novaordis.events.api.metric.MockOSAddress;
-import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.OSAddress;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/7/17
+ * @since 6/12/17
  */
-public class MockOSSource extends OSSourceBase {
+public class MockOSAddress extends MockAddress implements OSAddress {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,39 +31,6 @@ public class MockOSSource extends OSSourceBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public MockOSSource(Address address) {
-
-        super(address);
-    }
-
-    public MockOSSource() {
-
-        super(new MockOSAddress());
-    }
-
-    // OSSourceBase implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public void start() throws MetricSourceException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected String execute(String command) {
-        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
-    }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

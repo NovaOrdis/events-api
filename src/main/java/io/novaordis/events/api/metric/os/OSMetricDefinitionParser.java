@@ -22,6 +22,7 @@ import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.OSAddress;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -165,8 +166,8 @@ public class OSMetricDefinitionParser {
 
         try {
 
-            Constructor<MetricSource> constructor = c.getConstructor(OSSourceBase.class);
-            md = (MetricDefinition)constructor.newInstance(metricSource);
+            Constructor<MetricSource> constructor = c.getConstructor(OSAddress.class);
+            md = (MetricDefinition)constructor.newInstance(metricSource.getAddress());
 
         }
         catch(Exception e) {

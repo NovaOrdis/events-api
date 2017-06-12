@@ -24,6 +24,7 @@ import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -67,9 +68,12 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         MetricDefinition d = getMetricDefinitionToTest();
 
-        LocalOS localOs = (LocalOS) d.getMetricSourceAddress();
+        LocalOSAddress localOsAddress = (LocalOSAddress)d.getMetricSourceAddress();
 
-        List<Property> measurements = localOs.collectMetrics(Collections.singletonList(d));
+        LocalOS localOS = new LocalOS();
+        assertEquals(localOS.getAddress(), localOsAddress);
+
+        List<Property> measurements = localOS.collectMetrics(Collections.singletonList(d));
 
         assertEquals(1, measurements.size());
 
