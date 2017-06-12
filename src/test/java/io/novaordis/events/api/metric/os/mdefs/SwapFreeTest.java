@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import io.novaordis.events.api.metric.os.LocalOS;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +51,35 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        SwapFree md = new SwapFree(new LocalOS());
+        SwapFree md = new SwapFree(new LocalOSAddress());
         assertEquals("SwapFree", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        SwapFree md = new SwapFree(new LocalOS());
+        SwapFree md = new SwapFree(new LocalOSAddress());
         assertEquals(Long.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        SwapFree md = new SwapFree(new LocalOS());
+        SwapFree md = new SwapFree(new LocalOSAddress());
         assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        SwapFree m = new SwapFree(new LocalOS());
+        SwapFree m = new SwapFree(new LocalOSAddress());
         assertEquals("Free Swap", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        SwapFree m = new SwapFree(new LocalOS());
+        SwapFree m = new SwapFree(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("free"));
         assertTrue(m.getDescription().toLowerCase().contains("swap"));
     }
@@ -88,7 +89,7 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        SwapFree m = new SwapFree(new LocalOS());
+        SwapFree m = new SwapFree(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -116,7 +117,7 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        SwapFree m = new SwapFree(new LocalOS());
+        SwapFree m = new SwapFree(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -145,7 +146,7 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        SwapFree m = new SwapFree(new LocalOS());
+        SwapFree m = new SwapFree(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -257,7 +258,7 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
 
     @Override
     protected SwapFree getMetricDefinitionToTest() throws Exception {
-        return new SwapFree(new LocalOS());
+        return new SwapFree(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

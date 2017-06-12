@@ -16,6 +16,7 @@
 
 package io.novaordis.ssh;
 
+import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.NativeExecutor;
@@ -39,7 +40,7 @@ public interface SshConnection extends NativeExecutor {
      */
     NativeExecutionResult execute(String command) throws NativeExecutionException;
 
-    String getAddress();
+    Address getAddress();
 
     void connect();
     void disconnect();

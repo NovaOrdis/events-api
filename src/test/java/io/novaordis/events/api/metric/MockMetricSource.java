@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.OS;
 
 import java.util.ArrayList;
@@ -51,6 +52,11 @@ public class MockMetricSource implements MetricSource {
 
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+
+        if (breakOnCollect) {
+            throw new RuntimeException("SYNTHETIC");
+        }
+
         throw new RuntimeException("collectMetrics() NOT YET IMPLEMENTED");
     }
 
@@ -70,12 +76,12 @@ public class MockMetricSource implements MetricSource {
     }
 
     @Override
-    public String getAddress() {
+    public Address getAddress() {
         throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
     }
 
     @Override
-    public boolean hasAddress(String address) {
+    public boolean hasAddress(Address address) {
         throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
     }
 

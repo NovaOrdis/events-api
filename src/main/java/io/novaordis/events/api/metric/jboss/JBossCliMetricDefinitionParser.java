@@ -19,8 +19,8 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
-import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.AddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -57,7 +57,7 @@ public class JBossCliMetricDefinitionParser {
      */
     public static JBossCliMetricDefinition parse(MetricSourceRepository repository,
                                                  String metricSourceAndMetricDefinitionRepresentation)
-            throws MetricDefinitionException {
+            throws MetricDefinitionException, AddressException {
 
         String mds;
 
@@ -126,9 +126,9 @@ public class JBossCliMetricDefinitionParser {
 
             try {
 
-                ca = JBossControllerAddress.parseAddress(controllerAddress);
+                ca = new JBossControllerAddress(controllerAddress);
             }
-            catch(JBossCliException e) {
+            catch(AddressException e) {
 
                 String msg = "cannot get a jboss controller address from \"" + controllerAddress + "\"";
 
@@ -143,8 +143,7 @@ public class JBossCliMetricDefinitionParser {
                 }
             }
 
-            String address = ca.getLiteral();
-            metricSource = repository == null ? null : repository.getSource(JBossController.class, address);
+            metricSource = repository == null ? null : repository.getSource(JBossController.class, ca);
 
             if (metricSource == null) {
 
@@ -199,7 +198,7 @@ public class JBossCliMetricDefinitionParser {
         // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
 
-        return new JBossCliMetricDefinition(metricSource, path, attribute);
+        return new JBossCliMetricDefinition(metricSource.getAddress(), path, attribute);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

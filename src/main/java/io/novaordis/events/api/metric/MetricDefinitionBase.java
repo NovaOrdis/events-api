@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.utilities.address.Address;
 
 /**
  * Not thread-safe, access synchronization must be implemented externally.
@@ -32,18 +33,18 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private MetricSource source;
+    private Address source;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @param source must always have a non-null source.
      */
-    protected MetricDefinitionBase(MetricSource source) {
+    protected MetricDefinitionBase(Address source) {
 
         if (source == null) {
 
-            throw new IllegalArgumentException("null source");
+            throw new IllegalArgumentException("null metric source address");
         }
 
         this.source = source;
@@ -83,7 +84,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     }
 
     @Override
-    public MetricSource getSource() {
+    public Address getMetricSourceAddress() {
 
         return source;
     }

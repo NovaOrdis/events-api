@@ -14,19 +14,15 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.os.mdefs;
+package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.event.MockProperty;
-import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MockMetricDefinition;
-import io.novaordis.events.api.metric.os.OSMetricDefinition;
 import io.novaordis.utilities.address.Address;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/3/16
+ * @since 6/12/17
  */
-public class MockOSMetricDefinition extends MockMetricDefinition implements OSMetricDefinition {
+public class MockAddress implements Address {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,61 +30,43 @@ public class MockOSMetricDefinition extends MockMetricDefinition implements OSMe
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String command;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Invoked by reflection.
-     */
-    @SuppressWarnings("unused")
-    public MockOSMetricDefinition(Address osMetricSourceAddress) {
-
-        this(MockOSMetricDefinition.class.getSimpleName(), osMetricSourceAddress, null);
-    }
-
-    public MockOSMetricDefinition(String id, Address osMetricSourceAddress, String command) {
-
-        super(osMetricSourceAddress);
-
-        setId(id);
-
-        this.command = command;
-    }
-
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
-
-    @Override
-    public String getCommand() {
-
-        return command;
-    }
-
-    @Override
-    public String getLinuxCommand() {
-        throw new RuntimeException("getLinuxCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getMacCommand() {
-        throw new RuntimeException("getMacCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getWindowsCommand() {
-        throw new RuntimeException("getWindowsCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Property parseCommandOutput(String commandExecutionStdout) {
-
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-        return new MockProperty(getId(), commandExecutionStdout);
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Address implementation ------------------------------------------------------------------------------------------
+
+
+    @Override
+    public String getProtocol() {
+        throw new RuntimeException("getProtocol() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getHost() {
+        throw new RuntimeException("getHost() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Integer getPort() {
+        throw new RuntimeException("getPort() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getUsername() {
+        throw new RuntimeException("getUsername() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public char[] getPassword() {
+        throw new RuntimeException("getPassword() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public String getLiteral() {
+        throw new RuntimeException("getLiteral() NOT YET IMPLEMENTED");
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

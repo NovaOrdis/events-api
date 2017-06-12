@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.Address;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -39,9 +41,9 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMetricDefinition(MetricSource s) {
+    public MockMetricDefinition(Address metricSourceAddress) {
 
-        super(s);
+        super(metricSourceAddress);
 
         setId(getClass().getSimpleName());
 

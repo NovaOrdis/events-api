@@ -20,6 +20,7 @@ import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
+import io.novaordis.utilities.address.Address;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -38,9 +39,9 @@ public class LoadAverageLastFiveMinutes extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LoadAverageLastFiveMinutes(OSSourceBase s) {
+    public LoadAverageLastFiveMinutes(Address metricSourceAddress) {
 
-        super(s);
+        super(metricSourceAddress);
 
         this.TYPE = Float.class;
 

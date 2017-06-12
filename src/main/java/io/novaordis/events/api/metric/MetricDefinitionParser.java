@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric;
 import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinitionParser;
 import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionParser;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionParser;
+import io.novaordis.utilities.address.AddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -56,7 +57,7 @@ public class MetricDefinitionParser {
      */
     public static MetricDefinition parse(MetricSourceRepository repository,
                                   String metricSourceAndMetricDefinitionRepresentation)
-            throws MetricDefinitionException {
+            throws MetricDefinitionException, AddressException {
 
 
         log.debug("parsing metric definition \"" + metricSourceAndMetricDefinitionRepresentation + "\"");

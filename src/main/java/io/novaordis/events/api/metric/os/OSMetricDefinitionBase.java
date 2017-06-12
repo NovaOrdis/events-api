@@ -24,6 +24,7 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.parser.ParsingException;
+import io.novaordis.utilities.address.Address;
 
 import java.util.regex.Pattern;
 
@@ -52,9 +53,9 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected OSMetricDefinitionBase(OSSourceBase source) {
+    protected OSMetricDefinitionBase(Address metricSourceAddress) {
 
-        super(source);
+        super(metricSourceAddress);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

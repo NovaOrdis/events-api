@@ -18,9 +18,9 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +50,35 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertEquals("CpuHardwareInterruptTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime md = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertEquals("CPU Hardware Interrupt Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("hardware"));
         assertTrue(m.getDescription().toLowerCase().contains("interrupt"));
@@ -89,7 +89,7 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -117,7 +117,7 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -146,7 +146,7 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOS());
+        CpuHardwareInterruptTime m = new CpuHardwareInterruptTime(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -259,7 +259,7 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuHardwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuHardwareInterruptTime(new LocalOS());
+        return new CpuHardwareInterruptTime(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

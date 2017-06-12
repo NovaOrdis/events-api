@@ -19,7 +19,8 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
 
 /**
  * A metric that can be read from a JBoss controller.
@@ -48,22 +49,16 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
      *
      * @throws IllegalArgumentException
      */
-    public JBossCliMetricDefinition(MetricSource source, CliPath path, CliAttribute attribute)
+    public JBossCliMetricDefinition(Address metricSourceAddress, CliPath path, CliAttribute attribute)
             throws MetricDefinitionException {
 
-        super(source);
+        super(metricSourceAddress);
 
         this.path = path;
         this.attribute = attribute;
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
-
-    @Override
-    public JBossController getSource() {
-
-        return (JBossController)super.getSource();
-    }
 
     @Override
     public String getId() {
@@ -110,9 +105,12 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
         return null;
     }
 
-    //
-    // we need to override all source-related methods, as we override the storage
-    //
+    @Override
+    public JBossControllerAddress getMetricSourceAddress() {
+
+        Address a = super.getMetricSourceAddress();
+        return (JBossControllerAddress)a;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

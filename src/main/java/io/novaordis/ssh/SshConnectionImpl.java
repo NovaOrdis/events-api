@@ -16,6 +16,9 @@
 
 package io.novaordis.ssh;
 
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 
@@ -33,16 +36,16 @@ public class SshConnectionImpl implements SshConnection {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address;
+    private Address address;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
      * @param address the address, including optionally the ssh:// protocol
      */
-    public SshConnectionImpl(String address) {
+    public SshConnectionImpl(String address) throws AddressException {
 
-        this.address = address;
+        this.address = new AddressImpl(address);
     }
 
     // NativeExecutor implementation -----------------------------------------------------------------------------------
@@ -60,7 +63,7 @@ public class SshConnectionImpl implements SshConnection {
     // SshConnection implementation ------------------------------------------------------------------------------------
 
     @Override
-    public String getAddress() {
+    public Address getAddress() {
 
         return address;
     }

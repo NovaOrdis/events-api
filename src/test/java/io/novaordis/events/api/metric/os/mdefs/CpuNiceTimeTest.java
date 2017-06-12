@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,35 +49,35 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuNiceTime md = new CpuNiceTime(new LocalOS());
+        CpuNiceTime md = new CpuNiceTime(new LocalOSAddress());
         assertEquals("CpuNiceTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuNiceTime md = new CpuNiceTime(new LocalOS());
+        CpuNiceTime md = new CpuNiceTime(new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuNiceTime md = new CpuNiceTime(new LocalOS());
+        CpuNiceTime md = new CpuNiceTime(new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
+        CpuNiceTime m = new CpuNiceTime(new LocalOSAddress());
         assertEquals("CPU Nice Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
+        CpuNiceTime m = new CpuNiceTime(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("niced"));
@@ -87,7 +88,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
+        CpuNiceTime m = new CpuNiceTime(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -115,7 +116,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
+        CpuNiceTime m = new CpuNiceTime(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -144,7 +145,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuNiceTime m = new CpuNiceTime(new LocalOS());
+        CpuNiceTime m = new CpuNiceTime(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -257,7 +258,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuNiceTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuNiceTime(new LocalOS());
+        return new CpuNiceTime(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

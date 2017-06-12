@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.Address;
+
 import java.util.Set;
 
 /**
@@ -57,7 +59,7 @@ public interface MetricSourceRepository {
      * @exception IllegalStateException if more than one metric sources for the given type exist, and no address is
      *  provided.
      */
-    <T extends MetricSource> T getSource(Class<T> t, String... address);
+    <T extends MetricSource> T getSource(Class<T> t, Address... address);
 
     <T extends MetricSource> void add(T source);
 

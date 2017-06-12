@@ -23,6 +23,7 @@ import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -52,35 +53,35 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals("PhysicalMemoryFree", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals(Long.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree md = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals("Free Physical Memory", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("physical"));
         assertTrue(m.getDescription().toLowerCase().contains("memory"));
         assertTrue(m.getDescription().toLowerCase().contains("unused"));
@@ -91,7 +92,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -121,7 +122,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -151,7 +152,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
         String expected = "typeperf -sc 1 \"\\Memory\\*\"";
 
-        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOS());
+        PhysicalMemoryFree m = new PhysicalMemoryFree(new LocalOSAddress());
         assertEquals(expected, m.getWindowsCommand());
 
         try {
@@ -280,7 +281,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryFree getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryFree(new LocalOS());
+        return new PhysicalMemoryFree(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

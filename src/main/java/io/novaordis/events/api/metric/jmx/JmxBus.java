@@ -21,6 +21,8 @@ import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 
 import java.util.List;
 
@@ -34,37 +36,40 @@ public class JmxBus extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String PROTOCOL = "jmx";
+
+    public static final String DEFAULT_HOST = "localhost";
+    public static final int DEFAULT_PORT = 9999;
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private JmxServerAddress address;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmxBus() throws JmxException {
+    public JmxBus() throws Exception {
 
-        this.address = new JmxServerAddress();
+        this("jmx://" + DEFAULT_HOST + ":" + DEFAULT_PORT);
     }
 
-    public JmxBus(String address) throws JmxException  {
+    public JmxBus(String address) throws Exception  {
 
-        this.address = new JmxServerAddress(address);
+        this(new AddressImpl(address));
+    }
+
+    public JmxBus(Address address) throws Exception  {
+
+        super(address);
+
+        String protocol = getAddress().getProtocol();
+
+        if (!PROTOCOL.equals(getAddress().getProtocol())) {
+
+            throw new JmxException("invalid protocol " + protocol);
+        }
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-
-        return address.getLiteral();
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-
-        return getAddress().equals(address);
-    }
 
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
@@ -76,6 +81,7 @@ public class JmxBus extends MetricSourceBase {
 
     @Override
     public void start() throws MetricSourceException {
+
         throw new RuntimeException("start() NOT YET IMPLEMENTED");
     }
 
@@ -86,54 +92,16 @@ public class JmxBus extends MetricSourceBase {
 
     @Override
     public void stop() {
+
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public JmxServerAddress getJmxServerAddress() {
-
-        return address;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-
-        if (this == o) {
-
-            return true;
-        }
-
-        if (address == null) {
-
-            return false;
-        }
-
-        if (!(o instanceof JmxBus)) {
-
-            return false;
-        }
-
-        JmxBus that = (JmxBus)o;
-
-        return address.equals(that.address);
-    }
-
-    @Override
-    public int hashCode() {
-
-        if (address == null) {
-
-            return 0;
-        }
-
-        return address.hashCode();
-    }
-
     @Override
     public String toString() {
 
-        return "" + address;
+        return "" + getAddress();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

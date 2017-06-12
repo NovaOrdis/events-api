@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.jmx;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSource;
+import io.novaordis.utilities.address.Address;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -52,10 +52,10 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
      *
      * @throws IllegalArgumentException
      */
-    public JmxMetricDefinition(MetricSource source, String objectNameDomain,
+    public JmxMetricDefinition(Address metricSourceAddress, String objectNameDomain,
                                String objectNameKeyValuePairs, String attributeName) throws MetricDefinitionException {
 
-        super(source);
+        super(metricSourceAddress);
 
         //
         // we use the ObjectName constructor to parse, but we don't cache it
@@ -79,13 +79,6 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
-
-
-    @Override
-    public JmxBus getSource() {
-
-        return (JmxBus)super.getSource();
-    }
 
     /**
      * @return the definition where keys are rendered in the order in which they were introduced
@@ -134,7 +127,7 @@ public class JmxMetricDefinition extends MetricDefinitionBase {
     @Override
     public String toString() {
 
-        return getSource() + "/" + getId();
+        return getMetricSourceAddress() + "/" + getId();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

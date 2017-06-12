@@ -18,11 +18,13 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
@@ -116,7 +118,7 @@ public class OSMetricDefinitionParserTest {
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
-        LocalOS los = (LocalOS)d.getSource();
+        LocalOS los = (LocalOS)d.getMetricSourceAddress();
         assertNotNull(los);
     }
 
@@ -133,8 +135,8 @@ public class OSMetricDefinitionParserTest {
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
-        MetricSource s = m.getSource();
-        LocalOS los = (LocalOS)s;
+        Address s = m.getMetricSourceAddress();
+        LocalOSAddress los = (LocalOSAddress)s;
         assertNotNull(los);
 
         assertTrue(mr.getSources(LocalOS.class).isEmpty());
@@ -147,9 +149,9 @@ public class OSMetricDefinitionParserTest {
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
-        RemoteOS ros = (RemoteOS)d.getSource();
+        Address ros = d.getMetricSourceAddress();
         assertNotNull(ros);
-        assertEquals("ssh://1.2.3.4", ros.getAddress());
+        assertEquals(new AddressImpl("ssh://1.2.3.4"), ros);
     }
 
     @Test
@@ -166,10 +168,8 @@ public class OSMetricDefinitionParserTest {
 
         assertNotNull(m);
 
-        MetricSource s = m.getSource();
-        RemoteOS ros = (RemoteOS)s;
-        assertEquals("ssh://1.2.3.4", ros.getAddress());
-
+        Address s = m.getMetricSourceAddress();
+        assertEquals(new AddressImpl("ssh://1.2.3.4"), s);
         assertTrue(mr.getSources(LocalOS.class).isEmpty());
     }
 

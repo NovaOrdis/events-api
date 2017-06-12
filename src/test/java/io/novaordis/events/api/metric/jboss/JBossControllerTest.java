@@ -24,6 +24,8 @@ import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -107,20 +109,19 @@ public class JBossControllerTest extends MetricSourceTest {
         // configure the internal client as a mock client and install state
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress(
-                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
         ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", 7);
 
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        MockMetricDefinition mmd = new MockMetricDefinition(jbossSource);
+        MockMetricDefinition mmd = new MockMetricDefinition(jbossSource.getAddress());
 
         JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
-                jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute"));
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
-        MockMetricDefinition mmd2 = new MockMetricDefinition(jbossSource);
+        MockMetricDefinition mmd2 = new MockMetricDefinition(jbossSource.getAddress());
 
         List<MetricDefinition> definitions = Arrays.asList(mmd, jbmd, mmd2);
 
@@ -148,8 +149,7 @@ public class JBossControllerTest extends MetricSourceTest {
         // configure the internal client as a mock client and install state
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress(
-                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
         ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute-1", 10);
 
@@ -161,10 +161,10 @@ public class JBossControllerTest extends MetricSourceTest {
         jbossSource.setControllerClient(client);
 
         JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
-                jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute-1"));
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-1"));
 
         JBossCliMetricDefinition jbmd2 = new JBossCliMetricDefinition(
-                jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute-2"));
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-2"));
 
         List<MetricDefinition> definitions = Arrays.asList(jbmd, jbmd2);
 
@@ -188,8 +188,7 @@ public class JBossControllerTest extends MetricSourceTest {
         // configure the internal client as a mock client and install state
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress(
-                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
 
         //
@@ -200,8 +199,8 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        JBossCliMetricDefinition jbmd =
-                new JBossCliMetricDefinition(jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute"));
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         List<MetricDefinition> definitions = Collections.singletonList(jbmd);
 
@@ -221,8 +220,7 @@ public class JBossControllerTest extends MetricSourceTest {
         // make sure the first collectMetrics() correctly initializes the internal client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress(
-                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
         JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
@@ -231,8 +229,8 @@ public class JBossControllerTest extends MetricSourceTest {
         assertNotNull(client2);
         assertFalse(client2.isConnected());
 
-        JBossCliMetricDefinition jbmd =
-                new JBossCliMetricDefinition(jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute"));
+        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         // this should trigger initialization, even if no properties are read
         List<Property> properties = jbossSource.collectMetrics(Collections.singletonList(jbmd));
@@ -251,8 +249,7 @@ public class JBossControllerTest extends MetricSourceTest {
         // make sure the first collectMetrics() correctly initializes the internal client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress(
-                "MOCK-USER", new char[] { 'm', 'o', 'c', 'k'}, "MOCK-HOST", "MOCK-HOST", 7777, "7777");
+        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
 
         MockJBossControllerClient mc = (MockJBossControllerClient)JBossControllerClient.getInstance(mockAddress);
 
@@ -265,8 +262,8 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(mc);
 
-        List<MetricDefinition> md = Collections.singletonList(
-                new JBossCliMetricDefinition(jbossSource, new CliPath("test-path"), new CliAttribute("test-attribute")));
+        List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(
+                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute")));
 
         // this should trigger initialization, even if no properties are read
         List<Property> properties = jbossSource.collectMetrics(md);
@@ -287,10 +284,10 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossController s = new JBossController();
 
-        JBossControllerAddress address = s.getControllerAddress();
+        JBossControllerAddress address = s.getAddress();
 
         assertEquals(JBossControllerClient.DEFAULT_HOST, address.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, address.getPort());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, address.getPort().intValue());
         assertNull(address.getUsername());
         assertNull(address.getPassword());
     }
@@ -300,107 +297,107 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void getAddress_hasAddress() throws Exception {
 
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("admin:adminpassword@1.2.3.4:9999");
+        JBossControllerAddress a = new JBossControllerAddress("admin:adminpassword@1.2.3.4:9999");
         JBossController c = new JBossController(a);
 
-        String address = c.getAddress();
+        Address address = c.getAddress();
         // password is not represented
-        assertEquals("admin@1.2.3.4:9999", address);
+        assertEquals(new AddressImpl("admin@1.2.3.4:9999"), address);
         assertTrue(c.hasAddress(address));
     }
 
     @Test
     public void getAddress_hasAddress2() throws Exception {
 
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("1.2.3.4:9999");
+        JBossControllerAddress a = new JBossControllerAddress("1.2.3.4:9999");
         JBossController c = new JBossController(a);
 
-        String address = c.getAddress();
-        assertEquals("1.2.3.4:9999", address);
+        Address address = c.getAddress();
+        assertEquals(new AddressImpl("1.2.3.4:9999"), address);
         assertTrue(c.hasAddress(address));
     }
 
     @Test
     public void getAddress_hasAddress3() throws Exception {
 
-        JBossControllerAddress a = JBossControllerAddress.parseAddress("someHost");
+        JBossControllerAddress a = new JBossControllerAddress("someHost");
         JBossController c = new JBossController(a);
 
-        String address = c.getAddress();
-        assertEquals("someHost", address);
+        Address address = c.getAddress();
+        assertEquals(new AddressImpl("someHost"), address);
         assertTrue(c.hasAddress(address));
     }
 
     @Test
     public void getAddress_hasAddress4() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("localhost"));
+        JBossController c = new JBossController(new JBossControllerAddress("localhost"));
 
-        assertEquals("localhost", c.getAddress());
-        assertTrue(c.hasAddress("localhost"));
+        assertEquals(new AddressImpl("localhost"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("localhost")));
     }
 
     @Test
     public void getAddress_hasAddress5() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("localhost:9999"));
+        JBossController c = new JBossController(new JBossControllerAddress("localhost:9999"));
 
-        assertEquals("localhost:9999", c.getAddress());
-        assertTrue(c.hasAddress("localhost:9999"));
+        assertEquals(new AddressImpl("localhost:9999"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("localhost:9999")));
     }
 
     @Test
     public void getAddress_hasAddress6() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("somehost"));
+        JBossController c = new JBossController(new JBossControllerAddress("somehost"));
 
-        assertEquals("somehost", c.getAddress());
-        assertTrue(c.hasAddress("somehost"));
+        assertEquals(new AddressImpl("somehost"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("somehost")));
     }
 
     @Test
     public void getAddress_hasAddress7() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("somehost:1111"));
+        JBossController c = new JBossController(new JBossControllerAddress("somehost:1111"));
 
-        assertEquals("somehost:1111", c.getAddress());
-        assertTrue(c.hasAddress("somehost:1111"));
+        assertEquals(new AddressImpl("somehost:1111"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("somehost:1111")));
     }
 
     @Test
     public void getAddress_hasAddress8() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("testuser:blah@localhost"));
+        JBossController c = new JBossController(new JBossControllerAddress("testuser:blah@localhost"));
 
-        assertEquals("testuser@localhost", c.getAddress());
-        assertTrue(c.hasAddress("testuser@localhost"));
+        assertEquals(new AddressImpl("testuser@localhost"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("testuser@localhost")));
     }
 
     @Test
     public void getAddress_hasAddress9() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("testuser:blah@localhost"));
+        JBossController c = new JBossController(new JBossControllerAddress("testuser:blah@localhost"));
 
-        assertEquals("testuser@localhost", c.getAddress());
-        assertTrue(c.hasAddress("testuser@localhost"));
+        assertEquals(new AddressImpl("testuser@localhost"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("testuser@localhost")));
     }
 
     @Test
     public void getAddress_hasAddress10() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("test:test123!@localhost"));
+        JBossController c = new JBossController(new JBossControllerAddress("test:test123!@localhost"));
 
-        assertEquals("test@localhost", c.getAddress());
-        assertTrue(c.hasAddress("test@localhost"));
+        assertEquals(new AddressImpl("test@localhost"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("test@localhost")));
     }
 
     @Test
     public void getAddress_hasAddress11() throws Exception {
 
-        JBossController c = new JBossController(JBossControllerAddress.parseAddress("test:test123!@localhost:9999"));
+        JBossController c = new JBossController(new JBossControllerAddress("test:test123!@localhost:9999"));
 
-        assertEquals("test@localhost:9999", c.getAddress());
-        assertTrue(c.hasAddress("test@localhost:9999"));
+        assertEquals(new AddressImpl("test@localhost:9999"), c.getAddress());
+        assertTrue(c.hasAddress(new AddressImpl("test@localhost:9999")));
     }
 
     // equals() and hashCode() -----------------------------------------------------------------------------------------
@@ -409,10 +406,8 @@ public class JBossControllerTest extends MetricSourceTest {
     @Override
     public void equalsTest() throws Exception {
 
-        JBossController s = new JBossController(new JBossControllerAddress(
-                "someuser", new char[] {'1'}, "somehost", "somehost", 1234, "1234"));
-        JBossController s2 = new JBossController(new JBossControllerAddress(
-                "someuser", new char[] {'2'}, "somehost", "somehost", 1234, "1234"));
+        JBossController s = new JBossController(new JBossControllerAddress("jbosscli://someuser:1@somehost:1234"));
+        JBossController s2 = new JBossController(new JBossControllerAddress("jbosscli://someuser:2@somehost:1234"));
 
         assertEquals(s, s2);
         assertEquals(s2, s);
@@ -431,10 +426,10 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void equals_DefaultControllerPort() throws Exception {
 
-        JBossController s = new JBossController(new JBossControllerAddress(
-                null, null, "somehost", "somehost", JBossControllerClient.DEFAULT_PORT, null));
-        JBossController s2 = new JBossController(new JBossControllerAddress(
-                null, null, "somehost", "somehost", JBossControllerClient.DEFAULT_PORT, null));
+        JBossController s = new JBossController(
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT));
+        JBossController s2 = new JBossController(
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT));
 
         assertEquals(s, s2);
         assertEquals(s2, s);
@@ -443,10 +438,8 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void equals_SameControllerAddress() throws Exception {
 
-        JBossController s = new JBossController(new JBossControllerAddress(
-                null, null, "somehost", "somehost", 1234, "1234"));
-        JBossController s2 = new JBossController(new JBossControllerAddress(
-                null, null, "somehost", "somehost", 1234, "1234"));
+        JBossController s = new JBossController(new JBossControllerAddress("jbosscli://somehost:1234"));
+        JBossController s2 = new JBossController(new JBossControllerAddress("jbosscli://somehost:1234"));
 
         assertEquals(s, s2);
         assertEquals(s2, s);
@@ -455,10 +448,8 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void notEquals_DifferentUser() throws Exception {
 
-        JBossController s = new JBossController(
-                new JBossControllerAddress("someuser", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
-        JBossController s2 = new JBossController(
-                new JBossControllerAddress("someuser2", new char[] {'a'}, "somehost", "somehost", 1234, "1234"));
+        JBossController s = new JBossController(new JBossControllerAddress("jbosscli://someuser:a@somehost:1234"));
+        JBossController s2 = new JBossController(new JBossControllerAddress("jbosscli://someuser2:a@somehost:1234"));
 
         assertFalse(s.equals(s2));
         assertFalse(s2.equals(s));
@@ -467,10 +458,8 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void notEquals_DifferentPort() throws Exception {
 
-        JBossController s = new JBossController(new JBossControllerAddress(
-                null, null, "localhost", null, 1234, "1234"));
-        JBossController s2 = new JBossController(new JBossControllerAddress(
-                null, null, "localhost", null, 1235, "1235"));
+        JBossController s = new JBossController(new JBossControllerAddress("jbosscli://localhost:1234"));
+        JBossController s2 = new JBossController(new JBossControllerAddress("jbosscli://localhost:1235"));
 
         assertFalse(s.equals(s2));
         assertFalse(s2.equals(s));
@@ -481,10 +470,9 @@ public class JBossControllerTest extends MetricSourceTest {
     @Override
     public void hashCodeTest() throws Exception {
 
-        JBossController s = new JBossController(new JBossControllerAddress(
-                "someuser", new char[] {'1'}, "somehost", "somehost", 1234, "1234"));
+        JBossController s = new JBossController(new JBossControllerAddress("jbosscli://someuser:1@somehost:1234"));
 
-        JBossControllerAddress a = s.getControllerAddress();
+        JBossControllerAddress a = s.getAddress();
         assertEquals(a.hashCode(), s.hashCode());
     }
 

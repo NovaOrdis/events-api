@@ -17,6 +17,8 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.events.api.metric.MockAddress;
+import io.novaordis.utilities.address.Address;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -32,17 +34,18 @@ public class MockOSSource extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // OSSourceBase implementation -----------------------------------------------------------------------------------------
+    public MockOSSource(Address address) {
 
-    @Override
-    public String getAddress() {
-        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+        super(address);
     }
 
-    @Override
-    public boolean hasAddress(String address) {
-        throw new RuntimeException("hasAddress() NOT YET IMPLEMENTED");
+    public MockOSSource() {
+
+        super(new MockAddress());
     }
+
+
+    // OSSourceBase implementation -------------------------------------------------------------------------------------
 
     @Override
     public void start() throws MetricSourceException {

@@ -62,7 +62,7 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {
 
         JmxMetricDefinition d = new JmxMetricDefinition(
-                new JmxBus(), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
+                new JmxBus().getAddress(), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
 
         String definition = d.getId();
 
@@ -79,7 +79,7 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
         try {
 
-            new JmxMetricDefinition(new JmxBus(), "test.domain", "999999", "testAttribute");
+            new JmxMetricDefinition(new JmxBus().getAddress(), "test.domain", "999999", "testAttribute");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -101,7 +101,8 @@ public class JmxMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JmxMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JmxMetricDefinition(new JmxBus(), "test.domain", "service=TestService", "testAttribute");
+        JmxBus bus = new JmxBus();
+        return new JmxMetricDefinition(bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

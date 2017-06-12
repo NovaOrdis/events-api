@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,35 +49,35 @@ public class CpuKernelTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuKernelTime md = new CpuKernelTime(new LocalOS());
+        CpuKernelTime md = new CpuKernelTime(new LocalOSAddress());
         assertEquals("CpuKernelTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuKernelTime md = new CpuKernelTime(new LocalOS());
+        CpuKernelTime md = new CpuKernelTime(new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuKernelTime md = new CpuKernelTime(new LocalOS());
+        CpuKernelTime md = new CpuKernelTime(new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuKernelTime m = new CpuKernelTime(new LocalOS());
+        CpuKernelTime m = new CpuKernelTime(new LocalOSAddress());
         assertEquals("CPU Kernel Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuKernelTime m = new CpuKernelTime(new LocalOS());
+        CpuKernelTime m = new CpuKernelTime(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("kernel"));
@@ -87,7 +88,7 @@ public class CpuKernelTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuKernelTime m = new CpuKernelTime(new LocalOS());
+        CpuKernelTime m = new CpuKernelTime(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -117,7 +118,7 @@ public class CpuKernelTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        CpuKernelTime m = new CpuKernelTime(new LocalOS());
+        CpuKernelTime m = new CpuKernelTime(new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -145,7 +146,7 @@ public class CpuKernelTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuKernelTime m = new CpuKernelTime(new LocalOS());
+        CpuKernelTime m = new CpuKernelTime(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -274,7 +275,7 @@ public class CpuKernelTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuKernelTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuKernelTime(new LocalOS());
+        return new CpuKernelTime(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

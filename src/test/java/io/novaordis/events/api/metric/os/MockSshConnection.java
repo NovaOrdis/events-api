@@ -17,6 +17,9 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.ssh.SshConnection;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 
@@ -34,12 +37,12 @@ public class MockSshConnection implements SshConnection {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String address = "mock-ssh-server";
+    private Address address;
     private MockNativeExecutor delegate;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockSshConnection() {
+    public MockSshConnection() throws AddressException {
 
         this("mock-ssh-server");
     }
@@ -47,14 +50,9 @@ public class MockSshConnection implements SshConnection {
     /**
      * "host:port" or "host" expected.
      */
-    public MockSshConnection(String address) {
+    public MockSshConnection(String address) throws AddressException {
 
-        if(address.startsWith("ssh://")) {
-
-            address = address.substring("ssh://".length());
-        }
-
-        this.address = address;
+        this.address = new AddressImpl(address);
         this.delegate = new MockNativeExecutor();
 
         //
@@ -73,7 +71,7 @@ public class MockSshConnection implements SshConnection {
     }
 
     @Override
-    public String getAddress() {
+    public Address getAddress() {
 
         return address;
     }

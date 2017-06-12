@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
@@ -242,8 +244,8 @@ public class JmxMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JmxBus b = d.getSource();
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        Address a = d.getMetricSourceAddress();
+        assertEquals(new AddressImpl("jmx://admin@1.2.3.4:8888"), a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -264,8 +266,8 @@ public class JmxMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JmxBus b = d.getSource();
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        Address a = d.getMetricSourceAddress();
+        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -285,8 +287,8 @@ public class JmxMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JmxBus b = d.getSource();
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        Address a = d.getMetricSourceAddress();
+        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -307,8 +309,8 @@ public class JmxMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JmxBus b = d.getSource();
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        Address a = d.getMetricSourceAddress();
+        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
 
         Set<JmxBus> buses = r.getSources(JmxBus.class);
         assertTrue(buses.isEmpty());

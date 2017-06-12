@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.utilities.address.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -53,9 +54,9 @@ public interface MetricDefinition {
     String getId();
 
     /**
-     * @return the source for this metric definition instance. Never returns null.
+     * @return the address of this metric definition MetricSource instance. Never returns null.
      */
-    MetricSource getSource();
+    Address getMetricSourceAddress();
 
     /**
      * The types for values corresponding to this metric definition. Typically Integer, Long, Double.

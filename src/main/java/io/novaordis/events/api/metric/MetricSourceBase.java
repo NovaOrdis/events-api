@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.Address;
+
 import java.util.List;
 
 /**
@@ -30,9 +32,72 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Address address;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    protected MetricSourceBase(Address address) {
+
+        if (address == null) {
+
+            throw new IllegalArgumentException("null address");
+        }
+
+        this.address = address;
+    }
+
     // MetricSource implementation -------------------------------------------------------------------------------------
+
+    @Override
+    public Address getAddress() {
+
+        return address;
+    }
+
+    @Override
+    public final boolean hasAddress(Address address) {
+
+        return this.address != null && this.address.equals(address);
+    }
+
+    @Override
+    public final boolean equals(Object o) {
+
+        if (this == o) {
+
+            return true;
+        }
+
+        if (o == null) {
+
+            return false;
+        }
+
+        if (address == null) {
+
+            return false;
+        }
+
+        if (!getClass().equals(o.getClass())) {
+
+            return false;
+        }
+
+        MetricSource that = (MetricSource)o;
+
+        return address.equals(that.getAddress());
+    }
+
+    @Override
+    public final int hashCode() {
+
+        if (address == null) {
+
+            return 0;
+        }
+
+        return address.hashCode();
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -40,12 +105,17 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    protected void setAddress(Address a) {
+
+        this.address = a;
+    }
+
     protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)
             throws MetricException {
 
         for(MetricDefinition d: metricDefinitions) {
 
-            if (!this.equals(d.getSource())) {
+            if (!this.equals(d.getMetricSourceAddress())) {
 
                 throw new MetricException(d + " has a different source than " + this);
             }

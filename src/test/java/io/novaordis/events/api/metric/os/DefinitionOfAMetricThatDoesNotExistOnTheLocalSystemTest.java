@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNull;
@@ -220,7 +221,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     @Override
     protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem getMetricDefinitionToTest() throws Exception {
 
-        return new DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(new LocalOS());
+        return new DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(new LocalOSAddress());
     }
 
 

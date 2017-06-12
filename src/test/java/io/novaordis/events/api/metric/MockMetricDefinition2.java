@@ -17,6 +17,8 @@
 package io.novaordis.events.api.metric;
 
 
+import io.novaordis.utilities.address.Address;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -32,10 +34,10 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param source must always have a non-null source.
+     * @param metricSourceAddress must always have a non-null source.
      */
-    protected MockMetricDefinition2(MetricSource source) {
-        super(source);
+    protected MockMetricDefinition2(Address metricSourceAddress) {
+        super(metricSourceAddress);
     }
 
 

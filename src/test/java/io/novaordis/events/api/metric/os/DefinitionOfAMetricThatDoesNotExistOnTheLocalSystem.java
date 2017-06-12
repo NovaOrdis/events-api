@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.utilities.address.Address;
+
 /**
  * Simulates a metric that does not exits on the system.
  *
@@ -32,9 +34,9 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(OSSourceBase source) {
+    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(Address metricSourceAddress) {
 
-        super(source);
+        super(metricSourceAddress);
 
         this.TYPE = Long.class;
 

@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricSourceTest;
+import io.novaordis.utilities.address.Address;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,14 +51,14 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus();
 
-        JmxServerAddress a = b.getJmxServerAddress();
+        Address a = b.getAddress();
 
-        assertEquals(JmxServerAddress.DEFAULT_HOST, a.getHost());
-        assertEquals(JmxServerAddress.DEFAULT_PORT, a.getPort());
+        assertEquals(JmxBus.DEFAULT_HOST, a.getHost());
+        assertEquals(JmxBus.DEFAULT_PORT, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
 
-        assertEquals(JmxServerAddress.DEFAULT_HOST + ":" + JmxServerAddress.DEFAULT_PORT, b.getAddress());
+        assertEquals(JmxBus.DEFAULT_HOST + ":" + JmxBus.DEFAULT_PORT, b.getAddress().getLiteral());
     }
 
     @Test
@@ -65,13 +66,13 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus("1.2.3.4:8888");
 
-        JmxServerAddress a = b.getJmxServerAddress();
+        Address a = b.getAddress();
 
         assertEquals("1.2.3.4", a.getHost());
-        assertEquals(8888, a.getPort());
+        assertEquals(8888, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4:8888", b.getAddress());
+        assertEquals("1.2.3.4:8888", b.getAddress().getLiteral());
     }
 
     @Test
@@ -79,13 +80,13 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus("1.2.3.4");
 
-        JmxServerAddress a = b.getJmxServerAddress();
+        Address a = b.getAddress();
 
         assertEquals("1.2.3.4", a.getHost());
-        assertEquals(JmxServerAddress.DEFAULT_PORT, a.getPort());
+        assertEquals(JmxBus.DEFAULT_PORT, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4", b.getAddress());
+        assertEquals("1.2.3.4", b.getAddress().getLiteral());
     }
 
     @Test
@@ -138,13 +139,13 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus("admin:admin123@1.2.3.4:8888");
 
-        JmxServerAddress a = b.getJmxServerAddress();
+        Address a = b.getAddress();
 
         assertEquals("1.2.3.4", a.getHost());
-        assertEquals(8888, a.getPort());
+        assertEquals(8888, a.getPort().intValue());
         assertEquals("admin", a.getUsername());
         assertEquals("admin123", new String(a.getPassword()));
-        assertEquals("admin@1.2.3.4:8888", b.getAddress());
+        assertEquals("admin@1.2.3.4:8888", b.getAddress().getLiteral());
     }
 
     @Test
@@ -152,14 +153,14 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus("jmx://admin:adminpasswd@1.2.3.4:2345");
 
-        JmxServerAddress a = b.getJmxServerAddress();
+        Address a = b.getAddress();
 
         assertEquals("1.2.3.4", a.getHost());
-        assertEquals(2345, a.getPort());
+        assertEquals(2345, a.getPort().intValue());
         assertEquals("adminpasswd", new String(a.getPassword()));
         assertEquals("admin", a.getUsername());
 
-        assertEquals("admin@1.2.3.4:2345", b.getAddress());
+        assertEquals("admin@1.2.3.4:2345", b.getAddress().getLiteral());
     }
 
     @Test
@@ -169,7 +170,7 @@ public class JmxBusTest extends MetricSourceTest {
 
             new JmxBus("http://admin:adminpasswd@1.2.3.4:2345");
         }
-        catch(JmxException e) {
+        catch(Exception e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("invalid protocol"));
@@ -209,7 +210,7 @@ public class JmxBusTest extends MetricSourceTest {
     public void hashCodeTest() throws Exception {
 
         JmxBus b = getMetricSourceToTest();
-        assertEquals(b.hashCode(), b.getJmxServerAddress().hashCode());
+        assertEquals(b.hashCode(), b.getAddress().hashCode());
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------

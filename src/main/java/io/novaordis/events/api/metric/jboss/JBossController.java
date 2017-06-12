@@ -21,9 +21,11 @@ import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -42,13 +44,13 @@ public class JBossController extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    public static final String PROTOCOL = "jbosscli";
+
     private static final Logger log = LoggerFactory.getLogger(JBossController.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
-
-    private JBossControllerAddress controllerAddress;
 
     //
     // lazily instantiated and connected
@@ -60,40 +62,29 @@ public class JBossController extends MetricSourceBase {
     /**
      * Uses the default controller address ("localhost:9999")
      */
-    public JBossController() {
+    public JBossController() throws AddressException {
 
-        this(new JBossControllerAddress());
+        this("jbosscli://localhost:9999");
     }
 
-    public JBossController(String address) throws JBossCliException {
+    public JBossController(String address) throws AddressException {
 
-        this(JBossControllerAddress.parseAddress(address));
+        this(new AddressImpl(address));
     }
 
-    public JBossController(JBossControllerAddress controllerAddress) {
+    public JBossController(Address address) throws AddressException {
 
-        if (controllerAddress == null) {
+        super(address);
 
-            throw new IllegalArgumentException("null controller address");
+        String protocol = getAddress().getProtocol();
+
+        if (!PROTOCOL.equals(getAddress().getProtocol())) {
+
+            throw new AddressException("invalid protocol " + protocol);
         }
-
-        this.controllerAddress = controllerAddress;
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-
-        return controllerAddress.getLiteral();
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-
-        String thisAddress = controllerAddress.getLiteral();
-        return thisAddress.equals(address);
-    }
 
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
@@ -115,7 +106,7 @@ public class JBossController extends MetricSourceBase {
 //
 //            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
 //
-//            JBossController thatSource = jbmd.getSource();
+//            JBossController thatSource = jbmd.getMetricSourceAddress();
 //
 //            if (!this.equals(thatSource)) {
 //
@@ -130,7 +121,7 @@ public class JBossController extends MetricSourceBase {
 //
 //            if (controllerClient == null) {
 //
-//                JBossControllerAddress address = jbmd.getSource().getControllerAddress();
+//                JBossControllerAddress address = jbmd.getMetricSourceAddress().getControllerAddress();
 //                JBossControllerClient newClient = JBossControllerClient.getInstance(address);
 //                setControllerClient(newClient);
 //            }
@@ -216,11 +207,16 @@ public class JBossController extends MetricSourceBase {
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    // MetricSourceBase overrides --------------------------------------------------------------------------------------
 
-    public JBossControllerAddress getControllerAddress() {
-        return controllerAddress;
+    @Override
+    public JBossControllerAddress getAddress() {
+
+        Address a = super.getAddress();
+        return (JBossControllerAddress)a;
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     /**
      * May return null if the client was not initialized yet.
@@ -231,39 +227,10 @@ public class JBossController extends MetricSourceBase {
     }
 
     @Override
-    public boolean equals(Object o) {
-
-        if (this == o) {
-            return true;
-        }
-
-        if (controllerAddress == null) {
-            return false;
-        }
-
-        if (!(o instanceof JBossController)) {
-            return false;
-        }
-
-        JBossController that = (JBossController)o;
-
-        return controllerAddress.equals(that.controllerAddress);
-    }
-
-    @Override
-    public int hashCode() {
-
-        if (controllerAddress == null) {
-            return 0;
-        }
-
-        return controllerAddress.hashCode();
-    }
-
-    @Override
     public String toString() {
 
-        return controllerAddress == null ? "null" : controllerAddress.toString();
+        Address a = getAddress();
+        return a == null ? "null" : a.toString();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -274,7 +241,8 @@ public class JBossController extends MetricSourceBase {
         this.controllerClient = controllerClient;
 
         if(controllerClient != null) {
-            this.controllerAddress = controllerClient.getControllerAddress();
+
+            setAddress(controllerClient.getControllerAddress());
         }
     }
 

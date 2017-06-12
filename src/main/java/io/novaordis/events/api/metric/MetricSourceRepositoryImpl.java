@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -63,6 +64,7 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
 
         Set<MetricSource> result = new HashSet<>();
 
+        //noinspection Convert2streamapi
         for(Collection<MetricSource> sourcesOfASpecificType: sources.values()) {
 
             result.addAll(sourcesOfASpecificType);
@@ -89,7 +91,7 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
     }
 
     @Override
-    public <T extends MetricSource> T getSource(Class<T> t, String... addresses) {
+    public <T extends MetricSource> T getSource(Class<T> t, Address... addresses) {
 
         if (addresses.length > 1) {
 
@@ -126,7 +128,7 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
         // an address has been specified
         //
 
-        String address = addresses[0];
+        Address address = addresses[0];
 
         for(T s: sources) {
 

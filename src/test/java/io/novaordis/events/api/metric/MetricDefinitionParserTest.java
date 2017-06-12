@@ -24,6 +24,8 @@ import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import java.util.Set;
@@ -59,8 +61,8 @@ public class MetricDefinitionParserTest {
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
-        MetricSource s = m.getSource();
-        LocalOS los = (LocalOS)s;
+        Address s = m.getMetricSourceAddress();
+        LocalOSAddress los = (LocalOSAddress)s;
         assertNotNull(los);
     }
 
@@ -76,8 +78,8 @@ public class MetricDefinitionParserTest {
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
-        MetricSource s = m.getSource();
-        LocalOS los = (LocalOS)s;
+        Address s = m.getMetricSourceAddress();
+        LocalOSAddress los = (LocalOSAddress)s;
         assertNotNull(los);
 
         mr.getSources(LocalOS.class);
@@ -99,9 +101,9 @@ public class MetricDefinitionParserTest {
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
-        MetricSource s = m.getSource();
-        LocalOS los2 = (LocalOS)s;
-        assertEquals(los, los2);
+        Address s = m.getMetricSourceAddress();
+        LocalOSAddress los2 = (LocalOSAddress)s;
+        assertEquals(los.getAddress(), los2);
 
         localOses = mr.getSources(LocalOS.class);
         assertEquals(1, localOses.size());
@@ -120,9 +122,8 @@ public class MetricDefinitionParserTest {
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
-        MetricSource s = m.getSource();
-        RemoteOS ros = (RemoteOS)s;
-        assertNotNull(ros);
+        Address s = m.getMetricSourceAddress();
+        assertNotNull(s);
 
         remoteOSes = mr.getSources(RemoteOS.class);
         assertTrue(remoteOSes.isEmpty());
@@ -144,9 +145,8 @@ public class MetricDefinitionParserTest {
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
-        MetricSource s = m.getSource();
-        RemoteOS ros2 = (RemoteOS)s;
-        assertEquals(ros, ros2);
+        Address s = m.getMetricSourceAddress();
+        assertEquals(ros.getAddress(), s);
 
         remoteOSes = mr.getSources(RemoteOS.class);
         assertEquals(1, remoteOSes.size());
@@ -167,9 +167,8 @@ public class MetricDefinitionParserTest {
 
         JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
 
-        MetricSource s = jmd.getSource();
-        JBossController c = (JBossController)s;
-        assertNotNull(c);
+        JBossControllerAddress s = jmd.getMetricSourceAddress();
+        assertNotNull(s);
 
         String definition = jmd.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
@@ -196,9 +195,8 @@ public class MetricDefinitionParserTest {
 
         JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
 
-        MetricSource s = jmd.getSource();
-        JBossController c2 = (JBossController)s;
-        assertEquals(c, c2);
+        JBossControllerAddress s = jmd.getMetricSourceAddress();
+        assertEquals(c.getAddress(), s);
 
         String definition = jmd.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
@@ -225,9 +223,8 @@ public class MetricDefinitionParserTest {
 
         JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
 
-        MetricSource s = jmd.getSource();
-        JBossController c = (JBossController)s;
-        assertNotNull(c);
+        JBossControllerAddress s = jmd.getMetricSourceAddress();
+        assertNotNull(s);
 
         String definition = d.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
@@ -239,8 +236,7 @@ public class MetricDefinitionParserTest {
     @Test
     public void parse_ExistingRemoteJBossControllerMetricDefinition() throws Exception {
 
-        JBossController c = new JBossController(
-                JBossControllerAddress.parseAddress("jbosscli://admin:passwd@1.2.3.4:9999"));
+        JBossController c = new JBossController(new JBossControllerAddress("jbosscli://admin:passwd@1.2.3.4:9999"));
 
         MetricSourceRepository mr = new MetricSourceRepositoryImpl();
 
@@ -256,9 +252,8 @@ public class MetricDefinitionParserTest {
 
         JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
 
-        MetricSource s = jmd.getSource();
-        JBossController c2 = (JBossController)s;
-        assertEquals(c, c2);
+        JBossControllerAddress s = jmd.getMetricSourceAddress();
+        assertEquals(c.getAddress(), s);
 
         String definition = d.getId();
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", definition);
@@ -285,8 +280,8 @@ public class MetricDefinitionParserTest {
 
         JmxMetricDefinition jmxm = (JmxMetricDefinition)d;
 
-        JmxBus b = jmxm.getSource();
-        assertNotNull(b);
+        Address a = jmxm.getMetricSourceAddress();
+        assertNotNull(a);
 
         String definition = jmxm.getId();
         assertEquals("jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount", definition);
@@ -314,8 +309,8 @@ public class MetricDefinitionParserTest {
 
         JmxMetricDefinition jmxm = (JmxMetricDefinition)d;
 
-        JmxBus b2 = jmxm.getSource();
-        assertEquals(b, b2);
+        Address b2 = jmxm.getMetricSourceAddress();
+        assertEquals(b.getAddress(), b2);
 
         String definition = jmxm.getId();
         assertEquals("jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount", definition);

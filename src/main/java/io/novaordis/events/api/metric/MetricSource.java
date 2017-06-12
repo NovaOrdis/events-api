@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.utilities.address.Address;
 
 import java.util.List;
 
@@ -53,16 +54,16 @@ public interface MetricSource {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @return the address of this metric source, as string, or null if it does not apply to this metric source (for
-     * example, LocalOS). If a non-null string is returned hasAddress() invoked on this string will always return
+     * @return the address of this metric source. Must never return null. This instance's hasAddress() invoked with the
+     * value returned by getAddress() must return true.
      * true.
      */
-    String getAddress();
+    Address getAddress();
 
     /**
      * @return true if this metric source has the specified address, false otherwise.
      */
-    boolean hasAddress(String address);
+    boolean hasAddress(Address address);
 
     /**
      * Collect the metrics for the given definitions, in one invocation.

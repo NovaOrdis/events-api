@@ -19,6 +19,9 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.ssh.SshConnection;
 import io.novaordis.ssh.SshConnectionImpl;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.os.NativeExecutor;
 
 /**
@@ -39,52 +42,18 @@ public class RemoteOS extends OSSourceBase {
 
     public RemoteOS(String address) throws Exception {
 
-        if (address == null) {
-
-            throw new IllegalArgumentException("null address");
-        }
+        super(new AddressImpl(address));
 
         buildSshConnection(address);
     }
 
     public RemoteOS(SshConnection c) throws Exception {
 
-        if (c == null) {
-
-            throw new IllegalArgumentException("null connection");
-        }
-
+        super(c.getAddress());
         setSshConnection(c);
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-
-        SshConnection connection = (SshConnection)getNativeExecutor();
-
-        if (connection == null) {
-
-            return null;
-        }
-
-        return connection.getAddress();
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-
-        //
-        // TODO more complete implementation to follow
-        //
-
-        String thisAddress = getAddress();
-
-        return thisAddress != null && thisAddress.equals(address);
-
-
-    }
 
     @Override
     public void start() throws MetricSourceException {
@@ -123,54 +92,16 @@ public class RemoteOS extends OSSourceBase {
     }
 
     @Override
-    public boolean equals(Object o) {
-
-        if (this == o) {
-
-            return true;
-        }
-
-        String address = getAddress();
-
-        if (address == null) {
-
-            return false;
-        }
-
-        if (!(o instanceof RemoteOS)) {
-
-            return false;
-        }
-
-        RemoteOS that = (RemoteOS)o;
-
-        return getAddress().equals(that.getAddress());
-    }
-
-    @Override
-    public int hashCode() {
-
-        String address = getAddress();
-
-        if (address == null) {
-
-            return 0;
-        }
-
-        return address.hashCode();
-    }
-
-    @Override
     public String toString() {
 
-        String address = getAddress();
+        Address address = getAddress();
 
         if (address == null) {
 
             return "null";
         }
 
-        return address;
+        return address.toString();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -180,6 +111,7 @@ public class RemoteOS extends OSSourceBase {
     void setSshConnection(SshConnection c) {
 
         setNativeExecutor(c);
+        setAddress(c.getAddress());
     }
 
     SshConnection getSshConnection() {
@@ -202,7 +134,7 @@ public class RemoteOS extends OSSourceBase {
      *
      * @see RemoteOS#connect()
      */
-    private void buildSshConnection(String address) {
+    private void buildSshConnection(String address) throws AddressException {
 
         //
         // do not connect yet

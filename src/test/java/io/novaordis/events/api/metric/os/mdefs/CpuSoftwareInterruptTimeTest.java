@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import io.novaordis.events.api.metric.os.LocalOS;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,35 +49,35 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertEquals("CpuSoftwareInterruptTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertEquals("CPU Software Interrupt Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("percentage"));
@@ -89,7 +90,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -117,7 +118,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -146,7 +147,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOS());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -259,7 +260,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuSoftwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuSoftwareInterruptTime(new LocalOS());
+        return new CpuSoftwareInterruptTime(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

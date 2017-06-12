@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
+import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.NativeExecutor;
 import org.slf4j.Logger;
@@ -52,6 +53,11 @@ public abstract class OSSourceBase extends MetricSourceBase {
     private NativeExecutor nativeExecutor;
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    protected OSSourceBase(Address address) {
+
+        super(address);
+    }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 

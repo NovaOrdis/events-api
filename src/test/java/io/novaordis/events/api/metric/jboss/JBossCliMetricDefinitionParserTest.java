@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -83,8 +84,8 @@ public class JBossCliMetricDefinitionParserTest {
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
 
-        JBossController c = d.getSource();
-        assertNotNull(c);
+        JBossControllerAddress ca = d.getMetricSourceAddress();
+        assertNotNull(ca);
     }
 
     @Test
@@ -99,8 +100,8 @@ public class JBossCliMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JBossController c = d.getSource();
-        assertNotNull(c);
+        JBossControllerAddress ca = d.getMetricSourceAddress();
+        assertNotNull(ca);
 
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
@@ -122,8 +123,8 @@ public class JBossCliMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JBossController c = d.getSource();
-        assertNotNull(c);
+        JBossControllerAddress ca = d.getMetricSourceAddress();
+        assertNotNull(ca);
 
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
@@ -146,8 +147,8 @@ public class JBossCliMetricDefinitionParserTest {
 
         assertNotNull(d);
 
-        JBossController c = d.getSource();
-        assertNotNull(c);
+        JBossControllerAddress ca = d.getMetricSourceAddress();
+        assertNotNull(ca);
 
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());

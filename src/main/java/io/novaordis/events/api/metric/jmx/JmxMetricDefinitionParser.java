@@ -18,6 +18,9 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSourceRepository;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -49,7 +52,7 @@ public class JmxMetricDefinitionParser {
      */
     public static JmxMetricDefinition parse(MetricSourceRepository repository,
                                                  String metricSourceAndMetricDefinitionRepresentation)
-            throws MetricDefinitionException {
+            throws MetricDefinitionException, AddressException {
 
         boolean thisIsAJmxMetric = false;
 
@@ -102,7 +105,9 @@ public class JmxMetricDefinitionParser {
         int start = m.start();
         int end = m.end();
 
-        String address = metricSourceAndMetricDefinitionRepresentation.substring(0, start);
+        String as = metricSourceAndMetricDefinitionRepresentation.substring(0, start);
+
+        Address address = new AddressImpl(as);
 
         JmxBus metricSource = repository == null ? null : repository.getSource(JmxBus.class, address);
 
@@ -155,7 +160,7 @@ public class JmxMetricDefinitionParser {
 
         try {
 
-            d = new JmxMetricDefinition(metricSource, domainName, keyValuePairs, attributeName);
+            d = new JmxMetricDefinition(metricSource.getAddress(), domainName, keyValuePairs, attributeName);
         }
         catch(MetricDefinitionException e) {
 

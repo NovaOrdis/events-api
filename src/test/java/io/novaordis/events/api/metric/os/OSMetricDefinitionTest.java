@@ -67,7 +67,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         MetricDefinition d = getMetricDefinitionToTest();
 
-        LocalOS localOs = (LocalOS) d.getSource();
+        LocalOS localOs = (LocalOS) d.getMetricSourceAddress();
 
         List<Property> measurements = localOs.collectMetrics(Collections.singletonList(d));
 
@@ -130,8 +130,8 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void preRefactoring_StaticScopeAfterTwoDifferentClassesAreLoaded() throws Exception {
 
-        PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(new MockOSSource());
-        PhysicalMemoryUsed pmu = new PhysicalMemoryUsed(new MockOSSource());
+        PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(new MockOSSource().getAddress());
+        PhysicalMemoryUsed pmu = new PhysicalMemoryUsed(new MockOSSource().getAddress());
 
         assertEquals("Total Physical Memory", pmt.getLabel());
         assertEquals("Used Physical Memory", pmu.getLabel());

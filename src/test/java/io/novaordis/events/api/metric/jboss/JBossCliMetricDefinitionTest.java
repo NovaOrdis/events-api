@@ -76,8 +76,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_DefaultController() throws Exception {
 
+        JBossControllerAddress a = new JBossController().getAddress();
+
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(
-                new JBossController(), new CliPath("test-path"), new CliAttribute("test-attribute"));
+                a, new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -86,9 +88,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition_NonDefaultController() throws Exception {
 
+        JBossControllerAddress a = new JBossControllerAddress("admin:adminp@1.2.3.4:8888");
+
         JBossCliMetricDefinition d = new JBossCliMetricDefinition(
-                new JBossController(JBossControllerAddress.parseAddress("admin:adminp@1.2.3.4:8888")),
-                new CliPath("test-path"), new CliAttribute("test-attribute"));
+                a, new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -104,13 +107,11 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
 
         assertNotNull(d);
-        
-        JBossController source = d.getSource();
 
-        JBossControllerAddress controllerAddress = source.getControllerAddress();
+        JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals(JBossControllerClient.DEFAULT_HOST, controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -133,12 +134,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         assertNotNull(d);
 
-        JBossController source = d.getSource();
-
-        JBossControllerAddress controllerAddress = source.getControllerAddress();
+        JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("localhost", controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -161,12 +160,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         assertNotNull(d);
 
-        JBossController source = d.getSource();
-
-        JBossControllerAddress controllerAddress = source.getControllerAddress();
+        JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("blue", controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort());
+        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -189,12 +186,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         assertNotNull(d);
 
-        JBossController source = d.getSource();
-
-        JBossControllerAddress controllerAddress = source.getControllerAddress();
+        JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("localhost", controllerAddress.getHost());
-        assertEquals(9999, controllerAddress.getPort());
+        assertEquals(9999, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -217,12 +212,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         assertNotNull(d);
 
-        JBossController source = d.getSource();
-
-        JBossControllerAddress controllerAddress = source.getControllerAddress();
+        JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("blue", controllerAddress.getHost());
-        assertEquals(9999, controllerAddress.getPort());
+        assertEquals(9999, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -260,7 +253,8 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Override
     protected JBossCliMetricDefinition getMetricDefinitionToTest() throws Exception {
 
-        return new JBossCliMetricDefinition(new JBossController(), new CliPath("test=test"), new CliAttribute("test") );
+        JBossControllerAddress address = new JBossControllerAddress();
+        return new JBossCliMetricDefinition(address, new CliPath("test=test"), new CliAttribute("test") );
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

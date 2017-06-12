@@ -19,8 +19,8 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
+import io.novaordis.utilities.address.Address;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -41,9 +41,9 @@ public class SwapTotal extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public SwapTotal(OSSourceBase s) {
+    public SwapTotal(Address metricSourceAddress) {
 
-        super(s);
+        super(metricSourceAddress);
 
         this.TYPE = Long.class;
 

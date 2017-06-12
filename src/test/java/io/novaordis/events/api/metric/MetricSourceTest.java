@@ -17,6 +17,9 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.metric.os.MockOSSource;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
 import java.util.Arrays;
@@ -52,6 +55,24 @@ public abstract class MetricSourceTest {
     public abstract void equalsTest() throws Exception;
 
     @Test
+    public void equalsTest_Null() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        final Object nullReference = null;
+        assertFalse(s.equals(nullReference));
+    }
+
+    @Test
+    public void equalsTest_NotSameClass() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        MockOSSource mos = new MockOSSource(new AddressImpl("test://test"));
+
+        assertFalse(s.equals(mos));
+        assertFalse(mos.equals(s));
+    }
+
+    @Test
     public abstract void hashCodeTest() throws Exception;
 
     // hasAddress() ----------------------------------------------------------------------------------------------------
@@ -60,7 +81,9 @@ public abstract class MetricSourceTest {
     public void hasAddress_DoesNotHaveTheAddress() throws Exception {
 
         MetricSource s = getMetricSourceToTest();
-        assertFalse(s.hasAddress("I am sure the metric does not have this address"));
+
+        Address a = new AddressImpl("test://i-am-sure-the-metric-does-not-have-this-address");
+        assertFalse(s.hasAddress(a));
     }
 
     @Test
@@ -68,7 +91,7 @@ public abstract class MetricSourceTest {
 
         MetricSource s = getMetricSourceToTest();
 
-        String address = s.getAddress();
+        Address address = s.getAddress();
 
         if (address != null) {
 
@@ -90,11 +113,11 @@ public abstract class MetricSourceTest {
 
         MetricSource source = getMetricSourceToTest();
 
-        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source);
+        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
 
         MetricSource source2 = getMetricSourceToTest("other-host");
 
-        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2);
+        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
 
         try {
 
@@ -113,7 +136,7 @@ public abstract class MetricSourceTest {
 
         MetricSource s = getMetricSourceToTest();
 
-        MockMetricDefinition mmd = getCorrespondingMockMetricDefinition(s);
+        MockMetricDefinition mmd = getCorrespondingMockMetricDefinition(s.getAddress());
 
         List<MetricDefinition> definitions = Collections.singletonList(mmd);
 
@@ -152,9 +175,9 @@ public abstract class MetricSourceTest {
     /**
      * Gives the sub-classes a chance to provide more specialized mocks.
      */
-    protected MockMetricDefinition getCorrespondingMockMetricDefinition(MetricSource source) {
+    protected MockMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
 
-        return new MockMetricDefinition(source);
+        return new MockMetricDefinition(metricSourceAddress);
     }
 
     /**

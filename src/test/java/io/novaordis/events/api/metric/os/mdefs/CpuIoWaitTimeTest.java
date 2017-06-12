@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +51,35 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOSAddress());
         assertEquals("CpuIoWaitTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime md = new CpuIoWaitTime(new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOSAddress());
         assertEquals("CPU I/O Wait Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("i/o"));
     }
@@ -88,7 +89,7 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -116,7 +117,7 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -145,7 +146,7 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOS());
+        CpuIoWaitTime m = new CpuIoWaitTime(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -258,7 +259,7 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuIoWaitTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuIoWaitTime(new LocalOS());
+        return new CpuIoWaitTime(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

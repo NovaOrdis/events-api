@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,24 +40,14 @@ public class LocalOS extends OSSourceBase {
 
     public LocalOS() throws Exception {
 
+        super(new LocalOSAddress());
+
         setNativeExecutor(OS.getInstance());
 
         log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
-
-    @Override
-    public String getAddress() {
-
-        return null;
-    }
-
-    @Override
-    public boolean hasAddress(String address) {
-
-        return false;
-    }
 
     /**
      * A LocalOS instance is always started, start() is a noop.
@@ -83,18 +74,6 @@ public class LocalOS extends OSSourceBase {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean equals(Object o) {
-
-        return o instanceof LocalOS;
-    }
-
-    @Override
-    public int hashCode() {
-
-        return 1;
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

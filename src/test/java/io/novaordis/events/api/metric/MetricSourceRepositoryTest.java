@@ -21,6 +21,8 @@ import io.novaordis.events.api.metric.jmx.JmxBus;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
 import java.util.Set;
@@ -132,7 +134,7 @@ public abstract class MetricSourceRepositoryTest {
 
     }
 
-    // getSource() -----------------------------------------------------------------------------------------------------
+    // getMetricSourceAddress() -----------------------------------------------------------------------------------------------------
 
     @Test
     public void getSource_MoreThanOneAddress() throws Exception {
@@ -141,7 +143,7 @@ public abstract class MetricSourceRepositoryTest {
 
         try {
 
-            r.getSource(MockMetricSource.class, "address1", "address2");
+            r.getSource(MockMetricSource.class, new AddressImpl("address1"), new AddressImpl("address2"));
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -195,16 +197,16 @@ public abstract class MetricSourceRepositoryTest {
         LocalOS los2 = r.getSource(LocalOS.class);
         assertEquals(los, los2);
 
-        LocalOS los3 = r.getSource(LocalOS.class, "does not matter");
+        LocalOS los3 = r.getSource(LocalOS.class, new AddressImpl("does-not-matter"));
         assertNull(los3);
 
         RemoteOS ros2 = r.getSource(RemoteOS.class);
         assertEquals(ros, ros2);
 
-        RemoteOS ros3 = r.getSource(RemoteOS.class, "ssh://1.2.3.4");
+        RemoteOS ros3 = r.getSource(RemoteOS.class, new AddressImpl("ssh://1.2.3.4"));
         assertEquals(ros, ros3);
 
-        RemoteOS ros4 = r.getSource(RemoteOS.class, "ssh://5.6.7.8");
+        RemoteOS ros4 = r.getSource(RemoteOS.class, new AddressImpl("ssh://5.6.7.8"));
         assertNull(ros4);
     }
 
@@ -217,7 +219,7 @@ public abstract class MetricSourceRepositoryTest {
         // add
         //
 
-        JBossControllerAddress address = JBossControllerAddress.parseAddress("admin:admin123@1.2.3.4:8888");
+        JBossControllerAddress address = new JBossControllerAddress("admin:admin123@1.2.3.4:8888");
         JBossController c = new JBossController(address);
         r.add(c);
 
@@ -225,7 +227,7 @@ public abstract class MetricSourceRepositoryTest {
         // verify
         //
 
-        String lookupAddress = c.getControllerAddress().getLiteral();
+        Address lookupAddress = c.getAddress();
 
         JBossController c2 = r.getSource(JBossController.class, lookupAddress);
 

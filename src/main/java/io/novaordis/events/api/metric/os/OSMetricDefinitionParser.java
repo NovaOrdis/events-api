@@ -20,6 +20,8 @@ import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
 import io.novaordis.events.api.metric.MetricSourceRepository;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -144,7 +146,9 @@ public class OSMetricDefinitionParser {
             }
             else {
 
-                metricSource =  repository == null ? null : repository.getSource(RemoteOS.class, metricSourceAddress);
+                Address address = new AddressImpl(metricSourceAddress);
+
+                metricSource =  repository == null ? null : repository.getSource(RemoteOS.class, address);
 
                 if (metricSource == null) {
 

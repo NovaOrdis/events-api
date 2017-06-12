@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.events.api.metric.os.OSType;
 import io.novaordis.events.api.metric.os.LocalOS;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +51,35 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        SwapTotal md = new SwapTotal(new LocalOS());
+        SwapTotal md = new SwapTotal(new LocalOSAddress());
         assertEquals("SwapTotal", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        SwapTotal md = new SwapTotal(new LocalOS());
+        SwapTotal md = new SwapTotal(new LocalOSAddress());
         assertEquals(Long.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        SwapTotal md = new SwapTotal(new LocalOS());
+        SwapTotal md = new SwapTotal(new LocalOSAddress());
         assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        SwapTotal m = new SwapTotal(new LocalOS());
+        SwapTotal m = new SwapTotal(new LocalOSAddress());
         assertEquals("Total Swap", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        SwapTotal m = new SwapTotal(new LocalOS());
+        SwapTotal m = new SwapTotal(new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("total"));
         assertTrue(m.getDescription().toLowerCase().contains("swap"));
     }
@@ -88,7 +89,7 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        SwapTotal m = new SwapTotal(new LocalOS());
+        SwapTotal m = new SwapTotal(new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -116,7 +117,7 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        SwapTotal m = new SwapTotal(new LocalOS());
+        SwapTotal m = new SwapTotal(new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -145,7 +146,7 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        SwapTotal m = new SwapTotal(new LocalOS());
+        SwapTotal m = new SwapTotal(new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -257,7 +258,7 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
 
     @Override
     protected SwapTotal getMetricDefinitionToTest() throws Exception {
-        return new SwapTotal(new LocalOS());
+        return new SwapTotal(new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
