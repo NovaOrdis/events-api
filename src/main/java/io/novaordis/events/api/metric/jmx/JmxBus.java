@@ -22,7 +22,11 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 
 import java.util.List;
 
@@ -41,6 +45,8 @@ public class JmxBus extends MetricSourceBase {
     public static final String DEFAULT_HOST = "localhost";
     public static final int DEFAULT_PORT = 9999;
 
+    private static final Logger log = LoggerFactory.getLogger(JmxBus.class);
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -52,20 +58,33 @@ public class JmxBus extends MetricSourceBase {
         this("jmx://" + DEFAULT_HOST + ":" + DEFAULT_PORT);
     }
 
-    public JmxBus(String address) throws Exception  {
+    public JmxBus(String address) throws AddressException {
 
         this(new AddressImpl(address));
     }
 
-    public JmxBus(Address address) throws Exception  {
+    public JmxBus(Address model) throws AddressException  {
 
-        super(address);
+        super(model);
 
-        String protocol = getAddress().getProtocol();
+        Address address = getAddress();
 
-        if (!PROTOCOL.equals(getAddress().getProtocol())) {
+        String protocol = address.getProtocol();
 
-            throw new JmxException("invalid protocol " + protocol);
+        if (protocol == null) {
+
+            address.setProtocol(PROTOCOL);
+        }
+        else if (!PROTOCOL.equals(protocol)) {
+
+            throw new AddressException("invalid protocol " + protocol);
+        }
+
+        Integer port = address.getPort();
+
+        if (port == null) {
+
+            address.setPort(DEFAULT_PORT);
         }
     }
 

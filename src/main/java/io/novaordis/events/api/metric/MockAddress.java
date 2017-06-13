@@ -43,6 +43,11 @@ public class MockAddress implements Address {
     }
 
     @Override
+    public void setProtocol(String protocol) {
+        throw new RuntimeException("setProtocol() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public String getHost() {
         throw new RuntimeException("getHost() NOT YET IMPLEMENTED");
     }
@@ -50,6 +55,11 @@ public class MockAddress implements Address {
     @Override
     public Integer getPort() {
         throw new RuntimeException("getPort() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void setPort(Integer port) {
+        throw new RuntimeException("setPort() NOT YET IMPLEMENTED");
     }
 
     @Override
@@ -65,6 +75,11 @@ public class MockAddress implements Address {
     @Override
     public String getLiteral() {
         throw new RuntimeException("getLiteral() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public Address copy() {
+        throw new RuntimeException("copy() NOT YET IMPLEMENTED");
     }
 
 

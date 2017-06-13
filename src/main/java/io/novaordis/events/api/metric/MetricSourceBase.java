@@ -36,6 +36,9 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    /**
+     * @param address - makes a copy
+     */
     protected MetricSourceBase(Address address) {
 
         if (address == null) {
@@ -43,7 +46,7 @@ public abstract class MetricSourceBase implements MetricSource {
             throw new IllegalArgumentException("null address");
         }
 
-        this.address = address;
+        this.address = address.copy();
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
