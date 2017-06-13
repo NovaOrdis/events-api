@@ -22,7 +22,7 @@ import java.util.Set;
 
 /**
  * The runtime repository of metric sources. The intention behind depositing metric sources in a central location is
- * to maintain state per metric source and thus optimize collection.
+ * to maintain state per metric source and thus optimize collection and management.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17

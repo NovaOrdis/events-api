@@ -17,8 +17,6 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.AddressException;
 import org.slf4j.Logger;
@@ -55,13 +53,12 @@ public class JBossCliMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JBossCliMetricDefinition parse(MetricSourceRepository repository,
-                                                 String metricSourceAndMetricDefinitionRepresentation)
+    public static JBossCliMetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         String mds;
 
-        MetricSource metricSource;
+        JBossControllerAddress controllerAddress;
 
         boolean thisIsAJBossCliMetric = false;
 
@@ -71,7 +68,7 @@ public class JBossCliMetricDefinitionParser {
             // use the default controller
             //
 
-            metricSource = new JBossController();
+            controllerAddress = new JBossControllerAddress();
             mds = metricSourceAndMetricDefinitionRepresentation;
         }
         else {
@@ -120,17 +117,17 @@ public class JBossCliMetricDefinitionParser {
             }
 
             mds = metricSourceAndMetricDefinitionRepresentation.substring(i);
-            String controllerAddress = metricSourceAndMetricDefinitionRepresentation.substring(0, i);
+            String ca = metricSourceAndMetricDefinitionRepresentation.substring(0, i);
 
-            JBossControllerAddress ca;
+
 
             try {
 
-                ca = new JBossControllerAddress(controllerAddress);
+                controllerAddress = new JBossControllerAddress(ca);
             }
             catch(AddressException e) {
 
-                String msg = "cannot get a jboss controller address from \"" + controllerAddress + "\"";
+                String msg = "cannot get a jboss controller address from \"" + ca + "\"";
 
                 if (thisIsAJBossCliMetric) {
 
@@ -141,13 +138,6 @@ public class JBossCliMetricDefinitionParser {
                     log.debug(msg + ", bailing out", e);
                     return null;
                 }
-            }
-
-            metricSource = repository == null ? null : repository.getSource(JBossController.class, ca);
-
-            if (metricSource == null) {
-
-                metricSource = new JBossController(ca);
             }
         }
 
@@ -198,7 +188,7 @@ public class JBossCliMetricDefinitionParser {
         // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
 
-        return new JBossCliMetricDefinition(metricSource.getAddress(), path, attribute);
+        return new JBossCliMetricDefinition(controllerAddress, path, attribute);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

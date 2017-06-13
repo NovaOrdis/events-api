@@ -17,14 +17,12 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -54,13 +52,8 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
         assertNull(d);
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -68,7 +61,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -77,13 +70,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "something://admin:passwd@1.2.3.4:8888/test:service=Test/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -91,20 +80,15 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:passwd@1.2.3.4:8888/something";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
         try {
 
-            JmxMetricDefinitionParser.parse(r, s);
+            JmxMetricDefinitionParser.parse(s);
         }
         catch(MetricDefinitionException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("no ObjectName domain name identified in the metric definition"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -112,13 +96,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:passwd@1.2.3.4:8888/something";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -126,12 +106,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:blah/test.domain:service=Test,subService=Test/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
         try {
 
-            JmxMetricDefinitionParser.parse(r, s);
+            JmxMetricDefinitionParser.parse(s);
         }
         catch(MetricDefinitionException e) {
 
@@ -142,8 +119,6 @@ public class JmxMetricDefinitionParserTest {
             String msg2 = e2.getMessage();
             assertTrue(msg2.contains("invalid port"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -151,14 +126,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:blah/test.domain:service=Test,subService=Test/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -166,20 +136,15 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
         try {
 
-            JmxMetricDefinitionParser.parse(r, s);
+            JmxMetricDefinitionParser.parse(s);
         }
         catch(MetricDefinitionException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("missing attribute name"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -187,14 +152,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -202,12 +162,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://1.2.3.4:8888/test.domain:999999/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
         try {
 
-            JmxMetricDefinitionParser.parse(r, s);
+            JmxMetricDefinitionParser.parse(s);
         }
         catch(MetricDefinitionException e) {
 
@@ -217,8 +174,6 @@ public class JmxMetricDefinitionParserTest {
             MalformedObjectNameException e2 = (MalformedObjectNameException)e.getCause();
             assertNotNull(e2);
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -226,14 +181,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "1.2.3.4:8888/test.domain:999999/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -241,7 +191,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -262,10 +212,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -279,8 +226,6 @@ public class JmxMetricDefinitionParserTest {
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -288,7 +233,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(null, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -309,19 +254,13 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(r, s);
+        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
         Address a = d.getMetricSourceAddress();
         Address expected = new AddressImpl("jmx", "admin", null, "1.2.3.4", 8888);
-        assertEquals(expected, a);
-
-        Set<JmxBus> buses = r.getSources(JmxBus.class);
-        assertTrue(buses.isEmpty());
+        assertTrue(expected.equals(a));
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());

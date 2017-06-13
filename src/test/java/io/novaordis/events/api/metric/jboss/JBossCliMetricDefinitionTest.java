@@ -18,7 +18,6 @@ package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
@@ -104,12 +103,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli:///a=b/c=d/f";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
-
-        assertTrue(r.isEmpty());
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -135,7 +129,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://localhost/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -161,13 +155,9 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://bluehost/a=b/c=d/f";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
-        assertTrue(r.isEmpty());
 
         JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
@@ -191,7 +181,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://localhost:9999/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -217,7 +207,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://blue:9999/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -241,11 +231,9 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void parse_InvalidMetricDefinition() throws Exception {
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
         try {
 
-            JBossCliMetricDefinitionParser.parse(r, "jbosscli:///this-should-fail");
+            JBossCliMetricDefinitionParser.parse("jbosscli:///this-should-fail");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {

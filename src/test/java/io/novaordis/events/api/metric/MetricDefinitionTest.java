@@ -113,11 +113,9 @@ public abstract class MetricDefinitionTest {
     @Test
     public void getInstance_UnknownInstance() throws Exception {
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
         try {
 
-            MetricDefinitionParser.parse(r, "we are pretty sure there's no such metric");
+            MetricDefinitionParser.parse("we are pretty sure there's no such metric");
             fail("should throw exception");
         }
         catch(MetricDefinitionException e) {
@@ -125,8 +123,6 @@ public abstract class MetricDefinitionTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("no known parser can understand"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
 
@@ -50,13 +49,8 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
         assertNull(d);
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -64,7 +58,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -73,7 +67,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -93,10 +87,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -109,8 +100,6 @@ public class JBossCliMetricDefinitionParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -119,7 +108,7 @@ public class JBossCliMetricDefinitionParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(null, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -140,10 +129,7 @@ public class JBossCliMetricDefinitionParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -156,8 +142,6 @@ public class JBossCliMetricDefinitionParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -165,13 +149,9 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "something://admin@1.2.3.4:8888/test=test/test";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -179,13 +159,9 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "admin@1.2.3.4:8888";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -193,11 +169,9 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://something";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
         try {
 
-            JBossCliMetricDefinitionParser.parse(r, s);
+            JBossCliMetricDefinitionParser.parse(s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -205,8 +179,6 @@ public class JBossCliMetricDefinitionParserTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("no / found in metric definition"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -214,13 +186,9 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "admin:adminpassword@1.2.3.4:blah/test=test/test";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -228,11 +196,9 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://admin:adminpassword@1.2.3.4:blah/test=test/test";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-
         try {
 
-            JBossCliMetricDefinitionParser.parse(r, s);
+            JBossCliMetricDefinitionParser.parse(s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -245,8 +211,6 @@ public class JBossCliMetricDefinitionParserTest {
             assertTrue(msg2.contains("invalid"));
             assertTrue(msg2.contains("port"));
         }
-
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -254,10 +218,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://some-host:1000/a=b/c=d/f";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -277,10 +238,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://some-user:some-password@some-host:1000/a=b/c=d/f";
 
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 

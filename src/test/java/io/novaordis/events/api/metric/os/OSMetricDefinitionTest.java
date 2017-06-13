@@ -20,7 +20,6 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.events.api.parser.ParsingException;
@@ -107,14 +106,9 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         String literal = osmd.getClass().getSimpleName();
 
-
-        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
-        assertTrue(r.isEmpty());
-
-        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(r, literal);
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(literal);
 
         assertEquals(osmd2.getClass(), osmd.getClass());
-        assertTrue(r.isEmpty());
     }
 
     @Test
@@ -124,7 +118,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         String literal = osmd.getClass().getSimpleName();
 
-        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(null, literal);
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(literal);
 
         assertEquals(osmd2.getClass(), osmd.getClass());
     }

@@ -18,8 +18,6 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricSourceRepository;
-import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import io.novaordis.utilities.address.Address;
@@ -28,12 +26,10 @@ import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import java.lang.reflect.InvocationTargetException;
-import java.util.Set;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -57,39 +53,18 @@ public class OSMetricDefinitionParserTest {
     @Test
     public void parse_NoSuchOSMetric() throws Exception {
 
-        MetricSourceRepository mr = new MetricSourceRepositoryImpl();
-
-        Set<LocalOS> localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(mr, "IAmPrettySureThereIsNoSuchOsMetric");
-
-        assertNull(d);
-
-        localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-    }
-
-    @Test
-    public void parse_NullRepository_NoSuchOSMetric() throws Exception {
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(null, "IAmPrettySureThereIsNoSuchOsMetric");
+        MetricDefinition d = OSMetricDefinitionParser.parse("IAmPrettySureThereIsNoSuchOsMetric");
         assertNull(d);
     }
 
     @Test
     public void parse_ReflectionFailure() throws Exception {
 
-        MetricSourceRepository mr = new MetricSourceRepositoryImpl();
-
-        Set<LocalOS> localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-
         try {
 
             MockOSMetricDefinition.setFailInConstructor(true);
 
-            OSMetricDefinitionParser.parse(mr, "MockOSMetricDefinition");
+            OSMetricDefinitionParser.parse("MockOSMetricDefinition");
             fail("should have thrown exception");
         }
         catch(MetricException e) {
@@ -106,71 +81,29 @@ public class OSMetricDefinitionParserTest {
 
             MockOSMetricDefinition.setFailInConstructor(false);
         }
-
-        localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-    }
-
-    @Test
-    public void parse_NullRepository_LocalOS() throws Exception {
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(null, "PhysicalMemoryFree");
-        PhysicalMemoryFree m = (PhysicalMemoryFree)d;
-        assertNotNull(m);
-
-        LocalOSAddress los = (LocalOSAddress)d.getMetricSourceAddress();
-        assertNotNull(los);
     }
 
     @Test
     public void parse_LocalOS() throws Exception {
 
-        MetricSourceRepository mr = new MetricSourceRepositoryImpl();
-
-        Set<LocalOS> localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(mr, "PhysicalMemoryFree");
-
+        MetricDefinition d = OSMetricDefinitionParser.parse("PhysicalMemoryFree");
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
         Address s = m.getMetricSourceAddress();
         LocalOSAddress los = (LocalOSAddress)s;
         assertNotNull(los);
-
-        assertTrue(mr.getSources(LocalOS.class).isEmpty());
-    }
-
-    @Test
-    public void parse_NullRepository_RemoteOS() throws Exception {
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(null, "ssh://1.2.3.4/PhysicalMemoryFree");
-        PhysicalMemoryFree m = (PhysicalMemoryFree)d;
-        assertNotNull(m);
-
-        Address ros = d.getMetricSourceAddress();
-        assertNotNull(ros);
-        assertEquals(new AddressImpl("ssh://1.2.3.4"), ros);
     }
 
     @Test
     public void parse_RemoteOS() throws Exception {
 
-        MetricSourceRepository mr = new MetricSourceRepositoryImpl();
-
-        Set<LocalOS> localOses = mr.getSources(LocalOS.class);
-        assertTrue(localOses.isEmpty());
-
-        MetricDefinition d = OSMetricDefinitionParser.parse(mr, "ssh://1.2.3.4/PhysicalMemoryFree");
-
+        MetricDefinition d = OSMetricDefinitionParser.parse("ssh://1.2.3.4/PhysicalMemoryFree");
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
-
         assertNotNull(m);
 
         Address s = m.getMetricSourceAddress();
         assertEquals(new AddressImpl("ssh://1.2.3.4"), s);
-        assertTrue(mr.getSources(LocalOS.class).isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

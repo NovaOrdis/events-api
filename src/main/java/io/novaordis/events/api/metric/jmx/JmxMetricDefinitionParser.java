@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
@@ -50,8 +49,7 @@ public class JmxMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JmxMetricDefinition parse(MetricSourceRepository repository,
-                                                 String metricSourceAndMetricDefinitionRepresentation)
+    public static JmxMetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         boolean thisIsAJmxMetric = false;
@@ -107,11 +105,12 @@ public class JmxMetricDefinitionParser {
 
         String as = metricSourceAndMetricDefinitionRepresentation.substring(0, start);
 
-        Address address;
+        Address jmxBusAddress;
 
         try {
 
-            address = new AddressImpl(as);
+            jmxBusAddress = new AddressImpl(as);
+            jmxBusAddress.setProtocol(JmxBus.PROTOCOL);
         }
         catch(Exception e) {
 
@@ -124,28 +123,6 @@ public class JmxMetricDefinitionParser {
 
             log.debug(msg + ", bailing out ...");
             return null;
-        }
-
-        JmxBus metricSource = repository == null ? null : repository.getSource(JmxBus.class, address);
-
-        if (metricSource == null) {
-
-            try {
-
-                metricSource = new JmxBus(address);
-            }
-            catch(Exception e) {
-
-                String msg = "invalid JMX bus address \"" + address + "\"";
-
-                if (thisIsAJmxMetric) {
-
-                    throw new MetricDefinitionException(msg, e);
-                }
-
-                log.debug(msg + ", bailing out ...");
-                return null;
-            }
         }
 
         String domainName = metricSourceAndMetricDefinitionRepresentation.substring(start + 1, end - 1);
@@ -177,7 +154,7 @@ public class JmxMetricDefinitionParser {
 
         try {
 
-            d = new JmxMetricDefinition(metricSource.getAddress(), domainName, keyValuePairs, attributeName);
+            d = new JmxMetricDefinition(jmxBusAddress, domainName, keyValuePairs, attributeName);
         }
         catch(MetricDefinitionException e) {
 

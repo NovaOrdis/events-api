@@ -43,20 +43,12 @@ public class MetricDefinitionParser {
 
     /**
      * Parse the metric definition representation, which may optionally include the metric source representation, and
-     * return the associated MetricDefinition instance. If the metric definition contains the metric source, and
-     * the repository is not null, it will be queried in an attempt to retrieve the metric source from it, if it exists
-     * in the repository. If the metric is found, it will be used and no new metric source instance will be created.
-     * If it does not exist, a new metric source instance will be created, but it will NOT be placed in the repository.
-     * It is up to the caller whether to place the source in the repository or not.
-     *
-     * @param repository the source repository that will be queried before a specific metric source is created. May
-     *                   be null.
+     * return the associated MetricDefinition instance.
      *
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      a metric source representation.
      */
-    public static MetricDefinition parse(MetricSourceRepository repository,
-                                  String metricSourceAndMetricDefinitionRepresentation)
+    public static MetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
 
@@ -70,7 +62,7 @@ public class MetricDefinitionParser {
         // assume we're an OS metric ...
         //
 
-        MetricDefinition d = OSMetricDefinitionParser.parse(repository, metricSourceAndMetricDefinitionRepresentation);
+        MetricDefinition d = OSMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 
@@ -81,7 +73,7 @@ public class MetricDefinitionParser {
         // ... then assume we're a JBoss CLI metric ...
         //
 
-        d = JBossCliMetricDefinitionParser.parse(repository, metricSourceAndMetricDefinitionRepresentation);
+        d = JBossCliMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 
@@ -92,7 +84,7 @@ public class MetricDefinitionParser {
         // ... then assume we're a JMX metric ...
         //
 
-        d = JmxMetricDefinitionParser.parse(repository, metricSourceAndMetricDefinitionRepresentation);
+        d = JmxMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 

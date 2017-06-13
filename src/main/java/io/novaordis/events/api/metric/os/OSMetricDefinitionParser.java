@@ -19,16 +19,14 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
-import io.novaordis.events.api.metric.MetricSourceRepository;
 import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.address.OSAddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.lang.reflect.Constructor;
-import java.util.Collections;
-import java.util.Set;
 
 /**
  * The logic that parses the string representation of a metric definition, which optionally may include the metric
@@ -51,8 +49,7 @@ public class OSMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static MetricDefinition parse(MetricSourceRepository repository,
-                                         String metricSourceAndMetricDefinitionRepresentation)
+    public static MetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException {
 
         int sourceSeparatorIndex = metricSourceAndMetricDefinitionRepresentation.lastIndexOf('/');
@@ -123,43 +120,25 @@ public class OSMetricDefinitionParser {
         }
 
         //
-        // metric definition resolved, figure out the source, by looking into repository first and creating the source
-        // if necessary
+        // metric definition resolved, figure out the source address
         //
 
-        MetricSource metricSource;
+        Address address;
 
         try {
 
             if (local) {
 
-                Set<LocalOS> sources =
-                        repository == null ? Collections.emptySet() : repository.getSources(LocalOS.class);
-
-                if (sources.isEmpty()) {
-
-                    metricSource = new LocalOS();
-                }
-                else {
-
-                    metricSource = sources.iterator().next();
-                }
+                address = new LocalOSAddress();
             }
             else {
 
-                Address address = new AddressImpl(metricSourceAddress);
-
-                metricSource =  repository == null ? null : repository.getSource(RemoteOS.class, address);
-
-                if (metricSource == null) {
-
-                    metricSource = new RemoteOS(metricSourceAddress);
-                }
+                address = new OSAddressImpl(metricSourceAddress);
             }
         }
         catch(Exception e) {
 
-            throw new MetricDefinitionException("failed to instantiate metric source", e);
+            throw new MetricDefinitionException("failed to get metric source address", e);
         }
 
         MetricDefinition md;
@@ -167,7 +146,7 @@ public class OSMetricDefinitionParser {
         try {
 
             Constructor<MetricSource> constructor = c.getConstructor(OSAddress.class);
-            md = (MetricDefinition)constructor.newInstance(metricSource.getAddress());
+            md = (MetricDefinition)constructor.newInstance(address);
 
         }
         catch(Exception e) {
