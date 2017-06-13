@@ -16,13 +16,13 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -80,11 +80,13 @@ public class LocalOSTest extends OSSourceBaseTest {
     // getAddress() ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void getAddressIsNull() throws Exception {
+    public void getAddress() throws Exception {
 
         LocalOS os = new LocalOS();
 
-        assertNull(os.getAddress());
+        LocalOSAddress losa = (LocalOSAddress)os.getAddress();
+
+        assertNotNull(losa);
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------

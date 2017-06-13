@@ -60,6 +60,14 @@ public abstract class OSSourceBase extends MetricSourceBase {
         super(address);
     }
 
+    /**
+     * Used by subclasses that build the Address instance internally
+     */
+    protected OSSourceBase() {
+
+        super(null);
+    }
+
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override

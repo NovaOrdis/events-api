@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric.jmx;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
@@ -137,7 +138,7 @@ public class JmxMetricDefinitionParserTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("invalid JMX bus address"));
 
-            JmxException e2 = (JmxException)e.getCause();
+            AddressException e2 = (AddressException)e.getCause();
             String msg2 = e2.getMessage();
             assertTrue(msg2.contains("invalid port"));
         }
@@ -245,7 +246,9 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         Address a = d.getMetricSourceAddress();
-        assertEquals(new AddressImpl("jmx://admin@1.2.3.4:8888"), a);
+        Address expected = new AddressImpl("jmx", "admin", null, "1.2.3.4", 8888);
+
+        assertEquals(expected, a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -267,7 +270,9 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         Address a = d.getMetricSourceAddress();
-        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
+        Address expected = new AddressImpl("jmx", "admin", null, "1.2.3.4", 8888);
+
+        assertEquals(expected, a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -288,7 +293,9 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         Address a = d.getMetricSourceAddress();
-        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
+        Address expected = new AddressImpl("jmx", "admin", null, "1.2.3.4", 8888);
+
+        assertEquals(expected, a);
 
         assertEquals("test.domain:service=Test,subService=Test/testAttribute", d.getId());
         assertEquals("testAttribute", d.getAttributeName());
@@ -310,7 +317,8 @@ public class JmxMetricDefinitionParserTest {
         assertNotNull(d);
 
         Address a = d.getMetricSourceAddress();
-        assertEquals(new AddressImpl("admin@1.2.3.4:8888"), a);
+        Address expected = new AddressImpl("jmx", "admin", null, "1.2.3.4", 8888);
+        assertEquals(expected, a);
 
         Set<JmxBus> buses = r.getSources(JmxBus.class);
         assertTrue(buses.isEmpty());

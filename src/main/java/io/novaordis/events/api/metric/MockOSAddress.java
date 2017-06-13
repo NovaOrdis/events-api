@@ -32,7 +32,20 @@ public class MockOSAddress extends MockAddress implements OSAddress {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockOSAddress(String address) {
+
+        super(address);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // MockAddress overrides -------------------------------------------------------------------------------------------
+
+    @Override
+    public MockOSAddress copy() {
+
+        return new MockOSAddress(getLiteral());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

@@ -18,7 +18,7 @@ package io.novaordis.ssh;
 
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.OSAddressImpl;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
 
@@ -45,7 +45,7 @@ public class SshConnectionImpl implements SshConnection {
      */
     public SshConnectionImpl(String address) throws AddressException {
 
-        this.address = new AddressImpl(address);
+        this.address = new OSAddressImpl(address);
     }
 
     // NativeExecutor implementation -----------------------------------------------------------------------------------

@@ -104,7 +104,12 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli:///a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
+
+        assertTrue(r.isEmpty());
 
         assertNotNull(d);
 
@@ -154,15 +159,19 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void parse_JBoss_HostNoPort() throws Exception {
 
-        String s = "jbosscli://blue/a=b/c=d/f";
+        String s = "jbosscli://bluehost/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(new MetricSourceRepositoryImpl(), s);
+        MetricSourceRepositoryImpl r = new MetricSourceRepositoryImpl();
+        assertTrue(r.isEmpty());
+
+        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(r, s);
 
         assertNotNull(d);
+        assertTrue(r.isEmpty());
 
         JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
-        assertEquals("blue", controllerAddress.getHost());
+        assertEquals("bluehost", controllerAddress.getHost());
         assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();

@@ -87,7 +87,7 @@ public class JmxBusTest extends MetricSourceTest {
         assertEquals(JmxBus.DEFAULT_PORT, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4:" + JmxBus.DEFAULT_PORT, a.getLiteral());
+        assertEquals("1.2.3.4", a.getLiteral());
     }
 
     @Test

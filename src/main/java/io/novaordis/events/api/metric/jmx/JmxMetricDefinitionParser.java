@@ -107,7 +107,24 @@ public class JmxMetricDefinitionParser {
 
         String as = metricSourceAndMetricDefinitionRepresentation.substring(0, start);
 
-        Address address = new AddressImpl(as);
+        Address address;
+
+        try {
+
+            address = new AddressImpl(as);
+        }
+        catch(Exception e) {
+
+            String msg = "invalid JMX bus address \"" + as + "\"";
+
+            if (thisIsAJmxMetric) {
+
+                throw new MetricDefinitionException(msg, e);
+            }
+
+            log.debug(msg + ", bailing out ...");
+            return null;
+        }
 
         JmxBus metricSource = repository == null ? null : repository.getSource(JmxBus.class, address);
 

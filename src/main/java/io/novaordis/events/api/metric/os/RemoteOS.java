@@ -21,7 +21,7 @@ import io.novaordis.ssh.SshConnection;
 import io.novaordis.ssh.SshConnectionImpl;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.OSAddressImpl;
 import io.novaordis.utilities.os.NativeExecutor;
 
 /**
@@ -42,7 +42,7 @@ public class RemoteOS extends OSSourceBase {
 
     public RemoteOS(String address) throws Exception {
 
-        super(new AddressImpl(address));
+        super();
 
         buildSshConnection(address);
     }

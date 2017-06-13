@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric.os;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -46,8 +47,8 @@ public class RemoteOSTest extends OSSourceBaseTest {
         RemoteOS ros = new RemoteOS("ssh://1.2.3.4:55");
         RemoteOS ros2 = new RemoteOS("ssh://1.2.3.4:55");
 
-        assertEquals(ros, ros2);
-        assertEquals(ros2, ros2);
+        assertTrue(ros.equals(ros2));
+        assertTrue(ros2.equals(ros));
     }
 
     @Override

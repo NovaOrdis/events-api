@@ -302,8 +302,9 @@ public class JBossControllerTest extends MetricSourceTest {
 
         Address address = c.getAddress();
         // password is not represented
-        assertEquals(new AddressImpl("admin@1.2.3.4:9999"), address);
-        assertTrue(c.hasAddress(address));
+        JBossControllerAddress expected = new JBossControllerAddress("admin", null, "1.2.3.4", 9999);
+        assertEquals(expected, address);
+        assertTrue(c.hasAddress(expected));
     }
 
     @Test
@@ -313,7 +314,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController c = new JBossController(a);
 
         Address address = c.getAddress();
-        assertEquals(new AddressImpl("1.2.3.4:9999"), address);
+        assertEquals(new JBossControllerAddress("1.2.3.4:9999"), address);
         assertTrue(c.hasAddress(address));
     }
 
@@ -324,7 +325,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController c = new JBossController(a);
 
         Address address = c.getAddress();
-        assertEquals(new AddressImpl("someHost"), address);
+        assertEquals(new JBossControllerAddress("someHost"), address);
         assertTrue(c.hasAddress(address));
     }
 
@@ -333,8 +334,8 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossController c = new JBossController(new JBossControllerAddress("localhost"));
 
-        assertEquals(new AddressImpl("localhost"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("localhost")));
+        assertEquals(new JBossControllerAddress("localhost"), c.getAddress());
+        assertTrue(c.hasAddress(new JBossControllerAddress("localhost")));
     }
 
     @Test
@@ -342,8 +343,8 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossController c = new JBossController(new JBossControllerAddress("localhost:9999"));
 
-        assertEquals(new AddressImpl("localhost:9999"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("localhost:9999")));
+        assertEquals(new JBossControllerAddress("localhost:9999"), c.getAddress());
+        assertTrue(c.hasAddress(new JBossControllerAddress("localhost:9999")));
     }
 
     @Test
@@ -351,8 +352,8 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossController c = new JBossController(new JBossControllerAddress("somehost"));
 
-        assertEquals(new AddressImpl("somehost"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("somehost")));
+        assertEquals(new JBossControllerAddress("somehost"), c.getAddress());
+        assertTrue(c.hasAddress(new JBossControllerAddress("somehost")));
     }
 
     @Test
@@ -360,44 +361,47 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossController c = new JBossController(new JBossControllerAddress("somehost:1111"));
 
-        assertEquals(new AddressImpl("somehost:1111"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("somehost:1111")));
+        assertEquals(new JBossControllerAddress("somehost:1111"), c.getAddress());
+        assertTrue(c.hasAddress(new JBossControllerAddress("somehost:1111")));
     }
 
     @Test
     public void getAddress_hasAddress8() throws Exception {
 
         JBossController c = new JBossController(new JBossControllerAddress("testuser:blah@localhost"));
-
-        assertEquals(new AddressImpl("testuser@localhost"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("testuser@localhost")));
+        JBossControllerAddress expected =
+                new JBossControllerAddress("testuser", null, "localhost", JBossControllerAddress.DEFAULT_PORT);
+        assertEquals(expected, c.getAddress());
+        assertTrue(c.hasAddress(expected));
     }
 
     @Test
     public void getAddress_hasAddress9() throws Exception {
 
         JBossController c = new JBossController(new JBossControllerAddress("testuser:blah@localhost"));
-
-        assertEquals(new AddressImpl("testuser@localhost"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("testuser@localhost")));
+        JBossControllerAddress expected =
+                new JBossControllerAddress("testuser", null, "localhost", JBossControllerAddress.DEFAULT_PORT);
+        assertEquals(expected, c.getAddress());
+        assertTrue(c.hasAddress(expected));
     }
 
     @Test
     public void getAddress_hasAddress10() throws Exception {
 
         JBossController c = new JBossController(new JBossControllerAddress("test:test123!@localhost"));
-
-        assertEquals(new AddressImpl("test@localhost"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("test@localhost")));
+        JBossControllerAddress expected =
+                new JBossControllerAddress("test", null, "localhost", JBossControllerAddress.DEFAULT_PORT);
+        assertEquals(expected, c.getAddress());
+        assertTrue(c.hasAddress(expected));
     }
 
     @Test
     public void getAddress_hasAddress11() throws Exception {
 
         JBossController c = new JBossController(new JBossControllerAddress("test:test123!@localhost:9999"));
-
-        assertEquals(new AddressImpl("test@localhost:9999"), c.getAddress());
-        assertTrue(c.hasAddress(new AddressImpl("test@localhost:9999")));
+        JBossControllerAddress expected = new JBossControllerAddress("test", null, "localhost", 9999);
+        assertEquals(expected, c.getAddress());
+        assertTrue(c.hasAddress(expected));
     }
 
     // equals() and hashCode() -----------------------------------------------------------------------------------------
@@ -426,13 +430,18 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void equals_DefaultControllerPort() throws Exception {
 
-        JBossController s = new JBossController(
-                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT));
-        JBossController s2 = new JBossController(
-                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT));
+        JBossControllerAddress a =
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT);
 
-        assertEquals(s, s2);
-        assertEquals(s2, s);
+        JBossControllerAddress a2 =
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT);
+
+
+        JBossController s = new JBossController(a);
+        JBossController s2 = new JBossController(a2);
+
+        assertTrue(s.equals(s2));
+        assertTrue(s2.equals(s));
     }
 
     @Test

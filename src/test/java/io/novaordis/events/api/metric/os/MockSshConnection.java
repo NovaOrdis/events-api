@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.metric.MockOSAddress;
 import io.novaordis.ssh.SshConnection;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
@@ -52,7 +53,7 @@ public class MockSshConnection implements SshConnection {
      */
     public MockSshConnection(String address) throws AddressException {
 
-        this.address = new AddressImpl(address);
+        this.address = new MockOSAddress(address);
         this.delegate = new MockNativeExecutor();
 
         //

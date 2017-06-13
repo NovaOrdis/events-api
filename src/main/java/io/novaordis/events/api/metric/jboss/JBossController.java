@@ -25,7 +25,6 @@ import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -43,8 +42,6 @@ import java.util.List;
 public class JBossController extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    public static final String PROTOCOL = "jbosscli";
 
     private static final Logger log = LoggerFactory.getLogger(JBossController.class);
 
@@ -69,16 +66,27 @@ public class JBossController extends MetricSourceBase {
 
     public JBossController(String address) throws AddressException {
 
-        this(new AddressImpl(address));
+        this(new JBossControllerAddress(address));
     }
 
-    public JBossController(Address address) throws AddressException {
+    public JBossController(JBossControllerAddress model) throws AddressException {
 
-        super(address);
+        super(model);
 
-        String protocol = getAddress().getProtocol();
+        if (model == null) {
 
-        if (!PROTOCOL.equals(getAddress().getProtocol())) {
+            throw new IllegalArgumentException("null controller address");
+        }
+
+        Address address = getAddress();
+
+        String protocol = address.getProtocol();
+
+        if (protocol == null) {
+
+            address.setProtocol(JBossControllerAddress.PROTOCOL);
+        }
+        else if (!JBossControllerAddress.PROTOCOL.equals(protocol)) {
 
             throw new AddressException("invalid protocol " + protocol);
         }

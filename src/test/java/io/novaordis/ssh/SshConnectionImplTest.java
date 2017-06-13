@@ -16,6 +16,7 @@
 
 package io.novaordis.ssh;
 
+import io.novaordis.utilities.address.OSAddressImpl;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -48,7 +49,7 @@ public class SshConnectionImplTest extends SshConnectionTest {
 
         SshConnectionImpl c = getSshConnectionToTest(address);
 
-        assertEquals(address, c.getAddress());
+        assertEquals(new OSAddressImpl(address), c.getAddress());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

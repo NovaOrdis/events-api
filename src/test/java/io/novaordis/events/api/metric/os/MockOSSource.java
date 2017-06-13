@@ -42,7 +42,7 @@ public class MockOSSource extends OSSourceBase {
 
     public MockOSSource() {
 
-        super(new MockOSAddress());
+        super(new MockOSAddress("mock-host"));
     }
 
     // OSSourceBase implementation -------------------------------------------------------------------------------------

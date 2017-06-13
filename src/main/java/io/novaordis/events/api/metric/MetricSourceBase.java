@@ -37,16 +37,13 @@ public abstract class MetricSourceBase implements MetricSource {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param address - makes a copy
+     * @param address - makes a copy of the given address and stores it internally.
+     *
+     * @see MetricSourceBase#setAddress(Address)
      */
     protected MetricSourceBase(Address address) {
 
-        if (address == null) {
-
-            throw new IllegalArgumentException("null address");
-        }
-
-        this.address = address.copy();
+        setAddress(address);
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -108,9 +105,20 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * Installs a copy of the given address
+     * @param a
+     */
     protected void setAddress(Address a) {
 
-        this.address = a;
+        if (a == null) {
+
+            this.address = null;
+        }
+        else {
+
+            this.address = a.copy();
+        }
     }
 
     protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)

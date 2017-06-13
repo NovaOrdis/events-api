@@ -30,7 +30,14 @@ public class MockAddress implements Address {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String literal;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public MockAddress(String address) {
+
+        this.literal = address;
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -74,14 +81,15 @@ public class MockAddress implements Address {
 
     @Override
     public String getLiteral() {
-        throw new RuntimeException("getLiteral() NOT YET IMPLEMENTED");
+
+        return literal;
     }
 
     @Override
-    public Address copy() {
-        throw new RuntimeException("copy() NOT YET IMPLEMENTED");
-    }
+    public MockAddress copy() {
 
+        return new MockAddress(getLiteral());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

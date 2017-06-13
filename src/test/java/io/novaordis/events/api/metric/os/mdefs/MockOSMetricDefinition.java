@@ -20,7 +20,7 @@ import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.OSMetricDefinition;
-import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.OSAddress;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -42,12 +42,12 @@ public class MockOSMetricDefinition extends MockMetricDefinition implements OSMe
      * Invoked by reflection.
      */
     @SuppressWarnings("unused")
-    public MockOSMetricDefinition(Address osMetricSourceAddress) {
+    public MockOSMetricDefinition(OSAddress osMetricSourceAddress) {
 
         this(MockOSMetricDefinition.class.getSimpleName(), osMetricSourceAddress, null);
     }
 
-    public MockOSMetricDefinition(String id, Address osMetricSourceAddress, String command) {
+    public MockOSMetricDefinition(String id, OSAddress osMetricSourceAddress, String command) {
 
         super(osMetricSourceAddress);
 

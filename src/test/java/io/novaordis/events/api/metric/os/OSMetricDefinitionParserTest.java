@@ -118,7 +118,7 @@ public class OSMetricDefinitionParserTest {
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
-        LocalOS los = (LocalOS)d.getMetricSourceAddress();
+        LocalOSAddress los = (LocalOSAddress)d.getMetricSourceAddress();
         assertNotNull(los);
     }
 
