@@ -25,7 +25,6 @@ import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.AddressImpl;
 import org.junit.After;
 import org.junit.Before;
 import org.junit.Test;
@@ -286,8 +285,8 @@ public class JBossControllerTest extends MetricSourceTest {
 
         JBossControllerAddress address = s.getAddress();
 
-        assertEquals(JBossControllerClient.DEFAULT_HOST, address.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, address.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, address.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, address.getPort().intValue());
         assertNull(address.getUsername());
         assertNull(address.getPassword());
     }
@@ -431,10 +430,10 @@ public class JBossControllerTest extends MetricSourceTest {
     public void equals_DefaultControllerPort() throws Exception {
 
         JBossControllerAddress a =
-                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT);
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerAddress.DEFAULT_PORT);
 
         JBossControllerAddress a2 =
-                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerClient.DEFAULT_PORT);
+                new JBossControllerAddress("jbosscli://somehost:" + JBossControllerAddress.DEFAULT_PORT);
 
 
         JBossController s = new JBossController(a);

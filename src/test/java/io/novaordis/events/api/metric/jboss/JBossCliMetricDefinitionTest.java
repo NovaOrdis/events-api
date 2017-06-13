@@ -18,7 +18,6 @@ package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
-import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
 
@@ -109,8 +108,8 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
-        assertEquals(JBossControllerClient.DEFAULT_HOST, controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_HOST, controllerAddress.getHost());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -136,7 +135,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("localhost", controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
@@ -162,7 +161,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
         JBossControllerAddress controllerAddress = d.getMetricSourceAddress();
 
         assertEquals("bluehost", controllerAddress.getHost());
-        assertEquals(JBossControllerClient.DEFAULT_PORT, controllerAddress.getPort().intValue());
+        assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
         CliPath path = d.getPathInstance();
 
