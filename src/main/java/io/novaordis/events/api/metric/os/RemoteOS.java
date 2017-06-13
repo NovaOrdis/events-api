@@ -21,7 +21,7 @@ import io.novaordis.ssh.SshConnection;
 import io.novaordis.ssh.SshConnectionImpl;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.OSAddressImpl;
+import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.NativeExecutor;
 
 /**
@@ -40,14 +40,40 @@ public class RemoteOS extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public RemoteOS(String address) throws Exception {
+    public RemoteOS(String address) throws MetricSourceException {
 
         super();
 
-        buildSshConnection(address);
+        try {
+
+            buildSshConnection(address);
+        }
+        catch(AddressException e) {
+
+            throw new MetricSourceException(e);
+        }
     }
 
-    public RemoteOS(SshConnection c) throws Exception {
+    public RemoteOS(OSAddress address) throws MetricSourceException {
+
+        super(address);
+
+        if (!"ssh".equals(address.getProtocol())) {
+
+            throw new IllegalArgumentException(address + " not an ssh address");
+        }
+
+        try {
+
+            buildSshConnection(address.getLiteral());
+        }
+        catch(AddressException e) {
+
+            throw new MetricSourceException(e);
+        }
+    }
+
+    public RemoteOS(SshConnection c) {
 
         super(c.getAddress());
         setSshConnection(c);

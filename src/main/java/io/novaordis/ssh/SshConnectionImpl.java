@@ -46,6 +46,7 @@ public class SshConnectionImpl implements SshConnection {
     public SshConnectionImpl(String address) throws AddressException {
 
         this.address = new OSAddressImpl(address);
+        this.address.setProtocol("ssh");
     }
 
     // NativeExecutor implementation -----------------------------------------------------------------------------------

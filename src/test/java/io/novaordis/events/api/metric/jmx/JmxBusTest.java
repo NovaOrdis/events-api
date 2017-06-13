@@ -16,9 +16,9 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.AddressException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -98,7 +98,7 @@ public class JmxBusTest extends MetricSourceTest {
             new JmxBus("1.2.3.4:blah");
             fail("should have thrown exception");
         }
-        catch(AddressException e) {
+        catch(MetricSourceException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("invalid port"));
@@ -113,7 +113,7 @@ public class JmxBusTest extends MetricSourceTest {
             new JmxBus("admin:admin123@1.2.3.4:blah");
             fail("should have thrown exception");
         }
-        catch(AddressException e) {
+        catch(MetricSourceException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("invalid port"));
@@ -128,7 +128,7 @@ public class JmxBusTest extends MetricSourceTest {
             new JmxBus("admin@1.2.3.4:2222");
             fail("should have thrown exception");
         }
-        catch(AddressException e) {
+        catch(MetricSourceException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("missing password"));

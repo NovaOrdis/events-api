@@ -22,7 +22,6 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -53,17 +52,17 @@ public class JmxBus extends MetricSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmxBus() throws Exception {
+    public JmxBus() throws MetricSourceException {
 
         this("jmx://" + DEFAULT_HOST + ":" + DEFAULT_PORT);
     }
 
-    public JmxBus(String address) throws AddressException {
+    public JmxBus(String address) throws MetricSourceException {
 
-        this(new AddressImpl(address));
+        this(stringToAddress(address));
     }
 
-    public JmxBus(Address model) throws AddressException  {
+    public JmxBus(Address model) throws MetricSourceException  {
 
         super(model);
 
@@ -77,7 +76,7 @@ public class JmxBus extends MetricSourceBase {
         }
         else if (!PROTOCOL.equals(protocol)) {
 
-            throw new AddressException("invalid protocol " + protocol);
+            throw new MetricSourceException("invalid protocol " + protocol);
         }
 
         Integer port = address.getPort();
@@ -86,6 +85,8 @@ public class JmxBus extends MetricSourceBase {
 
             address.setPort(DEFAULT_PORT);
         }
+
+        log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -128,6 +129,21 @@ public class JmxBus extends MetricSourceBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    /**
+     * We need this trick to work around the constructor limitation of not allowing a try catch around this();
+     */
+    private static Address stringToAddress(String a) throws MetricSourceException {
+
+        try {
+
+            return new AddressImpl(a);
+        }
+        catch (Exception e) {
+
+            throw new MetricSourceException(e);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

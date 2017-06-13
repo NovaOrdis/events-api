@@ -38,11 +38,18 @@ public class LocalOS extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LocalOS() throws Exception {
+    public LocalOS() throws MetricSourceException {
 
         super(new LocalOSAddress());
 
-        setNativeExecutor(OS.getInstance());
+        try {
+
+            setNativeExecutor(OS.getInstance());
+        }
+        catch(Exception e) {
+
+            throw new MetricSourceException(e);
+        }
 
         log.debug(this + " constructed");
     }
