@@ -41,10 +41,18 @@ public class MockMetricSource implements MetricSource {
 
     private boolean breakOnCollect;
 
+    private Address address;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockMetricSource() {
 
+        this(null);
+    }
+
+    public MockMetricSource(Address address) {
+
+        this.address = address;
         results = new HashMap<>();
     }
 
@@ -77,7 +85,8 @@ public class MockMetricSource implements MetricSource {
 
     @Override
     public Address getAddress() {
-        throw new RuntimeException("getAddress() NOT YET IMPLEMENTED");
+
+        return address;
     }
 
     @Override

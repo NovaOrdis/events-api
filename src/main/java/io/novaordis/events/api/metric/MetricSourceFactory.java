@@ -16,86 +16,22 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.metric.jboss.JBossController;
-import io.novaordis.events.api.metric.jmx.JmxBus;
-import io.novaordis.events.api.metric.os.LocalOS;
-import io.novaordis.events.api.metric.os.RemoteOS;
-import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.LocalOSAddress;
-import io.novaordis.utilities.address.OSAddress;
 
 /**
- * A static factory that builds metric source instances from their addresses.
+ * The implementations of these interface create MetricSource instances based on the given address.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/13/17
  */
-public class MetricSourceFactory {
+public interface MetricSourceFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static MetricSource buildMetricSource(Address a) throws MetricSourceException {
-
-        if (a == null) {
-
-            throw new IllegalArgumentException("null address");
-        }
-
-        if (a instanceof LocalOSAddress) {
-
-            return new LocalOS();
-        }
-        else if (a instanceof OSAddress) {
-
-            return new RemoteOS((OSAddress)a);
-        }
-        else if (JmxBus.PROTOCOL.equals(a.getProtocol())) {
-
-            return new JmxBus(a);
-        }
-        else if (a instanceof JBossControllerAddress) {
-
-            try {
-
-                return new JBossController((JBossControllerAddress) a);
-            }
-            catch(Exception e) {
-
-                throw new MetricSourceException(e);
-            }
-        }
-        else if (JBossControllerAddress.PROTOCOL.equals(a.getProtocol())) {
-
-            //
-            // TODO this is clunky, think of a better solution
-            //
-            throw new IllegalArgumentException(
-                    "use a JBossControllerAddress instance to create a JBossController, not a simple AddressImpl");
-        }
-        else {
-
-            throw new MetricSourceException(a + " NOT YET SUPPORTED");
-        }
-    }
-
-    // Attributes ------------------------------------------------------------------------------------------------------
-
-    // Constructors ----------------------------------------------------------------------------------------------------
-
-    private MetricSourceFactory() {
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Package protected -----------------------------------------------------------------------------------------------
-
-    // Protected -------------------------------------------------------------------------------------------------------
-
-    // Private ---------------------------------------------------------------------------------------------------------
-
-    // Inner classes ---------------------------------------------------------------------------------------------------
+    MetricSource buildMetricSource(Address a) throws MetricSourceException;
 
 }

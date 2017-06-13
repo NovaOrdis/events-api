@@ -46,7 +46,8 @@ public class MockAddress implements Address {
 
     @Override
     public String getProtocol() {
-        throw new RuntimeException("getProtocol() NOT YET IMPLEMENTED");
+
+        return "mock";
     }
 
     @Override
