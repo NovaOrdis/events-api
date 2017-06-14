@@ -122,7 +122,7 @@ public abstract class MetricSourceBase implements MetricSource {
     }
 
     protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)
-            throws MetricException {
+            throws MetricSourceException {
 
         Address thisAddress = getAddress();
 
@@ -130,7 +130,7 @@ public abstract class MetricSourceBase implements MetricSource {
 
             if (!thisAddress.equals(d.getMetricSourceAddress())) {
 
-                throw new MetricException(d + " has a different source than " + this);
+                throw new MetricSourceException(d + " has a different source than " + this);
             }
         }
     }

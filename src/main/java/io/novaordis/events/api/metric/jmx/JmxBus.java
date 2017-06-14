@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
@@ -92,7 +91,7 @@ public class JmxBus extends MetricSourceBase {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
 
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
 

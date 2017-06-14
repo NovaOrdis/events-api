@@ -18,8 +18,8 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
+import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.NativeExecutionResult;
@@ -71,7 +71,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
 
         insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
 
@@ -86,7 +86,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
             if (!(d instanceof OSMetricDefinition)) {
 
-                throw new MetricException(d + " is not an " + OSMetricDefinition.class.getSimpleName());
+                throw new MetricSourceException(d + " is not an " + OSMetricDefinition.class.getSimpleName());
             }
 
             OSMetricDefinition osmd = (OSMetricDefinition)d;

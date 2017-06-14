@@ -75,10 +75,10 @@ public interface MetricSource {
      * a Property with the correct id, type and base unit must, but with a null value, be returned returned.
      * Implementations should also log as WARN more details on why the collection failed.
      *
-     * @exception MetricException if metric definitions do not list this source among their sources. This indicates
-     *      a programming error, not a runtime collection failure.
+     * @exception MetricSourceException if metric definitions do not list this source among their sources.
+     *      This indicates a programming error, not a runtime collection failure.
      */
-    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
+    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
 
     //
     // life cycle methods
