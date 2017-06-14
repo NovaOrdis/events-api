@@ -23,6 +23,8 @@ import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.address.OSAddressImpl;
 import org.junit.Test;
 
 import java.util.Set;
@@ -134,7 +136,7 @@ public abstract class MetricSourceRepositoryTest {
 
     }
 
-    // getMetricSourceAddress() -----------------------------------------------------------------------------------------------------
+    // getSource() -----------------------------------------------------------------------------------------------------
 
     @Test
     public void getSource_MoreThanOneAddress() throws Exception {
@@ -232,6 +234,36 @@ public abstract class MetricSourceRepositoryTest {
         JBossController c2 = r.getSource(JBossController.class, lookupAddress);
 
         assertEquals(c, c2);
+    }
+
+    // getSource(Address) ----------------------------------------------------------------------------------------------
+
+    @Test
+    public void getSource_Address() throws Exception {
+
+        MetricSourceRepository r = getMetricSourceRepositoryToTest();
+
+        //
+        // add all
+        //
+
+        LocalOS los = new LocalOS();
+        r.add(los);
+
+        RemoteOS ros = new RemoteOS("ssh://1.2.3.4");
+        r.add(ros);
+
+        //
+        // verify
+        //
+
+        assertNull(r.getSource(new AddressImpl("something like this does not exist")));
+
+        LocalOS los2 = (LocalOS)r.getSource(new LocalOSAddress());
+        assertEquals(los, los2);
+
+        RemoteOS ros2 = (RemoteOS)r.getSource(new OSAddressImpl("ssh://1.2.3.4"));
+        assertEquals(ros, ros2);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

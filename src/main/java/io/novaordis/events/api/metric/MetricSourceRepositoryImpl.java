@@ -142,6 +142,28 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
     }
 
     @Override
+    public MetricSource getSource(Address address) {
+
+        for(Set<MetricSource> mss: sources.values()) {
+
+            if (mss == null) {
+
+                continue;
+            }
+
+            for(MetricSource ms: mss) {
+
+                if (ms.getAddress().equals(address)) {
+
+                    return ms;
+                }
+            }
+        }
+
+        return null;
+    }
+
+    @Override
     public <T extends MetricSource> void add(T source) {
 
         if (source == null) {

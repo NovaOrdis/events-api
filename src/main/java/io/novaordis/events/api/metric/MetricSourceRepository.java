@@ -61,6 +61,11 @@ public interface MetricSourceRepository {
      */
     <T extends MetricSource> T getSource(Class<T> t, Address... address);
 
+    /**
+     * @return the metric source associated with the given address, if exists, or null if it does not.
+     */
+    MetricSource getSource(Address address);
+
     <T extends MetricSource> void add(T source);
 
     boolean isEmpty();
