@@ -35,14 +35,14 @@ public class MockOSSource extends OSSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockOSSource() {
+
+        super(new MockOSAddress());
+    }
+
     public MockOSSource(Address address) {
 
         super(address);
-    }
-
-    public MockOSSource() {
-
-        super(new MockOSAddress("mock-host"));
     }
 
     // OSSourceBase implementation -------------------------------------------------------------------------------------

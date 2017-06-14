@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.OSAddress;
 
 /**
@@ -32,7 +33,14 @@ public class MockOSAddress extends MockAddress implements OSAddress {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockOSAddress(String address) {
+    public MockOSAddress() {
+
+        super();
+        setHost("mock-host");
+    }
+
+
+    public MockOSAddress(String address) throws AddressException {
 
         super(address);
     }
@@ -44,7 +52,13 @@ public class MockOSAddress extends MockAddress implements OSAddress {
     @Override
     public MockOSAddress copy() {
 
-        return new MockOSAddress(getLiteral());
+        MockOSAddress a = new MockOSAddress();
+        a.setProtocol(getProtocol());
+        a.setHost(getHost());
+        a.setPort(getPort());
+        a.setUsername(getUsername());
+        a.setPassword(getPassword());
+        return a;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

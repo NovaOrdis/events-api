@@ -16,13 +16,16 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 
 /**
+ * It correctly implements equals() and hashCode(): two MockAddresses based on the same string are equal.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/12/17
  */
-public class MockAddress implements Address {
+public class MockAddress extends AddressImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,18 +33,18 @@ public class MockAddress implements Address {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String literal;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockAddress() {
 
-        this("mock-address");
+        super();
+
+        setHost("mock-address");
     }
 
-    public MockAddress(String address) {
+    public MockAddress(String address) throws AddressException {
 
-        this.literal = address;
+        super(address);
     }
 
     // Address implementation ------------------------------------------------------------------------------------------
@@ -53,45 +56,17 @@ public class MockAddress implements Address {
     }
 
     @Override
-    public void setProtocol(String protocol) {
-        throw new RuntimeException("setProtocol() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getHost() {
-        throw new RuntimeException("getHost() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public Integer getPort() {
-        throw new RuntimeException("getPort() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void setPort(Integer port) {
-        throw new RuntimeException("setPort() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getUsername() {
-        throw new RuntimeException("getUsername() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public char[] getPassword() {
-        throw new RuntimeException("getPassword() NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public String getLiteral() {
 
-        return literal;
+        return super.getLiteral();
     }
 
     @Override
     public MockAddress copy() {
 
-        return new MockAddress(getLiteral());
+        MockAddress ma = new MockAddress();
+        ma.setHost(getHost());
+        return ma;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -99,7 +74,7 @@ public class MockAddress implements Address {
     @Override
     public String toString() {
 
-        return literal == null ? "UNINITIALIZED" : literal;
+        return getLiteral() == null ? "UNINITIALIZED" : getLiteral();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
