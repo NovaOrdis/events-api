@@ -34,6 +34,11 @@ public class MockAddress implements Address {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public MockAddress() {
+
+        this("mock-address");
+    }
+
     public MockAddress(String address) {
 
         this.literal = address;
