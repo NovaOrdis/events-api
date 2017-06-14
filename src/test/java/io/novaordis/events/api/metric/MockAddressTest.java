@@ -16,18 +16,15 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
+import org.junit.Test;
+
+import static org.junit.Assert.assertTrue;
 
 /**
- * It correctly implements equals() and hashCode(): two MockAddresses based on the same string are equal.
- *
- * Since it was added to the public interface, it must be supported going forward.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/12/17
+ * @since 6/14/17
  */
-public class MockAddress extends AddressImpl {
+public class MockAddressTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,36 +34,29 @@ public class MockAddress extends AddressImpl {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockAddress() {
-
-        super();
-        setProtocol("mock");
-        setHost("mock-address");
-    }
-
-    public MockAddress(String address) throws AddressException {
-
-        super(address);
-        setProtocol("mock");
-    }
-
-    // Address implementation ------------------------------------------------------------------------------------------
-
-    @Override
-    public MockAddress copy() {
-
-        MockAddress ma = new MockAddress();
-        ma.setHost(getHost());
-        return ma;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String toString() {
+    @Test
+    public void equalsTest() throws Exception {
 
-        return getLiteral() == null ? "UNINITIALIZED" : getLiteral();
+        MockAddress a = new MockAddress();
+        MockAddress a2 = new MockAddress();
+
+        assertTrue(a.equals(a2));
+        assertTrue(a2.equals(a));
     }
+
+    @Test
+    public void equalsTest2() throws Exception {
+
+        MockAddress a = new MockAddress("something");
+        MockAddress a2 = new MockAddress("something");
+
+        assertTrue(a.equals(a2));
+        assertTrue(a2.equals(a));
+    }
+
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
