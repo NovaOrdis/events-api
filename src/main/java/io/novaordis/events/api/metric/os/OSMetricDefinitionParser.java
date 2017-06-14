@@ -42,6 +42,7 @@ public class OSMetricDefinitionParser {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(OSMetricDefinitionParser.class);
+    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -105,7 +106,7 @@ public class OSMetricDefinitionParser {
             }
             catch (Exception e) {
 
-                log.debug("no such metric implementation: " + fqcn);
+                if (trace) { log.trace("no such metric implementation: " + fqcn, e); }
             }
         }
 
