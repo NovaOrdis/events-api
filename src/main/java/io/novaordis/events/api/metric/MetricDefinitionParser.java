@@ -66,6 +66,7 @@ public class MetricDefinitionParser {
 
         if (d != null) {
 
+            log.debug("OSMetricDefinitionParser successfully parsed " + d);
             return d;
         }
 
@@ -77,6 +78,7 @@ public class MetricDefinitionParser {
 
         if (d != null) {
 
+            log.debug("JBossCliMetricDefinitionParser successfully parsed " + d);
             return d;
         }
 
@@ -88,6 +90,7 @@ public class MetricDefinitionParser {
 
         if (d != null) {
 
+            log.debug("JmxMetricDefinitionParser successfully parsed " + d);
             return d;
         }
 
