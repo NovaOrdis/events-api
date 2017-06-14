@@ -68,12 +68,22 @@ public abstract class OSSourceBase extends MetricSourceBase {
         super(null);
     }
 
-    // MetricSource implementation -------------------------------------------------------------------------------------
+    // MetricSourceBase overrides --------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+    public OSAddress getAddress() {
 
-        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
+        Address a = super.getAddress();
+        return (OSAddress)a;
+    }
+
+    @Override
+    protected List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+
+        if (!isStarted()) {
+
+            throw new IllegalStateException(this + " not started");
+        }
 
         List<OSMetricDefinition> osMetricDefinitions = new ArrayList<>();
         Map<String, String> commandOutputs = new HashMap<>();
@@ -145,15 +155,6 @@ public abstract class OSSourceBase extends MetricSourceBase {
         }
 
         return results;
-    }
-
-    // MetricSourceBase overrides --------------------------------------------------------------------------------------
-
-    @Override
-    public OSAddress getAddress() {
-
-        Address a = super.getAddress();
-        return (OSAddress)a;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

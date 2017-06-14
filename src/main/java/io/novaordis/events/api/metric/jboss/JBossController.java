@@ -94,9 +94,38 @@ public class JBossController extends MetricSourceBase {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+    public void start() throws MetricSourceException {
+        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    }
 
-        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
+    @Override
+    public boolean isStarted() {
+        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void stop() {
+        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
+
+    // MetricSourceBase overrides --------------------------------------------------------------------------------------
+
+    @Override
+    public JBossControllerAddress getAddress() {
+
+        Address a = super.getAddress();
+        return (JBossControllerAddress)a;
+    }
+
+    // MetricSourceBase overrides --------------------------------------------------------------------------------------
+
+    @Override
+    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+
+        if (!isStarted()) {
+
+            throw new IllegalStateException(this + " not started");
+        }
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
 
@@ -197,30 +226,7 @@ public class JBossController extends MetricSourceBase {
 //        }
 //
 //        return properties;
-    }
 
-    @Override
-    public void start() throws MetricSourceException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
-    }
-
-    // MetricSourceBase overrides --------------------------------------------------------------------------------------
-
-    @Override
-    public JBossControllerAddress getAddress() {
-
-        Address a = super.getAddress();
-        return (JBossControllerAddress)a;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

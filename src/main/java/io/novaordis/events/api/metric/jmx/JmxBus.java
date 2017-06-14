@@ -91,14 +91,6 @@ public class JmxBus extends MetricSourceBase {
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
-
-        insureAllMetricDefinitionsAreAssociatedWithThisSource(metricDefinitions);
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
-    }
-
-    @Override
     public void start() throws MetricSourceException {
 
         throw new RuntimeException("start() NOT YET IMPLEMENTED");
@@ -113,6 +105,19 @@ public class JmxBus extends MetricSourceBase {
     public void stop() {
 
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+    }
+
+    // MetricSourceBase overrides --------------------------------------------------------------------------------------
+
+    @Override
+    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+
+        if (!isStarted()) {
+
+            throw new IllegalStateException(this + " not started");
+        }
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

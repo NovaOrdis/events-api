@@ -75,21 +75,26 @@ public interface MetricSource {
      * a Property with the correct id, type and base unit must, but with a null value, be returned returned.
      * Implementations should also log as WARN more details on why the collection failed.
      *
+     * Implementations may choose - and they are encouraged - to attempt to start the source in-line inside this
+     * call, in case the source is not started. Of course they may also choose to signal the fact that the source
+     * is not started and request external start.
+     *
      * @exception MetricSourceException if metric definitions do not list this source among their sources.
      *      This indicates a programming error, not a runtime collection failure.
      */
     List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
 
-    //
-    // life cycle methods
-    //
+    // Life cycle ------------------------------------------------------------------------------------------------------
 
     /**
      * A metric source instance must be started before metrics can be collected from it. The start operation usually
      * implies expensive remote connection creation, initial state verification, etc. so metric source implementations
      * should be designed to be started once and then stay in that state indefinitely. However, the underlying
      * connection may break for various reasons during the metric source life, so it may become necessary to re-start a
-     * metric source.
+     * metric source. Implementations may chose to attempt to start a source that is not started during the
+     * collectMetrics() call.
+     *
+     * @see MetricSource#collectMetrics(List)
      */
     void start() throws MetricSourceException;
 

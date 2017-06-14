@@ -51,30 +51,6 @@ public abstract class MetricSourceTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
-    @Test
-    public abstract void equalsTest() throws Exception;
-
-    @Test
-    public void equalsTest_Null() throws Exception {
-
-        MetricSource s = getMetricSourceToTest();
-        final Object nullReference = null;
-        assertFalse(s.equals(nullReference));
-    }
-
-    @Test
-    public void equalsTest_NotSameClass() throws Exception {
-
-        MetricSource s = getMetricSourceToTest();
-        MockOSSource mos = new MockOSSource(new AddressImpl("test://test"));
-
-        assertFalse(s.equals(mos));
-        assertFalse(mos.equals(s));
-    }
-
-    @Test
-    public abstract void hashCodeTest() throws Exception;
-
     // hasAddress() ----------------------------------------------------------------------------------------------------
 
     @Test
@@ -124,7 +100,7 @@ public abstract class MetricSourceTest {
             source.collectMetrics(Arrays.asList(md, md2));
             fail("should have thrown exception");
         }
-        catch(MetricException e) {
+        catch(MetricSourceException e) {
 
             String msg = e.getMessage();
             assertTrue(msg.contains("has a different source than"));
@@ -154,6 +130,54 @@ public abstract class MetricSourceTest {
         assertNull(p.getValue());
     }
 
+    // collect() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void collect_FailIfSourceNotStarted() throws Exception {
+
+        MetricSourceBase s = (MetricSourceBase)getMetricSourceToTest();
+
+        if (s.isStarted()) {
+
+            //
+            // noop, this test does not apply
+            //
+            return;
+        }
+
+        MockMetricDefinition md = getCorrespondingMockMetricDefinition(s.getAddress());
+
+        try {
+
+            s.collect(Collections.singletonList(md));
+            fail("should have thrown exceptions");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("not started"));
+        }
+    }
+
+    @Test
+    public void collect_SourceAddressNotRelevant() throws Exception {
+
+        MetricSourceBase source = (MetricSourceBase)getMetricSourceToTest();
+        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
+
+        MetricSource source2 = getMetricSourceToTest("other-host");
+        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
+
+        source.start();
+
+        List<Property> result = source.collectMetrics(Arrays.asList(md, md2));
+
+        //
+        // we don't care about result at this point, it is important that the method does not fail
+        //
+        assertNotNull(result);
+    }
+
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     @Test
@@ -167,6 +191,32 @@ public abstract class MetricSourceTest {
 
         fail("RETURN HERE");
     }
+
+    // equals() and related --------------------------------------------------------------------------------------------
+
+    @Test
+    public abstract void equalsTest() throws Exception;
+
+    @Test
+    public void equalsTest_Null() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        final Object nullReference = null;
+        assertFalse(s.equals(nullReference));
+    }
+
+    @Test
+    public void equalsTest_NotSameClass() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+        MockOSSource mos = new MockOSSource(new AddressImpl("test://test"));
+
+        assertFalse(s.equals(mos));
+        assertFalse(mos.equals(s));
+    }
+
+    @Test
+    public abstract void hashCodeTest() throws Exception;
 
     // Package protected -----------------------------------------------------------------------------------------------
 

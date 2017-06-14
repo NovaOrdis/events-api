@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.Property;
 import io.novaordis.utilities.address.Address;
 
 import java.util.List;
@@ -58,6 +59,35 @@ public abstract class MetricSourceBase implements MetricSource {
     public final boolean hasAddress(Address address) {
 
         return this.address != null && this.address.equals(address);
+    }
+
+    /**
+     * The base implementation of this method insures that all metric definitions are associated with the source
+     * the method is invoked on, and it also starts the source, if not started already.
+     *
+     * @throws MetricSourceException if a metric definition is associated with a different metric source than
+     *      this one, if the source is not started and cannot be started.
+     */
+    @Override
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+
+        Address thisAddress = getAddress();
+
+        for(MetricDefinition d: metricDefinitions) {
+
+            if (!thisAddress.equals(d.getMetricSourceAddress())) {
+
+                throw new MetricSourceException(d + " has a different source than " + this);
+            }
+        }
+
+        if (!isStarted()) {
+
+            start();
+        }
+
+        return collect(metricDefinitions);
+
     }
 
     @Override
@@ -106,8 +136,9 @@ public abstract class MetricSourceBase implements MetricSource {
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
-     * Installs a copy of the given address
-     * @param a
+     * Installs a copy of the given address.
+     *
+     * @see Address#copy()
      */
     protected void setAddress(Address a) {
 
@@ -121,19 +152,15 @@ public abstract class MetricSourceBase implements MetricSource {
         }
     }
 
-    protected void insureAllMetricDefinitionsAreAssociatedWithThisSource(List<MetricDefinition> metricDefinitions)
-            throws MetricSourceException {
-
-        Address thisAddress = getAddress();
-
-        for(MetricDefinition d: metricDefinitions) {
-
-            if (!thisAddress.equals(d.getMetricSourceAddress())) {
-
-                throw new MetricSourceException(d + " has a different source than " + this);
-            }
-        }
-    }
+    /**
+     * The caller of this method guarantees that all metric definitions passed as argument apply to this source,
+     * meaning that the address part of the definition has been already verified, and it can actually be ignored.
+     * The caller of the method also guarantees that the source is started. If the source is not started,
+     * the method will throw an IllegalStateExceptions.
+     *
+     * @exception IllegalStateException if the source is not started. The source must be started by the calling layer.
+     */
+    protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
