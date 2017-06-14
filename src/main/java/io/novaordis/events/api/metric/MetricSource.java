@@ -42,6 +42,9 @@ import java.util.List;
  * should be designed to be started once and then stay in that state indefinitely. However, the underlying connection
  * may break for various reasons during the metric source life, so it may become necessary to re-start a metric source.
  *
+ * Implementations are NOT expected to maintain their own internal threads. The recommended way to manage sources
+ * and collect metrics is to do it with external threads/executors.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/4/16
  */

@@ -168,6 +168,12 @@ public class MetricSourceRepositoryImpl implements MetricSourceRepository {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString() {
+
+        return "MetricSourceRepositoryImpl[" + Integer.toHexString(System.identityHashCode(this)) + "]";
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -39,10 +39,7 @@ public class MockAddress implements Address {
         this.literal = address;
     }
 
-    // Public ----------------------------------------------------------------------------------------------------------
-
     // Address implementation ------------------------------------------------------------------------------------------
-
 
     @Override
     public String getProtocol() {
@@ -90,6 +87,14 @@ public class MockAddress implements Address {
     public MockAddress copy() {
 
         return new MockAddress(getLiteral());
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    @Override
+    public String toString() {
+
+        return literal == null ? "UNINITIALIZED" : literal;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
