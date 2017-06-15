@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.events.api.metric.MetricSourceType;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
@@ -37,6 +38,8 @@ import java.util.List;
 public class JmxBus extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final MetricSourceType METRIC_SOURCE_TYPE = new MetricSourceType() {};
 
     public static final String PROTOCOL = "jmx";
 

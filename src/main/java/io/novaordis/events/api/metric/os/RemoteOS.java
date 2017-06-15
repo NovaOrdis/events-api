@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.events.api.metric.MetricSourceType;
 import io.novaordis.ssh.SshConnection;
 import io.novaordis.ssh.SshConnectionImpl;
 import io.novaordis.utilities.address.Address;
@@ -33,6 +34,8 @@ import io.novaordis.utilities.os.NativeExecutor;
 public class RemoteOS extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final MetricSourceType METRIC_SOURCE_TYPE = new MetricSourceType() {};
 
     // Static ----------------------------------------------------------------------------------------------------------
 
