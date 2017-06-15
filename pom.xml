@@ -17,7 +17,7 @@
         -->
 
         <novaordis.utilities.version>4.7.5-SNAPSHOT-14</novaordis.utilities.version>
-        <novaordis.jboss.cli>1.0.3-SNAPSHOT-5</novaordis.jboss.cli>
+        <novaordis.jboss.cli>1.0.3-SNAPSHOT-6</novaordis.jboss.cli>
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>

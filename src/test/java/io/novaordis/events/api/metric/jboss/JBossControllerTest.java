@@ -491,21 +491,32 @@ public class JBossControllerTest extends MetricSourceTest {
     @Override
     protected JBossController getMetricSourceToTest(String... addresses) throws Exception {
 
+        JBossController result;
+
         if (addresses.length == 0) {
 
-            return new JBossController();
+            result = new JBossController();
         }
         else if (addresses.length == 1) {
 
             String address = addresses[0];
             address = "jbosscli://" + address;
-            return new JBossController(address);
+            result = new JBossController(address);
         }
         else {
 
             // at most one argument is expected
             throw new IllegalArgumentException(addresses.length + " arguments");
         }
+
+        //
+        // since we don't have a JBoss controller lying around, we simulate one with a mock JBossControllerClient
+        // built by this factory
+        //
+
+        result.setJBossControllerClientFactory(new MockJBossControllerClientFactory());
+
+        return result;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

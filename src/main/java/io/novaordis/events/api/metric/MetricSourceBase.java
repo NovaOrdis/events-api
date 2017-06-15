@@ -71,15 +71,7 @@ public abstract class MetricSourceBase implements MetricSource {
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
 
-        Address thisAddress = getAddress();
-
-        for(MetricDefinition d: metricDefinitions) {
-
-            if (!thisAddress.equals(d.getMetricSourceAddress())) {
-
-                throw new MetricSourceException(d + " has a different source than " + this);
-            }
-        }
+        insureAllDefinitionsAreAssociatedWithThisAddress(metricDefinitions);
 
         if (!isStarted()) {
 
@@ -163,6 +155,20 @@ public abstract class MetricSourceBase implements MetricSource {
     protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private void insureAllDefinitionsAreAssociatedWithThisAddress(List<MetricDefinition> metricDefinitions)
+            throws MetricSourceException {
+
+        Address thisAddress = getAddress();
+
+        for(MetricDefinition d: metricDefinitions) {
+
+            if (!thisAddress.equals(d.getMetricSourceAddress())) {
+
+                throw new MetricSourceException(d + " has a different source than " + this);
+            }
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

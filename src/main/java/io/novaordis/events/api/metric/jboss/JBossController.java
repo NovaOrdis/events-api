@@ -16,17 +16,25 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.IntegerProperty;
+import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
+import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
+import io.novaordis.jboss.cli.JBossControllerClientFactory;
+import io.novaordis.jboss.cli.JBossControllerClientFactoryImpl;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
@@ -47,6 +55,8 @@ public class JBossController extends MetricSourceBase {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private JBossControllerClientFactory clientFactory;
 
     //
     // lazily instantiated and connected
@@ -89,22 +99,54 @@ public class JBossController extends MetricSourceBase {
 
             throw new AddressException("invalid protocol " + protocol);
         }
+
+        //
+        // the default client factory, produces a regular JBossControllerClient instance
+        //
+
+        this.clientFactory = new JBossControllerClientFactoryImpl();
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void start() throws MetricSourceException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+    public synchronized void start() throws MetricSourceException {
+
+        // TODO idempotence
+
+        // TODO even if the controller client is present, test connectivity?
+
+        log.debug(this + " starting ...");
+
+        try {
+
+            //
+            // lazy instantiation
+            //
+
+            if (controllerClient == null) {
+
+                JBossControllerClient c = clientFactory.buildControllerClient(getAddress());
+                setControllerClient(c);
+            }
+
+            controllerClient.connect();
+        }
+        catch(Exception e) {
+
+            throw new MetricSourceException(e);
+        }
     }
 
     @Override
-    public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+    public synchronized boolean isStarted() {
+
+        return controllerClient != null && controllerClient.isConnected();
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
+
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
 
@@ -127,106 +169,75 @@ public class JBossController extends MetricSourceBase {
             throw new IllegalStateException(this + " not started");
         }
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        List<Property> properties = null;
 
-//        List<Property> properties = new ArrayList<>();
-//
-//        for(MetricDefinition md : metricDefinitions) {
-//
-//            if (!(md instanceof JBossCliMetricDefinition)) {
-//
-//                log.debug(this + " does not handle non-jboss CLI metrics " + md);
-//                properties.add(null);
-//                continue;
-//            }
-//
-//            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
-//
-//            JBossController thatSource = jbmd.getMetricSourceAddress();
-//
-//            if (!this.equals(thatSource)) {
-//
-//                log.debug(jbmd + " has a different source than " + this + ", ignorning ...");
-//                properties.add(null);
-//                continue;
-//            }
-//
-//            //
-//            // lazy instantiation
-//            //
-//
-//            if (controllerClient == null) {
-//
-//                JBossControllerAddress address = jbmd.getMetricSourceAddress().getControllerAddress();
-//                JBossControllerClient newClient = JBossControllerClient.getInstance(address);
-//                setControllerClient(newClient);
-//            }
-//
-//            //
-//            // if the client is not connected, attempt to connect it, every time we collect metrics. This is useful if
-//            // the JBoss instance is started after os-stats, or if the JBoss instance becomes inaccessible and then
-//            // reappears
-//            //
-//
-//            if (!controllerClient.isConnected()) {
-//
-//                try {
-//
-//                    log.debug("attempting to connect " + controllerClient);
-//
-//                    controllerClient.connect();
-//                }
-//                catch(Exception e) {
-//
-//                    log.warn(e.getMessage());
-//                    log.debug("controller client connection failure", e);
-//                    continue;
-//                }
-//            }
-//
-//            String path = jbmd.getPath();
-//            String attributeName = jbmd.getAttributeName();
-//            Object attributeValue = null;
-//
-//            try {
-//
-//                attributeValue = controllerClient.getAttributeValue(path, attributeName);
-//            }
-//            catch (JBossCliException e) {
-//
-//                log.warn(e.getMessage());
-//            }
-//
-//            if (attributeValue == null) {
-//                properties.add(null);
-//                continue;
-//            }
-//
-//            String name = jbmd.getId();
-//
-//            Property p;
-//
-//            if (attributeValue instanceof String) {
-//
-//                p = new StringProperty(name, (String)attributeValue);
-//            }
-//            else if (attributeValue instanceof Integer) {
-//
-//                p = new IntegerProperty(name, (Integer)attributeValue);
-//            }
-//            else if (attributeValue instanceof Long) {
-//
-//                p = new LongProperty(name, (Long)attributeValue);
-//            }
-//            else {
-//                throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");
-//            }
-//
-//            properties.add(p);
-//        }
-//
-//        return properties;
+        for(MetricDefinition md : metricDefinitions) {
 
+            if (!(md instanceof JBossCliMetricDefinition)) {
+
+                throw new RuntimeException("RETURN HERE: we need an interface hierarchy where JBossCliMetricDefinition is an interface, not a class");
+
+//                log.warn(this + " does not handle non-jboss CLI metric " + md);
+//                continue;
+            }
+
+            JBossCliMetricDefinition jbmd = (JBossCliMetricDefinition)md;
+
+            String path = jbmd.getPath();
+            String attributeName = jbmd.getAttributeName();
+            Object attributeValue = null;
+
+            try {
+
+                attributeValue = controllerClient.getAttributeValue(path, attributeName);
+            }
+            catch (JBossCliException e) {
+
+                log.warn(e.getMessage());
+            }
+
+            if (properties == null) {
+
+                properties = new ArrayList<>();
+            }
+
+            if (attributeValue == null) {
+
+                properties.add(null);
+                continue;
+            }
+
+            String name = jbmd.getId();
+
+            Property p;
+
+            if (attributeValue instanceof String) {
+
+                p = new StringProperty(name, (String)attributeValue);
+            }
+            else if (attributeValue instanceof Integer) {
+
+                p = new IntegerProperty(name, (Integer)attributeValue);
+            }
+            else if (attributeValue instanceof Long) {
+
+                p = new LongProperty(name, (Long)attributeValue);
+            }
+            else {
+                throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");
+            }
+
+            properties.add(p);
+        }
+
+        if (properties == null) {
+
+            return Collections.emptyList();
+        }
+        else {
+
+            return properties;
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -247,6 +258,11 @@ public class JBossController extends MetricSourceBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setJBossControllerClientFactory(JBossControllerClientFactory factory) {
+
+        this.clientFactory = factory;
+    }
 
     void setControllerClient(JBossControllerClient controllerClient) {
 

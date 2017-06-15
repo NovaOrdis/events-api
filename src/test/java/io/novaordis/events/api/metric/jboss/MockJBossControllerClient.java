@@ -44,8 +44,9 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockJBossControllerClient() {
+    public MockJBossControllerClient(JBossControllerAddress address) {
 
+        this.address = address;
         this.values = new HashMap<>();
     }
 
@@ -95,7 +96,7 @@ public class MockJBossControllerClient implements JBossControllerClient {
             return;
         }
 
-        log.info(this + " is connected");
+        log.info(this + " connected");
         connected = true;
     }
 
@@ -147,9 +148,13 @@ public class MockJBossControllerClient implements JBossControllerClient {
     @Override
     public String toString() {
 
+        if (address == null) {
+
+            return "UNINITIALIZED";
+        }
+
         return address.getUsername() + ":***@" + address.getHost() + ":" + address.getPort() + "(" +
                 (connected ? "connected" : "disconnected") + ")";
-
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

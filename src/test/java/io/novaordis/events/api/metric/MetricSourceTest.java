@@ -170,7 +170,7 @@ public abstract class MetricSourceTest {
 
         source.start();
 
-        List<Property> result = source.collectMetrics(Arrays.asList(md, md2));
+        List<Property> result = source.collect(Arrays.asList(md, md2));
 
         //
         // we don't care about result at this point, it is important that the method does not fail
