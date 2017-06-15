@@ -89,11 +89,11 @@ public abstract class MetricSourceTest {
 
         MetricSource source = getMetricSourceToTest();
 
-        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
+        MetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
 
         MetricSource source2 = getMetricSourceToTest("other-host");
 
-        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
+        MetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
 
         try {
 
@@ -112,7 +112,7 @@ public abstract class MetricSourceTest {
 
         MetricSource s = getMetricSourceToTest();
 
-        MockMetricDefinition mmd = getCorrespondingMockMetricDefinition(s.getAddress());
+        MetricDefinition mmd = getCorrespondingMockMetricDefinition(s.getAddress());
 
         List<MetricDefinition> definitions = Collections.singletonList(mmd);
 
@@ -145,7 +145,7 @@ public abstract class MetricSourceTest {
             return;
         }
 
-        MockMetricDefinition md = getCorrespondingMockMetricDefinition(s.getAddress());
+        MetricDefinition md = getCorrespondingMockMetricDefinition(s.getAddress());
 
         try {
 
@@ -163,10 +163,10 @@ public abstract class MetricSourceTest {
     public void collect_SourceAddressNotRelevant() throws Exception {
 
         MetricSourceBase source = (MetricSourceBase)getMetricSourceToTest();
-        MockMetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
+        MetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
 
         MetricSource source2 = getMetricSourceToTest("other-host");
-        MockMetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
+        MetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
 
         source.start();
 
@@ -225,7 +225,7 @@ public abstract class MetricSourceTest {
     /**
      * Gives the sub-classes a chance to provide more specialized mocks.
      */
-    protected MockMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
+    protected MetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
 
         return new MockMetricDefinition(metricSourceAddress);
     }

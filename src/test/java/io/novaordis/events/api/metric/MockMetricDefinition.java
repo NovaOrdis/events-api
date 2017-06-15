@@ -28,16 +28,7 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static boolean FAIL_IN_CONSTRUCTOR = false;
-
-    public static void setFailInConstructor(boolean b) {
-
-        FAIL_IN_CONSTRUCTOR = b;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
-
-    private String id;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -46,20 +37,9 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
         super(metricSourceAddress);
 
         setId(getClass().getSimpleName());
-
-        if (FAIL_IN_CONSTRUCTOR) {
-
-            throw new RuntimeException("SYNTHETIC");
-        }
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
-
-    @Override
-    public String getId() {
-
-        return id;
-    }
 
     @Override
     public String getSimpleLabel() {
@@ -68,11 +48,6 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void setId(String s) {
-
-        this.id = s;
-    }
 
     @Override
     public String toString() {

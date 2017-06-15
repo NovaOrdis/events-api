@@ -18,19 +18,25 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.MockMetricDefinition;
-import io.novaordis.events.api.metric.os.OSMetricDefinition;
+import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class MockOSMetricDefinition extends MockMetricDefinition implements OSMetricDefinition {
+public class MockOSMetricDefinition extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    private static boolean FAIL_IN_CONSTRUCTOR = false;
+
+    public static void setFailInConstructor(boolean b) {
+
+        FAIL_IN_CONSTRUCTOR = b;
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -54,6 +60,11 @@ public class MockOSMetricDefinition extends MockMetricDefinition implements OSMe
         setId(id);
 
         this.command = command;
+
+        if (FAIL_IN_CONSTRUCTOR) {
+
+            throw new RuntimeException("SYNTHETIC");
+        }
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
@@ -86,6 +97,21 @@ public class MockOSMetricDefinition extends MockMetricDefinition implements OSMe
         // we return the command execution stdout as value of the property, to allow for extra consistency testing
         //
         return new MockProperty(getId(), commandExecutionStdout);
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

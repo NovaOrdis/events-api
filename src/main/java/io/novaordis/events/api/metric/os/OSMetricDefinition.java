@@ -81,5 +81,4 @@ public interface OSMetricDefinition extends MetricDefinition {
      */
     Property parseCommandOutput(String commandExecutionStdout);
 
-
 }

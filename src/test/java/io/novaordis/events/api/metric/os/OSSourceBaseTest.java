@@ -20,7 +20,6 @@ import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
-import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
@@ -316,7 +315,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected MockMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
+    protected MockOSMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
 
         if (metricSourceAddress.getClass().isAssignableFrom(OSAddress.class)) {
 

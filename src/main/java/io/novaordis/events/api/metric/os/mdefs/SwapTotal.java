@@ -20,7 +20,6 @@ import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.parser.ParsingException;
-import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
 
 import java.util.regex.Matcher;

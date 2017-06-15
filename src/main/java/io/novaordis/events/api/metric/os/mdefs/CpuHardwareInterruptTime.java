@@ -49,7 +49,7 @@ public class CpuHardwareInterruptTime extends OSMetricDefinitionBase {
 
         this.LABEL = "CPU Hardware Interrupt Time";
 
-        this.BASE_UNIT = Percentage.getInstance();;
+        this.BASE_UNIT = Percentage.getInstance();
 
         this.DESCRIPTION = "Percentage of total CPU time spent time spent spent servicing hardware interrupts.";
 

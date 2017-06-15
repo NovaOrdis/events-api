@@ -56,18 +56,14 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     protected OSMetricDefinitionBase(Address metricSourceAddress) {
 
         super(metricSourceAddress);
+
+        //
+        // For all OS metrics, the ID is conventionally the simple name of the class implementing the metric definition.
+        //
+        setId(getClass().getSimpleName());
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
-
-    /**
-     * For all OS metrics, the ID is conventionally the simple name of the class implementing the metric definition.
-     */
-    @Override
-    public String getId() {
-
-        return getClass().getSimpleName();
-    }
 
     @Override
     public Class getType() {

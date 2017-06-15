@@ -33,6 +33,8 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String id;
+
     private Address source;
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -51,6 +53,12 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
+
+    @Override
+    public String getId() {
+
+        return id;
+    }
 
     @Override
     public final String getLabel(LabelAttribute... attributes) {
@@ -106,6 +114,16 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
      * @see MetricDefinition#getLabel(LabelAttribute...)
      */
     protected abstract String getSimpleLabel();
+
+    protected void setId(String id) {
+
+        if (id == null) {
+
+            throw new IllegalArgumentException("null id");
+        }
+
+        this.id = id;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
