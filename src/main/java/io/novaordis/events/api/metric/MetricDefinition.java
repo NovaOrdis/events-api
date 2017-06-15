@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.utilities.address.Address;
 import org.slf4j.Logger;
@@ -92,4 +93,13 @@ public interface MetricDefinition {
      * The human readable text that explains what this metric represents.
      */
     String getDescription();
+
+    /**
+     * Builds a property instance corresponding to the given value of the metric - it has the correct name, type, etc.
+     * If the value is null, build an empty property, but also with the correct name, type, etc.
+     *
+     * @throws MetricException
+     */
+    Property buildProperty(Object value) throws MetricException;
+
 }

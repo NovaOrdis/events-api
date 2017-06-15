@@ -28,7 +28,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
  */
-public class ListProperty<V> extends PropertyBase implements Property {
+public class ListProperty<V> extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.utilities.address.Address;
 
@@ -95,6 +97,18 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     public Address getMetricSourceAddress() {
 
         return source;
+    }
+
+    @Override
+    public Property buildProperty(Object value) {
+
+        String id = getId();
+        Class type = getType();
+        MeasureUnit mu = getBaseUnit();
+
+        //noinspection UnnecessaryLocalVariable
+        Property p = PropertyFactory.createInstance(id, type, value, mu);
+        return p;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

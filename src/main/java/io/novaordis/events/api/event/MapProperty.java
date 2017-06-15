@@ -26,7 +26,7 @@ import java.util.Map;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
  */
-public class MapProperty extends PropertyBase implements Property {
+public class MapProperty extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

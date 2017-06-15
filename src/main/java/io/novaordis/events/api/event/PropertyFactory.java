@@ -17,10 +17,14 @@
 package io.novaordis.events.api.event;
 
 import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.utilities.NotYetImplementedException;
 
 import java.util.Map;
 
 /**
+ * Static factory that creates the appropriate property instance based on type and value. If the type is not known
+ * (null), but the value is known, type heuristics are applied.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/2/16
  */
@@ -32,6 +36,7 @@ public class PropertyFactory {
      * @see PropertyFactory#createInstance(String, Class, Object, Double, MeasureUnit)
      */
     public static Property createInstance(String name, Class type, Object value, MeasureUnit measureUnit) {
+
         return createInstance(name, type, value, null, measureUnit);
     }
 
@@ -54,7 +59,28 @@ public class PropertyFactory {
 
         PropertyBase result;
 
-        if(String.class.equals(type)) {
+        if (type == null) {
+
+            //
+            // if the value is not null, attempt type heuristics. If the value is null, attempt to create an
+            // UndefinedTypeProperty instance
+            //
+
+            if (value != null) {
+
+                return createTypeHeuristicsInstance(name, value, conversionFactor, measureUnit);
+            }
+
+            if (measureUnit != null) {
+
+                throw new IllegalArgumentException(
+                        "cannot create an " + UndefinedTypeProperty.class.getSimpleName() +
+                                " instance when the measure unit is specified");
+            }
+
+            return new UndefinedTypeProperty(name);
+        }
+        else if(String.class.equals(type)) {
 
             if (value != null && !(value instanceof String)) {
                 throw new IllegalArgumentException(
@@ -191,9 +217,19 @@ public class PropertyFactory {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    private PropertyFactory() {
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    static Property createTypeHeuristicsInstance(
+            String name, Object value, Double conversionFactor, MeasureUnit measureUnit) {
+
+        throw new NotYetImplementedException(
+                "createTypeHeuristicsInstance(" + name + ", " + value + ", " + conversionFactor + ", " + measureUnit);
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

@@ -82,7 +82,7 @@ public interface MetricSource {
      * @exception MetricSourceException if metric definitions do not list this source among their sources.
      *      This indicates a programming error, not a runtime collection failure.
      */
-    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
+    List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
 
     // Life cycle ------------------------------------------------------------------------------------------------------
 

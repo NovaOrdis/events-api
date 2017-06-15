@@ -16,12 +16,14 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -125,6 +127,58 @@ public abstract class MetricDefinitionTest {
         }
     }
 
+    // buildProperty() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void buildProperty_Null() throws Exception {
+
+        MetricDefinition d = getMetricDefinitionToTest();
+
+        String id = d.getId();
+        Class type = d.getType();
+        MeasureUnit mu = d.getBaseUnit();
+
+        Property p = d.buildProperty(null);
+
+        String name = p.getName();
+        Class pType = p.getType();
+        MeasureUnit pMu = p.getMeasureUnit();
+        Object pValue = p.getValue();
+
+        assertNotNull(p);
+
+        assertEquals(name, id);
+        assertEquals(pType, type);
+        assertEquals(pMu, mu);
+        assertNull(pValue);
+    }
+
+    @Test
+    public void buildProperty() throws Exception {
+
+        MetricDefinition d = getMetricDefinitionToTest();
+
+        String id = d.getId();
+        Class type = d.getType();
+        MeasureUnit mu = d.getBaseUnit();
+
+        Object testValue = generateTestValue(type);
+
+        Property p = d.buildProperty(testValue);
+
+        String name = p.getName();
+        Class pType = p.getType();
+        MeasureUnit pMu = p.getMeasureUnit();
+        Object pValue = p.getValue();
+
+        assertNotNull(p);
+
+        assertEquals(name, id);
+        assertEquals(pType, type);
+        assertEquals(pMu, mu);
+        assertEquals(pValue, testValue);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -132,6 +186,43 @@ public abstract class MetricDefinitionTest {
     protected abstract MetricDefinition getMetricDefinitionToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private Object generateTestValue(Class type) {
+
+        if (type == null) {
+
+            throw new IllegalArgumentException("null type");
+        }
+
+        if (Integer.class.equals(type)) {
+
+            return 7;
+        }
+        else if (Long.class.equals(type)) {
+
+            return 7L;
+        }
+        else if (String.class.equals(type)) {
+
+            return "test";
+        }
+        else if (Double.class.equals(type)) {
+
+            return 7.0d;
+        }
+        else if (Float.class.equals(type)) {
+
+            return 7.0f;
+        }
+        else if (Boolean.class.equals(type)) {
+
+            return true;
+        }
+        else {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: extend this to support " + type);
+        }
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

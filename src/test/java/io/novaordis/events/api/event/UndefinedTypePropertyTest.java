@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -18,9 +18,9 @@ package io.novaordis.events.api.event;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 2/1/16
+ * @since 6/15/17
  */
-public class IntegerProperty extends PropertyBase {
+public class UndefinedTypePropertyTest extends PropertyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,43 +30,29 @@ public class IntegerProperty extends PropertyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public IntegerProperty(String name) {
-        this(name, null);
-    }
-
-    public IntegerProperty(String name, Integer value) {
-        super(name, value);
-    }
-
-    // Property implementation -----------------------------------------------------------------------------------------
-
-    @Override
-    public Class getType() {
-        return Integer.class;
-    }
-
-    @Override
-    public Property fromString(String s) throws IllegalArgumentException {
-
-        try {
-            int i = Integer.valueOf(s);
-            return new IntegerProperty(getName(), i);
-        }
-        catch(Exception e) {
-            throw new IllegalArgumentException("\"" + s + "\" cannot be converted to an IntegerProperty value");
-        }
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public Integer getInteger() {
+    // Test Overrides --------------------------------------------------------------------------------------------------
 
-        return (Integer)getValue();
-    }
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected Property getPropertyToTest(String name) {
+
+
+
+        throw new RuntimeException("getPropertyToTest() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object getAppropriateValueForPropertyToTest() {
+
+        return null;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -67,9 +67,10 @@ public abstract class MetricSourceBase implements MetricSource {
      *
      * @throws MetricSourceException if a metric definition is associated with a different metric source than
      *      this one, if the source is not started and cannot be started.
+     * @throws MetricException by other underlying conditions.
      */
     @Override
-    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+    public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         insureAllDefinitionsAreAssociatedWithThisAddress(metricDefinitions);
 
@@ -150,9 +151,16 @@ public abstract class MetricSourceBase implements MetricSource {
      * The caller of the method also guarantees that the source is started. If the source is not started,
      * the method will throw an IllegalStateExceptions.
      *
+     * @return a list of Properties. If one or more metrics could not be collected, because they were not available
+     * of the collection failed, a non-null Property with a null value will be returned on the corresponding position
+     * in the list. For mre details:
+     *
+     * @see MetricSource#collectMetrics(List)
+     *
      * @exception IllegalStateException if the source is not started. The source must be started by the calling layer.
+     * @throws MetricException by other underlying conditions.
      */
-    protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException;
+    protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -17,10 +17,13 @@
 package io.novaordis.events.api.event;
 
 /**
+ * A property for which we don't know the type, measure unit and value.
+ *
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 2/1/16
+ * @since 6/15/17
  */
-public class IntegerProperty extends PropertyBase {
+public class UndefinedTypeProperty extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,39 +33,24 @@ public class IntegerProperty extends PropertyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public IntegerProperty(String name) {
-        this(name, null);
-    }
+    public UndefinedTypeProperty(String name) {
 
-    public IntegerProperty(String name, Integer value) {
-        super(name, value);
+        super(name, null);
     }
-
-    // Property implementation -----------------------------------------------------------------------------------------
 
     @Override
     public Class getType() {
-        return Integer.class;
+
+        return null;
     }
 
     @Override
     public Property fromString(String s) throws IllegalArgumentException {
 
-        try {
-            int i = Integer.valueOf(s);
-            return new IntegerProperty(getName(), i);
-        }
-        catch(Exception e) {
-            throw new IllegalArgumentException("\"" + s + "\" cannot be converted to an IntegerProperty value");
-        }
+        throw new RuntimeException("fromString() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public Integer getInteger() {
-
-        return (Integer)getValue();
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

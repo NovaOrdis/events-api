@@ -24,8 +24,12 @@ import java.util.List;
 /**
  * A typed key/value pair. Optionally, it can have a measure unit, a format, etc.
  *
- * Typically a Property is produced by a MetricSource when given a MetricDefinition to "collect". For conventions
- * on what happens if the MetricSource cannot successfully collect the MetricDefinition
+ * Property instances encapsulate the values produced as the result of reading a metric, defined by a MetricDefinition.
+ *
+ * Property instances can be instantiate directly using the respective constructors, or they can be created with the
+ * static factory PropertyFactory.createInstance(...).
+ *
+ * @see PropertyFactory
  *
  * @see io.novaordis.events.api.metric.MetricSource#collectMetrics(List)
  *

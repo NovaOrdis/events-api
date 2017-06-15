@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MemoryMeasureUnit;
+import io.novaordis.utilities.NotYetImplementedException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -310,10 +312,65 @@ public class PropertyFactoryTest {
     public void createInstance_Map_TypeMismatch() throws Exception {
 
         try {
+
             PropertyFactory.createInstance("test", Map.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
+        }
+    }
+
+    @Test
+    public void createInstance_UnknownType_NullValue_NullMeasureUnit() throws Exception {
+
+        Property p = PropertyFactory.createInstance("test", null, null, null);
+
+        assertTrue(p instanceof UndefinedTypeProperty);
+
+        UndefinedTypeProperty utp = (UndefinedTypeProperty)p;
+
+        assertEquals("test", utp.getName());
+        assertNull(utp.getType());
+        assertNull(utp.getValue());
+        assertNull(utp.getMeasureUnit());
+        assertNull(utp.getFormat());
+    }
+
+    @Test
+    public void createInstance_UnknownType_NullValue_NonNullMeasureUnit() throws Exception {
+
+        try {
+
+            // this is an invalid mode of invoking the method
+            PropertyFactory.createInstance("test", null, null, MemoryMeasureUnit.BYTE);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains(
+                    "cannot create an " + UndefinedTypeProperty.class.getSimpleName() +
+                            " instance when the measure unit is specified"));
+        }
+    }
+
+    @Test
+    public void createInstance_TypeHeuristics() throws Exception {
+
+        //
+        // TODO not implemented for the time being. When we start implementing it, this test will fail so we'll
+        // remember to add tests here
+        //
+
+        try {
+
+            PropertyFactory.createInstance("test", null, 1, null);
+            fail("should have thrown exception");
+        }
+        catch(NotYetImplementedException e) {
+
+            String msg = e.getMessage();
+            log.info(msg);
         }
     }
 

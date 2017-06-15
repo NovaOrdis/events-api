@@ -16,11 +16,10 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.event.IntegerProperty;
-import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.event.StringProperty;
+import io.novaordis.events.api.event.UndefinedTypeProperty;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.jboss.cli.JBossCliException;
@@ -168,7 +167,7 @@ public class JBossController extends MetricSourceBase {
     }
 
     @Override
-    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         if (!isStarted()) {
 
@@ -188,11 +187,11 @@ public class JBossController extends MetricSourceBase {
 
             String path = jbmd.getPath();
             String attributeName = jbmd.getAttributeName();
-            Object attributeValue = null;
+            Object value = null;
 
             try {
 
-                attributeValue = controllerClient.getAttributeValue(path, attributeName);
+                value = controllerClient.getAttributeValue(path, attributeName);
             }
             catch (JBossCliException e) {
 
@@ -204,32 +203,7 @@ public class JBossController extends MetricSourceBase {
                 properties = new ArrayList<>();
             }
 
-            if (attributeValue == null) {
-
-                properties.add(null);
-                continue;
-            }
-
-            String name = jbmd.getId();
-
-            Property p;
-
-            if (attributeValue instanceof String) {
-
-                p = new StringProperty(name, (String)attributeValue);
-            }
-            else if (attributeValue instanceof Integer) {
-
-                p = new IntegerProperty(name, (Integer)attributeValue);
-            }
-            else if (attributeValue instanceof Long) {
-
-                p = new LongProperty(name, (Long)attributeValue);
-            }
-            else {
-                throw new RuntimeException(attributeValue.getClass() + " SUPPORT NOT YET IMPLEMENTED");
-            }
-
+            Property p = md.buildProperty(value);
             properties.add(p);
         }
 

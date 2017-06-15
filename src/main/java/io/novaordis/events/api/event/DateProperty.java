@@ -24,7 +24,7 @@ import java.util.Date;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
  */
-public class DateProperty extends PropertyBase implements Property {
+public class DateProperty extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

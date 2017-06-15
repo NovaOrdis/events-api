@@ -20,7 +20,7 @@ package io.novaordis.events.api.event;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
  */
-public class FloatProperty extends PropertyBase implements Property {
+public class FloatProperty extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
