@@ -26,7 +26,7 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * JBoss controller metrics definition parser.
+ * JBoss DMR (Dynamic Model Representation) metrics definition parser.
  *
  * It parses the string representation of a metric definition including optionally the metric source:
  *
@@ -35,11 +35,11 @@ import java.util.regex.Pattern;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17
  */
-public class JBossCliMetricDefinitionParser {
+public class JBossDmrMetricDefinitionParser {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    private static final Logger log = LoggerFactory.getLogger(JBossCliMetricDefinitionParser.class);
+    private static final Logger log = LoggerFactory.getLogger(JBossDmrMetricDefinitionParser.class);
 
     public static final String PROTOCOL = "jbosscli";
     public static final String PROTOCOL_SEPARATOR = "://";
@@ -86,7 +86,7 @@ public class JBossCliMetricDefinitionParser {
                 if (!PROTOCOL.equals(protocol)) {
 
                     log.debug
-                            (JBossCliMetricDefinitionParser.class.getSimpleName() +
+                            (JBossDmrMetricDefinitionParser.class.getSimpleName() +
                                     " won't parse " + protocol + PROTOCOL_SEPARATOR + " metric definitions");
 
                     return null;
@@ -195,7 +195,7 @@ public class JBossCliMetricDefinitionParser {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    private JBossCliMetricDefinitionParser() {
+    private JBossDmrMetricDefinitionParser() {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -49,7 +49,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -58,7 +58,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -67,7 +67,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -87,7 +87,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -108,7 +108,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -129,7 +129,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -149,7 +149,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "something://admin@1.2.3.4:8888/test=test/test";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -159,7 +159,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "admin@1.2.3.4:8888";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -171,7 +171,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         try {
 
-            JBossCliMetricDefinitionParser.parse(s);
+            JBossDmrMetricDefinitionParser.parse(s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -186,7 +186,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "admin:adminpassword@1.2.3.4:blah/test=test/test";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -198,7 +198,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         try {
 
-            JBossCliMetricDefinitionParser.parse(s);
+            JBossDmrMetricDefinitionParser.parse(s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -218,7 +218,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://some-host:1000/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -238,7 +238,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://some-user:some-password@some-host:1000/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 

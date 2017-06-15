@@ -101,7 +101,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli:///a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -127,7 +127,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://localhost/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -153,7 +153,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://bluehost/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -179,7 +179,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://localhost:9999/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -205,7 +205,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://blue:9999/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -231,7 +231,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         try {
 
-            JBossCliMetricDefinitionParser.parse("jbosscli:///this-should-fail");
+            JBossDmrMetricDefinitionParser.parse("jbosscli:///this-should-fail");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {

@@ -16,7 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinitionParser;
+import io.novaordis.events.api.metric.jboss.JBossDmrMetricDefinitionParser;
 import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionParser;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionParser;
 import io.novaordis.utilities.address.AddressException;
@@ -74,11 +74,11 @@ public class MetricDefinitionParser {
         // ... then assume we're a JBoss CLI metric ...
         //
 
-        d = JBossCliMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
+        d = JBossDmrMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 
-            log.debug("JBossCliMetricDefinitionParser successfully parsed " + d);
+            log.debug("JBossDmrMetricDefinitionParser successfully parsed " + d);
             return d;
         }
 
