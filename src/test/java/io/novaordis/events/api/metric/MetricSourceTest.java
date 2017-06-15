@@ -159,6 +159,11 @@ public abstract class MetricSourceTest {
         }
     }
 
+    /**
+     * We test the fact that at this level (collect()), we don't care anymore about the metric definition source,
+     * we trust it was checked by the upper layer (collectMetrics()), and we simply ignore it.
+     * @throws Exception
+     */
     @Test
     public void collect_SourceAddressNotRelevant() throws Exception {
 
@@ -176,6 +181,29 @@ public abstract class MetricSourceTest {
         // we don't care about result at this point, it is important that the method does not fail
         //
         assertNotNull(result);
+    }
+
+    @Test
+    public void collect_InvalidMetricType() throws Exception {
+
+        MetricSourceBase source = (MetricSourceBase)getMetricSourceToTest();
+
+        //
+        // this metric should be rejected as it is not known by any of the actual implementations
+        //
+        MetricDefinition md = new MockMetricDefinition(new AddressImpl("test"));
+
+        source.start();
+
+        try {
+
+            source.collect(Collections.singletonList(md));
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("does not handle"));
+        }
     }
 
     // lifecycle -------------------------------------------------------------------------------------------------------

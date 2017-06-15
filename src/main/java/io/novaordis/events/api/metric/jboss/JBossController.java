@@ -66,11 +66,12 @@ public class JBossController extends MetricSourceBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * Uses the default controller address ("localhost:9999")
+     * Uses the default controller address ("localhost:9999"), as exposed by JBossControllerAddress constants.
      */
     public JBossController() throws AddressException {
 
-        this("jbosscli://localhost:9999");
+        this(JBossControllerAddress.PROTOCOL + "://" +
+                JBossControllerAddress.DEFAULT_HOST + ":" + JBossControllerAddress.DEFAULT_PORT);
     }
 
     public JBossController(String address) throws AddressException {
@@ -78,6 +79,10 @@ public class JBossController extends MetricSourceBase {
         this(new JBossControllerAddress(address));
     }
 
+    /**
+     * @param model the constructor will use the instance as a model and it will copy it locally, it will not use
+     *              the reference to point to the given instance.
+     */
     public JBossController(JBossControllerAddress model) throws AddressException {
 
         super(model);
@@ -105,6 +110,8 @@ public class JBossController extends MetricSourceBase {
         //
 
         this.clientFactory = new JBossControllerClientFactoryImpl();
+
+        log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
@@ -131,6 +138,8 @@ public class JBossController extends MetricSourceBase {
             }
 
             controllerClient.connect();
+
+            log.debug(this + " started");
         }
         catch(Exception e) {
 
@@ -155,11 +164,8 @@ public class JBossController extends MetricSourceBase {
     @Override
     public JBossControllerAddress getAddress() {
 
-        Address a = super.getAddress();
-        return (JBossControllerAddress)a;
+        return (JBossControllerAddress)super.getAddress();
     }
-
-    // MetricSourceBase overrides --------------------------------------------------------------------------------------
 
     @Override
     public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
@@ -178,7 +184,7 @@ public class JBossController extends MetricSourceBase {
                 throw new IllegalArgumentException(this + " does not handle non-jboss CLI metric " + md);
             }
 
-            JBossDmrMetricDefinitionImpl jbmd = (JBossDmrMetricDefinitionImpl)md;
+            JBossDmrMetricDefinition jbmd = (JBossDmrMetricDefinition)md;
 
             String path = jbmd.getPath();
             String attributeName = jbmd.getAttributeName();
