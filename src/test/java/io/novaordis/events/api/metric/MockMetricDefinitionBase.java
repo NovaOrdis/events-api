@@ -16,7 +16,6 @@
 
 package io.novaordis.events.api.metric;
 
-
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.utilities.address.Address;
 
@@ -24,7 +23,7 @@ import io.novaordis.utilities.address.Address;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/4/16
  */
-abstract class MockMetricDefinitionBase extends MetricDefinitionBase implements MetricDefinition {
+abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,27 +37,31 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase implements 
      * @param metricSourceAddress must always have a non-null source.
      */
     protected MockMetricDefinitionBase(Address metricSourceAddress) {
+
         super(metricSourceAddress);
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
+    public Class getType() {
+
+        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public MeasureUnit getBaseUnit() {
+
         throw new RuntimeException("getBaseUnit() NOT YET IMPLEMENTED");
     }
 
     @Override
     public String getDescription() {
+
         throw new RuntimeException("getDescription() NOT YET IMPLEMENTED");
     }
-
-    @Override
-    public Class getType() {
-        throw new RuntimeException("getType() NOT YET IMPLEMENTED");
-    }
-
-    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

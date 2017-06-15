@@ -20,9 +20,12 @@ package io.novaordis.events.api.metric;
 import io.novaordis.utilities.address.Address;
 
 /**
+ * Invoked via reflection.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
+@SuppressWarnings("unused")
 public class MockMetricDefinition2 extends MockMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
@@ -34,12 +37,14 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
+     * Invoked via reflection.
+     *
      * @param metricSourceAddress must always have a non-null source.
      */
+    @SuppressWarnings("unused")
     protected MockMetricDefinition2(Address metricSourceAddress) {
         super(metricSourceAddress);
     }
-
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
@@ -50,6 +55,7 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
 
     @Override
     public String getSimpleLabel() {
+
         throw new RuntimeException("getSimpleLabel() NOT YET IMPLEMENTED");
     }
 
