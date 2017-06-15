@@ -28,7 +28,7 @@ import io.novaordis.utilities.address.Address;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class JBossCliMetricDefinition extends MetricDefinitionBase {
+public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implements JBossDmrMetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
      *
      * @throws IllegalArgumentException
      */
-    public JBossCliMetricDefinition(Address metricSourceAddress, CliPath path, CliAttribute attribute)
+    public JBossDmrMetricDefinitionImpl(Address metricSourceAddress, CliPath path, CliAttribute attribute)
             throws MetricDefinitionException {
 
         super(metricSourceAddress);
@@ -57,6 +57,31 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
         this.path = path;
         this.attribute = attribute;
     }
+
+    // JBossDmrMetricDefinition implementation -------------------------------------------------------------------------
+
+    @Override
+    public String getPath() {
+
+        if (path == null) {
+
+            return null;
+        }
+
+        return path.getPath();
+    }
+
+    @Override
+    public String getAttributeName() {
+
+        if (attribute == null) {
+
+            return null;
+        }
+
+        return attribute.getName();
+    }
+
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------
 
@@ -113,26 +138,6 @@ public class JBossCliMetricDefinition extends MetricDefinitionBase {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public String getPath() {
-
-        if (path == null) {
-
-            return null;
-        }
-
-        return path.getPath();
-    }
-
-    public String getAttributeName() {
-
-        if (attribute == null) {
-
-            return null;
-        }
-
-        return attribute.getName();
-    }
 
     @Override
     public String toString() {

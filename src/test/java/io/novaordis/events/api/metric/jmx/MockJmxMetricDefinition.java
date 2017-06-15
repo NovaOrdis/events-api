@@ -16,13 +16,14 @@
 
 package io.novaordis.events.api.metric.jmx;
 
-import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricDefinitionException;
+import io.novaordis.utilities.address.Address;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public abstract class JmxMetricDefinitionTest extends MetricDefinitionTest {
+public class MockJmxMetricDefinition extends JmxMetricDefinitionImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,9 +33,19 @@ public abstract class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    /**
+     * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
+     *                                   must be human-readable, as it will most likely end up in error messages.
+     * @throws IllegalArgumentException
+     */
+    public MockJmxMetricDefinition(Address metricSourceAddress, String objectNameDomain,
+                                   String objectNameKeyValuePairs, String attributeName)
+            throws MetricDefinitionException {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+        super(metricSourceAddress, objectNameDomain, objectNameKeyValuePairs, attributeName);
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

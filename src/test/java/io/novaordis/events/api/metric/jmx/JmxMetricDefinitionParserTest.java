@@ -52,7 +52,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -61,7 +61,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -70,7 +70,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "something://admin:passwd@1.2.3.4:8888/test:service=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -96,7 +96,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:passwd@1.2.3.4:8888/something";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -126,7 +126,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:blah/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -152,7 +152,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -181,7 +181,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "1.2.3.4:8888/test.domain:999999/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -191,7 +191,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -212,7 +212,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -233,7 +233,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -254,7 +254,7 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinition d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 

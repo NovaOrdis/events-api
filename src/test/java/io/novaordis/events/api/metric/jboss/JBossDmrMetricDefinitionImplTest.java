@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
 
@@ -30,7 +29,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
+public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -48,7 +47,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void getDefinition() throws Exception {
 
-        JBossCliMetricDefinition d = getMetricDefinitionToTest();
+        JBossDmrMetricDefinitionImpl d = getMetricDefinitionToTest();
         assertEquals("/test=test/test", d.getId());
     }
 
@@ -59,7 +58,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         try {
 
-            new JBossCliMetricDefinition(null, null, null);
+            new JBossDmrMetricDefinitionImpl(null, null, null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -76,7 +75,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossControllerAddress a = new JBossController().getAddress();
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
                 a, new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         String definition = d.getId();
@@ -88,7 +87,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         JBossControllerAddress a = new JBossControllerAddress("admin:adminp@1.2.3.4:8888");
 
-        JBossCliMetricDefinition d = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
                 a, new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         String definition = d.getId();
@@ -102,7 +101,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli:///a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -128,7 +127,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://localhost/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -154,7 +153,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://bluehost/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -180,7 +179,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://localhost:9999/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -206,7 +205,7 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
 
         String s = "jbosscli://blue:9999/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -247,10 +246,10 @@ public class JBossCliMetricDefinitionTest extends MetricDefinitionTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected JBossCliMetricDefinition getMetricDefinitionToTest() throws Exception {
+    protected JBossDmrMetricDefinitionImpl getMetricDefinitionToTest() throws Exception {
 
         JBossControllerAddress address = new JBossControllerAddress();
-        return new JBossCliMetricDefinition(address, new CliPath("test=test"), new CliAttribute("test") );
+        return new JBossDmrMetricDefinitionImpl(address, new CliPath("test=test"), new CliAttribute("test") );
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

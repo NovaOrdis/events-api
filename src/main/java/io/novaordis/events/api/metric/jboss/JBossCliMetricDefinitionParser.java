@@ -53,7 +53,7 @@ public class JBossCliMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JBossCliMetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static JBossDmrMetricDefinitionImpl parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         String mds;
@@ -188,7 +188,7 @@ public class JBossCliMetricDefinitionParser {
         // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
 
-        return new JBossCliMetricDefinition(controllerAddress, path, attribute);
+        return new JBossDmrMetricDefinitionImpl(controllerAddress, path, attribute);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

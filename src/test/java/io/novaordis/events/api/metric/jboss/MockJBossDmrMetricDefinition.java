@@ -14,15 +14,16 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.jmx;
+package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.metric.MetricDefinitionTest;
+import io.novaordis.events.api.metric.MetricDefinitionException;
+import io.novaordis.utilities.address.Address;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/15/17
+ * @since 6/14/17
  */
-public abstract class JmxMetricDefinitionTest extends MetricDefinitionTest {
+public class MockJBossDmrMetricDefinition extends JBossDmrMetricDefinitionImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,9 +33,19 @@ public abstract class JmxMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    /**
+     * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
+     *                                   must be human-readable, as it will most likely end up in error messages.
+     * @throws IllegalArgumentException
+     */
+    public MockJBossDmrMetricDefinition(Address metricSourceAddress, CliPath path, CliAttribute attribute)
+            throws MetricDefinitionException {
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+        super(metricSourceAddress, path, attribute);
+    }
+
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

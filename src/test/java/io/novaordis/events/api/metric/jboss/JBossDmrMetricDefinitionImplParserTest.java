@@ -30,7 +30,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/4/17
  */
-public class JBossCliMetricDefinitionParserTest {
+public class JBossDmrMetricDefinitionImplParserTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -58,7 +58,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
         assertNull(d);
     }
 
@@ -67,7 +67,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -87,7 +87,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -108,7 +108,7 @@ public class JBossCliMetricDefinitionParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -129,7 +129,7 @@ public class JBossCliMetricDefinitionParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -149,7 +149,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "something://admin@1.2.3.4:8888/test=test/test";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -159,7 +159,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "admin@1.2.3.4:8888";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -186,7 +186,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "admin:adminpassword@1.2.3.4:blah/test=test/test";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNull(d);
     }
@@ -218,7 +218,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://some-host:1000/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 
@@ -238,7 +238,7 @@ public class JBossCliMetricDefinitionParserTest {
 
         String s = "jbosscli://some-user:some-password@some-host:1000/a=b/c=d/f";
 
-        JBossCliMetricDefinition d = JBossCliMetricDefinitionParser.parse(s);
+        JBossDmrMetricDefinitionImpl d = JBossCliMetricDefinitionParser.parse(s);
 
         assertNotNull(d);
 

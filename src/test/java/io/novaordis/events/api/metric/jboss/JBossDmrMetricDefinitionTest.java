@@ -16,14 +16,13 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import io.novaordis.events.api.metric.MetricDefinitionException;
-import io.novaordis.utilities.address.Address;
+import io.novaordis.events.api.metric.MetricDefinitionTest;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/14/17
+ * @since 6/15/17
  */
-public class MockJBossCliMetricDefinition extends JBossCliMetricDefinition {
+public abstract class JBossDmrMetricDefinitionTest extends MetricDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,19 +32,9 @@ public class MockJBossCliMetricDefinition extends JBossCliMetricDefinition {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
-     *                                   must be human-readable, as it will most likely end up in error messages.
-     * @throws IllegalArgumentException
-     */
-    public MockJBossCliMetricDefinition(Address metricSourceAddress, CliPath path, CliAttribute attribute)
-            throws MetricDefinitionException {
-
-        super(metricSourceAddress, path, attribute);
-    }
-
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

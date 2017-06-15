@@ -49,7 +49,7 @@ public class JmxMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JmxMetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static JmxMetricDefinitionImpl parse(String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         boolean thisIsAJmxMetric = false;
@@ -150,11 +150,11 @@ public class JmxMetricDefinitionParser {
         String attributeName = restOfObjectNameAndAttribute.substring(i + 1);
         String keyValuePairs = restOfObjectNameAndAttribute.substring(0, i);
 
-        JmxMetricDefinition d;
+        JmxMetricDefinitionImpl d;
 
         try {
 
-            d = new JmxMetricDefinition(jmxBusAddress, domainName, keyValuePairs, attributeName);
+            d = new JmxMetricDefinitionImpl(jmxBusAddress, domainName, keyValuePairs, attributeName);
         }
         catch(MetricDefinitionException e) {
 

@@ -117,7 +117,7 @@ public class JBossControllerTest extends MetricSourceTest {
 
         MockMetricDefinition mmd = new MockMetricDefinition(jbossSource.getAddress());
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         MockMetricDefinition mmd2 = new MockMetricDefinition(jbossSource.getAddress());
@@ -159,10 +159,10 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-1"));
 
-        JBossCliMetricDefinition jbmd2 = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl jbmd2 = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-2"));
 
         List<MetricDefinition> definitions = Arrays.asList(jbmd, jbmd2);
@@ -198,7 +198,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(client);
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         List<MetricDefinition> definitions = Collections.singletonList(jbmd);
@@ -228,7 +228,7 @@ public class JBossControllerTest extends MetricSourceTest {
         assertNotNull(client2);
         assertFalse(client2.isConnected());
 
-        JBossCliMetricDefinition jbmd = new JBossCliMetricDefinition(
+        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
 
         // this should trigger initialization, even if no properties are read
@@ -261,7 +261,7 @@ public class JBossControllerTest extends MetricSourceTest {
         JBossController jbossSource = getMetricSourceToTest();
         jbossSource.setControllerClient(mc);
 
-        List<MetricDefinition> md = Collections.singletonList(new JBossCliMetricDefinition(
+        List<MetricDefinition> md = Collections.singletonList(new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute")));
 
         // this should trigger initialization, even if no properties are read

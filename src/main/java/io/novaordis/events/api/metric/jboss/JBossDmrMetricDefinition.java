@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric.jmx;
+package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.metric.MetricDefinition;
 
@@ -22,7 +22,7 @@ import io.novaordis.events.api.metric.MetricDefinition;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public interface JmxMetricDefinition extends MetricDefinition {
+public interface JBossDmrMetricDefinition extends MetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -30,11 +30,8 @@ public interface JmxMetricDefinition extends MetricDefinition {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    String getDomainName();
-
-    String getKeyValuePairs();
+    String getPath();
 
     String getAttributeName();
-
 
 }

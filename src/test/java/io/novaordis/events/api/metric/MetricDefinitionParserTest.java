@@ -16,8 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.metric.jboss.JBossCliMetricDefinition;
-import io.novaordis.events.api.metric.jmx.JmxMetricDefinition;
+import io.novaordis.events.api.metric.jboss.JBossDmrMetricDefinitionImpl;
+import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionImpl;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
@@ -89,7 +89,7 @@ public class MetricDefinitionParserTest {
 
         MetricDefinition d = MetricDefinitionParser.parse(mds);
 
-        JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
+        JBossDmrMetricDefinitionImpl jmd = (JBossDmrMetricDefinitionImpl)d;
 
         JBossControllerAddress s = jmd.getMetricSourceAddress();
         assertNotNull(s);
@@ -106,7 +106,7 @@ public class MetricDefinitionParserTest {
 
         MetricDefinition d = MetricDefinitionParser.parse(mds);
 
-        JBossCliMetricDefinition jmd = (JBossCliMetricDefinition)d;
+        JBossDmrMetricDefinitionImpl jmd = (JBossDmrMetricDefinitionImpl)d;
 
         JBossControllerAddress s = jmd.getMetricSourceAddress();
         assertNotNull(s);
@@ -123,7 +123,7 @@ public class MetricDefinitionParserTest {
 
         MetricDefinition d = MetricDefinitionParser.parse(s);
 
-        JmxMetricDefinition jmxm = (JmxMetricDefinition)d;
+        JmxMetricDefinitionImpl jmxm = (JmxMetricDefinitionImpl)d;
 
         Address a = jmxm.getMetricSourceAddress();
         assertNotNull(a);
