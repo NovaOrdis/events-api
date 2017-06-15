@@ -83,6 +83,7 @@ public class PropertyFactory {
         else if(String.class.equals(type)) {
 
             if (value != null && !(value instanceof String)) {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
@@ -94,22 +95,28 @@ public class PropertyFactory {
             Integer i;
 
             if (value == null || value instanceof Integer) {
+
                 i = (Integer)value;
             }
             else if (value instanceof String) {
+
                 try {
+
                     i = Integer.parseInt((String) value);
                 }
                 catch(Exception e) {
+
                     throw new IllegalArgumentException("cannot convert \"" + value + "\" to an integer");
                 }
             }
             else {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
 
             if (conversionFactor != null && i != null) {
+
                 i = (int)(i * conversionFactor);
             }
 
@@ -120,22 +127,28 @@ public class PropertyFactory {
             Long l;
 
             if (value == null || value instanceof Long) {
+
                 l = (Long)value;
             }
             else if (value instanceof String) {
+
                 try {
+
                     l = Long.parseLong((String) value);
                 }
                 catch(Exception e) {
+
                     throw new IllegalArgumentException("cannot convert \"" + value + "\" to a long");
                 }
             }
             else {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
 
             if (conversionFactor != null && l != null) {
+
                 l = (long)(l * conversionFactor);
             }
 
@@ -146,22 +159,28 @@ public class PropertyFactory {
             Double d;
 
             if (value == null || value instanceof Double) {
+
                 d = (Double)value;
             }
             else if (value instanceof String) {
+
                 try {
+
                     d = Double.parseDouble((String) value);
                 }
                 catch(Exception e) {
+
                     throw new IllegalArgumentException("cannot convert \"" + value + "\" to a double");
                 }
             }
             else {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
 
             if (conversionFactor != null && d != null) {
+
                 d = d * conversionFactor;
             }
 
@@ -172,22 +191,28 @@ public class PropertyFactory {
             Float f;
 
             if (value == null || value instanceof Float) {
+
                 f = (Float)value;
             }
             else if (value instanceof String) {
+
                 try {
+
                     f = Float.parseFloat((String) value);
                 }
                 catch(Exception e) {
+
                     throw new IllegalArgumentException("cannot convert \"" + value + "\" to a float");
                 }
             }
             else {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
 
             if (conversionFactor != null && f != null) {
+
                 f = (float)(f * conversionFactor);
             }
 
@@ -196,6 +221,7 @@ public class PropertyFactory {
         else if(Map.class.equals(type)) {
 
             if (value != null && !(value instanceof Map)) {
+
                 throw new IllegalArgumentException(
                         "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
             }
@@ -204,6 +230,7 @@ public class PropertyFactory {
             result = new MapProperty(name, (Map)value);
         }
         else {
+
             throw new RuntimeException("createInstance() for " + type + " NOT YET IMPLEMENTED");
         }
 
@@ -227,8 +254,27 @@ public class PropertyFactory {
     static Property createTypeHeuristicsInstance(
             String name, Object value, Double conversionFactor, MeasureUnit measureUnit) {
 
-        throw new NotYetImplementedException(
-                "createTypeHeuristicsInstance(" + name + ", " + value + ", " + conversionFactor + ", " + measureUnit);
+        if (value == null) {
+
+            throw new IllegalArgumentException("null value, cannot infer type");
+        }
+
+        if (value instanceof Integer) {
+
+            return new IntegerProperty(name, (Integer)value);
+        }
+        else if (value instanceof String) {
+
+            //
+            // TODO: when we attempt to convert to more specialized types?
+            //
+
+            return new StringProperty(name, (String)value);
+        }
+        else {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: support for type inference from " + value);
+        }
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

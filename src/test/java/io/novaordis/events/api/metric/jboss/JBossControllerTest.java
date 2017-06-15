@@ -142,22 +142,28 @@ public class JBossControllerTest extends MetricSourceTest {
     @Test
     public void collectMetrics_SomeOfTheDefinitionsDoNotExistOnController() throws Exception {
 
-        fail("RETURN HERE");
-
         //
-        // configure the internal client as a mock client and install state
+        // install the client factory that produces a mock client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
-        JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
-        ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute-1", 10);
+        MockJBossControllerClientFactory mcf = new MockJBossControllerClientFactory();
+
+        JBossController jbossSource = getMetricSourceToTest();
+        jbossSource.setJBossControllerClientFactory(mcf);
+
+        //
+        // install test state into the mock client
+        //
+
+        jbossSource.start();
+
+        MockJBossControllerClient mc = (MockJBossControllerClient)jbossSource.getControllerClient();
+
+        mc.setAttributeValue("/test-path", "test-attribute-1", 10);
 
         //
         // test-attribute-2 does not exist on the controller
         //
-
-        JBossController jbossSource = getMetricSourceToTest();
-        jbossSource.setControllerClient(client);
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
                 jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-1"));

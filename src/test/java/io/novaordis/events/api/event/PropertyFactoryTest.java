@@ -17,7 +17,6 @@
 package io.novaordis.events.api.event;
 
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.utilities.NotYetImplementedException;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -355,23 +354,65 @@ public class PropertyFactoryTest {
     }
 
     @Test
-    public void createInstance_TypeHeuristics() throws Exception {
+    public void createInstance_TypeHeuristics_Integer() throws Exception {
 
-        //
-        // TODO not implemented for the time being. When we start implementing it, this test will fail so we'll
-        // remember to add tests here
-        //
+        IntegerProperty p = (IntegerProperty)PropertyFactory.createInstance("test", null, 1, null);
+        assertEquals("test", p.getName());
+        assertEquals(1, p.getInteger().intValue());
+    }
+
+    //
+    // more heuristic typing testing under "createTypeHeuristicsInstance()"
+    //
+
+    // createTypeHeuristicsInstance() ----------------------------------------------------------------------------------
+
+    @Test
+    public void createTypeHeuristicsInstance_Null() throws Exception {
 
         try {
 
-            PropertyFactory.createInstance("test", null, 1, null);
+            PropertyFactory.createTypeHeuristicsInstance("test", null, null, null);
             fail("should have thrown exception");
         }
-        catch(NotYetImplementedException e) {
+        catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
-            log.info(msg);
+            assertTrue(msg.contains("null value"));
+            assertTrue(msg.contains("cannot infer type"));
         }
+    }
+
+    @Test
+    public void createTypeHeuristicsInstance_Integer() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", 7, null, null);
+
+        assertNotNull(p);
+
+        IntegerProperty ip = (IntegerProperty)p;
+
+        assertEquals("test", ip.getName());
+        assertEquals(7, ip.getValue());
+        assertEquals(7, ip.getInteger().intValue());
+        assertEquals(Integer.class, ip.getType());
+        assertNull(ip.getMeasureUnit());
+    }
+
+    @Test
+    public void createTypeHeuristicsInstance_String() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", "something", null, null);
+
+        assertNotNull(p);
+
+        StringProperty p2 = (StringProperty)p;
+
+        assertEquals("test", p2.getName());
+        assertEquals("something", p2.getValue());
+        assertEquals("something", p2.getString());
+        assertEquals(String.class, p2.getType());
+        assertNull(p2.getMeasureUnit());
     }
 
     // conversions -----------------------------------------------------------------------------------------------------
