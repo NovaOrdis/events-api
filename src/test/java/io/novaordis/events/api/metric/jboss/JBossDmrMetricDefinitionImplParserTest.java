@@ -222,11 +222,11 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         assertNotNull(d);
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
         assertEquals("f", d.getAttributeName());
 
-        CliPath pathInstance = d.getPathInstance();
+        DmrPath pathInstance = d.getPathInstance();
         assertEquals("/a=b/c=d", pathInstance.getPath());
 
         String path = d.getPath();
@@ -242,11 +242,11 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         assertNotNull(d);
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
         assertEquals("f", d.getAttributeName());
 
-        CliPath pathInstance = d.getPathInstance();
+        DmrPath pathInstance = d.getPathInstance();
         assertEquals("/a=b/c=d", pathInstance.getPath());
 
         String path = d.getPath();

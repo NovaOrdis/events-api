@@ -38,8 +38,8 @@ public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implement
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private CliPath path;
-    private CliAttribute attribute;
+    private DmrPath path;
+    private DmrAttribute attribute;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -49,7 +49,7 @@ public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implement
      *
      * @throws IllegalArgumentException
      */
-    public JBossDmrMetricDefinitionImpl(Address metricSourceAddress, CliPath path, CliAttribute attribute)
+    public JBossDmrMetricDefinitionImpl(Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
             throws MetricDefinitionException {
 
         super(metricSourceAddress);
@@ -142,17 +142,16 @@ public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implement
     @Override
     public String toString() {
 
-        //return PREFIX + source + ":" + path + "/" + attribute;
-        return "?";
+        return path + "/" + attribute;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    CliAttribute getAttribute() {
+    DmrAttribute getAttribute() {
         return attribute;
     }
 
-    CliPath getPathInstance() {
+    DmrPath getPathInstance() {
         return path;
     }
 

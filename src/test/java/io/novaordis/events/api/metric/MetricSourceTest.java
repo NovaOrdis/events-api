@@ -209,15 +209,55 @@ public abstract class MetricSourceTest {
     // lifecycle -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void start() throws Exception {
+    public void lifecycle() throws Exception {
 
-        fail("RETURN HERE");
-    }
+        MetricSource ms = getMetricSourceToTest();
 
-    @Test
-    public void stop() throws Exception {
+        assertFalse(ms.isStarted());
 
-        fail("RETURN HERE");
+        ms.start();
+
+        assertTrue(ms.isStarted());
+
+        //
+        // idempotence
+        //
+
+        ms.start();
+
+        assertTrue(ms.isStarted());
+
+        //
+        // collect a random metric that surely does not exist - the corresponding property with an empty value
+        // must return, though
+        //
+
+        MetricDefinition md = getCorrespondingMockMetricDefinition(ms.getAddress());
+
+        List<Property> properties = ms.collectMetrics(Collections.singletonList(md));
+
+        assertEquals(1, properties.size());
+
+        Property p = properties.get(0);
+
+        assertEquals(md.getId(), p.getName());
+        assertNull(p.getValue());
+
+        //
+        // stop
+        //
+
+        ms.stop();
+
+        assertFalse(ms.isStarted());
+
+        //
+        // idempotence
+        //
+
+        ms.stop();
+
+        assertFalse(ms.isStarted());
     }
 
     // equals() and related --------------------------------------------------------------------------------------------

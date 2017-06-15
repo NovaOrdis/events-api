@@ -47,7 +47,7 @@ public class UndefinedTypeProperty extends PropertyBase {
     @Override
     public Property fromString(String s) throws IllegalArgumentException {
 
-        throw new RuntimeException("fromString() NOT YET IMPLEMENTED");
+        throw new RuntimeException("NOT YET IMPLEMENTED: fromString()");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

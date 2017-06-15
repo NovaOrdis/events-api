@@ -67,6 +67,7 @@ public abstract class MetricSourceBase implements MetricSource {
      *
      * @throws MetricSourceException if a metric definition is associated with a different metric source than
      *      this one, if the source is not started and cannot be started.
+     *
      * @throws MetricException by other underlying conditions.
      */
     @Override
@@ -80,7 +81,6 @@ public abstract class MetricSourceBase implements MetricSource {
         }
 
         return collect(metricDefinitions);
-
     }
 
     @Override
@@ -158,6 +158,7 @@ public abstract class MetricSourceBase implements MetricSource {
      * @see MetricSource#collectMetrics(List)
      *
      * @exception IllegalStateException if the source is not started. The source must be started by the calling layer.
+     * @exception IllegalArgumentException if the metric is not of the correct type.
      * @throws MetricException by other underlying conditions.
      */
     protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricException;

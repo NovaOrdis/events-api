@@ -16,15 +16,17 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertEquals;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 /**
+ * A JBoss DMR (Dynamic Model Representation) path.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-public class CliPathTest {
+class DmrPath {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,29 +34,64 @@ public class CliPathTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private List<String> pathElements;
+
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public DmrPath() {
+
+        this(new String[0]);
+    }
+
+    public DmrPath(String... pes) {
+
+        this.pathElements = new ArrayList<>();
+
+        for(String pe: pes) {
+
+            addPathElement(pe);
+        }
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // constructors ----------------------------------------------------------------------------------------------------
+    /**
+     * A path element in the "a=b" format.
+     */
+    public void addPathElement(String pathElement) {
 
-    @Test
-    public void constructor() throws Exception {
+        //
+        // skip leading slash
+        //
 
-        CliPath p = new CliPath("/a=b");
-        assertEquals("/a=b", p.getPath());
+        if (pathElement.startsWith("/")) {
+
+            pathElement = pathElement.substring(1);
+        }
+
+        pathElements.add(pathElement);
     }
 
-    // addPathElement() ------------------------------------------------------------------------------------------------
+    public String getPath() {
 
-    @Test
-    public void addPathElement_LeadingSlash() {
+        String s = "/";
 
-        CliPath p = new CliPath();
+        for(Iterator<String> i = pathElements.iterator(); i.hasNext(); ) {
 
-        p.addPathElement("/a=b");
+            s += i.next();
 
-        assertEquals("/a=b", p.getPath());
+            if (i.hasNext()) {
+
+                s += "/";
+            }
+        }
+
+        return s;
+    }
+
+    @Override
+    public String toString() {
+        return getPath();
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -76,7 +76,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         JBossControllerAddress a = new JBossController().getAddress();
 
         JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
-                a, new CliPath("test-path"), new CliAttribute("test-attribute"));
+                a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -88,7 +88,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         JBossControllerAddress a = new JBossControllerAddress("admin:adminp@1.2.3.4:8888");
 
         JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
-                a, new CliPath("test-path"), new CliAttribute("test-attribute"));
+                a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -110,12 +110,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         assertEquals(JBossControllerAddress.DEFAULT_HOST, controllerAddress.getHost());
         assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
-        CliPath path = d.getPathInstance();
+        DmrPath path = d.getPathInstance();
 
         assertEquals("/a=b/c=d", path.getPath());
         assertEquals("/a=b/c=d", d.getPath());
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
         assertEquals("/a=b/c=d/f", d.getSimpleLabel());
@@ -136,12 +136,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         assertEquals("localhost", controllerAddress.getHost());
         assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
-        CliPath path = d.getPathInstance();
+        DmrPath path = d.getPathInstance();
 
         assertEquals("/a=b/c=d", path.getPath());
         assertEquals("/a=b/c=d", d.getPath());
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
         assertEquals("/a=b/c=d/f", d.getSimpleLabel());
@@ -162,12 +162,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         assertEquals("bluehost", controllerAddress.getHost());
         assertEquals(JBossControllerAddress.DEFAULT_PORT, controllerAddress.getPort().intValue());
 
-        CliPath path = d.getPathInstance();
+        DmrPath path = d.getPathInstance();
 
         assertEquals("/a=b/c=d", path.getPath());
         assertEquals("/a=b/c=d", d.getPath());
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
         assertEquals("/a=b/c=d/f", d.getSimpleLabel());
@@ -188,12 +188,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         assertEquals("localhost", controllerAddress.getHost());
         assertEquals(9999, controllerAddress.getPort().intValue());
 
-        CliPath path = d.getPathInstance();
+        DmrPath path = d.getPathInstance();
 
         assertEquals("/a=b/c=d", path.getPath());
         assertEquals("/a=b/c=d", d.getPath());
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
         assertEquals("/a=b/c=d/f", d.getSimpleLabel());
@@ -214,12 +214,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         assertEquals("blue", controllerAddress.getHost());
         assertEquals(9999, controllerAddress.getPort().intValue());
 
-        CliPath path = d.getPathInstance();
+        DmrPath path = d.getPathInstance();
 
         assertEquals("/a=b/c=d", path.getPath());
         assertEquals("/a=b/c=d", d.getPath());
 
-        CliAttribute attribute = d.getAttribute();
+        DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
         assertEquals("/a=b/c=d/f", d.getSimpleLabel());
@@ -249,7 +249,7 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
     protected JBossDmrMetricDefinitionImpl getMetricDefinitionToTest() throws Exception {
 
         JBossControllerAddress address = new JBossControllerAddress();
-        return new JBossDmrMetricDefinitionImpl(address, new CliPath("test=test"), new CliAttribute("test") );
+        return new JBossDmrMetricDefinitionImpl(address, new DmrPath("test=test"), new DmrAttribute("test") );
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

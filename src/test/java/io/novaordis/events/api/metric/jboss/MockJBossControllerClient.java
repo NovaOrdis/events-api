@@ -102,7 +102,15 @@ public class MockJBossControllerClient implements JBossControllerClient {
 
     @Override
     public void disconnect() {
-        throw new RuntimeException("disconnect() NOT YET IMPLEMENTED");
+
+        if (!connected) {
+
+            log.info(this + " already disconnected");
+            return;
+        }
+
+        log.info(this + " disconnected");
+        connected = false;
     }
 
     @Override

@@ -43,9 +43,7 @@ public class UndefinedTypePropertyTest extends PropertyTest {
     @Override
     protected Property getPropertyToTest(String name) {
 
-
-
-        throw new RuntimeException("getPropertyToTest() NOT YET IMPLEMENTED");
+        return new UndefinedTypeProperty(name);
     }
 
     @Override

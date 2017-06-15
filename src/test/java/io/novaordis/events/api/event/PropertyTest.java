@@ -42,6 +42,8 @@ public abstract class PropertyTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
     @Test
     public void name() throws Exception {
 
@@ -53,16 +55,19 @@ public abstract class PropertyTest {
     public void fromString() throws Exception {
 
         Property p = getPropertyToTest("test");
+
         Object value = getAppropriateValueForPropertyToTest();
 
-        String valueAsString;
+        String valueAsString = null;
 
         Format format = p.getFormat();
 
         if (format != null) {
+
             valueAsString = format.format(value);
         }
-        else {
+        else if (value != null) {
+
             valueAsString = value.toString();
         }
 

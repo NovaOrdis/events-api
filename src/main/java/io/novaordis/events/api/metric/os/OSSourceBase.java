@@ -96,7 +96,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
             if (!(d instanceof OSMetricDefinition)) {
 
-                throw new MetricSourceException(d + " is not an " + OSMetricDefinition.class.getSimpleName());
+                throw new IllegalArgumentException(
+                        this + " does not handle " + d + ", an " + OSMetricDefinition.class.getSimpleName() + " is expected");
             }
 
             OSMetricDefinition osmd = (OSMetricDefinition)d;

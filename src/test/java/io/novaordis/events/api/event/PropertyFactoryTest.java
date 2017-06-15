@@ -400,6 +400,22 @@ public class PropertyFactoryTest {
     }
 
     @Test
+    public void createTypeHeuristicsInstance_Long() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", 7L, null, null);
+
+        assertNotNull(p);
+
+        LongProperty ip = (LongProperty)p;
+
+        assertEquals("test", ip.getName());
+        assertEquals(7L, ip.getValue());
+        assertEquals(7L, ip.getLong().longValue());
+        assertEquals(Long.class, ip.getType());
+        assertNull(ip.getMeasureUnit());
+    }
+
+    @Test
     public void createTypeHeuristicsInstance_String() throws Exception {
 
         Property p = PropertyFactory.createTypeHeuristicsInstance("test", "something", null, null);

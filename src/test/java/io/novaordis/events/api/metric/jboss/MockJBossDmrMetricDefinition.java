@@ -38,7 +38,7 @@ public class MockJBossDmrMetricDefinition extends JBossDmrMetricDefinitionImpl {
      *                                   must be human-readable, as it will most likely end up in error messages.
      * @throws IllegalArgumentException
      */
-    public MockJBossDmrMetricDefinition(Address metricSourceAddress, CliPath path, CliAttribute attribute)
+    public MockJBossDmrMetricDefinition(Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
             throws MetricDefinitionException {
 
         super(metricSourceAddress, path, attribute);

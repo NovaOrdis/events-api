@@ -20,10 +20,12 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 
 /**
+ * A JBoss DMR (Dynamic Model Representation) attribute.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-class CliAttribute {
+class DmrAttribute {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,7 +37,7 @@ class CliAttribute {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CliAttribute(String literal) throws MetricDefinitionException {
+    public DmrAttribute(String literal) throws MetricDefinitionException {
 
         this.name = literal;
     }

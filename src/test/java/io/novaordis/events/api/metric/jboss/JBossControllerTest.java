@@ -35,7 +35,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -100,43 +99,48 @@ public class JBossControllerTest extends MetricSourceTest {
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
     @Test
-    public void collectMetrics_SomeOfTheDefinitionsAreNotJBossCliMetricDefinitions() throws Exception {
-
-        fail("RETURN HERE");
+    public void collectMetrics_SomeOfTheDefinitionsAreNotJBossDmrMetricDefinitions() throws Exception {
 
         //
-        // configure the internal client as a mock client and install state
+        // install the client factory that produces a mock client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
-        JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
-        ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", 7);
+        MockJBossControllerClientFactory mcf = new MockJBossControllerClientFactory();
 
         JBossController jbossSource = getMetricSourceToTest();
-        jbossSource.setControllerClient(client);
+        jbossSource.setJBossControllerClientFactory(mcf);
 
-        MockMetricDefinition mmd = new MockMetricDefinition(jbossSource.getAddress());
+        //
+        // install test state into the mock client
+        //
 
-        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
+        jbossSource.start();
+
+        MockJBossControllerClient mc = (MockJBossControllerClient)jbossSource.getControllerClient();
+
+        mc.setAttributeValue("/test-path", "test-attribute-1", 7);
+
+        JBossDmrMetricDefinitionImpl mmd = new JBossDmrMetricDefinitionImpl(
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+
+        //
+        // this metric is not a JBoss DMR metric
+        //
 
         MockMetricDefinition mmd2 = new MockMetricDefinition(jbossSource.getAddress());
 
-        List<MetricDefinition> definitions = Arrays.asList(mmd, jbmd, mmd2);
+        List<MetricDefinition> definitions = Arrays.asList(mmd, mmd2);
 
-        List<Property> properties = jbossSource.collectMetrics(definitions);
+        try {
 
-        assertEquals(3, properties.size());
+            jbossSource.collectMetrics(definitions);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
 
-        assertNull(properties.get(0));
-
-        IntegerProperty p = (IntegerProperty)properties.get(1);
-        String name = p.getName();
-        String expected = client.getHost() + ":" + client.getPort() + "/test-path/test-attribute";
-        assertEquals(expected, name);
-        assertEquals(7, p.getValue());
-
-        assertNull(properties.get(2));
+            String msg = e.getMessage();
+            assertTrue(msg.contains("non-JBoss DMR metric"));
+        }
     }
 
     @Test
@@ -166,10 +170,10 @@ public class JBossControllerTest extends MetricSourceTest {
         //
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-1"));
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-1"));
 
         JBossDmrMetricDefinitionImpl jbmd2 = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute-2"));
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-2"));
 
         List<MetricDefinition> definitions = Arrays.asList(jbmd, jbmd2);
 
@@ -178,108 +182,126 @@ public class JBossControllerTest extends MetricSourceTest {
         assertEquals(2, properties.size());
 
         IntegerProperty p = (IntegerProperty)properties.get(0);
+        assertEquals("/test-path/test-attribute-1", p.getName());
         assertEquals(10, p.getValue());
+        assertEquals(Integer.class, p.getType());
 
         Property p2 = properties.get(1);
-        assertNull(p2);
+        assertEquals("/test-path/test-attribute-2", p2.getName());
+        assertNull(p2.getValue());
+        assertNull(p2.getType());
     }
 
     @Test
     public void collectMetrics_DefinitionDoesNotHaveCorrespondingValue() throws Exception {
 
-        fail("RETURN HERE");
-
         //
-        // configure the internal client as a mock client and install state
+        // install the client factory that produces a mock client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
-        JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
-
-        //
-        // this simulates an "undefined" CLI attribute
-        //
-        ((MockJBossControllerClient)client).setAttributeValue("/test-path", "test-attribute", null);
+        MockJBossControllerClientFactory mcf = new MockJBossControllerClientFactory();
 
         JBossController jbossSource = getMetricSourceToTest();
-        jbossSource.setControllerClient(client);
+        jbossSource.setJBossControllerClientFactory(mcf);
+
+        //
+        // install test state into the mock client
+        //
+
+        jbossSource.start();
+
+        MockJBossControllerClient mc = (MockJBossControllerClient)jbossSource.getControllerClient();
+
+        mc.setAttributeValue("/test-path", "test-attribute", null);
+
+        //
+        // test-attribute-2 does not exist on the controller
+        //
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         List<MetricDefinition> definitions = Collections.singletonList(jbmd);
 
         List<Property> properties = jbossSource.collectMetrics(definitions);
 
         assertEquals(1, properties.size());
-        Property p = properties.get(0);
-        assertNull(p);
+
+        Property p2 = properties.get(0);
+        assertEquals("/test-path/test-attribute", p2.getName());
+        assertNull(p2.getValue());
+        assertNull(p2.getType());
     }
 
     @Test
     public void collectMetrics_LazyClientInitialization() throws Exception {
 
-        fail("RETURN HERE");
-
         //
         // make sure the first collectMetrics() correctly initializes the internal client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
-        JBossControllerClient client = JBossControllerClient.getInstance(mockAddress);
+        MockJBossControllerClientFactory mcf = new MockJBossControllerClientFactory();
         JBossController jbossSource = getMetricSourceToTest();
-        jbossSource.setControllerClient(client);
+        jbossSource.setJBossControllerClientFactory(mcf);
 
-        JBossControllerClient client2 = jbossSource.getControllerClient();
-        assertNotNull(client2);
-        assertFalse(client2.isConnected());
+        //
+        // client not initialized at this type
+        //
+
+        assertNull(jbossSource.getControllerClient());
+
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute"));
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
+        //
         // this should trigger initialization, even if no properties are read
+        //
         List<Property> properties = jbossSource.collectMetrics(Collections.singletonList(jbmd));
 
         assertTrue(jbossSource.getControllerClient().isConnected());
-
-        assertFalse(properties.isEmpty());
+        assertEquals(1, properties.size());
     }
 
     @Test
     public void collectMetrics_Long() throws Exception {
 
-        fail("RETURN HERE");
-
         //
-        // make sure the first collectMetrics() correctly initializes the internal client
+        // install the client factory that produces a mock client
         //
 
-        JBossControllerAddress mockAddress = new JBossControllerAddress("jbosscli://MOCK-USER:mock@MOCK-HOST:7777");
-
-        MockJBossControllerClient mc = (MockJBossControllerClient)JBossControllerClient.getInstance(mockAddress);
-
-        //
-        // "install" a Long
-        //
-
-        mc.setAttributeValue("test-path", "test-attribute", 7L);
+        MockJBossControllerClientFactory mcf = new MockJBossControllerClientFactory();
 
         JBossController jbossSource = getMetricSourceToTest();
-        jbossSource.setControllerClient(mc);
+        jbossSource.setJBossControllerClientFactory(mcf);
 
-        List<MetricDefinition> md = Collections.singletonList(new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new CliPath("test-path"), new CliAttribute("test-attribute")));
+        //
+        // install test state into the mock client
+        //
 
-        // this should trigger initialization, even if no properties are read
-        List<Property> properties = jbossSource.collectMetrics(md);
+        jbossSource.start();
+
+        MockJBossControllerClient mc = (MockJBossControllerClient)jbossSource.getControllerClient();
+
+        mc.setAttributeValue("/test-path", "test-attribute", 10L);
+
+        //
+        // test-attribute-2 does not exist on the controller
+        //
+
+        JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
+                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+
+        List<MetricDefinition> definitions = Collections.singletonList(jbmd);
+
+        List<Property> properties = jbossSource.collectMetrics(definitions);
 
         assertEquals(1, properties.size());
 
         LongProperty p = (LongProperty)properties.get(0);
-
-        assertEquals(7L, p.getLong().longValue());
-
-        assertEquals("MOCK-HOST:7777/test-path/test-attribute", p.getName());
+        assertEquals("/test-path/test-attribute", p.getName());
+        assertEquals(10L, p.getValue());
+        assertEquals(Long.class, p.getType());
     }
 
     // host, port and username support ---------------------------------------------------------------------------------
@@ -498,7 +520,7 @@ public class JBossControllerTest extends MetricSourceTest {
     protected JBossDmrMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress)
             throws Exception {
 
-        return new MockJBossDmrMetricDefinition(metricSourceAddress, new CliPath("test=test"), new CliAttribute("test"));
+        return new MockJBossDmrMetricDefinition(metricSourceAddress, new DmrPath("test=test"), new DmrAttribute("test"));
     }
 
     @Override

@@ -16,15 +16,15 @@
 
 package io.novaordis.events.api.metric.jboss;
 
-import java.util.ArrayList;
-import java.util.Iterator;
-import java.util.List;
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
  */
-class CliPath {
+public class DmrPathTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -32,64 +32,29 @@ class CliPath {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private List<String> pathElements;
-
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    public CliPath() {
-
-        this(new String[0]);
-    }
-
-    public CliPath(String... pes) {
-
-        this.pathElements = new ArrayList<>();
-
-        for(String pe: pes) {
-
-            addPathElement(pe);
-        }
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * A path element in the "a=b" format.
-     */
-    public void addPathElement(String pathElement) {
+    // constructors ----------------------------------------------------------------------------------------------------
 
-        //
-        // skip leading slash
-        //
+    @Test
+    public void constructor() throws Exception {
 
-        if (pathElement.startsWith("/")) {
-
-            pathElement = pathElement.substring(1);
-        }
-
-        pathElements.add(pathElement);
+        DmrPath p = new DmrPath("/a=b");
+        assertEquals("/a=b", p.getPath());
     }
 
-    public String getPath() {
+    // addPathElement() ------------------------------------------------------------------------------------------------
 
-        String s = "/";
+    @Test
+    public void addPathElement_LeadingSlash() {
 
-        for(Iterator<String> i = pathElements.iterator(); i.hasNext(); ) {
+        DmrPath p = new DmrPath();
 
-            s += i.next();
+        p.addPathElement("/a=b");
 
-            if (i.hasNext()) {
-
-                s += "/";
-            }
-        }
-
-        return s;
-    }
-
-    @Override
-    public String toString() {
-        return getPath();
+        assertEquals("/a=b", p.getPath());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

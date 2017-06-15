@@ -174,8 +174,28 @@ public abstract class MetricDefinitionTest {
         assertNotNull(p);
 
         assertEquals(name, id);
-        assertEquals(pType, type);
-        assertEquals(pMu, mu);
+
+        //
+        // if the metric definition did not have a type to start with, the returned type is irrelevant and
+        // it does not make sense to test it
+        //
+
+        if (type != null) {
+
+            assertEquals(pType, type);
+        }
+
+        //
+        // if the metric definition did not have a measure unit to start with, the returned measure unit is irrelevant
+        // and it does not make sense to test it
+        //
+
+        if (mu != null) {
+
+            assertEquals(pMu, mu);
+
+        }
+
         assertEquals(pValue, testValue);
     }
 
@@ -191,7 +211,9 @@ public abstract class MetricDefinitionTest {
 
         if (type == null) {
 
-            throw new IllegalArgumentException("null type");
+            // any type is good, return a String
+
+            return "a String returned in expectation of a null type";
         }
 
         if (Integer.class.equals(type)) {

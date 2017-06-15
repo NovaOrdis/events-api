@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.jboss;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.event.UndefinedTypeProperty;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
@@ -155,7 +154,16 @@ public class JBossController extends MetricSourceBase {
     @Override
     public synchronized void stop() {
 
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+        if (controllerClient == null || !controllerClient.isConnected()) {
+
+            return;
+        }
+
+        log.debug(this + " stopping ...");
+
+        controllerClient.disconnect();
+
+        log.debug(this + " stopped");
     }
 
     // MetricSourceBase overrides --------------------------------------------------------------------------------------
@@ -180,7 +188,7 @@ public class JBossController extends MetricSourceBase {
 
             if (!(md instanceof JBossDmrMetricDefinition)) {
 
-                throw new IllegalArgumentException(this + " does not handle non-jboss CLI metric " + md);
+                throw new IllegalArgumentException(this + " does not handle non-JBoss DMR metric " + md);
             }
 
             JBossDmrMetricDefinition jbmd = (JBossDmrMetricDefinition)md;

@@ -17,7 +17,6 @@
 package io.novaordis.events.api.event;
 
 import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.utilities.NotYetImplementedException;
 
 import java.util.Map;
 
@@ -262,6 +261,10 @@ public class PropertyFactory {
         if (value instanceof Integer) {
 
             return new IntegerProperty(name, (Integer)value);
+        }
+        else if (value instanceof Long) {
+
+            return new LongProperty(name, (Long)value);
         }
         else if (value instanceof String) {
 

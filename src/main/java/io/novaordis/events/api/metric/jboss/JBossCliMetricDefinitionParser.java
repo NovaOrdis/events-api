@@ -147,14 +147,14 @@ public class JBossCliMetricDefinitionParser {
 
         Matcher m = JBOSS_CLI_PATH_SEGMENT.matcher(mds);
 
-        CliPath path = null;
+        DmrPath path = null;
         int end = -1;
 
         while(m.find()) {
 
             if (path == null) {
 
-                path = new CliPath();
+                path = new DmrPath();
             }
 
             end = m.end();
@@ -182,7 +182,7 @@ public class JBossCliMetricDefinitionParser {
         //
 
         String attributeName = mds.substring(end + 1);
-        CliAttribute attribute = new CliAttribute(attributeName);
+        DmrAttribute attribute = new DmrAttribute(attributeName);
 
         //
         // DO NOT add the source to the repository, let the upper layer to do it if they want to

@@ -93,7 +93,7 @@ public class LocalOSTest extends OSSourceBaseTest {
 
     @Test
     @Override
-    public void start() throws Exception {
+    public void lifecycle() throws Exception {
 
         //
         // start operation is a noop for a LocalOS, a LocalOS is always "started"
@@ -112,13 +112,9 @@ public class LocalOSTest extends OSSourceBaseTest {
         os.start();
 
         assertTrue(os.isStarted());
-    }
 
-    @Test
-    @Override
-    public void stop() throws Exception {
-
-        LocalOS os = getMetricSourceToTest();
+        // noop
+        os.stop();
 
         assertTrue(os.isStarted());
 
