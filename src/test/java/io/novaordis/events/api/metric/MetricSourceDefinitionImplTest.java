@@ -16,16 +16,20 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
 
-import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public abstract class MetricSourceDefinitionTest {
+public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,23 +41,45 @@ public abstract class MetricSourceDefinitionTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Test ------------------------------------------------------------------------------------------------------------
+    // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void defaults() throws Exception {
+    public void nullAddress() throws Exception {
 
-        MetricSourceDefinition d = getMetricSourceDefinitionToTest();
+        try {
 
-        assertNotNull(d.getAddress());
-        assertNull(d.getName());
+            new MetricSourceDefinitionImpl(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null address"));
+        }
+    }
+
+    @Test
+    public void simple() throws Exception {
+
+        Address a = new AddressImpl("test");
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(a);
+
+        assertTrue(new AddressImpl("test").equals(d.getAddress()));
         assertNull(d.getType());
+        assertNull(d.getName());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
-    protected abstract MetricSourceDefinition getMetricSourceDefinitionToTest() throws Exception;
+    @Override
+    protected MetricSourceDefinitionImpl getMetricSourceDefinitionToTest() throws Exception {
+
+        AddressImpl address = new AddressImpl("mock");
+        return new MetricSourceDefinitionImpl(address);
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

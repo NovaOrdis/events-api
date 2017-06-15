@@ -35,6 +35,9 @@ public interface MetricSourceDefinition {
 
     Address getAddress();
 
+    /**
+     * The type is optional, may return null.
+     */
     MetricSourceType getType();
 
     /**

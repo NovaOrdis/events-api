@@ -16,16 +16,13 @@
 
 package io.novaordis.events.api.metric;
 
-import org.junit.Test;
-
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
+import io.novaordis.utilities.address.Address;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public abstract class MetricSourceDefinitionTest {
+public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,27 +30,54 @@ public abstract class MetricSourceDefinitionTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private Address address;
+    private String name;
+    private MetricSourceType type;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    /**
+     * Makes an internal copy of the address passed as argument.
+     *
+     * @see Address#copy()
+     */
+    public MetricSourceDefinitionImpl(Address a) {
 
-    // Test ------------------------------------------------------------------------------------------------------------
+        if (a == null) {
 
-    @Test
-    public void defaults() throws Exception {
+            throw new IllegalArgumentException("null address");
+        }
 
-        MetricSourceDefinition d = getMetricSourceDefinitionToTest();
-
-        assertNotNull(d.getAddress());
-        assertNull(d.getName());
-        assertNull(d.getType());
+        this.address = a.copy();
+        this.name = null;
+        this.type = null;
     }
+
+    // MetricSourceDefinition ------------------------------------------------------------------------------------------
+
+    @Override
+    public Address getAddress() {
+
+        return address;
+    }
+
+    @Override
+    public MetricSourceType getType() {
+
+        return type;
+    }
+
+    @Override
+    public String getName() {
+
+        return name;
+    }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract MetricSourceDefinition getMetricSourceDefinitionToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
