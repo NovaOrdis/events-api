@@ -173,12 +173,9 @@ public class JBossController extends MetricSourceBase {
 
         for(MetricDefinition md : metricDefinitions) {
 
-            if (!(md instanceof JBossDmrMetricDefinitionImpl)) {
+            if (!(md instanceof JBossDmrMetricDefinition)) {
 
-                throw new RuntimeException("RETURN HERE: we need an interface hierarchy where JBossDmrMetricDefinitionImpl is an interface, not a class");
-
-//                log.warn(this + " does not handle non-jboss CLI metric " + md);
-//                continue;
+                throw new IllegalArgumentException(this + " does not handle non-jboss CLI metric " + md);
             }
 
             JBossDmrMetricDefinitionImpl jbmd = (JBossDmrMetricDefinitionImpl)md;

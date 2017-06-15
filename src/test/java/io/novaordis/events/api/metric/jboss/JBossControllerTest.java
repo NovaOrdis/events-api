@@ -489,6 +489,13 @@ public class JBossControllerTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
+    protected JBossDmrMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress)
+            throws Exception {
+
+        return new MockJBossDmrMetricDefinition(metricSourceAddress, new CliPath("test=test"), new CliAttribute("test"));
+    }
+
+    @Override
     protected JBossController getMetricSourceToTest(String... addresses) throws Exception {
 
         JBossController result;

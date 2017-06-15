@@ -225,7 +225,7 @@ public abstract class MetricSourceTest {
     /**
      * Gives the sub-classes a chance to provide more specialized mocks.
      */
-    protected MetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) {
+    protected MetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) throws Exception {
 
         return new MockMetricDefinition(metricSourceAddress);
     }
