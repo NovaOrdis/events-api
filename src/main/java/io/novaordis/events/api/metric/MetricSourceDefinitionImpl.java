@@ -211,6 +211,26 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    public String toString() {
+
+        String s = "";
+
+        if (name != null) {
+
+            s += name + ": ";
+        }
+
+        s += address;
+
+        if (type != null) {
+
+            s += " (" + type + ")";
+        }
+
+        return s;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
