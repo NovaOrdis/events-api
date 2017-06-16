@@ -53,6 +53,24 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
         this.type = null;
     }
 
+    /**
+     * This constructor was designed to be used with YAML representations of source metric definitions.
+     *
+     * @param sourceName the metric source definition name.
+     *
+     * @param yamlProducedStructure the structure following the source name, as extracted by a Yaml parser.
+     *
+     * @exception MetricSourceException should contain human readable error messages, as it most likely will be
+     * displayed after a configuration file parsing failure.
+     */
+    public MetricSourceDefinitionImpl(String sourceName, Object yamlProducedStructure) throws MetricSourceException {
+
+        if (sourceName == null) {
+
+            throw new IllegalArgumentException("null source name");
+        }
+    }
+
     // MetricSourceDefinition ------------------------------------------------------------------------------------------
 
     @Override
