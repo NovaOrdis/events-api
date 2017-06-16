@@ -143,7 +143,7 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     public void constructor_yaml_NullMap() throws Exception {
 
         try {
-            
+
             new MetricSourceDefinitionImpl("something", (Object)null);
             fail("should have thrown exception");
         }
