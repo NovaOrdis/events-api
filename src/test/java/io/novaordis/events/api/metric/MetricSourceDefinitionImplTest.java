@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import java.util.HashMap;
@@ -52,7 +53,7 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
 
         try {
 
-            new MetricSourceDefinitionImpl("some-name", MetricSourceType.JBOSS_CONTROLLER, null);
+            new MetricSourceDefinitionImpl("some-name", null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -67,36 +68,59 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
 
         Address a = new AddressImpl("test");
 
-        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(null, MetricSourceType.JBOSS_CONTROLLER, a);
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(null, a);
 
         assertTrue(new AddressImpl("test").equals(d.getAddress()));
         assertNull(d.getName());
-        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
-    }
-
-    @Test
-    public void constructor_NullType() throws Exception {
-
-        Address a = new AddressImpl("test");
-
-        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", null, a);
-
-        assertTrue(new AddressImpl("test").equals(d.getAddress()));
-        assertEquals("some-name", d.getName());
         assertNull(d.getType());
     }
 
     @Test
-    public void constructor() throws Exception {
+    public void constructor_InferType_LocalOSAddress() throws Exception {
 
-        Address a = new AddressImpl("test");
+        LocalOSAddress a = new LocalOSAddress();
 
-        MetricSourceDefinitionImpl d =
-                new MetricSourceDefinitionImpl("some-name", MetricSourceType.JBOSS_CONTROLLER, a);
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", a);
+
+        assertTrue(new LocalOSAddress().equals(d.getAddress()));
+        assertEquals("some-name", d.getName());
+        assertEquals(MetricSourceType.LOCAL_OS, d.getType());
+    }
+
+    @Test
+    public void constructor_InferType_JmxBusAddress() throws Exception {
+
+        AddressImpl a = new AddressImpl("jmx://somehost");
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", a);
+
+        assertTrue(new AddressImpl("jmx://somehost").equals(d.getAddress()));
+        assertEquals("some-name", d.getName());
+        assertEquals(MetricSourceType.JMX, d.getType());
+    }
+
+    @Test
+    public void constructor_InferType_JBossControllerAddress() throws Exception {
+
+        JBossControllerAddress a = new JBossControllerAddress("test");
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", a);
+
+        assertTrue(new JBossControllerAddress("test").equals(d.getAddress()));
+        assertEquals("some-name", d.getName());
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
+    }
+
+    @Test
+    public void constructor_InferType_NonDescriptAddress() throws Exception {
+
+        AddressImpl a = new AddressImpl("test");
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", a);
 
         assertTrue(new AddressImpl("test").equals(d.getAddress()));
         assertEquals("some-name", d.getName());
-        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
+        assertNull(d.getType());
     }
 
     // YAML constructor ------------------------------------------------------------------------------------------------
@@ -119,7 +143,8 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     public void constructor_yaml_NullMap() throws Exception {
 
         try {
-            new MetricSourceDefinitionImpl("something", null);
+            
+            new MetricSourceDefinitionImpl("something", (Object)null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -232,7 +257,7 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     protected MetricSourceDefinitionImpl getMetricSourceDefinitionToTest() throws Exception {
 
         AddressImpl address = new AddressImpl("mock");
-        return new MetricSourceDefinitionImpl(null, null, address);
+        return new MetricSourceDefinitionImpl(null, address);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

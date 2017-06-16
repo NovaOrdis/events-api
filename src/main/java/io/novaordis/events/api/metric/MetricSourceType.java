@@ -16,6 +16,11 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.metric.jmx.JmxBus;
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.LocalOSAddress;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
@@ -46,7 +51,41 @@ public enum MetricSourceType {
         return null;
     }
 
+    /**
+     * @return null if no know MetricSourceType is identified
+     */
+    public static MetricSourceType fromAddress(Address a) {
+
+        if (a == null) {
+
+            return null;
+        }
+
+        if (a instanceof LocalOSAddress) {
+
+            return LOCAL_OS;
+        }
+
+        if (a instanceof JBossControllerAddress) {
+
+            return JBOSS_CONTROLLER;
+        }
+
+        String protocol = a.getProtocol();
+
+        if (JmxBus.PROTOCOL.equals(protocol)) {
+
+            return JMX;
+        }
+
+        return null;
+    }
+
+    // Attributes ------------------------------------------------------------------------------------------------------
+
     private String literal;
+
+    // Constructors ----------------------------------------------------------------------------------------------------
 
     MetricSourceType(String literal) {
 

@@ -47,21 +47,21 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
 
     /**
      * @param name may be null
-     * @param type may be null
-     * @param address Makes an internal copy of the address passed as argument. May not be null.
+     * @param address Makes an internal copy of the address passed as argument. May not be null. The source type
+     *                will be inferred from address, if possible.
      *
      * @see Address#copy()
      */
-    public MetricSourceDefinitionImpl(String name, MetricSourceType type, Address address) {
+    public MetricSourceDefinitionImpl(String name, Address address) {
 
         if (address == null) {
 
             throw new IllegalArgumentException("null address");
         }
 
-        this.address = address.copy();
         this.name = name;
-        this.type = type;
+        this.address = address.copy();
+        this.type = MetricSourceType.fromAddress(address);
     }
 
     /**

@@ -16,6 +16,9 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -69,6 +72,38 @@ public class MetricSourceTypeTest {
         assertEquals(MetricSourceType.JMX, t);
     }
 
+    // fromAddress() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void fromAddress_null() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromAddress(null);
+        //noinspection ConstantConditions
+        assertNull(t);
+    }
+
+    @Test
+    public void fromAddress_LocalOSAddress() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromAddress(new LocalOSAddress());
+        assertEquals(MetricSourceType.LOCAL_OS, t);
+    }
+
+    @Test
+    public void fromAddress_JBossControllerAddress() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromAddress(new JBossControllerAddress());
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, t);
+    }
+
+    @Test
+    public void fromAddress_JmxAddress() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromAddress(new AddressImpl("jmx://something/"));
+        assertEquals(MetricSourceType.JMX, t);
+    }
+
+    // getLiteral()  ---------------------------------------------------------------------------------------------------
 
     @Test
     public void getLiteral() throws Exception {
