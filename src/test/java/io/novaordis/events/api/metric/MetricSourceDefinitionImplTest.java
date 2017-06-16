@@ -16,9 +16,13 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
 import org.junit.Test;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
@@ -44,11 +48,11 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void nullAddress() throws Exception {
+    public void constructor_nullAddress() throws Exception {
 
         try {
 
-            new MetricSourceDefinitionImpl(null);
+            new MetricSourceDefinitionImpl("some-name", MetricSourceType.JBOSS_CONTROLLER, null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -59,15 +63,165 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     }
 
     @Test
-    public void simple() throws Exception {
+    public void constructor_NullName() throws Exception {
 
         Address a = new AddressImpl("test");
 
-        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(a);
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(null, MetricSourceType.JBOSS_CONTROLLER, a);
 
         assertTrue(new AddressImpl("test").equals(d.getAddress()));
-        assertNull(d.getType());
         assertNull(d.getName());
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
+    }
+
+    @Test
+    public void constructor_NullType() throws Exception {
+
+        Address a = new AddressImpl("test");
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", null, a);
+
+        assertTrue(new AddressImpl("test").equals(d.getAddress()));
+        assertEquals("some-name", d.getName());
+        assertNull(d.getType());
+    }
+
+    @Test
+    public void constructor() throws Exception {
+
+        Address a = new AddressImpl("test");
+
+        MetricSourceDefinitionImpl d =
+                new MetricSourceDefinitionImpl("some-name", MetricSourceType.JBOSS_CONTROLLER, a);
+
+        assertTrue(new AddressImpl("test").equals(d.getAddress()));
+        assertEquals("some-name", d.getName());
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
+    }
+
+    // YAML constructor ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void constructor_yaml_NullName() throws Exception {
+
+        try {
+            new MetricSourceDefinitionImpl(null, new HashMap());
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null source name"));
+        }
+    }
+
+    @Test
+    public void constructor_yaml_NullMap() throws Exception {
+
+        try {
+            new MetricSourceDefinitionImpl("something", null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null source definition representation"));
+        }
+    }
+
+    @Test
+    public void constructor_yaml_NoType() throws Exception {
+
+        String s =
+                "some-source:\n" +
+                "  host: something\n" +
+                "  port: 80\n";
+
+        Map m = YamlUtil.parse(s);
+
+        try {
+
+            new MetricSourceDefinitionImpl("some-source", m.get("some-source"));
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unspecified type for source"));
+        }
+    }
+
+    @Test
+    public void constructor_yaml_InvalidType() throws Exception {
+
+        String s =
+                "some-source:\n" +
+                        "  type: we-are-sure-there-is-no-such-type\n" +
+                        "  host: something\n" +
+                        "  port: 80\n";
+
+        Map m = YamlUtil.parse(s);
+
+        try {
+
+            new MetricSourceDefinitionImpl("some-source", m.get("some-source"));
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid metric source type \"we-are-sure-there-is-no-such-type\""));
+        }
+    }
+
+    @Test
+    public void constructor_yaml_MissingHostName() throws Exception {
+
+        String s =
+                "some-source:\n" +
+                        "  type: jboss-controller\n" +
+                        "  port: 9999\n" +
+                        "  classpath:\n" +
+                        "    - some.jar\n" +
+                        "    - some/other.jar\n";
+
+        Map m = YamlUtil.parse(s);
+
+        try {
+
+            new MetricSourceDefinitionImpl("some-source", m.get("some-source"));
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("missing host"));
+        }
+    }
+
+    @Test
+    public void constructor_yaml_JBossController() throws Exception {
+
+        String s =
+                "some-source:\n" +
+                "  type: jboss-controller\n" +
+                "  host: something\n" +
+                "  port: 9999\n" +
+                "  classpath:\n" +
+                "    - some.jar\n" +
+                "    - some/other.jar\n";
+
+        Map m = YamlUtil.parse(s);
+
+        String name = "some-source";
+
+        MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl(name, m.get(name));
+
+        assertEquals("some-source", d.getName());
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, d.getType());
+        JBossControllerAddress a = (JBossControllerAddress)d.getAddress();
+        assertEquals("something", a.getHost());
+        assertEquals(9999, a.getPort().intValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -78,7 +232,7 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     protected MetricSourceDefinitionImpl getMetricSourceDefinitionToTest() throws Exception {
 
         AddressImpl address = new AddressImpl("mock");
-        return new MetricSourceDefinitionImpl(address);
+        return new MetricSourceDefinitionImpl(null, null, address);
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

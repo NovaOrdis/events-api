@@ -21,7 +21,6 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.events.api.metric.MetricSourceType;
 import io.novaordis.jboss.cli.JBossCliException;
 import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jboss.cli.JBossControllerClientFactory;
@@ -50,8 +49,6 @@ public class JBossController extends MetricSourceBase {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(JBossController.class);
-
-    public static final MetricSourceType METRIC_SOURCE_TYPE = new MetricSourceType() {};
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -17,7 +17,6 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.events.api.metric.MetricSourceType;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OS;
 import org.slf4j.Logger;
@@ -32,8 +31,6 @@ public class LocalOS extends OSSourceBase {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(LocalOS.class);
-
-    public static final MetricSourceType METRIC_SOURCE_TYPE = new MetricSourceType() {};
 
     // Static ----------------------------------------------------------------------------------------------------------
 

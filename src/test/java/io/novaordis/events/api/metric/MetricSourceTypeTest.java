@@ -16,11 +16,16 @@
 
 package io.novaordis.events.api.metric;
 
+import org.junit.Test;
+
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public abstract class MetricSourceTypeTest {
+public class MetricSourceTypeTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -34,11 +39,42 @@ public abstract class MetricSourceTypeTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // fromString() ----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void fromString_NoSuchMetricSourceType() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromString("I-am-sure-theres-no-such-type");
+        assertNull(t);
+    }
+
+    @Test
+    public void fromString_LOCAL_OS() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromString("local-os");
+        assertEquals(MetricSourceType.LOCAL_OS, t);
+    }
+
+    @Test
+    public void fromString_JBOSS_CONTROLLER() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromString("jboss-controller");
+        assertEquals(MetricSourceType.JBOSS_CONTROLLER, t);
+    }
+
+    @Test
+    public void getLiteral() throws Exception {
+
+        for(MetricSourceType t: MetricSourceType.values()) {
+
+            String literal = t.getLiteral();
+            assertEquals(t, MetricSourceType.fromString(literal));
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    protected abstract MetricSourceType getMetricSourceTypeToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

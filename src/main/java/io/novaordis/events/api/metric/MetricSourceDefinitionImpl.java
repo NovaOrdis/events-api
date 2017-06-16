@@ -16,7 +16,10 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
+
+import java.util.Map;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -25,6 +28,12 @@ import io.novaordis.utilities.address.Address;
 public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    public static final String TYPE_YAML_KEY = "type";
+    public static final String HOST_YAML_KEY = "host";
+    public static final String PORT_YAML_KEY = "port";
+    public static final String USERNAME_YAML_KEY = "username";
+    public static final String PASSWORD_YAML_KEY = "password";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -37,37 +46,146 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * Makes an internal copy of the address passed as argument.
+     * @param name may be null
+     * @param type may be null
+     * @param address Makes an internal copy of the address passed as argument. May not be null.
      *
      * @see Address#copy()
      */
-    public MetricSourceDefinitionImpl(Address a) {
+    public MetricSourceDefinitionImpl(String name, MetricSourceType type, Address address) {
 
-        if (a == null) {
+        if (address == null) {
 
             throw new IllegalArgumentException("null address");
         }
 
-        this.address = a.copy();
-        this.name = null;
-        this.type = null;
+        this.address = address.copy();
+        this.name = name;
+        this.type = type;
     }
 
     /**
      * This constructor was designed to be used with YAML representations of source metric definitions.
      *
-     * @param sourceName the metric source definition name.
+     * @param name the metric source definition name.
      *
      * @param yamlProducedStructure the structure following the source name, as extracted by a Yaml parser.
      *
      * @exception MetricSourceException should contain human readable error messages, as it most likely will be
      * displayed after a configuration file parsing failure.
      */
-    public MetricSourceDefinitionImpl(String sourceName, Object yamlProducedStructure) throws MetricSourceException {
+    public MetricSourceDefinitionImpl(String name, Object yamlProducedStructure) throws MetricSourceException {
 
-        if (sourceName == null) {
+        if (name == null) {
 
             throw new IllegalArgumentException("null source name");
+        }
+
+        if (yamlProducedStructure == null) {
+
+            throw new IllegalArgumentException("null source definition representation");
+        }
+
+        if (!(yamlProducedStructure instanceof Map)) {
+
+            throw new MetricSourceException("source \"" + name + "\" definition representation is not a map");
+        }
+
+        Map m = (Map)yamlProducedStructure;
+
+        this.name = name;
+
+        Object o;
+
+        o = m.get(TYPE_YAML_KEY);
+
+        if (o == null) {
+
+            throw new MetricSourceException("unspecified type for source \"" + name + "\"");
+        }
+        else {
+
+            if (!(o instanceof String)) {
+
+                throw new MetricSourceException("type not a string");
+            }
+
+            this.type = MetricSourceType.fromString((String)o);
+
+            if (this.type == null) {
+
+                throw new MetricSourceException("invalid metric source type \"" + o + "\"");
+            }
+        }
+
+        if (MetricSourceType.LOCAL_OS.equals(type)) {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: " + type);
+        }
+
+        o = m.get(HOST_YAML_KEY);
+
+        if (o == null) {
+
+            throw new MetricSourceException("missing host name");
+        }
+
+        if (!(o instanceof String)) {
+
+            throw new MetricSourceException("host not a string");
+        }
+
+        String host = (String)o;
+
+        Integer port = null;
+
+        o = m.get(PORT_YAML_KEY);
+
+        if (o != null) {
+
+            if (!(o instanceof Integer)) {
+
+                throw new MetricSourceException("port not an integer");
+            }
+
+            port = (Integer)o;
+        }
+
+        String username = null;
+
+        o = m.get(USERNAME_YAML_KEY);
+
+        if (o != null) {
+
+            if (!(o instanceof String)) {
+
+                throw new MetricSourceException("username not a string");
+            }
+
+            username = (String)o;
+        }
+
+        String password = null;
+
+        o = m.get(PASSWORD_YAML_KEY);
+
+        if (o != null) {
+
+            if (!(o instanceof String)) {
+
+                throw new MetricSourceException("password not a string");
+            }
+
+            password = (String)o;
+        }
+
+        if (MetricSourceType.JBOSS_CONTROLLER.equals(type)) {
+
+            this.address = new JBossControllerAddress(username, password, host, port);
+        }
+        else {
+
+            throw new RuntimeException("NOT YET IMPLEMENTED: support for type " + type);
         }
     }
 

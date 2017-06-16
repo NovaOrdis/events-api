@@ -16,50 +16,44 @@
 
 package io.novaordis.events.api.metric;
 
+import org.yaml.snakeyaml.Yaml;
+
+import java.io.ByteArrayInputStream;
+import java.util.Map;
+
 /**
+ * A Yaml parser.
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
  */
-public enum MetricSourceType {
+public class YamlUtil {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    LOCAL_OS("local-os"),
-    JBOSS_CONTROLLER("jboss-controller"),
-    ;
-
     // Static ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * @return null if no know MetricSourceType is identified
-     */
-    public static MetricSourceType fromString(String s) {
+    public static Map parse(String s) {
 
-        for(MetricSourceType t: values()) {
-
-            if (t.literal.equals(s)) {
-                return t;
-            }
-        }
-
-        return null;
+        ByteArrayInputStream bais = new ByteArrayInputStream(s.getBytes());
+        Yaml yaml = new Yaml();
+        return (Map)yaml.load(bais);
     }
 
-    private String literal;
+    // Attributes ------------------------------------------------------------------------------------------------------
 
-    MetricSourceType(String literal) {
+    // Constructors ----------------------------------------------------------------------------------------------------
 
-        this.literal = literal;
+    private YamlUtil() {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    /**
-     * The value used to declare this type in Yaml (and other text) configuration.
-     */
-    public String getLiteral() {
+    // Package protected -----------------------------------------------------------------------------------------------
 
-        return literal;
-    }
+    // Protected -------------------------------------------------------------------------------------------------------
+
+    // Private ---------------------------------------------------------------------------------------------------------
+
+    // Inner classes ---------------------------------------------------------------------------------------------------
 
 }
