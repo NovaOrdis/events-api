@@ -45,9 +45,11 @@ public class UndefinedTypeProperty extends PropertyBase {
     }
 
     @Override
-    public Property fromString(String s) throws IllegalArgumentException {
+    public UndefinedTypeProperty fromString(String s) throws IllegalArgumentException {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED: fromString()");
+        UndefinedTypeProperty result = new UndefinedTypeProperty(getName());
+        result.setValue(s);
+        return result;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

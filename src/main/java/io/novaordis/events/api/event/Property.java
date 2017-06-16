@@ -82,7 +82,7 @@ public interface Property extends Comparable<Property> {
     Format getFormat();
 
     /**
-     * Builds a property matching this from the given string.
+     * Builds a property similar to this from the given string.
      *
      * @exception IllegalArgumentException if the string cannot be converted into a property of the same kind.
      */
