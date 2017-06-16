@@ -26,6 +26,7 @@ public enum MetricSourceType {
 
     LOCAL_OS("local-os"),
     JBOSS_CONTROLLER("jboss-controller"),
+    JMX("jmx"),
     ;
 
     // Static ----------------------------------------------------------------------------------------------------------

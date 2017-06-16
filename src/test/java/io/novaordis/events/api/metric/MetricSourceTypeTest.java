@@ -63,6 +63,14 @@ public class MetricSourceTypeTest {
     }
 
     @Test
+    public void fromString_JMX() throws Exception {
+
+        MetricSourceType t = MetricSourceType.fromString("jmx");
+        assertEquals(MetricSourceType.JMX, t);
+    }
+
+
+    @Test
     public void getLiteral() throws Exception {
 
         for(MetricSourceType t: MetricSourceType.values()) {
