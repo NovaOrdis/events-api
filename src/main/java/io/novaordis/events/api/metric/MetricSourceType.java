@@ -16,8 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.events.api.metric.jmx.JmxBus;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.LocalOSAddress;
 
@@ -71,9 +71,7 @@ public enum MetricSourceType {
             return JBOSS_CONTROLLER;
         }
 
-        String protocol = a.getProtocol();
-
-        if (JmxBus.PROTOCOL.equals(protocol)) {
+        if (a instanceof JmxAddress) {
 
             return JMX;
         }

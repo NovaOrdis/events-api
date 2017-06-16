@@ -20,8 +20,9 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.utilities.address.Address;
-import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.jboss.cli.JBossControllerClient;
+import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxClientFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -29,7 +30,7 @@ import org.slf4j.LoggerFactory;
 import java.util.List;
 
 /**
- * Represents a JMX bus of a local or remote JVM.
+ * Represents a JMX bus running on a local or remote JVM.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
@@ -38,12 +39,14 @@ public class JmxBus extends MetricSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String PROTOCOL = "jmx";
-
-    public static final String DEFAULT_HOST = "localhost";
-    public static final int DEFAULT_PORT = 9999;
-
     private static final Logger log = LoggerFactory.getLogger(JmxBus.class);
+
+    private JmxClientFactory clientFactory;
+
+    //
+    // lazily instantiated and connected
+    //
+    private JBossControllerClient controllerClient;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -51,39 +54,44 @@ public class JmxBus extends MetricSourceBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public JmxBus() throws MetricSourceException {
+    /**
+     * There is no public no-argument constructor because there are no default coordinates for a JMX bus. In order
+     * to get a functional JMX bus, we will need to specify an address. This constructor returns a partially
+     * initialized instance.
+     */
+    protected JmxBus() {
 
-        this("jmx://" + DEFAULT_HOST + ":" + DEFAULT_PORT);
+        super(null);
     }
 
     public JmxBus(String address) throws MetricSourceException {
 
-        this(stringToAddress(address));
+        this(stringToJmxAddress(address));
     }
 
-    public JmxBus(Address model) throws MetricSourceException  {
+    public JmxBus(JmxAddress model) throws MetricSourceException  {
 
         super(model);
 
-        Address address = getAddress();
-
-        String protocol = address.getProtocol();
-
-        if (protocol == null) {
-
-            address.setProtocol(PROTOCOL);
-        }
-        else if (!PROTOCOL.equals(protocol)) {
-
-            throw new MetricSourceException("invalid protocol " + protocol);
-        }
-
-        Integer port = address.getPort();
-
-        if (port == null) {
-
-            address.setPort(DEFAULT_PORT);
-        }
+//        Address address = getAddress();
+//
+//        String protocol = address.getProtocol();
+//
+//        if (protocol == null) {
+//
+//            address.setProtocol(PROTOCOL);
+//        }
+//        else if (!PROTOCOL.equals(protocol)) {
+//
+//            throw new MetricSourceException("invalid protocol " + protocol);
+//        }
+//
+//        Integer port = address.getPort();
+//
+//        if (port == null) {
+//
+//            address.setPort(DEFAULT_PORT);
+//        }
 
         log.debug(this + " constructed");
     }
@@ -98,6 +106,7 @@ public class JmxBus extends MetricSourceBase {
 
     @Override
     public boolean isStarted() {
+
         throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
     }
 
@@ -108,6 +117,12 @@ public class JmxBus extends MetricSourceBase {
     }
 
     // MetricSourceBase overrides --------------------------------------------------------------------------------------
+
+    @Override
+    public JmxAddress getAddress() {
+
+        return (JmxAddress)super.getAddress();
+    }
 
     @Override
     public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
@@ -137,11 +152,11 @@ public class JmxBus extends MetricSourceBase {
     /**
      * We need this trick to work around the constructor limitation of not allowing a try catch around this();
      */
-    private static Address stringToAddress(String a) throws MetricSourceException {
+    private static JmxAddress stringToJmxAddress(String a) throws MetricSourceException {
 
         try {
 
-            return new AddressImpl(a);
+            return new JmxAddress(a);
         }
         catch (Exception e) {
 

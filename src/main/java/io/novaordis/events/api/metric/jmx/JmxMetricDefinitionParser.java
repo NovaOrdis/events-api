@@ -17,9 +17,9 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinitionException;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -109,8 +109,7 @@ public class JmxMetricDefinitionParser {
 
         try {
 
-            jmxBusAddress = new AddressImpl(as);
-            jmxBusAddress.setProtocol(JmxBus.PROTOCOL);
+            jmxBusAddress = new JmxAddress(as);
         }
         catch(Exception e) {
 

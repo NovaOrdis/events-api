@@ -21,6 +21,7 @@ import io.novaordis.events.api.metric.jmx.JmxBus;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.address.OSAddress;
@@ -64,9 +65,9 @@ public class MetricSourceFactoryImpl implements MetricSourceFactory {
 
             return new RemoteOS((OSAddress)a);
         }
-        else if (JmxBus.PROTOCOL.equals(a.getProtocol())) {
+        else if (a instanceof JmxAddress) {
 
-            return new JmxBus(a);
+            return new JmxBus((JmxAddress)a);
         }
         else if (a instanceof JBossControllerAddress) {
 

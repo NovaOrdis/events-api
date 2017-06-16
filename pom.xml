@@ -18,6 +18,7 @@
 
         <novaordis.utilities.version>4.7.5</novaordis.utilities.version>
         <novaordis.jboss.cli>1.0.3</novaordis.jboss.cli>
+        <novaordis.jmx.version>1.0.0-SNAPSHOT-3</novaordis.jmx.version>
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
@@ -89,6 +90,11 @@
             <artifactId>novaordis-jboss-cli</artifactId>
             <version>${novaordis.jboss.cli}</version>
         </dependency>
+        <dependency>
+            <groupId>io.novaordis.jmx</groupId>
+            <artifactId>novaordis-jmx</artifactId>
+            <version>${novaordis.jmx.version}</version>
+        </dependency>
 
         <dependency>
             <groupId>junit</groupId>
@@ -96,7 +102,6 @@
             <version>${junit.version}</version>
             <scope>test</scope>
         </dependency>
-
         <dependency>
             <groupId>org.yaml</groupId>
             <artifactId>snakeyaml</artifactId>

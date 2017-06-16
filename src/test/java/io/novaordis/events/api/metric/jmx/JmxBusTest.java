@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
+import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxException;
 import io.novaordis.utilities.address.Address;
 import org.junit.Test;
 
@@ -53,14 +55,12 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus();
 
-        Address a = b.getAddress();
+        JmxAddress a = b.getAddress();
 
-        assertEquals(JmxBus.DEFAULT_HOST, a.getHost());
-        assertEquals(JmxBus.DEFAULT_PORT, a.getPort().intValue());
+        assertNull(a.getHost());
+        assertNull(a.getPort());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-
-        assertEquals(JmxBus.DEFAULT_HOST + ":" + JmxBus.DEFAULT_PORT, b.getAddress().getLiteral());
     }
 
     @Test
@@ -80,15 +80,17 @@ public class JmxBusTest extends MetricSourceTest {
     @Test
     public void constructor_NoUsernamePassword_NoPort() throws Exception {
 
-        JmxBus b = new JmxBus("1.2.3.4");
+        try {
 
-        Address a = b.getAddress();
+            new JmxBus("1.2.3.4");
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
 
-        assertEquals("1.2.3.4", a.getHost());
-        assertEquals(JmxBus.DEFAULT_PORT, a.getPort().intValue());
-        assertNull(a.getUsername());
-        assertNull(a.getPassword());
-        assertEquals("1.2.3.4", a.getLiteral());
+            JmxException cause = (JmxException)e.getCause();
+            String msg = cause.getMessage();
+            assertTrue(msg.contains("missing port"));
+        }
     }
 
     @Test
@@ -101,7 +103,8 @@ public class JmxBusTest extends MetricSourceTest {
         }
         catch(MetricSourceException e) {
 
-            String msg = e.getMessage();
+            JmxException cause = (JmxException)e.getCause();
+            String msg = cause.getMessage();
             assertTrue(msg.contains("invalid port"));
         }
     }
@@ -116,7 +119,8 @@ public class JmxBusTest extends MetricSourceTest {
         }
         catch(MetricSourceException e) {
 
-            String msg = e.getMessage();
+            JmxException cause = (JmxException)e.getCause();
+            String msg = cause.getMessage();
             assertTrue(msg.contains("invalid port"));
         }
     }
@@ -138,9 +142,8 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = new JmxBus("admin:admin123@1.2.3.4:8888");
 
-        Address a = b.getAddress();
+        JmxAddress a = b.getAddress();
 
-        assertEquals(JmxBus.PROTOCOL, a.getProtocol());
         assertEquals("1.2.3.4", a.getHost());
         assertEquals(8888, a.getPort().intValue());
         assertEquals("admin", a.getUsername());
