@@ -23,6 +23,7 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
@@ -121,18 +122,15 @@ public class JmxBusTest extends MetricSourceTest {
     }
 
     @Test
-    public void constructor_InvalidAddress_MissingPassword() throws Exception {
+    public void constructor_MissingPassword() throws Exception {
 
-        try {
+        JmxBus b = new JmxBus("admin@1.2.3.4:2222");
 
-            new JmxBus("admin@1.2.3.4:2222");
-            fail("should have thrown exception");
-        }
-        catch(MetricSourceException e) {
+        Address a = b.getAddress();
+        assertNotNull(a);
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("missing password"));
-        }
+        assertEquals("admin", a.getUsername());
+        assertNull(a.getPassword());
     }
 
     @Test
