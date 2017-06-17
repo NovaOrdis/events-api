@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.address.LocalOSAddress;
@@ -90,11 +91,11 @@ public class MetricSourceDefinitionImplTest extends MetricSourceDefinitionTest {
     @Test
     public void constructor_InferType_JmxBusAddress() throws Exception {
 
-        AddressImpl a = new AddressImpl("jmx://somehost");
+        JmxAddress a = new JmxAddress("jmx://somehost:222");
 
         MetricSourceDefinitionImpl d = new MetricSourceDefinitionImpl("some-name", a);
 
-        assertTrue(new AddressImpl("jmx://somehost").equals(d.getAddress()));
+        assertTrue(new JmxAddress("jmx://somehost:222").equals(d.getAddress()));
         assertEquals("some-name", d.getName());
         assertEquals(MetricSourceType.JMX, d.getType());
     }

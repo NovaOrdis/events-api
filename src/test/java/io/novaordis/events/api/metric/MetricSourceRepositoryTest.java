@@ -104,7 +104,7 @@ public abstract class MetricSourceRepositoryTest {
         JBossController jbc = new JBossController();
         r.add(jbc);
 
-        JmxBus jmxb = new JmxBus("jmx://1.2.3.4/something");
+        JmxBus jmxb = new JmxBus("jmx://1.2.3.4/something:99");
         r.add(jmxb);
 
         Set<MetricSource> allSources = r.getSources();

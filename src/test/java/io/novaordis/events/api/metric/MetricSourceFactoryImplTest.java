@@ -21,6 +21,7 @@ import io.novaordis.events.api.metric.jmx.JmxBus;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.RemoteOS;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.address.OSAddressImpl;
@@ -113,14 +114,14 @@ public class MetricSourceFactoryImplTest extends MetricSourceFactoryTest {
 
         MetricSourceFactoryImpl f = getMetricSourceFactoryToTest();
 
-        MetricSource s = f.buildMetricSource(new AddressImpl("jmx://localhost:1234"));
+        MetricSource s = f.buildMetricSource(new JmxAddress("localhost:1234"));
 
         JmxBus jmxBus = (JmxBus)s;
         assertNotNull(jmxBus);
 
-        assertEquals(new AddressImpl("jmx://localhost:1234"), jmxBus.getAddress());
+        assertEquals(new JmxAddress("localhost:1234"), jmxBus.getAddress());
 
-        MetricSource s2 = f.buildMetricSource(new AddressImpl("jmx://localhost:1234"));
+        MetricSource s2 = f.buildMetricSource(new JmxAddress("localhost:1234"));
 
         JmxBus jmxBus2 = (JmxBus)s2;
         assertNotNull(jmxBus2);

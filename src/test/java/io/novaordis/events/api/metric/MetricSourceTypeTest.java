@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
@@ -99,7 +100,7 @@ public class MetricSourceTypeTest {
     @Test
     public void fromAddress_JmxAddress() throws Exception {
 
-        MetricSourceType t = MetricSourceType.fromAddress(new AddressImpl("jmx://something/"));
+        MetricSourceType t = MetricSourceType.fromAddress(new JmxAddress("jmx://something:99/"));
         assertEquals(MetricSourceType.JMX, t);
     }
 
