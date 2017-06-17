@@ -21,6 +21,7 @@ import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.jmx.JmxException;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -57,10 +58,7 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxAddress a = b.getAddress();
 
-        assertNull(a.getHost());
-        assertNull(a.getPort());
-        assertNull(a.getUsername());
-        assertNull(a.getPassword());
+        assertNull(a);
     }
 
     @Test
@@ -87,7 +85,7 @@ public class JmxBusTest extends MetricSourceTest {
         }
         catch(MetricSourceException e) {
 
-            JmxException cause = (JmxException)e.getCause();
+            AddressException cause = (AddressException)e.getCause();
             String msg = cause.getMessage();
             assertTrue(msg.contains("missing port"));
         }
@@ -103,7 +101,7 @@ public class JmxBusTest extends MetricSourceTest {
         }
         catch(MetricSourceException e) {
 
-            JmxException cause = (JmxException)e.getCause();
+            AddressException cause = (AddressException)e.getCause();
             String msg = cause.getMessage();
             assertTrue(msg.contains("invalid port"));
         }
@@ -119,7 +117,7 @@ public class JmxBusTest extends MetricSourceTest {
         }
         catch(MetricSourceException e) {
 
-            JmxException cause = (JmxException)e.getCause();
+            AddressException cause = (AddressException)e.getCause();
             String msg = cause.getMessage();
             assertTrue(msg.contains("invalid port"));
         }
@@ -204,8 +202,8 @@ public class JmxBusTest extends MetricSourceTest {
     @Test
     public void equalsTest3() throws Exception {
 
-        JmxBus b = new JmxBus();
-        JmxBus b2 = new JmxBus();
+        JmxBus b = new JmxBus("example:77");
+        JmxBus b2 = new JmxBus("example:77");
 
         assertEquals(b, b2);
         assertEquals(b2, b);
@@ -214,7 +212,7 @@ public class JmxBusTest extends MetricSourceTest {
     @Override
     public void hashCodeTest() throws Exception {
 
-        JmxBus b = getMetricSourceToTest();
+        JmxBus b = getMetricSourceToTest("jmx://example:1000");
         assertEquals(b.hashCode(), b.getAddress().hashCode());
     }
 
@@ -236,7 +234,10 @@ public class JmxBusTest extends MetricSourceTest {
         else if (addresses.length == 1) {
 
             String address = addresses[0];
-            address = "jmx://" + address;
+
+            address = address.startsWith(JmxAddress.PROTOCOL) ?
+                    address : JmxAddress.PROTOCOL + JmxAddress.PROTOCOL_SEPARATOR + address;
+
             return new JmxBus(address);
         }
         else {

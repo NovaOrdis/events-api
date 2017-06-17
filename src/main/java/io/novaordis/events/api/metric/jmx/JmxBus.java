@@ -73,26 +73,6 @@ public class JmxBus extends MetricSourceBase {
 
         super(model);
 
-//        Address address = getAddress();
-//
-//        String protocol = address.getProtocol();
-//
-//        if (protocol == null) {
-//
-//            address.setProtocol(PROTOCOL);
-//        }
-//        else if (!PROTOCOL.equals(protocol)) {
-//
-//            throw new MetricSourceException("invalid protocol " + protocol);
-//        }
-//
-//        Integer port = address.getPort();
-//
-//        if (port == null) {
-//
-//            address.setPort(DEFAULT_PORT);
-//        }
-
         log.debug(this + " constructed");
     }
 
