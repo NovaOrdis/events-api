@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionException;
+import io.novaordis.jmx.JmxAddress;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
@@ -61,7 +62,7 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {
 
         JmxMetricDefinitionImpl d = new JmxMetricDefinitionImpl(
-                new JmxBus().getAddress(), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
+                new JmxAddress("jmx://test:70"), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
 
         String definition = d.getId();
 
@@ -78,7 +79,7 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
 
         try {
 
-            new JmxMetricDefinitionImpl(new JmxBus().getAddress(), "test.domain", "999999", "testAttribute");
+            new JmxMetricDefinitionImpl(new JmxAddress("test:80"), "test.domain", "999999", "testAttribute");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -100,7 +101,7 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     @Override
     protected JmxMetricDefinitionImpl getMetricDefinitionToTest() throws Exception {
 
-        JmxBus bus = new JmxBus();
+        JmxBus bus = new JmxBus("jmx://localhost:1234");
         return new JmxMetricDefinitionImpl(bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
     }
 
