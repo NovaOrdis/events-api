@@ -99,7 +99,19 @@ public interface MetricDefinition {
      * If the value is null, build an empty property, but also with the correct name, type, etc.
      *
      * @throws MetricException
+     *
+     * @see MetricDefinition#buildProperty()
      */
     Property buildProperty(Object value) throws MetricException;
+
+    /**
+     * Builds an empty (null valued) property instance corresponding this metric definition - it has the correct name,
+     * type, etc. This is a convenience method, it produces the same result as buildProperty(null).
+    *
+     * @throws MetricException
+     *
+     * @see MetricDefinition#buildProperty(Object)
+     */
+    Property buildProperty() throws MetricException;
 
 }

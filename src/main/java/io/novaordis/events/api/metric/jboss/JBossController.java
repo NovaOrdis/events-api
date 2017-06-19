@@ -117,7 +117,11 @@ public class JBossController extends MetricSourceBase {
     @Override
     public synchronized void start() throws MetricSourceException {
 
-        // TODO idempotence
+        if (isStarted()) {
+
+            log.debug(this + " is already started");
+            return;
+        }
 
         // TODO even if the controller client is present, test connectivity?
 

@@ -111,6 +111,12 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
         return p;
     }
 
+    @Override
+    public Property buildProperty() {
+
+        return buildProperty(null);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

@@ -18,19 +18,24 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricSourceBase;
 import io.novaordis.events.api.metric.MetricSourceException;
-import io.novaordis.jboss.cli.JBossControllerClient;
 import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxClient;
 import io.novaordis.jmx.JmxClientFactory;
+import io.novaordis.jmx.JmxClientFactoryImpl;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.management.ObjectName;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 /**
- * Represents a JMX bus running on a local or remote JVM.
+ * Represents access to a JMX bus running on the local or a remote JVM.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/31/16
@@ -46,7 +51,7 @@ public class JmxBus extends MetricSourceBase {
     //
     // lazily instantiated and connected
     //
-    private JBossControllerClient controllerClient;
+    private JmxClient jmxClient;
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -73,25 +78,58 @@ public class JmxBus extends MetricSourceBase {
 
         super(model);
 
+        //
+        // the default client factory, produces a regular JmxClient instance
+        //
+
+        this.clientFactory = new JmxClientFactoryImpl();
+
         log.debug(this + " constructed");
     }
 
     // MetricSource implementation -------------------------------------------------------------------------------------
 
     @Override
-    public void start() throws MetricSourceException {
+    public synchronized void start() throws MetricSourceException {
 
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+        if (isStarted()) {
+
+            log.debug(this + " already started");
+            return;
+        }
+
+        log.debug(this + " starting ...");
+
+        try {
+
+            //
+            // lazy instantiation
+            //
+
+            if (jmxClient == null) {
+
+                JmxClient c = clientFactory.build(getAddress());
+                setJmxClient(c);
+            }
+
+            jmxClient.connect();
+
+            log.debug(this + " started");
+        }
+        catch(Exception e) {
+
+            throw new MetricSourceException(e);
+        }
     }
 
     @Override
-    public boolean isStarted() {
+    public synchronized boolean isStarted() {
 
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+        return jmxClient != null && jmxClient.isConnected();
     }
 
     @Override
-    public void stop() {
+    public synchronized void stop() {
 
         throw new RuntimeException("stop() NOT YET IMPLEMENTED");
     }
@@ -105,14 +143,62 @@ public class JmxBus extends MetricSourceBase {
     }
 
     @Override
-    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricSourceException {
+    public List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricException {
 
         if (!isStarted()) {
 
             throw new IllegalStateException(this + " not started");
         }
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        List<Property> properties = null;
+
+        for(MetricDefinition md : metricDefinitions) {
+
+            if (!(md instanceof JmxMetricDefinition)) {
+
+                throw new IllegalArgumentException(this + " does not handle non-JMX metric " + md);
+            }
+
+            //
+            // build an initially null-valued property
+            //
+            Property p = md.buildProperty();
+
+            Object value;
+
+            JmxMetricDefinition jbmd = (JmxMetricDefinition)md;
+
+            try {
+
+                ObjectName on = new ObjectName(jbmd.getDomainName() + ":" + jbmd.getKeyValuePairs());
+                value = jmxClient.getMBeanServerConnection().getAttribute(on, jbmd.getAttributeName());
+
+                if (properties == null) {
+
+                    properties = new ArrayList<>();
+                }
+
+                p.setValue(value);
+                properties.add(p);
+            }
+            catch(Exception e) {
+
+                //
+                // at some time during the handling, we failed. Log and return a null-valued property
+                //
+
+                log.warn("failed to collect " + md.getId() + " from " + this, e);
+            }
+        }
+
+        if (properties == null) {
+
+            return Collections.emptyList();
+        }
+        else {
+
+            return properties;
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -124,6 +210,23 @@ public class JmxBus extends MetricSourceBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    void setJmxClientFactory(JmxClientFactory factory) {
+
+        this.clientFactory = factory;
+    }
+
+    void setJmxClient(JmxClient c) {
+
+        log.debug(this + " sets the JMX client " + c);
+
+        this.jmxClient = c;
+
+        if(jmxClient != null) {
+
+            setAddress(jmxClient.getAddress());
+        }
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

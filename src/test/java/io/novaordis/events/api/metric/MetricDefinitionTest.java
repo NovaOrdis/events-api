@@ -154,6 +154,30 @@ public abstract class MetricDefinitionTest {
     }
 
     @Test
+    public void buildProperty_Null2() throws Exception {
+
+        MetricDefinition d = getMetricDefinitionToTest();
+
+        String id = d.getId();
+        Class type = d.getType();
+        MeasureUnit mu = d.getBaseUnit();
+
+        Property p = d.buildProperty();
+
+        String name = p.getName();
+        Class pType = p.getType();
+        MeasureUnit pMu = p.getMeasureUnit();
+        Object pValue = p.getValue();
+
+        assertNotNull(p);
+
+        assertEquals(name, id);
+        assertEquals(pType, type);
+        assertEquals(pMu, mu);
+        assertNull(pValue);
+    }
+
+    @Test
     public void buildProperty() throws Exception {
 
         MetricDefinition d = getMetricDefinitionToTest();

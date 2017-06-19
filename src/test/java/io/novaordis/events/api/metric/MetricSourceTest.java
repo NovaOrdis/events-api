@@ -91,7 +91,7 @@ public abstract class MetricSourceTest {
 
         MetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
 
-        MetricSource source2 = getMetricSourceToTest("other-host");
+        MetricSource source2 = getMetricSourceToTest("other-host:1000");
 
         MetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
 
@@ -170,7 +170,7 @@ public abstract class MetricSourceTest {
         MetricSourceBase source = (MetricSourceBase)getMetricSourceToTest();
         MetricDefinition md = getCorrespondingMockMetricDefinition(source.getAddress());
 
-        MetricSource source2 = getMetricSourceToTest("other-host");
+        MetricSource source2 = getMetricSourceToTest("other-host:1000");
         MetricDefinition md2 = getCorrespondingMockMetricDefinition(source2.getAddress());
 
         source.start();

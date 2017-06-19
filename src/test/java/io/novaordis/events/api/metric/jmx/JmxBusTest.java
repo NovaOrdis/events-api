@@ -19,7 +19,6 @@ package io.novaordis.events.api.metric.jmx;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jmx.JmxAddress;
-import io.novaordis.jmx.JmxException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import org.junit.Test;
@@ -225,11 +224,25 @@ public class JmxBusTest extends MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
+    protected MockJmxMetricDefinition getCorrespondingMockMetricDefinition(Address address)
+            throws Exception {
+
+        if (!(address instanceof JmxAddress)) {
+
+            fail("we expect a JmxAddress but we got " + address);
+        }
+
+        return new MockJmxMetricDefinition((JmxAddress)address, "test.domain", "service=MockService", "testAttribute");
+    }
+
+    @Override
     protected JmxBus getMetricSourceToTest(String... addresses) throws Exception {
+
+        JmxBus testInstance;
 
         if (addresses.length == 0) {
 
-            return new JmxBus();
+            testInstance =  new JmxBus("jmx://mock-jmx-server:1000");
         }
         else if (addresses.length == 1) {
 
@@ -238,13 +251,21 @@ public class JmxBusTest extends MetricSourceTest {
             address = address.startsWith(JmxAddress.PROTOCOL) ?
                     address : JmxAddress.PROTOCOL + JmxAddress.PROTOCOL_SEPARATOR + address;
 
-            return new JmxBus(address);
+            testInstance = new JmxBus(address);
         }
         else {
 
             // at most one argument is expected
             throw new IllegalArgumentException(addresses.length + " arguments");
         }
+
+        //
+        // install a factory that produces an automatically testable client
+        //
+
+        testInstance.setJmxClientFactory(new MockJmxClientFactory());
+
+        return testInstance;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

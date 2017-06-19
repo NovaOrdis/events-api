@@ -16,33 +16,77 @@
 
 package io.novaordis.events.api.metric.jmx;
 
-import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxClient;
+import io.novaordis.jmx.JmxException;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import javax.management.MBeanServerConnection;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/15/17
+ * @since 6/16/17
  */
-public class MockJmxMetricDefinition extends JmxMetricDefinitionImpl {
+public class MockJmxClient implements JmxClient {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockJmxClient.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private JmxAddress address;
+
+    private boolean connected;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
-     *                                   must be human-readable, as it will most likely end up in error messages.
-     * @throws IllegalArgumentException
-     */
-    public MockJmxMetricDefinition(JmxAddress metricSourceAddress, String objectNameDomain,
-                                   String objectNameKeyValuePairs, String attributeName)
-            throws MetricDefinitionException {
+    public MockJmxClient(JmxAddress address) {
 
-        super(metricSourceAddress, objectNameDomain, objectNameKeyValuePairs, attributeName);
+        this.address = address;
+    }
+
+    // JmxClient implementation ----------------------------------------------------------------------------------------
+
+    @Override
+    public JmxAddress getAddress() {
+
+        return address;
+    }
+
+    @Override
+    public void setProtocolProviderPackage(String protocolProviderPackage) {
+        throw new RuntimeException("setProtocolProviderPackage() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void connect() throws JmxException {
+
+        connected = true;
+
+        log.info(this + " connected");
+    }
+
+    @Override
+    public void disconnect() {
+
+        connected = false;
+
+        log.info(this + " disconnected");
+    }
+
+    @Override
+    public boolean isConnected() {
+
+        return connected;
+    }
+
+    @Override
+    public MBeanServerConnection getMBeanServerConnection() throws JmxException {
+        throw new RuntimeException("getMBeanServerConnection() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

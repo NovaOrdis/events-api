@@ -16,14 +16,16 @@
 
 package io.novaordis.events.api.metric.jmx;
 
-import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxClient;
+import io.novaordis.jmx.JmxClientFactory;
+import io.novaordis.jmx.JmxException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/15/17
+ * @since 6/16/17
  */
-public class MockJmxMetricDefinition extends JmxMetricDefinitionImpl {
+public class MockJmxClientFactory implements JmxClientFactory {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -33,16 +35,12 @@ public class MockJmxMetricDefinition extends JmxMetricDefinitionImpl {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @throws MetricDefinitionException in case an invalid metric definition is encountered. The error message
-     *                                   must be human-readable, as it will most likely end up in error messages.
-     * @throws IllegalArgumentException
-     */
-    public MockJmxMetricDefinition(JmxAddress metricSourceAddress, String objectNameDomain,
-                                   String objectNameKeyValuePairs, String attributeName)
-            throws MetricDefinitionException {
+    // JmxClientFactory implementation ---------------------------------------------------------------------------------
 
-        super(metricSourceAddress, objectNameDomain, objectNameKeyValuePairs, attributeName);
+    @Override
+    public JmxClient build(JmxAddress address) throws JmxException {
+
+        return new MockJmxClient(address);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
