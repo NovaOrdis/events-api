@@ -131,7 +131,16 @@ public class JmxBus extends MetricSourceBase {
     @Override
     public synchronized void stop() {
 
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+        if (!isStarted()) {
+
+            log.debug(this + " is already stopped");
+            return;
+        }
+
+        jmxClient.disconnect();
+        jmxClient = null;
+
+        log.debug(this + " stopped");
     }
 
     // MetricSourceBase overrides --------------------------------------------------------------------------------------
@@ -164,6 +173,13 @@ public class JmxBus extends MetricSourceBase {
             //
             Property p = md.buildProperty();
 
+            if (properties == null) {
+
+                properties = new ArrayList<>();
+            }
+
+            properties.add(p);
+
             Object value;
 
             JmxMetricDefinition jbmd = (JmxMetricDefinition)md;
@@ -172,14 +188,7 @@ public class JmxBus extends MetricSourceBase {
 
                 ObjectName on = new ObjectName(jbmd.getDomainName() + ":" + jbmd.getKeyValuePairs());
                 value = jmxClient.getMBeanServerConnection().getAttribute(on, jbmd.getAttributeName());
-
-                if (properties == null) {
-
-                    properties = new ArrayList<>();
-                }
-
                 p.setValue(value);
-                properties.add(p);
             }
             catch(Exception e) {
 

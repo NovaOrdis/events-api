@@ -59,6 +59,7 @@ public class MockJmxClient implements JmxClient {
 
     @Override
     public void setProtocolProviderPackage(String protocolProviderPackage) {
+
         throw new RuntimeException("setProtocolProviderPackage() NOT YET IMPLEMENTED");
     }
 
@@ -86,6 +87,7 @@ public class MockJmxClient implements JmxClient {
 
     @Override
     public MBeanServerConnection getMBeanServerConnection() throws JmxException {
+
         throw new RuntimeException("getMBeanServerConnection() NOT YET IMPLEMENTED");
     }
 
