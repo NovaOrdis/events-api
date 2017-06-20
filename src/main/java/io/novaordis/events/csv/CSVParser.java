@@ -93,10 +93,17 @@ public class CSVParser {
         }
     }
 
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    public CSVFormat getFormat() {
+
+        return csvFormat;
+    }
+
     /**
      * @param lineNumber may be null, in case the line number information is not available.
      */
-    public Event parseLine(Long lineNumber, String line) throws ParsingException {
+    public Event parse(Long lineNumber, String line) throws ParsingException {
 
         //
         // we ignore empty lines
@@ -194,13 +201,6 @@ public class CSVParser {
         }
 
         return event;
-    }
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    public CSVFormat getFormat() {
-
-        return csvFormat;
     }
 
     @Override

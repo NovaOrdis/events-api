@@ -186,7 +186,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("a, b, c");
 
-        GenericEvent event = (GenericEvent)parser.parseLine(7L, "A, B, C");
+        GenericEvent event = (GenericEvent)parser.parse(7L, "A, B, C");
         assertNotNull(event);
 
         List<Property> properties = event.getPropertyList();
@@ -215,7 +215,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("a, b, c");
 
-        GenericEvent event = (GenericEvent)parser.parseLine(7L, "A, B, C, D");
+        GenericEvent event = (GenericEvent)parser.parse(7L, "A, B, C, D");
         assertNotNull(event);
 
         List<Property> properties = event.getPropertyList();
@@ -244,7 +244,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("a, b, c");
 
-        GenericEvent event = (GenericEvent)parser.parseLine(1L, "A, B");
+        GenericEvent event = (GenericEvent)parser.parse(1L, "A, B");
         assertNotNull(event);
 
         List<Property> properties = event.getPropertyList();
@@ -269,7 +269,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("brand(string), count(int)");
 
-        GenericEvent event = (GenericEvent)parser.parseLine(5L, "Audi, 5");
+        GenericEvent event = (GenericEvent)parser.parse(5L, "Audi, 5");
 
         assertNotNull(event);
 
@@ -295,7 +295,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("T(time:MMM-dd yyyy HH:mm:ss), brand(string), count(int)");
 
-        GenericTimedEvent event = (GenericTimedEvent)parser.parseLine(1L, "Jan-01 2016 12:01:01, BMW, 7");
+        GenericTimedEvent event = (GenericTimedEvent)parser.parse(1L, "Jan-01 2016 12:01:01, BMW, 7");
         assertNotNull(event);
 
         Long timestamp = event.getTime();
@@ -324,7 +324,7 @@ public class CSVParserTest {
 
         CSVParser parser = new CSVParser("brand(string), T(time:MMM-dd yyyy HH:mm:ss), count(int)");
 
-        GenericTimedEvent event = (GenericTimedEvent)parser.parseLine(1L, "BMW, Jan-01 2016 12:01:01, 7");
+        GenericTimedEvent event = (GenericTimedEvent)parser.parse(1L, "BMW, Jan-01 2016 12:01:01, 7");
         assertNotNull(event);
 
         Long timestamp = event.getTime();
@@ -355,7 +355,7 @@ public class CSVParserTest {
 
         String line = "something, \"something, else\"";
 
-        GenericEvent e = (GenericEvent)parser.parseLine(77L, line);
+        GenericEvent e = (GenericEvent)parser.parse(77L, line);
 
         List<Property> props = e.getPropertyList();
 
@@ -378,7 +378,7 @@ public class CSVParserTest {
 
         String line = "\"blah\", \"blah blah\"";
 
-        GenericEvent e = (GenericEvent)parser.parseLine(77L, line);
+        GenericEvent e = (GenericEvent)parser.parse(77L, line);
 
         List<Property> props = e.getPropertyList();
 
