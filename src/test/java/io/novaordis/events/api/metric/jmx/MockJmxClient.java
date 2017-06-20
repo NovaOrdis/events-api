@@ -42,11 +42,14 @@ public class MockJmxClient implements JmxClient {
 
     private boolean connected;
 
+    private MockMBeanServerConnection mockMBeanServerConnection;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockJmxClient(JmxAddress address) {
 
         this.address = address;
+        this.mockMBeanServerConnection = new MockMBeanServerConnection();
     }
 
     // JmxClient implementation ----------------------------------------------------------------------------------------
@@ -88,7 +91,7 @@ public class MockJmxClient implements JmxClient {
     @Override
     public MBeanServerConnection getMBeanServerConnection() throws JmxException {
 
-        throw new RuntimeException("getMBeanServerConnection() NOT YET IMPLEMENTED");
+        return mockMBeanServerConnection;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

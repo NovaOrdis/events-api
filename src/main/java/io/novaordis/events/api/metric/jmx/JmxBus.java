@@ -29,6 +29,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -159,7 +160,12 @@ public class JmxBus extends MetricSourceBase {
             throw new IllegalStateException(this + " not started");
         }
 
-        List<Property> properties = null;
+        if (metricDefinitions.isEmpty()) {
+
+            return Collections.emptyList();
+        }
+
+        List<Property> properties = new ArrayList<>();
 
         for(MetricDefinition md : metricDefinitions) {
 
@@ -168,27 +174,15 @@ public class JmxBus extends MetricSourceBase {
                 throw new IllegalArgumentException(this + " does not handle non-JMX metric " + md);
             }
 
-            //
-            // build an initially null-valued property
-            //
-            Property p = md.buildProperty();
-
-            if (properties == null) {
-
-                properties = new ArrayList<>();
-            }
-
-            properties.add(p);
-
-            Object value;
+            Object value = null;
 
             JmxMetricDefinition jbmd = (JmxMetricDefinition)md;
 
             try {
 
                 ObjectName on = new ObjectName(jbmd.getDomainName() + ":" + jbmd.getKeyValuePairs());
-                value = jmxClient.getMBeanServerConnection().getAttribute(on, jbmd.getAttributeName());
-                p.setValue(value);
+                MBeanServerConnection mBeanServerConnection = jmxClient.getMBeanServerConnection();
+                value = mBeanServerConnection.getAttribute(on, jbmd.getAttributeName());
             }
             catch(Exception e) {
 
@@ -198,16 +192,12 @@ public class JmxBus extends MetricSourceBase {
 
                 log.warn("failed to collect " + md.getId() + " from " + this, e);
             }
+
+            Property p = md.buildProperty(value);
+            properties.add(p);
         }
 
-        if (properties == null) {
-
-            return Collections.emptyList();
-        }
-        else {
-
-            return properties;
-        }
+        return properties;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

@@ -16,12 +16,20 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.LongProperty;
+import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
+import org.junit.After;
 import org.junit.Test;
+
+import javax.management.ObjectName;
+import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -45,6 +53,12 @@ public class JmxBusTest extends MetricSourceTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @After
+    public void cleanup() throws Exception {
+
+        MockMBeanServerConnection.clear();
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -209,6 +223,7 @@ public class JmxBusTest extends MetricSourceTest {
     }
 
     @Override
+    @Test
     public void hashCodeTest() throws Exception {
 
         JmxBus b = getMetricSourceToTest("jmx://example:1000");
@@ -217,7 +232,33 @@ public class JmxBusTest extends MetricSourceTest {
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
-    // collectMetrics() ------------------------------------------------------------------------------------------------
+    // collect() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void collect_Long_MetricDefinitionDoesNotSpecifyType() throws Exception {
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test.domain:service=Mock"), "TestAttribute", 7L);
+
+        JmxBus b = getMetricSourceToTest("jmx://example:1000");
+
+        JmxMetricDefinition md =
+                new JmxMetricDefinitionImpl(b.getAddress(), "test.domain", "service=Mock", "TestAttribute");
+
+        List<MetricDefinition> mds = Collections.singletonList(md);
+
+        b.start();
+
+        List<Property> properties = b.collect(mds);
+
+        assertEquals(1, properties.size());
+        Property p = properties.get(0);
+
+        assertTrue(p instanceof LongProperty);
+        LongProperty lp = (LongProperty)p;
+        assertEquals("test.domain:service=Mock/TestAttribute", lp.getName());
+        assertEquals(Long.class, lp.getType());
+        assertEquals(7L, lp.getLong().longValue());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

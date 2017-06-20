@@ -19,6 +19,8 @@ package io.novaordis.events.api.event;
 /**
  * A property for which we don't know the type, measure unit and value.
  *
+ * WARNING: It must be used with care, as it cannot really change its type after being assigned a value
+ * after construction.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
