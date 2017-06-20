@@ -108,7 +108,7 @@ public class JmxMetricSourceDefinitionUtil {
             return;
         }
 
-        log.debug("processing " + classpathElement);
+        log.debug("processing classpath element " + classpathElement);
 
         String jbossCliClientJarName = "jboss-cli-client.jar";
 
