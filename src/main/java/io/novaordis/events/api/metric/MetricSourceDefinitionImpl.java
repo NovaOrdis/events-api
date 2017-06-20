@@ -16,8 +16,9 @@
 
 package io.novaordis.events.api.metric;
 
-import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.Address;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -34,6 +35,8 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
     public static final String PORT_YAML_KEY = "port";
     public static final String USERNAME_YAML_KEY = "username";
     public static final String PASSWORD_YAML_KEY = "password";
+
+    private static final Logger log = LoggerFactory.getLogger(MetricSourceRepositoryImpl.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -179,14 +182,16 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
             password = (String)o;
         }
 
-        if (MetricSourceType.JBOSS_CONTROLLER.equals(type)) {
+        try {
 
-            this.address = new JBossControllerAddress(username, password, host, port);
+            this.address = type.toAddress(username, password, host, port);
         }
-        else {
+        catch(Exception e) {
 
-            throw new RuntimeException("NOT YET IMPLEMENTED: support for type " + type);
+            throw new MetricSourceException(e);
         }
+
+        log.debug(this + " constructed");
     }
 
     // MetricSourceDefinition ------------------------------------------------------------------------------------------

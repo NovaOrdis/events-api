@@ -18,12 +18,14 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.jmx.JmxAddress;
-import io.novaordis.utilities.address.AddressImpl;
+import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -91,6 +93,12 @@ public class MetricSourceTypeTest {
     }
 
     @Test
+    public void fromAddress_RemoteOSAddress() throws Exception {
+
+        fail("RETURN HERE");
+    }
+
+    @Test
     public void fromAddress_JBossControllerAddress() throws Exception {
 
         MetricSourceType t = MetricSourceType.fromAddress(new JBossControllerAddress());
@@ -102,6 +110,104 @@ public class MetricSourceTypeTest {
 
         MetricSourceType t = MetricSourceType.fromAddress(new JmxAddress("jmx://something:99/"));
         assertEquals(MetricSourceType.JMX, t);
+    }
+
+    // toAddress() -----------------------------------------------------------------------------------------------------
+
+    @Test
+    public void toAddress_LOCAL_OS() throws Exception {
+
+        Address a = MetricSourceType.LOCAL_OS.toAddress("test-user", "test-password", "test-host", 1000);
+
+        LocalOSAddress loa = (LocalOSAddress)a;
+
+        assertNotNull(loa);
+
+        assertNull(loa.getPort());
+        assertNull(loa.getUsername());
+        assertNull(loa.getPassword());
+    }
+
+    @Test
+    public void toAddress_LOCAL_OS_AllNull() throws Exception {
+
+        Address a = MetricSourceType.LOCAL_OS.toAddress(null, null, null, null);
+
+        assertNotNull(a);
+
+        LocalOSAddress loa = (LocalOSAddress)a;
+
+        assertNotNull(loa);
+
+        assertNull(loa.getPort());
+        assertNull(loa.getUsername());
+        assertNull(loa.getPassword());
+    }
+
+    @Test
+    public void toAddress_REMOTE_OS() throws Exception {
+
+        fail("RETURN HERE");
+    }
+
+    @Test
+    public void toAddress_JBOSS_CONTROLLER() throws Exception {
+
+        Address a = MetricSourceType.JBOSS_CONTROLLER.toAddress("test-user", "test-password", "test-host", 1000);
+
+        assertNotNull(a);
+
+        JBossControllerAddress jca = (JBossControllerAddress)a;
+
+        assertEquals("test-user", jca.getUsername());
+        assertEquals("test-password", new String(jca.getPassword()));
+        assertEquals("test-host", jca.getHost());
+        assertEquals(1000, jca.getPort().intValue());
+    }
+
+    @Test
+    public void toAddress_JBOSS_CONTROLLER_NullUsernameAndPassword() throws Exception {
+
+        Address a = MetricSourceType.JBOSS_CONTROLLER.toAddress(null, null, "test-host", 1000);
+
+        assertNotNull(a);
+
+        JBossControllerAddress jca = (JBossControllerAddress)a;
+
+        assertNull(jca.getUsername());
+        assertNull(jca.getPassword());
+        assertEquals("test-host", jca.getHost());
+        assertEquals(1000, jca.getPort().intValue());
+    }
+
+    @Test
+    public void toAddress_JMX() throws Exception {
+
+        Address a = MetricSourceType.JMX.toAddress("test-user", "test-password", "test-host", 1000);
+
+        assertNotNull(a);
+
+        JmxAddress jmxa = (JmxAddress)a;
+
+        assertEquals("test-user", jmxa.getUsername());
+        assertEquals("test-password", new String(jmxa.getPassword()));
+        assertEquals("test-host", jmxa.getHost());
+        assertEquals(1000, jmxa.getPort().intValue());
+    }
+
+    @Test
+    public void toAddress_JMX_NullUsernameAndPassword() throws Exception {
+
+        Address a = MetricSourceType.JMX.toAddress(null, null, "test-host", 1000);
+
+        assertNotNull(a);
+
+        JmxAddress jmxa = (JmxAddress)a;
+
+        assertNull(jmxa.getUsername());
+        assertNull(jmxa.getPassword());
+        assertEquals("test-host", jmxa.getHost());
+        assertEquals(1000, jmxa.getPort().intValue());
     }
 
     // getLiteral()  ---------------------------------------------------------------------------------------------------

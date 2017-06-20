@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.LocalOSAddress;
 
 /**
@@ -30,6 +31,7 @@ public enum MetricSourceType {
     // Constants -------------------------------------------------------------------------------------------------------
 
     LOCAL_OS("local-os"),
+    REMOTE_OS("ssh"),
     JBOSS_CONTROLLER("jboss-controller"),
     JMX("jmx"),
     ;
@@ -53,6 +55,8 @@ public enum MetricSourceType {
 
     /**
      * @return null if no know MetricSourceType is identified
+     *
+     * @see MetricSourceType#toAddress(String, String, String, Integer)
      */
     public static MetricSourceType fromAddress(Address a) {
 
@@ -98,6 +102,38 @@ public enum MetricSourceType {
     public String getLiteral() {
 
         return literal;
+    }
+
+    /**
+     * Creates an address instance corresponding to this source type.
+     *
+     * @param username may be null
+     * @param password may be null
+     * @param host may be null for some types of sources
+     * @param port may be null for some types of sources
+     *
+     * @return a valid address corresponding to this source type.
+     *
+     * @see MetricSourceType#fromAddress(Address)
+     *
+     * @exception AddressException in case we run into troubles building the address instance.
+     */
+    public Address toAddress(String username, String password, String host, Integer port) throws AddressException {
+
+        if (LOCAL_OS.equals(this)) {
+
+            return new LocalOSAddress();
+        }
+        else if (JBOSS_CONTROLLER.equals(this)) {
+
+            return new JBossControllerAddress(username, password, host, port);
+        }
+        else if (JMX.equals(this)) {
+
+            return new JmxAddress(username, password, host, port);
+        }
+
+        throw new RuntimeException("NOT YET IMPLEMENTED for " + this);
     }
 
 }
