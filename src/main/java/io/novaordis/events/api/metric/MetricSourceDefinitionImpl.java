@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.metric.jmx.JmxMetricSourceDefinitionUtil;
+import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -189,6 +191,16 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
         catch(Exception e) {
 
             throw new MetricSourceException(e);
+        }
+
+        //
+        // extra processing required by various types of metric source definitions. In case we find ourselves using
+        // this pattern a lot, we should refactor and introduce a MetricSourceDefinition class hierarchy.
+        //
+
+        if (MetricSourceType.JMX.equals(type)) {
+
+            JmxMetricSourceDefinitionUtil.extractAdditionalConfigurationElements((JmxAddress) address, m);
         }
 
         log.debug(this + " constructed");
