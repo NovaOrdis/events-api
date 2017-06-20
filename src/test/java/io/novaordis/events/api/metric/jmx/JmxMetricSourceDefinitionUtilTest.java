@@ -16,10 +16,19 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.metric.MetricSourceDefinition;
+import io.novaordis.jmx.JmxAddress;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -35,11 +44,34 @@ public class JmxMetricSourceDefinitionUtilTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    protected File scratchDirectory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Before
+    public void before() throws Exception {
+
+        String projectBaseDirName = System.getProperty("basedir");
+        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
+        assertTrue(scratchDirectory.isDirectory());
+    }
+
+    @After
+    public void after() throws Exception {
+
+        //
+        // scratch directory cleanup
+        //
+
+        assertTrue(io.novaordis.utilities.Files.rmdir(scratchDirectory, false));
+
+    }
+
     // Tests -----------------------------------------------------------------------------------------------------------
+
+    // extractAdditionalConfigurationElements() ------------------------------------------------------------------------
 
     @Test
     public void extractAdditionalConfigurationElements_NullAddress() throws Exception {
@@ -54,6 +86,82 @@ public class JmxMetricSourceDefinitionUtilTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("null address"));
         }
+    }
+
+    @Test
+    public void extractAdditionalConfigurationElements_NoClasspath() throws Exception {
+
+        JmxAddress a = new JmxAddress("jmx://localhost:1000");
+
+        Map m = new HashMap<>();
+
+        JmxMetricSourceDefinitionUtil.extractAdditionalConfigurationElements(a, m);
+
+        //
+        // will warn
+        //
+    }
+
+    @Test
+    public void extractAdditionalConfigurationElements() throws Exception {
+
+        JmxAddress a = new JmxAddress("jmx://localhost:1000");
+
+        Map m = new HashMap<>();
+
+        //noinspection unchecked
+        m.put(MetricSourceDefinition.CLASSPATH_YAML_KEY, Collections.singletonList("/some/class/path/element.jar"));
+
+        JmxMetricSourceDefinitionUtil.extractAdditionalConfigurationElements(a, m);
+
+    }
+
+    // processClasspathElementHeuristics() -----------------------------------------------------------------------------
+
+    @Test
+    public void processClasspathElementHeuristics_Null() throws Exception {
+
+        JmxAddress address = new JmxAddress("jmx://localhost:1000");
+
+        // nothing happens, no exception
+        JmxMetricSourceDefinitionUtil.processClasspathElementHeuristics(address, null);
+    }
+
+    @Test
+    public void processClasspathElementHeuristics_JBossEAP6_DirectoryDoesNotExist() throws Exception {
+
+        JmxAddress address = new JmxAddress("jmx://localhost:1000");
+
+        String classpathElement = "/some/nonexistent/directory/jboss-cli-client.jar";
+
+        // nothing happens, no exception, will warn
+        JmxMetricSourceDefinitionUtil.processClasspathElementHeuristics(address, classpathElement);
+    }
+
+    @Test
+    public void processClasspathElementHeuristics_JBossEAP6() throws Exception {
+
+        JmxAddress address = new JmxAddress("jmx://localhost:1000");
+
+        assertNull(address.getJmxServiceUrlProtocol());
+
+        //
+        // create a valid JBoss home simulation with a version file
+        //
+
+        File d = new File(scratchDirectory, "jboss-home/bin/client");
+        assertTrue(d.mkdirs());
+        File jbossCliClientJar = new File(d, "jboss-cli-client.jar");
+        io.novaordis.utilities.Files.write(jbossCliClientJar, "SYNTHETIC");
+        io.novaordis.utilities.Files.write(new File(d.getParentFile().getParentFile(), "version.txt"),
+                "Red Hat JBoss Enterprise Application Platform - Version 6.4.15.GA\n");
+
+        String classpathElement = jbossCliClientJar.getPath();
+
+        JmxMetricSourceDefinitionUtil.processClasspathElementHeuristics(address, classpathElement);
+
+        String expected = JmxAddress.EAP6_JMX_SERVICE_URL_PROTOCOL;
+        assertEquals(expected, address.getJmxServiceUrlProtocol());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

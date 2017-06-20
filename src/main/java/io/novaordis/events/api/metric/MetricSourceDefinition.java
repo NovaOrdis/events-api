@@ -29,6 +29,17 @@ public interface MetricSourceDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    //
+    // YAML configuration elements
+    //
+
+    String TYPE_YAML_KEY = "type";
+    String HOST_YAML_KEY = "host";
+    String PORT_YAML_KEY = "port";
+    String USERNAME_YAML_KEY = "username";
+    String PASSWORD_YAML_KEY = "password";
+    String CLASSPATH_YAML_KEY = "classpath";
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------

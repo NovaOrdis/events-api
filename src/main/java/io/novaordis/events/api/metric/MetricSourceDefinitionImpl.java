@@ -32,12 +32,6 @@ public class MetricSourceDefinitionImpl implements MetricSourceDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final String TYPE_YAML_KEY = "type";
-    public static final String HOST_YAML_KEY = "host";
-    public static final String PORT_YAML_KEY = "port";
-    public static final String USERNAME_YAML_KEY = "username";
-    public static final String PASSWORD_YAML_KEY = "password";
-
     private static final Logger log = LoggerFactory.getLogger(MetricSourceRepositoryImpl.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
