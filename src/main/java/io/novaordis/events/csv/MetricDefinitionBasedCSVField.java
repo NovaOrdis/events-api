@@ -92,6 +92,13 @@ public class MetricDefinitionBasedCSVField implements CSVField {
         return metricDefinition;
     }
 
+    @Override
+    public String toString() {
+
+        return "CSV Field (" + metricDefinition + ")";
+    }
+
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
