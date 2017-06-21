@@ -182,7 +182,12 @@ public class JmxBus extends MetricSourceBase {
 
                 ObjectName on = new ObjectName(jbmd.getDomainName() + ":" + jbmd.getKeyValuePairs());
                 MBeanServerConnection mBeanServerConnection = jmxClient.getMBeanServerConnection();
-                value = mBeanServerConnection.getAttribute(on, jbmd.getAttributeName());
+                String attributeName = jbmd.getAttributeName();
+                value = mBeanServerConnection.getAttribute(on, attributeName);
+
+                log.debug("the JMX server returned " +
+                        value + (value == null ? "" : " (" + value.getClass().getSimpleName() + ")") +
+                        " for \"" + attributeName + "\"");
             }
             catch(Exception e) {
 
