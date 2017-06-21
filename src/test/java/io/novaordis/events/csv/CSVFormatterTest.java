@@ -57,10 +57,12 @@ public class CSVFormatterTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // process() -------------------------------------------------------------------------------------------------------
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // format() --------------------------------------------------------------------------------------------------------
 
     @Test
-    public void process_WeDumpTheFaultOnFaultEvent() throws Exception {
+    public void format_WeDumpTheFaultOnFaultEvent() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -78,7 +80,7 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void process_RegularUntimedEvent_NoConfiguredOutputFormat() throws Exception {
+    public void format_RegularNonTimedEvent_NoConfiguredOutputFormat() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -103,7 +105,7 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void process_RegularTimedEvent_NoConfiguredOutputFormat() throws Exception {
+    public void format_RegularTimedEvent_NoConfiguredOutputFormat() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -131,7 +133,7 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void process_RegularUntimedEvent_WithConfiguredOutputFormat() throws Exception {
+    public void format_RegularNonTimedEvent_WithConfiguredOutputFormat() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -157,7 +159,7 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void process_RegularTimedEvent_WithConfiguredOutputFormat() throws Exception {
+    public void format_RegularTimedEvent_WithConfiguredOutputFormat() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -187,7 +189,7 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void process_TimestampHasTimezoneOffsetInfo() throws Exception {
+    public void format_TimestampHasTimezoneOffsetInfo() throws Exception {
 
         CSVFormatter c = new CSVFormatter();
 
@@ -212,6 +214,24 @@ public class CSVFormatterTest {
         String s = c.format(mte);
 
         assertEquals("07/01/16 10:00:00\n", s);
+    }
+
+    @Test
+    public void format_FieldNameContainsDot() throws Exception {
+
+        CSVFormatter c = new CSVFormatter();
+
+        CSVFormat format = new CSVFormat();
+        format.addField("some.name.with.dots");
+
+        c.setFormat(format);
+
+        MockTimedEvent mte = new MockTimedEvent(System.currentTimeMillis());
+        mte.setLongProperty("some.name.with.dots", 1000);
+
+        String s = c.format(mte);
+
+        assertEquals("1000\n", s);
     }
 
     // toString(Event) -------------------------------------------------------------------------------------------------

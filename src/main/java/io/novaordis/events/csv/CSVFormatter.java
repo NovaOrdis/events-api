@@ -308,30 +308,48 @@ public class CSVFormatter {
             }
             else {
 
-                int i;
-                String mapKey = null;
                 Object externalizedValue = null;
 
-                if ((i = fieldName.indexOf('.')) != -1) {
-
-                    //
-                    // map property
-                    //
-
-                    mapKey = fieldName.substring(i + 1);
-                    fieldName  = fieldName.substring(0, i);
-                }
-
+                //
+                // attempt to locate a property with the given name
+                //
 
                 Property p = event.getProperty(fieldName);
 
-                if (p instanceof MapProperty) {
-
-                    externalizedValue = ((MapProperty)p).externalizeValue(mapKey);
-                }
-                else if (p != null) {
+                if (p != null) {
 
                     externalizedValue = p.externalizeValue();
+                }
+                else {
+
+                    //
+                    // look for dots, map properties, etc.
+                    //
+
+                    int i;
+                    String mapKey = null;
+
+                    if ((i = fieldName.indexOf('.')) != -1) {
+
+                        //
+                        // map property
+                        //
+
+                        mapKey = fieldName.substring(i + 1);
+                        fieldName = fieldName.substring(0, i);
+                    }
+
+
+                    p = event.getProperty(fieldName);
+
+                    if (p instanceof MapProperty) {
+
+                        externalizedValue = ((MapProperty) p).externalizeValue(mapKey);
+                    }
+                    else if (p != null) {
+
+                        externalizedValue = p.externalizeValue();
+                    }
                 }
 
                 if (externalizedValue == null) {
@@ -339,6 +357,7 @@ public class CSVFormatter {
                     s += NULL_EXTERNALIZATION;
                 }
                 else {
+
                     s += externalizedValue;
                 }
             }
