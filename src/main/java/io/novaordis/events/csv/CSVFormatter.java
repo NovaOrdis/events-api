@@ -82,7 +82,7 @@ public class CSVFormatter {
      *
      * @param outputFormat See CSVFormatter#setOutputFormat(String).
      *
-     * @see CSVFormatter#setOutputFormat(String)
+     * @see CSVFormatter#setFormat(CSVFormat)
      */
     public static String outputFormatToHeader(String outputFormat) {
 
@@ -126,7 +126,7 @@ public class CSVFormatter {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     /**
-     * @see CSVFormatter#setOutputFormat(String)
+     * @see CSVFormatter#setFormat(CSVFormat)
      */
     private List<String> outputFormat;
 
@@ -195,48 +195,52 @@ public class CSVFormatter {
      * @param format - a comma separated list of property names and a "timestamp" field. For map properties, we accept
      *               a "map-property-name.key" dot-separated syntax.
      */
-    public void setOutputFormat(String format) {
+    public void setFormat(CSVFormat format) {
 
-        if (format == null) {
-
-            this.outputFormat = null;
-
-            log.debug(this + " clearing the format");
-            return;
-        }
-
-        outputFormat = new ArrayList<>();
-
-        for(StringTokenizer st = new StringTokenizer(format, ","); st.hasMoreTokens(); ) {
-
-            outputFormat.add(st.nextToken().trim());
-        }
+//        if (format == null) {
+//
+//            this.outputFormat = null;
+//
+//            log.debug(this + " clearing the format");
+//            return;
+//        }
+//
+//        outputFormat = new ArrayList<>();
+//
+//        for(StringTokenizer st = new StringTokenizer(format, ","); st.hasMoreTokens(); ) {
+//
+//            outputFormat.add(st.nextToken().trim());
+//        }
 
         log.debug(this + " setting output format to ");
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     /**
-     * @see io.novaordis.events.csv.CSVFormatter#setOutputFormat(String)
+     * @see io.novaordis.events.csv.CSVFormatter#setFormat(CSVFormat)
      */
-    public String getOutputFormat() {
+    public CSVFormat getFormat() {
 
-        if (outputFormat == null) {
+//        if (outputFormat == null) {
+//
+//            return null;
+//        }
+//
+//        String s = "";
+//
+//        for(Iterator<String> is = outputFormat.iterator(); is.hasNext(); ) {
+//
+//            s += is.next();
+//
+//            if (is.hasNext()) {
+//                s += ", ";
+//            }
+//        }
+//
+//        return s;
 
-            return null;
-        }
-
-        String s = "";
-
-        for(Iterator<String> is = outputFormat.iterator(); is.hasNext(); ) {
-
-            s += is.next();
-
-            if (is.hasNext()) {
-                s += ", ";
-            }
-        }
-
-        return s;
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     /**
@@ -295,17 +299,19 @@ public class CSVFormatter {
      */
     protected String getHeader(Event event) {
 
-        String outputFormat = getOutputFormat();
+//        String outputFormat = getFormat();
+//
+//        if (outputFormat != null) {
+//
+//            return outputFormatToHeader(outputFormat);
+//        }
+//
+//        //
+//        // based on the event introspection
+//        //
+//        return getHeaderViaIntrospection(event);
 
-        if (outputFormat != null) {
-
-            return outputFormatToHeader(outputFormat);
-        }
-
-        //
-        // based on the event introspection
-        //
-        return getHeaderViaIntrospection(event);
+        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

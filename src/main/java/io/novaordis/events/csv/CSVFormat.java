@@ -121,7 +121,7 @@ public class CSVFormat {
     /**
      * Adds a timestamp field.
      */
-    public void addTimestamp() {
+    public void addTimestampField() {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
