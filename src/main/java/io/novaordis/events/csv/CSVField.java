@@ -86,6 +86,7 @@ public class CSVField {
      * Build a CSVField instance based on the given specification
      */
     public CSVField(String specification) throws CSVFormatException {
+
         parseFieldSpecification(specification);
     }
 

@@ -16,6 +16,8 @@
 
 package io.novaordis.events.csv;
 
+import io.novaordis.events.api.metric.MetricDefinition;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -43,8 +45,14 @@ public class CSVFormat {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    public CSVFormat() {
+
+        fields = new ArrayList<>();
+    }
+
     /**
-     * @param formatSpecification - a comma-separated field specifications.
+     * @param formatSpecification - a comma-separated field specifications. Null is valid, and it will result in an
+     *                            empty CSVFormat instance.
      *
      * @see CSVField
      *
@@ -55,9 +63,11 @@ public class CSVFormat {
      */
     public CSVFormat(String formatSpecification) throws IllegalArgumentException, CSVFormatException {
 
+        this();
+
         if (formatSpecification == null) {
 
-            throw new IllegalArgumentException("null format specification");
+            return;
         }
 
         int lastComma = formatSpecification.lastIndexOf(',');
@@ -67,8 +77,6 @@ public class CSVFormat {
             throw new IllegalArgumentException(
                     "\"" + formatSpecification + "\" cannot be a CSV format specification, it does not contain commas");
         }
-
-        fields = new ArrayList<>();
 
         for(int i = 0, j = formatSpecification.indexOf(','); i < formatSpecification.length(); ) {
 
@@ -93,6 +101,30 @@ public class CSVFormat {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * Add a field, preserving the relative order.
+     */
+    public void addField(CSVField field) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * Add a field, preserving the relative order, corresponding to the given metric definition.
+     */
+    public void addField(MetricDefinition md) {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * Adds a timestamp field.
+     */
+    public void addTimestamp() {
+
+        throw new RuntimeException("NOT YET IMPLEMENTED");
+    }
 
     /**
      * @return the actual underlying storage so handle with care.
