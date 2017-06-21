@@ -26,6 +26,8 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    private static final String ID = MockMetricDefinition.class.getSimpleName();
+
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -36,8 +38,7 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     public MockMetricDefinition(Address metricSourceAddress) {
 
-        this(null, metricSourceAddress);
-        setId(getClass().getSimpleName());
+        this(ID, metricSourceAddress);
     }
 
     public MockMetricDefinition(String id, Address metricSourceAddress) {

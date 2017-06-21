@@ -171,9 +171,9 @@ public class CSVFormatterTest {
 
         c.setFormat(format);
 
-        Date d = new SimpleDateFormat("MM/yy/dd HH:mm:ss").parse("01/16/01 01:01:01");
+        long ts = System.currentTimeMillis();
 
-        MockTimedEvent me = new MockTimedEvent(d.getTime());
+        MockTimedEvent me = new MockTimedEvent(ts);
 
         // priority inverse to the name order
         me.setProperty(new MockProperty("A", "A value", 3));
@@ -182,7 +182,7 @@ public class CSVFormatterTest {
 
         String s = c.format(me);
 
-        String expected = "B value, , " + CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(d) + ", C value\n";
+        String expected = "B value, , " + CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(ts) + ", C value\n";
         assertEquals(expected, s);
     }
 
