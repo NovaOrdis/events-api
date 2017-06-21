@@ -20,6 +20,7 @@ import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
+import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.address.LocalOSAddress;
 
 /**
@@ -80,6 +81,13 @@ public enum MetricSourceType {
             return JMX;
         }
 
+        String protocol = a.getProtocol();
+
+        if ("ssh".equals(protocol)) {
+
+            return REMOTE_OS;
+        }
+
         return null;
     }
 
@@ -123,6 +131,10 @@ public enum MetricSourceType {
         if (LOCAL_OS.equals(this)) {
 
             return new LocalOSAddress();
+        }
+        else if (REMOTE_OS.equals(this)) {
+
+            return new AddressImpl("ssh", username, password, host, port);
         }
         else if (JBOSS_CONTROLLER.equals(this)) {
 

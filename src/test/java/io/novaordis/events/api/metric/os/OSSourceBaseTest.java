@@ -142,7 +142,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         oss.setNativeExecutor(me);
 
@@ -196,7 +196,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         me.failWith(new RuntimeException("SYNTHETIC"));
 
@@ -212,7 +212,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         me.failWith(new NativeExecutionException("SYNTHETIC"));
 
@@ -228,7 +228,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         me.failWith(255);
 
@@ -252,7 +252,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         me.setStdout(null);
         me.setStderr(null);
@@ -277,7 +277,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         OSSourceBase oss = getMetricSourceToTest();
 
-        MockNativeExecutor me = new MockNativeExecutor();
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
 
         String stdoutContent = "blah";
 
@@ -327,6 +327,14 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
     @Override
     protected abstract OSSourceBase getMetricSourceToTest(String... addresses) throws Exception;
+
+    /**
+     * Sub-classes must override to provide a more specialized executor.
+     */
+    protected MockNativeExecutor getCorrespondingMockNativeExecutor() throws Exception {
+
+        return new MockNativeExecutor();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

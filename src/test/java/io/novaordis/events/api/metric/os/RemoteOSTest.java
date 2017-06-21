@@ -106,6 +106,14 @@ public class RemoteOSTest extends OSSourceBaseTest {
         }
     }
 
+    @Override
+    protected MockNativeExecutor getCorrespondingMockNativeExecutor() throws Exception {
+
+        MockSshConnection mockSshConnection = new MockSshConnection();
+        mockSshConnection.connect();
+        return mockSshConnection;
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------

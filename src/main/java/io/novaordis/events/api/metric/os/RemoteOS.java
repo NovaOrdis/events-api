@@ -23,6 +23,8 @@ import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.NativeExecutor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * See https://kb.novaordis.com/index.php/Events-api_Concepts#Remote_OS
@@ -33,6 +35,8 @@ import io.novaordis.utilities.os.NativeExecutor;
 public class RemoteOS extends OSSourceBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(RemoteOS.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -83,39 +87,49 @@ public class RemoteOS extends OSSourceBase {
 
     @Override
     public void start() throws MetricSourceException {
-        throw new RuntimeException("start() NOT YET IMPLEMENTED");
+
+        if (isStarted()) {
+
+            log.debug(this + " already started");
+            return;
+        }
+
+        SshConnection c = getSshConnection();
+
+        if (c == null) {
+
+            throw new IllegalStateException(this + " incorrectly initialized");
+        }
+
+        c.connect();
+
+        log.debug(this + " started");
     }
 
     @Override
     public boolean isStarted() {
-        throw new RuntimeException("isStarted() NOT YET IMPLEMENTED");
+
+        SshConnection c = getSshConnection();
+        return c != null && c.isConnected();
     }
 
     @Override
     public void stop() {
-        throw new RuntimeException("stop() NOT YET IMPLEMENTED");
+
+        if (!isStarted()) {
+
+            log.debug(this + " already stopped");
+            return;
+        }
+
+        SshConnection c = getSshConnection();
+
+        c.disconnect();
+
+        log.debug(this + " stopped");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public void connect() {
-
-        throw new RuntimeException("NYE");
-
-//        SshConnection c = getSshConnection();
-//
-//        if (c == null) {
-//
-//            throw new IllegalArgumentException(this + " was not correctly initialized");
-//        }
-//
-//        c.connect();
-    }
-
-    public void disconnect() {
-
-        throw new RuntimeException("NYE");
-    }
 
     @Override
     public String toString() {
@@ -140,6 +154,9 @@ public class RemoteOS extends OSSourceBase {
         setAddress(c.getAddress());
     }
 
+    /**
+     * May return null.
+     */
     SshConnection getSshConnection() {
 
         NativeExecutor n = getNativeExecutor();
@@ -156,9 +173,7 @@ public class RemoteOS extends OSSourceBase {
 
     /**
      * Build the ssh connection, by parsing the address and creating the associated instances, but DO NOT implicitly
-     * connect.
-     *
-     * @see RemoteOS#connect()
+     * connect it.
      */
     private void buildSshConnection(String address) throws AddressException {
 

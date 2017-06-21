@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
@@ -95,7 +96,9 @@ public class MetricSourceTypeTest {
     @Test
     public void fromAddress_RemoteOSAddress() throws Exception {
 
-        fail("RETURN HERE");
+        Address a = new AddressImpl("ssh", "test-user", "test-passwd", "test-host", 1000);
+        MetricSourceType t = MetricSourceType.fromAddress(a);
+        assertEquals(MetricSourceType.REMOTE_OS, t);
     }
 
     @Test
@@ -147,7 +150,16 @@ public class MetricSourceTypeTest {
     @Test
     public void toAddress_REMOTE_OS() throws Exception {
 
-        fail("RETURN HERE");
+        Address a = MetricSourceType.REMOTE_OS.toAddress("test-user", "test-password", "test-host", 1000);
+
+        assertNotNull(a);
+
+        assertEquals("ssh", a.getProtocol());
+
+        assertEquals("test-host", a.getHost());
+        assertEquals(1000, a.getPort().longValue());
+        assertEquals("test-user", a.getUsername());
+        assertEquals("test-password", new String(a.getPassword()));
     }
 
     @Test

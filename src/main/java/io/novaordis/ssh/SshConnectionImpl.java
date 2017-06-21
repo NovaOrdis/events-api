@@ -75,6 +75,11 @@ public class SshConnectionImpl implements SshConnection {
     }
 
     @Override
+    public boolean isConnected() {
+        throw new RuntimeException("isConnected() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public void disconnect() {
         throw new RuntimeException("disconnect() NOT YET IMPLEMENTED");
     }

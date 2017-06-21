@@ -92,7 +92,7 @@ public class MockNativeExecutor implements NativeExecutor {
 
         NativeExecutionResult result = results.get(command);
 
-        if (result!= null) {
+        if (result != null) {
 
             return result;
         }

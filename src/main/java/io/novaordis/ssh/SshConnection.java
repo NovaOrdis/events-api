@@ -42,7 +42,12 @@ public interface SshConnection extends NativeExecutor {
 
     Address getAddress();
 
+    // Lifecycle -------------------------------------------------------------------------------------------------------
+
     void connect();
+
+    boolean isConnected();
+
     void disconnect();
 
 }

@@ -20,19 +20,23 @@ import io.novaordis.events.api.metric.MockOSAddress;
 import io.novaordis.ssh.SshConnection;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
-import io.novaordis.utilities.address.AddressImpl;
 import io.novaordis.utilities.os.NativeExecutionException;
 import io.novaordis.utilities.os.NativeExecutionResult;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/8/17
  */
-public class MockSshConnection implements SshConnection {
+public class MockSshConnection extends MockNativeExecutor implements SshConnection {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MockSshConnection.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -40,6 +44,7 @@ public class MockSshConnection implements SshConnection {
 
     private Address address;
     private MockNativeExecutor delegate;
+    private boolean connected;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -62,14 +67,27 @@ public class MockSshConnection implements SshConnection {
         delegate.putNativeExecutionResult("hostname", new NativeExecutionResult(0, address, null, true, true));
     }
 
-
-    // SshConnection implementation ------------------------------------------------------------------------------------
+    // MockNativeExecutor overrides ------------------------------------------------------------------------------------
 
     @Override
-    public NativeExecutionResult execute(String command) throws NativeExecutionException {
+    public void setStdout(String s) {
 
-        return delegate.execute(command);
+        delegate.setStdout(s);
     }
+
+    @Override
+    public void setStderr(String s) {
+
+        delegate.setStderr(s);
+    }
+
+    @Override
+    public List<String> getCommandExecutionHistory() {
+
+        return delegate.getCommandExecutionHistory();
+    }
+
+    // SshConnection implementation ------------------------------------------------------------------------------------
 
     @Override
     public Address getAddress() {
@@ -78,19 +96,49 @@ public class MockSshConnection implements SshConnection {
     }
 
     @Override
-    public void connect() {
-        throw new RuntimeException("connect() NOT YET IMPLEMENTED");
-    }
+    public NativeExecutionResult execute(String command) throws NativeExecutionException {
 
-    @Override
-    public void disconnect() {
-        throw new RuntimeException("disconnect() NOT YET IMPLEMENTED");
+        return delegate.execute(command);
     }
 
     @Override
     public NativeExecutionResult execute(File directory, String command) throws NativeExecutionException {
 
-        throw new RuntimeException("execute() NOT YET IMPLEMENTED");
+        return delegate.execute(directory, command);
+    }
+
+    // Lifecycle -------------------------------------------------------------------------------------------------------
+
+    @Override
+    public void connect() {
+
+        if (connected) {
+
+            log.debug(this + " already connected");
+        }
+
+        connected = true;
+
+        log.info(this + " connected");
+    }
+
+    @Override
+    public boolean isConnected() {
+
+        return connected;
+    }
+
+    @Override
+    public void disconnect() {
+
+        if (!connected) {
+
+            log.debug(this + " already disconnected");
+        }
+
+        connected = false;
+
+        log.info(this + " disconnected");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
