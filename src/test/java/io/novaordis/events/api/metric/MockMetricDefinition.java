@@ -30,6 +30,8 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private String simpleLabel;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockMetricDefinition(Address metricSourceAddress) {
@@ -53,10 +55,15 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
     @Override
     public String getSimpleLabel() {
 
-        throw new RuntimeException("getSimpleLabel() NOT YET IMPLEMENTED");
+        return simpleLabel;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void setSimpleLabel(String s) {
+
+        this.simpleLabel = s;
+    }
 
     @Override
     public String toString() {

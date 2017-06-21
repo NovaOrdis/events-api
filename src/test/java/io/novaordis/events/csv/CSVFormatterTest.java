@@ -18,27 +18,28 @@ package io.novaordis.events.csv;
 
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.FaultEvent;
+import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.MapProperty;
 import io.novaordis.events.api.event.MockEvent;
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.MockTimedEvent;
-import io.novaordis.events.api.metric.os.mdefs.CpuUserTime;
-import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.events.api.metric.MockAddress;
+import io.novaordis.events.api.metric.MockMetricDefinition;
 import io.novaordis.utilities.time.Timestamp;
 import io.novaordis.utilities.time.TimestampImpl;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.TimeZone;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
-import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -47,8 +48,6 @@ import static org.junit.Assert.fail;
 public class CSVFormatterTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(CSVFormatterTest.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -134,77 +133,85 @@ public class CSVFormatterTest {
     @Test
     public void process_RegularUntimedEvent_WithConfiguredOutputFormat() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter c = new CSVFormatter();
 
-//        CSVFormatter c = new CSVFormatter();
-//
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("B, no-such-property, C");
-//
-//        MockEvent me = new MockEvent();
-//
-//        // priority inverse to the name order
-//        me.setProperty(new MockProperty("A", "A value", 3));
-//        me.setProperty(new MockProperty("B", "B value", 2));
-//        me.setProperty(new MockProperty("C", "C value", 1));
-//
-//        String s = c.format(me);
-//
-//        assertEquals("B value, , C value\n", s);
+        assertFalse(c.isHeaderOn());
+
+        CSVFormat format = new CSVFormat();
+        format.addField("B");
+        format.addField("no-such-property");
+        format.addField("C");
+
+        c.setFormat(format);
+
+        MockEvent me = new MockEvent();
+
+        // priority inverse to the name order
+        me.setProperty(new MockProperty("A", "A value", 3));
+        me.setProperty(new MockProperty("B", "B value", 2));
+        me.setProperty(new MockProperty("C", "C value", 1));
+
+        String s = c.format(me);
+
+        assertEquals("B value, , C value\n", s);
     }
 
     @Test
     public void process_RegularTimedEvent_WithConfiguredOutputFormat() throws Exception {
 
-//        CSVFormatter c = new CSVFormatter();
-//
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("B, no-such-property, timestamp, C");
-//
-//        Date d = new SimpleDateFormat("MM/yy/dd HH:mm:ss").parse("01/16/01 01:01:01");
-//
-//        MockTimedEvent me = new MockTimedEvent(d.getTime());
-//
-//        // priority inverse to the name order
-//        me.setProperty(new MockProperty("A", "A value", 3));
-//        me.setProperty(new MockProperty("B", "B value", 2));
-//        me.setProperty(new MockProperty("C", "C value", 1));
-//
-//        String s = c.format(me);
-//
-//        String expected = "B value, , " + CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(d) + ", C value\n";
-//        assertEquals(expected, s);
+        CSVFormatter c = new CSVFormatter();
 
-        fail("RETURN HERE");
+        assertFalse(c.isHeaderOn());
+
+        CSVFormat format = new CSVFormat();
+        format.addField("B");
+        format.addField("no-such-property");
+        format.addTimestampField();
+        format.addField("C");
+
+        c.setFormat(format);
+
+        Date d = new SimpleDateFormat("MM/yy/dd HH:mm:ss").parse("01/16/01 01:01:01");
+
+        MockTimedEvent me = new MockTimedEvent(d.getTime());
+
+        // priority inverse to the name order
+        me.setProperty(new MockProperty("A", "A value", 3));
+        me.setProperty(new MockProperty("B", "B value", 2));
+        me.setProperty(new MockProperty("C", "C value", 1));
+
+        String s = c.format(me);
+
+        String expected = "B value, , " + CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(d) + ", C value\n";
+        assertEquals(expected, s);
     }
 
     @Test
     public void process_TimestampHasTimezoneOffsetInfo() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter c = new CSVFormatter();
 
-//        CSVFormatter c = new CSVFormatter();
-//
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("timestamp");
-//
-//        DateFormat sourceDateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss Z");
-//        Timestamp ts = new TimestampImpl("07/01/16 10:00:00 +1100", sourceDateFormat);
-//        assertEquals("+1100", ts.getTimeOffset().toRFC822String());
-//
-//        int ourOffset =
-//                (TimeZone.getDefault().getDSTSavings() + TimeZone.getDefault().getRawOffset()) / (3600 * 1000);
-//        assertTrue(ourOffset != 11);
-//
-//
-//        MockTimedEvent mte = new MockTimedEvent(ts);
-//
-//        String s = c.format(mte);
-//
-//        assertEquals("07/01/16 10:00:00\n", s);
+        assertFalse(c.isHeaderOn());
+
+        CSVFormat format = new CSVFormat();
+        format.addTimestampField();
+
+        c.setFormat(format);
+
+        DateFormat sourceDateFormat = new SimpleDateFormat("MM/dd/yy HH:mm:ss Z");
+        Timestamp ts = new TimestampImpl("07/01/16 10:00:00 +1100", sourceDateFormat);
+        assertEquals("+1100", ts.getTimeOffset().toRFC822String());
+
+        int ourOffset =
+                (TimeZone.getDefault().getDSTSavings() + TimeZone.getDefault().getRawOffset()) / (3600 * 1000);
+        assertTrue(ourOffset != 11);
+
+
+        MockTimedEvent mte = new MockTimedEvent(ts);
+
+        String s = c.format(mte);
+
+        assertEquals("07/01/16 10:00:00\n", s);
     }
 
     // toString(Event) -------------------------------------------------------------------------------------------------
@@ -212,69 +219,76 @@ public class CSVFormatterTest {
     @Test
     public void toStringEvent_MapProperty() throws Exception {
 
-//        CSVFormatter c = new CSVFormatter();
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("request-headers.TEST-HEADER");
-//
-//        HttpEvent e = new HttpEvent(new TimestampImpl(1L));
-//        e.setRequestHeader("TEST-HEADER", "TEST-VALUE");
-//
-//        String result = c.toString(e);
-//        assertEquals("TEST-VALUE", result);
+        CSVFormatter c = new CSVFormatter();
 
-        fail("RETURN HERE");
+        assertFalse(c.isHeaderOn());
+        
+        CSVFormat format = new CSVFormat();
+        format.addField(new CSVFieldImpl("test-map-property-name.test-map-key"));
+        
+        c.setFormat(format);
+
+        GenericTimedEvent e = new GenericTimedEvent(new TimestampImpl(1L));
+
+        Map<String, Object> mapContent = new HashMap<>();
+        mapContent.put("test-map-key", "TEST-VALUE");
+        e.setProperty(new MapProperty("test-map-property-name", mapContent));
+
+        String result = c.toString(e);
+        assertEquals("TEST-VALUE", result);
     }
 
     @Test
     public void toStringEvent_TimestampHasTimezoneOffsetInfo() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter c = new CSVFormatter();
+        assertFalse(c.isHeaderOn());
 
-//        CSVFormatter c = new CSVFormatter();
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("timestamp");
-//
-//        DateFormat sourceDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss Z");
-//        Timestamp ts = new TimestampImpl("01/07/16 10:00:00 +1100", sourceDateFormat);
-//        assertEquals("+1100", ts.getTimeOffset().toRFC822String());
-//
-//        int ourOffset =
-//                (TimeZone.getDefault().getDSTSavings() + TimeZone.getDefault().getRawOffset()) / (3600 * 1000);
-//        assertTrue(ourOffset != 11);
-//
-//        MockTimedEvent mte = new MockTimedEvent(ts);
-//
-//        String result = c.toString(mte);
-//
-//        assertEquals("07/01/16 10:00:00", result);
+        CSVFormat format = new CSVFormat();
+        format.addTimestampField();
+
+        c.setFormat(format);
+
+        DateFormat sourceDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss Z");
+        Timestamp ts = new TimestampImpl("01/07/16 10:00:00 +1100", sourceDateFormat);
+        assertEquals("+1100", ts.getTimeOffset().toRFC822String());
+
+        int ourOffset =
+                (TimeZone.getDefault().getDSTSavings() + TimeZone.getDefault().getRawOffset()) / (3600 * 1000);
+        assertTrue(ourOffset != 11);
+
+        MockTimedEvent mte = new MockTimedEvent(ts);
+
+        String result = c.toString(mte);
+
+        assertEquals("07/01/16 10:00:00", result);
     }
 
     @Test
     public void toStringEvent_TimestampDoesNOTHaveTimezoneOffsetInfo() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter c = new CSVFormatter();
+        assertFalse(c.isHeaderOn());
 
-//        CSVFormatter c = new CSVFormatter();
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("timestamp");
-//
-//        DateFormat sourceDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
-//        Timestamp ts = new TimestampImpl("01/07/16 10:00:00", sourceDateFormat);
-//
-//        MockTimedEvent mte = new MockTimedEvent(ts);
-//
-//        String result = c.toString(mte);
-//
-//        assertEquals("07/01/16 10:00:00", result);
+        CSVFormat format = new CSVFormat();
+        format.addTimestampField();
+
+        c.setFormat(format);
+
+        DateFormat sourceDateFormat = new SimpleDateFormat("dd/MM/yy HH:mm:ss");
+        Timestamp ts = new TimestampImpl("01/07/16 10:00:00", sourceDateFormat);
+
+        MockTimedEvent mte = new MockTimedEvent(ts);
+
+        String result = c.toString(mte);
+
+        assertEquals("07/01/16 10:00:00", result);
     }
 
     // setFormat() -----------------------------------------------------------------------------------------------
 
     @Test
-    public void setOutputFormat_Null() throws Exception {
+    public void setFormat_Null() throws Exception {
 
         CSVFormatter o = new CSVFormatter();
         o.setFormat(null);
@@ -282,29 +296,42 @@ public class CSVFormatterTest {
     }
 
     @Test
-    public void setOutputFormat_OneField() throws Exception {
+    public void setFormat_OneField() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter o = new CSVFormatter();
 
-//        CSVFormatter o = new CSVFormatter();
-//
-//        o.setFormat("a");
-//
-//        String s = o.getFormat();
-//        assertEquals("a", s);
+        CSVFormat format = new CSVFormat();
+        format.addField("a");
+
+        o.setFormat(format);
+
+        CSVFormat format2 = o.getFormat();
+        
+        assertEquals(1, format2.getFields().size());
+        
+        CSVField f = format2.getFields().get(0);
+        assertEquals("a", f.getName());
     }
 
     @Test
-    public void setOutputFormat_TwoFields() throws Exception {
+    public void setFormat_TwoFields() throws Exception {
 
-        fail("RETURN HERE");
+        CSVFormatter o = new CSVFormatter();
 
-//        CSVFormatter o = new CSVFormatter();
-//
-//        o.setFormat("a,b");
-//
-//        String s = o.getFormat();
-//        assertEquals("a, b", s);
+        CSVFormat format = new CSVFormat();
+        format.addField("a");
+        format.addField("b");
+
+        o.setFormat(format);
+
+        CSVFormat format2 = o.getFormat();
+
+        assertEquals(2, format2.getFields().size());
+
+        CSVField f = format2.getFields().get(0);
+        assertEquals("a", f.getName());
+        CSVField f2 = format2.getFields().get(1);
+        assertEquals("b", f2.getName());
     }
 
     // header line -----------------------------------------------------------------------------------------------------
@@ -312,57 +339,57 @@ public class CSVFormatterTest {
     @Test
     public void outputHeader_OutputFormatSet() throws Exception {
 
-//        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy/dd HH:mm:ss");
-//
-//        CSVFormatter c = new CSVFormatter();
-//        assertFalse(c.isHeaderOn());
-//
-//        c.setFormat("timestamp, field-1");
-//
-//        Date eventTime = dateFormat.parse("01/16/01 01:01:01");
-//        MockTimedEvent me = new MockTimedEvent(eventTime.getTime());
-//        me.setProperty(new MockProperty("field-1", "XXX"));
-//
-//        String output = c.format(me);
-//
-//        String expected = CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", XXX\n";
-//        assertEquals(expected, output);
-//
-//        //
-//        // turn on header generation
-//        //
-//
-//        c.setHeaderOn();
-//        assertTrue(c.isHeaderOn());
-//
-//        eventTime = dateFormat.parse("01/16/01 01:01:02");
-//        me = new MockTimedEvent(eventTime.getTime());
-//        me.setProperty(new MockProperty("field-1", "YYY"));
-//
-//        assertFalse(c.isHeaderOn());
-//
-//        output = c.format(me);
-//
-//        expected =
-//                "# timestamp, field-1\n" +
-//                        CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", YYY\n";
-//
-//        assertEquals(expected, output);
-//
-//        //
-//        // make sure the header generation turns off automatically
-//        //
-//
-//        eventTime = dateFormat.parse("01/16/01 01:01:03");
-//        me = new MockTimedEvent(eventTime.getTime());
-//        me.setProperty(new MockProperty("field-1", "ZZZ"));
-//
-//        output = c.format(me);
-//
-//        expected = CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", ZZZ\n";
-//        assertEquals(expected, output);
+        SimpleDateFormat dateFormat = new SimpleDateFormat("MM/yy/dd HH:mm:ss");
 
-        fail("RETURN HERE");
+        CSVFormatter c = new CSVFormatter();
+        assertFalse(c.isHeaderOn());
+
+        CSVFormat format = new CSVFormat();
+        format.addTimestampField();
+        format.addField("field-1");
+
+        Date eventTime = dateFormat.parse("01/16/01 01:01:01");
+        MockTimedEvent me = new MockTimedEvent(eventTime.getTime());
+        me.setProperty(new MockProperty("field-1", "XXX"));
+
+        String output = c.format(me);
+
+        String expected = CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", XXX\n";
+        assertEquals(expected, output);
+
+        //
+        // turn on header generation
+        //
+
+        c.setHeaderOn();
+        assertTrue(c.isHeaderOn());
+
+        eventTime = dateFormat.parse("01/16/01 01:01:02");
+        me = new MockTimedEvent(eventTime.getTime());
+        me.setProperty(new MockProperty("field-1", "YYY"));
+
+        assertTrue(c.isHeaderOn());
+
+        output = c.format(me);
+
+        expected =
+                "# timestamp, field-1\n" +
+                        CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", YYY\n";
+
+        assertEquals(expected, output);
+
+        //
+        // make sure the header generation turns off automatically
+        //
+
+        eventTime = dateFormat.parse("01/16/01 01:01:03");
+        me = new MockTimedEvent(eventTime.getTime());
+        me.setProperty(new MockProperty("field-1", "ZZZ"));
+
+        output = c.format(me);
+
+        expected = CSVFormatter.DEFAULT_TIMESTAMP_FORMAT.format(eventTime) + ", ZZZ\n";
+        assertEquals(expected, output);
     }
 
     @Test
@@ -424,9 +451,12 @@ public class CSVFormatterTest {
     @Test
     public void outputFormatToHeader() throws Exception {
 
-        String header = CSVFormatter.outputFormatToHeader("a, b, c");
+        CSVFormat format = new CSVFormat();
+        format.addField("a");
+        format.addField("b");
+        format.addField("c");
 
-        log.info(header);
+        String header = CSVFormatter.outputFormatToHeader(format);
 
         assertEquals("# a, b, c", header);
     }
@@ -434,14 +464,69 @@ public class CSVFormatterTest {
     @Test
     public void outputFormatToHeader_KnownMetric() throws Exception {
 
-        String header = CSVFormatter.outputFormatToHeader("CpuUserTime");
+        MockAddress ma = new MockAddress("mock://mock-host:1000");
+        MockMetricDefinition mmd = new MockMetricDefinition("mock-metric-id", Long.class, ma);
+        mmd.setSimpleLabel("TEST-SIMPLE-LABEL");
 
-        String expected = "# " + new CpuUserTime(new LocalOSAddress()).getLabel();
+        CSVFormat format = new CSVFormat();
 
-        log.info(expected);
-        log.info(header);
+        format.addField(mmd);
+
+        String header = CSVFormatter.outputFormatToHeader(format);
+
+        String expected = "# TEST-SIMPLE-LABEL";
 
         assertEquals(expected, header);
+    }
+
+    @Test
+    public void outputFormatToHeader_FieldNameContainsCommas() throws Exception {
+
+        CSVFormat format = new CSVFormat();
+
+        format.addField("this, field, contains, commas, in, its name");
+
+        String header = CSVFormatter.outputFormatToHeader(format);
+
+        assertEquals("# \"this, field, contains, commas, in, its name\"", header);
+    }
+
+    @Test
+    public void outputFormatToHeader_FieldNameContainsCommas2() throws Exception {
+
+        CSVFormat format = new CSVFormat();
+
+        format.addField("A");
+        format.addField("this, field, contains, commas, in, its name");
+
+        String header = CSVFormatter.outputFormatToHeader(format);
+
+        assertEquals("# A, \"this, field, contains, commas, in, its name\"", header);
+    }
+
+    @Test
+    public void outputFormatToHeader_FieldNameContainsDots() throws Exception {
+
+        CSVFormat format = new CSVFormat();
+
+        format.addField("this.field.contains.dots.in.its.name");
+
+        String header = CSVFormatter.outputFormatToHeader(format);
+
+        assertEquals("# \"this.field.contains.dots.in.its.name\"", header);
+    }
+
+    @Test
+    public void outputFormatToHeader_FieldNameContainsDots2() throws Exception {
+
+        CSVFormat format = new CSVFormat();
+
+        format.addField("A");
+        format.addField("this.field.contains.dots.in.its.name");
+
+        String header = CSVFormatter.outputFormatToHeader(format);
+
+        assertEquals("# A, \"this.field.contains.dots.in.its.name\"", header);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

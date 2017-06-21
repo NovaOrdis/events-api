@@ -40,6 +40,7 @@ public class MapProperty extends PropertyBase {
      * Creates a new inner map.
      */
     public MapProperty(String name) {
+
         this(name, new HashMap<>());
     }
 

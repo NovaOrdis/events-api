@@ -72,6 +72,8 @@ public class MetricDefinitionBasedCSVFieldTest extends CSVFieldTest {
         assertNull(f.getFormat());
         FloatProperty fp = (FloatProperty)f.toProperty("1.2f");
         assertEquals(1.2f, fp.getFloat(), 0.00001);
+
+        assertEquals(md, f.getMetricDefinition());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

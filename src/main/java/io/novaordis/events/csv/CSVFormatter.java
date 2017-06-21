@@ -22,7 +22,6 @@ import io.novaordis.events.api.event.MapProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.TimedEvent;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.parser.ParsingException;
 import io.novaordis.utilities.time.Timestamp;
 import org.slf4j.Logger;
@@ -35,7 +34,6 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
-import java.util.StringTokenizer;
 
 /**
  * Instances of this class convert events into comma-separated value lines containing event's properties values, usually
@@ -59,13 +57,9 @@ public class CSVFormatter {
 
     private static final Logger log = LoggerFactory.getLogger(CSVFormatter.class);
 
-    private static final boolean debug = log.isDebugEnabled();
-
     // MM/dd/yy HH:mm:ss (07/25/16 14:00:00) is the default time format so it works straight away with Excel
 
     public static final DateFormat DEFAULT_TIMESTAMP_FORMAT = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-
-    public static final byte[] EMPTY_BYTE_ARRAY = new byte[0];
 
     public static final String NULL_EXTERNALIZATION = "";
 
@@ -78,43 +72,41 @@ public class CSVFormatter {
      * If a known metric definition whose ID matches the property name is identified, we use that metric definition
      * label, instead of teh property name.
      *
-     * TODO: should we attempt to parse the property name every time, or we should introduce a "metric repository"?
-     *
      * @param outputFormat See CSVFormatter#setOutputFormat(String).
      *
      * @see CSVFormatter#setFormat(CSVFormat)
      */
-    public static String outputFormatToHeader(String outputFormat) {
+    public static String outputFormatToHeader(CSVFormat outputFormat) {
 
         String headerLine = "# ";
 
-        for(StringTokenizer st = new StringTokenizer(outputFormat, ","); st.hasMoreTokens(); ) {
+        List<CSVField> fields = outputFormat.getFields();
+
+        for(Iterator<CSVField> i = fields.iterator(); i.hasNext(); ) {
+
+            CSVField field = i.next();
 
             String fieldHeader;
 
-            String propertyName = st.nextToken().trim();
+            if (field instanceof MetricDefinitionBasedCSVField) {
 
-            //
-            // attempt to identify a known metric definition
-            //
-
-            try {
-
-                MetricDefinition md = MetricDefinitionParser.parse(propertyName);
+                MetricDefinitionBasedCSVField mdf = (MetricDefinitionBasedCSVField)field;
+                MetricDefinition md = mdf.getMetricDefinition();
                 fieldHeader = md.getLabel();
             }
-            catch (Exception e) {
+            else {
 
-                //
-                // that's fine, no known metric definition, use the property name as provided
-                //
+                fieldHeader = field.getName();
+            }
 
-                fieldHeader = propertyName;
+            if (fieldHeader.contains(",") || fieldHeader.contains(".")) {
+
+                fieldHeader = "\"" + fieldHeader + "\"";
             }
 
             headerLine += fieldHeader;
 
-            if (st.hasMoreTokens()) {
+            if (i.hasNext()) {
 
                 headerLine += ", ";
             }
@@ -128,7 +120,7 @@ public class CSVFormatter {
     /**
      * @see CSVFormatter#setFormat(CSVFormat)
      */
-    private List<String> outputFormat;
+    private CSVFormat outputFormat;
 
     private boolean headerOn;
 
@@ -192,55 +184,23 @@ public class CSVFormatter {
     }
 
     /**
-     * @param format - a comma separated list of property names and a "timestamp" field. For map properties, we accept
-     *               a "map-property-name.key" dot-separated syntax.
+     * @param format - a comma separated list of property names and a "timestamp" field.
      */
     public void setFormat(CSVFormat format) {
 
-//        if (format == null) {
-//
-//            this.outputFormat = null;
-//
-//            log.debug(this + " clearing the format");
-//            return;
-//        }
-//
-//        outputFormat = new ArrayList<>();
-//
-//        for(StringTokenizer st = new StringTokenizer(format, ","); st.hasMoreTokens(); ) {
-//
-//            outputFormat.add(st.nextToken().trim());
-//        }
+        this.outputFormat = format;
 
-        log.debug(this + " setting output format to ");
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        log.debug(this + " setting output format to " + format);
     }
 
     /**
+     * The output format. May return null.
+     *
      * @see io.novaordis.events.csv.CSVFormatter#setFormat(CSVFormat)
      */
     public CSVFormat getFormat() {
 
-//        if (outputFormat == null) {
-//
-//            return null;
-//        }
-//
-//        String s = "";
-//
-//        for(Iterator<String> is = outputFormat.iterator(); is.hasNext(); ) {
-//
-//            s += is.next();
-//
-//            if (is.hasNext()) {
-//                s += ", ";
-//            }
-//        }
-//
-//        return s;
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        return outputFormat;
     }
 
     /**
@@ -261,6 +221,7 @@ public class CSVFormatter {
     }
 
     public void setIgnoreFaults(boolean b) {
+
         this.ignoreFaults = b;
     }
 
@@ -299,30 +260,33 @@ public class CSVFormatter {
      */
     protected String getHeader(Event event) {
 
-//        String outputFormat = getFormat();
-//
-//        if (outputFormat != null) {
-//
-//            return outputFormatToHeader(outputFormat);
-//        }
-//
-//        //
-//        // based on the event introspection
-//        //
-//        return getHeaderViaIntrospection(event);
+        CSVFormat outputFormat = getFormat();
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        if (outputFormat != null) {
+
+            return outputFormatToHeader(outputFormat);
+        }
+        else {
+
+            //
+            // introspect the event and generate a header based on the event introspection
+            //
+
+            return getHeaderViaIntrospection(event);
+        }
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private String externalizeEventInOutputFormat(List<String> outputFormat, Event event) {
+    private String externalizeEventInOutputFormat(CSVFormat outputFormat, Event event) {
 
         String s = "";
 
-        for(Iterator<String> fni = outputFormat.iterator(); fni.hasNext(); ) {
+        for(Iterator<CSVField> fi = outputFormat.getFields().iterator(); fi.hasNext(); ) {
 
-            String fieldName = fni.next();
+            CSVField f = fi.next();
+
+            String fieldName = f.getName();
 
             if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(fieldName)) {
 
@@ -379,7 +343,7 @@ public class CSVFormatter {
                 }
             }
 
-            if (fni.hasNext()) {
+            if (fi.hasNext()) {
                 s += ", ";
             }
         }
@@ -514,6 +478,7 @@ public class CSVFormatter {
     private String externalizeFault(FaultEvent f) {
 
         if (isIgnoreFaults()) {
+
             return null;
         }
 

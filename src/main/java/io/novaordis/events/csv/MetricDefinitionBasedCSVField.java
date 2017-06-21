@@ -87,6 +87,11 @@ public class MetricDefinitionBasedCSVField implements CSVField {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    public MetricDefinition getMetricDefinition() {
+
+        return metricDefinition;
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

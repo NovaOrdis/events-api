@@ -33,6 +33,10 @@ import java.util.Date;
 /**
  * A CSVField implementation based on a string definition, similar to "test-field-name (int)"
  *
+ * For timestamp fields, use TimedEvent.TIMESTAMP_PROPERTY_NAME and Long.
+ *
+ * For map properties, we accept a "map-property-name.key" dot-separated syntax.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/6/16
  */
