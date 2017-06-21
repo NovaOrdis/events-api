@@ -18,6 +18,7 @@ package io.novaordis.events.api.event;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 
+import java.util.Date;
 import java.util.Map;
 
 /**
@@ -216,6 +217,38 @@ public class PropertyFactory {
             }
 
             result = new FloatProperty(name, f);
+        }
+        else if(Date.class.equals(type)) {
+
+            Long l;
+
+            if (value == null || value instanceof Long) {
+
+                l = (Long)value;
+            }
+            else if (value instanceof String) {
+
+                try {
+
+                    l = Long.parseLong((String) value);
+                }
+                catch(Exception e) {
+
+                    throw new IllegalArgumentException("cannot convert \"" + value + "\" into a long");
+                }
+            }
+            else {
+
+                throw new IllegalArgumentException(
+                        "cannot create a " + type + " property with a " + value.getClass().getSimpleName() + " value");
+            }
+
+            if (conversionFactor != null) {
+
+                throw new RuntimeException("NOT YET IMPLEMENTED: conversion factor");
+            }
+
+            result = new DateProperty(name, new Date(l));
         }
         else if(Map.class.equals(type)) {
 

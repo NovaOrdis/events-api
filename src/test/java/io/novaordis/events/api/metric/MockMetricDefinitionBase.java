@@ -32,6 +32,7 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private Class type;
+    private MeasureUnit baseUnit;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -74,7 +75,7 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
     @Override
     public MeasureUnit getBaseUnit() {
 
-        throw new RuntimeException("getBaseUnit() NOT YET IMPLEMENTED");
+        return baseUnit;
     }
 
     @Override
