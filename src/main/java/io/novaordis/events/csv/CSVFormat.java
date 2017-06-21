@@ -16,6 +16,7 @@
 
 package io.novaordis.events.csv;
 
+import io.novaordis.events.api.event.TimedEvent;
 import io.novaordis.events.api.metric.MetricDefinition;
 
 import java.util.ArrayList;
@@ -26,7 +27,6 @@ import java.util.List;
  * turn CSV text lines into events, or CSV formatters, which turn events into CSV text lines. The parsing/formatting
  * is an external concern, this class' only responsibility is to maintain the format information in a way that is as
  * flexible as possible.
- *
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/6/16
@@ -54,7 +54,7 @@ public class CSVFormat {
      * @param formatSpecification - a comma-separated field specifications. Null is valid, and it will result in an
      *                            empty CSVFormat instance.
      *
-     * @see CSVField
+     * @see CSVFieldImpl
      *
      * @throws IllegalArgumentException if the given format specification cannot be used to build a CSV format.
      *
@@ -84,14 +84,19 @@ public class CSVFormat {
 
             if (i >= lastComma && fieldSpec.length() == 0 && !fields.isEmpty()) {
 
+                //
                 // does not count
+                //
                 break;
             }
 
-            CSVField field = new CSVField(fieldSpec);
+            CSVFieldImpl field = new CSVFieldImpl(fieldSpec);
+
             if (field.getName().length() == 0) {
+
                 field.setName(nextUnnamedFieldName());
             }
+
             fields.add(field);
 
             i = j + 1;
@@ -103,11 +108,22 @@ public class CSVFormat {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
+     * Add a field, extracted from its field specification.
+     *
+     * @see CSVFieldImpl
+     */
+    public void addField(String fieldSpecification) throws CSVFormatException {
+
+        CSVFieldImpl f = new CSVFieldImpl(fieldSpecification);
+        addField(f);
+    }
+
+    /**
      * Add a field, preserving the relative order.
      */
     public void addField(CSVField field) {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        fields.add(field);
     }
 
     /**
@@ -115,7 +131,8 @@ public class CSVFormat {
      */
     public void addField(MetricDefinition md) {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        MetricDefinitionBasedCSVField f = new MetricDefinitionBasedCSVField(md);
+        fields.add(f);
     }
 
     /**
@@ -123,13 +140,15 @@ public class CSVFormat {
      */
     public void addTimestampField() {
 
-        throw new RuntimeException("NOT YET IMPLEMENTED");
+        CSVField f = new CSVFieldImpl(TimedEvent.TIMESTAMP_PROPERTY_NAME, Long.class);
+        fields.add(f);
     }
 
     /**
      * @return the actual underlying storage so handle with care.
      */
     public List<CSVField> getFields() {
+
         return fields;
     }
 
@@ -137,6 +156,7 @@ public class CSVFormat {
     public String toString() {
 
         String s = "";
+
         for(int i = 0; i < fields.size(); i ++) {
 
             s += fields.get(i);

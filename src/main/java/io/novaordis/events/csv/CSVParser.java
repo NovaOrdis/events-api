@@ -242,6 +242,7 @@ public class CSVParser {
                 t = new TimestampImpl(tok, (DateFormat)header.getFormat());
             }
             catch(Exception e) {
+
                 throw new ParsingException(
                         "invalid timestamp value \"" + tok + "\", does not match the required timestamp format", e);
             }

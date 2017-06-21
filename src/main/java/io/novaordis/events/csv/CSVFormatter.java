@@ -327,14 +327,18 @@ public class CSVFormatter {
             if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(fieldName)) {
 
                 Timestamp timestamp = null;
+
                 if (event instanceof TimedEvent) {
+
                     timestamp = ((TimedEvent)event).getTimestamp();
                 }
 
                 if (timestamp == null) {
+
                     s += NULL_EXTERNALIZATION;
                 }
                 else {
+
                     s += timestamp.format(DEFAULT_TIMESTAMP_FORMAT);
                 }
             }

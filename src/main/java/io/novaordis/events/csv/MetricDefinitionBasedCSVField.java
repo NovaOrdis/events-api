@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,19 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric;
+package io.novaordis.events.csv;
 
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.utilities.address.Address;
+import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.metric.MetricDefinition;
+import io.novaordis.events.api.metric.MetricException;
+
+import java.text.Format;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/4/16
+ * @since 6/20/17
  */
-abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
+public class MetricDefinitionBasedCSVField implements CSVField {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,57 +34,58 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Class type;
+    private MetricDefinition metricDefinition;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(Address metricSourceAddress) {
+    public MetricDefinitionBasedCSVField(MetricDefinition md) {
 
-        this(null, metricSourceAddress);
+        if (md == null) {
+
+            throw new IllegalArgumentException("null metric definition");
+        }
+
+        this.metricDefinition = md;
     }
 
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(String id, Address metricSourceAddress) {
+    // CSVField implementation -----------------------------------------------------------------------------------------
 
-        this(id, null, metricSourceAddress);
+    @Override
+    public String getName() {
+
+        return metricDefinition.getId();
     }
-
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(String id, Class type, Address metricSourceAddress) {
-
-        super(metricSourceAddress);
-        setId(id);
-        this.type = type;
-    }
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
     public Class getType() {
 
-        return type;
+        return metricDefinition.getType();
     }
 
     @Override
-    public MeasureUnit getBaseUnit() {
+    public Format getFormat() {
 
-        throw new RuntimeException("getBaseUnit() NOT YET IMPLEMENTED");
+        //
+        // TODO shouldn't MetricDefinition maintain a format?
+        //
+
+        return null;
     }
 
     @Override
-    public String getDescription() {
+    public Property toProperty(String s) throws IllegalArgumentException {
 
-        throw new RuntimeException("getDescription() NOT YET IMPLEMENTED");
+        try {
+
+            return metricDefinition.buildProperty(s);
+        }
+        catch(MetricException e) {
+
+            throw new IllegalArgumentException(e);
+        }
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

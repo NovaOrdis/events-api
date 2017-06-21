@@ -16,6 +16,9 @@
 
 package io.novaordis.events.csv;
 
+import io.novaordis.events.api.event.TimedEvent;
+import io.novaordis.events.api.metric.MockAddress;
+import io.novaordis.events.api.metric.MockMetricDefinition;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -47,6 +50,10 @@ public class CSVFormatTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    // constructors ----------------------------------------------------------------------------------------------------
+
     @Test
     public void constructor_InvalidFormat() throws Exception {
 
@@ -72,7 +79,6 @@ public class CSVFormatTest {
         CSVField f = fields.get(0);
         assertNotNull(f);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("CSVField01", f.getName());
     }
 
@@ -85,7 +91,6 @@ public class CSVFormatTest {
         CSVField f = fields.get(0);
         assertNotNull(f);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("CSVField01", f.getName());
     }
 
@@ -98,7 +103,6 @@ public class CSVFormatTest {
         CSVField f = fields.get(0);
         assertNotNull(f);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("CSVField01", f.getName());
     }
 
@@ -113,17 +117,14 @@ public class CSVFormatTest {
 
         CSVField f = fields.get(0);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("field1", f.getName());
 
         CSVField f2 = fields.get(1);
         assertEquals(String.class, f2.getType());
-        assertNull(f2.getValue());
         assertEquals("field2", f2.getName());
 
         CSVField f3 = fields.get(2);
         assertEquals(String.class, f3.getType());
-        assertNull(f3.getValue());
         assertEquals("field3", f3.getName());
     }
 
@@ -135,7 +136,6 @@ public class CSVFormatTest {
         assertEquals(1, fields.size());
         CSVField f = fields.get(0);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("field1", f.getName());
     }
 
@@ -150,17 +150,14 @@ public class CSVFormatTest {
 
         CSVField f = fields.get(0);
         assertEquals(String.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("a", f.getName());
 
         CSVField f2 = fields.get(1);
         assertEquals(String.class, f2.getType());
-        assertNull(f2.getValue());
         assertEquals("b", f2.getName());
 
         CSVField f3 = fields.get(2);
         assertEquals(String.class, f3.getType());
-        assertNull(f3.getValue());
         assertEquals("c", f3.getName());
     }
 
@@ -175,22 +172,18 @@ public class CSVFormatTest {
 
         CSVField f = fields.get(0);
         assertEquals(Date.class, f.getType());
-        assertNull(f.getValue());
         assertEquals("timestamp", f.getName());
 
         CSVField f2 = fields.get(1);
         assertEquals(Integer.class, f2.getType());
-        assertNull(f2.getValue());
         assertEquals("count", f2.getName());
 
         CSVField f3 = fields.get(2);
         assertEquals(Long.class, f3.getType());
-        assertNull(f3.getValue());
         assertEquals("duration", f3.getName());
 
         CSVField f4 = fields.get(3);
         assertEquals(String.class, f4.getType());
-        assertNull(f4.getValue());
         assertEquals("path", f4.getName());
     }
 
@@ -204,6 +197,125 @@ public class CSVFormatTest {
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
         }
+    }
+
+    // addField() ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void addField_Specification_NoType() throws Exception {
+
+        CSVFormat f = new CSVFormat();
+
+        assertTrue(f.getFields().isEmpty());
+
+        f.addField("something");
+
+        List<CSVField> fields = f.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField fd = fields.get(0);
+
+        assertEquals("something", fd.getName());
+
+        Class c = fd.getType();
+
+        assertEquals(String.class, c);
+    }
+
+    @Test
+    public void addField_Specification_Type() throws Exception {
+
+        CSVFormat f = new CSVFormat();
+
+        assertTrue(f.getFields().isEmpty());
+
+        f.addField("something (int)");
+
+        List<CSVField> fields = f.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField fd = fields.get(0);
+
+        assertEquals("something", fd.getName());
+
+        Class c = fd.getType();
+
+        assertEquals(Integer.class, c);
+    }
+
+    @Test
+    public void addField_CSVField() throws Exception {
+
+        CSVFormat f = new CSVFormat();
+
+        assertTrue(f.getFields().isEmpty());
+
+        CSVField fd = new CSVFieldImpl("something (int)");
+
+        f.addField(fd);
+
+        List<CSVField> fields = f.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField fd2 = fields.get(0);
+
+        assertEquals("something", fd2.getName());
+
+        Class c = fd2.getType();
+
+        assertEquals(Integer.class, c);
+    }
+
+    @Test
+    public void addField_MetricDefinition() throws Exception {
+
+        CSVFormat f = new CSVFormat();
+
+        assertTrue(f.getFields().isEmpty());
+
+        MockAddress ma = new MockAddress("mock://mock-host:1000");
+        MockMetricDefinition mmd = new MockMetricDefinition("mock-metric", Long.class, ma);
+
+        f.addField(mmd);
+
+        List<CSVField> fields = f.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField fd2 = fields.get(0);
+
+        assertEquals("mock-metric", fd2.getName());
+
+        Class c = fd2.getType();
+
+        assertEquals(Long.class, c);
+    }
+
+    // addTimestampField() ---------------------------------------------------------------------------------------------
+
+    @Test
+    public void addTimestampField() throws Exception {
+
+        CSVFormat f = new CSVFormat();
+
+        assertTrue(f.getFields().isEmpty());
+
+        f.addTimestampField();
+
+        List<CSVField> fields = f.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField fd = fields.get(0);
+
+        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, fd.getName());
+
+        Class c = fd.getType();
+
+        assertEquals(Long.class, c);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

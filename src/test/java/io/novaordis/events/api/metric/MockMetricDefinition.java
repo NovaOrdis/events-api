@@ -34,9 +34,18 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     public MockMetricDefinition(Address metricSourceAddress) {
 
-        super(metricSourceAddress);
-
+        this(null, metricSourceAddress);
         setId(getClass().getSimpleName());
+    }
+
+    public MockMetricDefinition(String id, Address metricSourceAddress) {
+
+        this(id, null, metricSourceAddress);
+    }
+
+    public MockMetricDefinition(String id, Class type, Address metricSourceAddress) {
+
+        super(id, type, metricSourceAddress);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
