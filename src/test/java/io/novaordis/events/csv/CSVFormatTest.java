@@ -28,7 +28,6 @@ import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -55,23 +54,7 @@ public class CSVFormatTest {
     // constructors ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void constructor_InvalidFormat() throws Exception {
-
-        try {
-
-            new CSVFormat("something without commas");
-            fail("should have thrown IllegalArgumentException");
-
-        }
-        catch(IllegalArgumentException e) {
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.contains("does not contain commas"));
-        }
-    }
-
-    @Test
-    public void constructor1() throws Exception {
+    public void constructor() throws Exception {
 
         CSVFormat csvFormat = new CSVFormat(",");
         List<CSVField> fields = csvFormat.getFields();
@@ -162,6 +145,24 @@ public class CSVFormatTest {
     }
 
     @Test
+    public void constructor7() throws Exception {
+
+        CSVFormat csvFormat = new CSVFormat(", ,");
+
+        List<CSVField> fields = csvFormat.getFields();
+
+        assertEquals(2, fields.size());
+
+        CSVField f = fields.get(0);
+        assertEquals(String.class, f.getType());
+        assertEquals("CSVField01", f.getName());
+
+        CSVField f2 = fields.get(1);
+        assertEquals(String.class, f2.getType());
+        assertEquals("CSVField02", f2.getName());
+    }
+
+    @Test
     public void constructor_typed() throws Exception {
 
         CSVFormat csvFormat = new CSVFormat("timestamp(time:yy/MM/dd HH:mm:ss), count(int), duration(long), path");
@@ -191,12 +192,28 @@ public class CSVFormatTest {
     public void constructor_invalidType() throws Exception {
 
         try {
+
             new CSVFormat("duration(ms)");
             fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
-            log.info(e.getMessage());
+        catch(CSVFormatException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid field type specification"));
+            assertTrue(msg.contains("ms"));
         }
+    }
+
+    @Test
+    public void constructor_NoCommas() throws Exception {
+
+        CSVFormat f = new CSVFormat("test");
+        assertEquals(1, f.getFields().size());
+
+        CSVField fd = f.getFields().get(0);
+        assertEquals("test", fd.getName());
+        assertEquals(String.class, fd.getType());
+        assertEquals(null, fd.getFormat());
     }
 
     // addField() ------------------------------------------------------------------------------------------------------

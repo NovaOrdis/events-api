@@ -51,6 +51,8 @@ public class CSVFormat {
     }
 
     /**
+     * NOTE: it does not contain logic to identify quoted tokens.
+     *
      * @param formatSpecification - a comma-separated field specifications. Null is valid, and it will result in an
      *                            empty CSVFormat instance.
      *
@@ -70,19 +72,15 @@ public class CSVFormat {
             return;
         }
 
-        int lastComma = formatSpecification.lastIndexOf(',');
+        for(int i = 0, j = formatSpecification.indexOf(',');
+            i < formatSpecification.length();
+            j = formatSpecification.indexOf(',', i)) {
 
-        if (lastComma == -1) {
-
-            throw new IllegalArgumentException(
-                    "\"" + formatSpecification + "\" cannot be a CSV format specification, it does not contain commas");
-        }
-
-        for(int i = 0, j = formatSpecification.indexOf(','); i < formatSpecification.length(); ) {
+            j = j == -1 ? formatSpecification.length() : j;
 
             String fieldSpec = formatSpecification.substring(i, j).trim();
 
-            if (i >= lastComma && fieldSpec.length() == 0 && !fields.isEmpty()) {
+            if (fieldSpec.isEmpty() && j >= formatSpecification.length()) {
 
                 //
                 // does not count
@@ -100,8 +98,6 @@ public class CSVFormat {
             fields.add(field);
 
             i = j + 1;
-            j = formatSpecification.indexOf(',', i);
-            j = j == -1 ? formatSpecification.length() : j;
         }
     }
 

@@ -24,8 +24,6 @@ import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.StringProperty;
 import org.junit.Test;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -43,8 +41,6 @@ import static org.junit.Assert.fail;
 public class CSVParserTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    private static final Logger log = LoggerFactory.getLogger(CSVParser.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -121,14 +117,28 @@ public class CSVParserTest {
     }
 
     @Test
+    public void constructor5() throws Exception {
+
+        CSVParser p = new CSVParser("a");
+        CSVFormat format = p.getFormat();
+
+        List<CSVField> fields = format.getFields();
+        assertEquals(1, fields.size());
+        assertEquals("a", fields.get(0).getName());
+    }
+
+    @Test
     public void constructor_InvalidFormat() throws Exception {
 
         try {
-            new CSVParser("a");
-            fail("should have thrown IllegalArgumentException");
+
+            new CSVParser("a(blah)");
+            fail("should have thrown exception");
         }
-        catch(IllegalArgumentException e) {
-            log.info(e.getMessage());
+        catch(CSVFormatException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid"));
         }
     }
 
