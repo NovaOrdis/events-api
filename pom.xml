@@ -8,7 +8,7 @@
     <artifactId>events-api</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.1.6</version>
+    <version>1.1.7-SNAPSHOT-1</version>
 
     <properties>
 
@@ -16,8 +16,7 @@
                Dependency Versions
         -->
 
-        <novaordis.utilities.version>4.7.5</novaordis.utilities.version>
-        <novaordis.jboss.cli>1.0.5</novaordis.jboss.cli>
+        <novaordis.jboss.version>1.0.7</novaordis.jboss.version>
         <novaordis.jmx.version>1.0.1</novaordis.jmx.version>
 
         <slf4j.version>1.7.12</slf4j.version>
@@ -107,14 +106,9 @@
             <scope>provided</scope>
         </dependency>
         <dependency>
-            <groupId>io.novaordis.utilities</groupId>
-            <artifactId>novaordis-utilities</artifactId>
-            <version>${novaordis.utilities.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>io.novaordis.jboss.cli</groupId>
-            <artifactId>novaordis-jboss-cli</artifactId>
-            <version>${novaordis.jboss.cli}</version>
+            <groupId>io.novaordis.jboss</groupId>
+            <artifactId>novaordis-jboss</artifactId>
+            <version>${novaordis.jboss.version}</version>
         </dependency>
         <dependency>
             <groupId>io.novaordis.jmx</groupId>
