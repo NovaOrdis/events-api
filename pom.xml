@@ -17,7 +17,7 @@
         -->
 
         <novaordis.jboss.version>1.0.7</novaordis.jboss.version>
-        <novaordis.jmx.version>1.0.1</novaordis.jmx.version>
+        <novaordis.jmx.version>1.2.1</novaordis.jmx.version>
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
