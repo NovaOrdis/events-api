@@ -79,8 +79,12 @@ public interface MetricSource {
      * call, in case the source is not started. Of course they may also choose to signal the fact that the source
      * is not started and request external start.
      *
+     * @param metricDefinitions a non-null, possibly empty, list of metrics to collect.
+     *
      * @exception MetricSourceException if metric definitions do not list this source among their sources.
      *      This indicates a programming error, not a runtime collection failure.
+     *
+     * @exception IllegalArgumentException if the list is null (may be empty though).
      */
     List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException;
 

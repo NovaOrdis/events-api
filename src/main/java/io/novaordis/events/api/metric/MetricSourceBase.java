@@ -73,6 +73,11 @@ public abstract class MetricSourceBase implements MetricSource {
     @Override
     public List<Property> collectMetrics(List<MetricDefinition> metricDefinitions) throws MetricException {
 
+        if (metricDefinitions == null) {
+
+            throw new IllegalArgumentException("null metric definition list");
+        }
+
         insureAllDefinitionsAreAssociatedWithThisAddress(metricDefinitions);
 
         if (!isStarted()) {
@@ -167,6 +172,11 @@ public abstract class MetricSourceBase implements MetricSource {
 
     private void insureAllDefinitionsAreAssociatedWithThisAddress(List<MetricDefinition> metricDefinitions)
             throws MetricSourceException {
+
+        if (metricDefinitions == null) {
+
+            throw new IllegalArgumentException("null metric definition list");
+        }
 
         Address thisAddress = getAddress();
 

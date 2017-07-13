@@ -85,6 +85,32 @@ public abstract class MetricSourceTest {
     // collectMetrics() ------------------------------------------------------------------------------------------------
 
     @Test
+    public void collectMetrics_Null() throws Exception {
+
+        MetricSource source = getMetricSourceToTest();
+
+        try {
+
+            source.collectMetrics(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null"));
+        }
+    }
+
+    @Test
+    public void collectMetrics_NoDefinitions() throws Exception {
+
+        MetricSource source = getMetricSourceToTest();
+
+        List<Property> result = source.collectMetrics(Collections.emptyList());
+        assertTrue(result.isEmpty());
+    }
+
+    @Test
     public void collectMetrics_DefinitionsHaveDifferentSources() throws Exception {
 
         MetricSource source = getMetricSourceToTest();
