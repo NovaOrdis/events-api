@@ -182,7 +182,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
      */
     String execute(String command) {
 
-        if (trace) { log.trace(this + " executing \"" + command + "\" with " + nativeExecutor); }
+        if (trace) { log.trace(this + " executing \"" + command + "\" on " + nativeExecutor); }
 
         String stdout = null;
 
