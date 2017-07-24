@@ -29,8 +29,10 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 /**
  * A metric source whose all metrics can be obtained executing OS commands.
@@ -43,6 +45,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(OSSourceBase.class);
+    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -85,6 +88,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
             throw new IllegalStateException(this + " not started");
         }
 
+        if (trace) { log.trace(this + " collecting " + metricDefinitions); }
+
         List<OSMetricDefinition> osMetricDefinitions = new ArrayList<>();
         Map<String, String> commandOutputs = new HashMap<>();
 
@@ -122,6 +127,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
         //
         // execute all commands
         //
+
+        if (trace) { log.trace(this + " will execute the following commands: " + commandListToString(commandOutputs.keySet())); }
 
         //
         // TODO if more than one command, execute in parallel
@@ -174,6 +181,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
      * warnings. The method mustn't knowingly throw any unchecked exception.
      */
     String execute(String command) {
+
+        if (trace) { log.trace(this + " executing \"" + command + "\" with " + nativeExecutor); }
 
         String stdout = null;
 
@@ -241,6 +250,28 @@ public abstract class OSSourceBase extends MetricSourceBase {
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private String commandListToString(Set<String> commands) {
+
+        if (commands.isEmpty()) {
+
+            return "N/A";
+        }
+
+        String s = "";
+
+        for(Iterator<String> i = commands.iterator(); i.hasNext(); ) {
+
+            s += "\"" + i.next() + "\"";
+
+            if (i.hasNext()) {
+
+                s += ", ";
+            }
+        }
+
+        return s;
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 
