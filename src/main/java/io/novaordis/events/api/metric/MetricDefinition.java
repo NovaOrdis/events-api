@@ -23,6 +23,8 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Definitions
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
@@ -51,6 +53,8 @@ public interface MetricDefinition {
      *
      * "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ:message-count" - uniquely identifies the DLQ queue
      *      depth metric for a specific broker node, managed by a JBoss management controller.
+     *
+     * See https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Definition_ID.
      */
     String getId();
 

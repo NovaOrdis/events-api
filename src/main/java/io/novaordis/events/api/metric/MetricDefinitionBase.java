@@ -37,21 +37,21 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     private String id;
 
-    private Address source;
+    private Address sourceAddress;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param source must always have a non-null source.
+     * @param sourceAddress must always have a non-null source address
      */
-    protected MetricDefinitionBase(Address source) {
+    protected MetricDefinitionBase(Address sourceAddress) {
 
-        if (source == null) {
+        if (sourceAddress == null) {
 
-            throw new IllegalArgumentException("null metric source address");
+            throw new IllegalArgumentException("null metric ource address");
         }
 
-        this.source = source;
+        this.sourceAddress = sourceAddress;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
@@ -96,7 +96,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
     @Override
     public Address getMetricSourceAddress() {
 
-        return source;
+        return sourceAddress;
     }
 
     @Override
