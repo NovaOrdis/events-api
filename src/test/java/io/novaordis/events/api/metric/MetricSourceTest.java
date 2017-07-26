@@ -156,6 +156,37 @@ public abstract class MetricSourceTest {
         assertNull(p.getValue());
     }
 
+    @Test
+    public final void collectMetrics_PropertyNameIsMetricDefinitionID() throws Exception {
+
+        MetricSource s = getMetricSourceToTest();
+
+        MetricDefinition mmd = getCorrespondingMockMetricDefinition(s.getAddress());
+
+        List<MetricDefinition> definitions = Collections.singletonList(mmd);
+
+        List<Property> properties = s.collectMetrics(definitions);
+
+        assertNotNull(properties);
+        assertEquals(1, properties.size());
+
+        Property p = properties.get(0);
+
+        //
+        // non-null property but with a null value
+        //
+        assertNotNull(p);
+
+        String metricDefinitionId = mmd.getId();
+        String propertyName = p.getName();
+
+        assertEquals(propertyName, metricDefinitionId);
+
+        //
+        // the value may or may be non-null, it depends on the implementation
+        //
+    }
+
     // collect() -------------------------------------------------------------------------------------------------------
 
     @Test

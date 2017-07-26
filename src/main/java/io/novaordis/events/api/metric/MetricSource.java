@@ -22,7 +22,7 @@ import io.novaordis.utilities.address.Address;
 import java.util.List;
 
 /**
- * A source of metrics. Implies an underlying mechanism that can be exercised to obtain a set of values for a set of
+ * A source of metrics. Implies an underlying mechanism that can be used to obtain a set of values for a set of
  * metric definitions, ideally in a single operation, for performance reasons. However, the implementations are free
  * to define what "efficient reading" means. Example of metric sources:
  *
@@ -35,8 +35,6 @@ import java.util.List;
  *
  * 4. The management controller (standalone or domain) of a WildFly instance.
  *
- * The implementations must correctly implement equals() and hashCode(), as metric sources will be used as map keys.
- *
  * A metric source instance must be started before metrics can be collected from it. The start operation usually
  * implies expensive remote connection creation, initial state verification, etc. so metric source implementations
  * should be designed to be started once and then stay in that state indefinitely. However, the underlying connection
@@ -44,6 +42,10 @@ import java.util.List;
  *
  * Implementations are NOT expected to maintain their own internal threads. The recommended way to manage sources
  * and collect metrics is to do it with external threads/executors.
+ *
+ * The implementations must correctly implement equals() and hashCode(), as metric sources will be used as map keys.
+ *
+ * See https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Source
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/4/16
@@ -69,15 +71,16 @@ public interface MetricSource {
     boolean hasAddress(Address address);
 
     /**
-     * Collect the metrics for the given definitions, in one invocation.
+     * Collect all metrics whose definitions are given as argument. If a value corresponding to a specific metric
+     * definition from the list cannot be successfully collected, a Property instance with the correct id, type and base
+     * unit is still returned, but its value is null. Implementations may log as WARN more details on why the collection
+     * failed. Implementations may choose - and they are encouraged - to attempt to start the source in-line, if the
+     * source is not already started. They, however, may chose to signal the fact that the source is not started and
+     * request an external start. The metric source will throw an exception if if finds at least a metric definition
+     * that has a null or different source. This indicates a programming error, not a runtime collection failure. A
+     * Property instance returned for a specific metric definition has its name equals with the metric definition ID.
      *
-     * If a value corresponding to a specific MetricDefinition from the list cannot be successfully collected,
-     * a Property with the correct id, type and base unit must, but with a null value, be returned returned.
-     * Implementations should also log as WARN more details on why the collection failed.
-     *
-     * Implementations may choose - and they are encouraged - to attempt to start the source in-line inside this
-     * call, in case the source is not started. Of course they may also choose to signal the fact that the source
-     * is not started and request external start.
+     * See https://kb.novaordis.com/index.php/Events-api_Concepts#Relationship_between_a_Metric_Definition_and_a_Metric_Source
      *
      * @param metricDefinitions a non-null, possibly empty, list of metrics to collect.
      *
