@@ -140,6 +140,11 @@ public class CSVFormatter {
      */
     public String format(Event event) {
 
+        if (log.isTraceEnabled()) {
+
+            log.trace(this + " formatting " + event);
+        }
+
         String s = "";
 
         if (headerOn) {
@@ -280,6 +285,11 @@ public class CSVFormatter {
 
     private String externalizeEventInOutputFormat(CSVFormat outputFormat, Event event) {
 
+        if (log.isDebugEnabled()) {
+
+            log.trace(this + " externalizing event " + event + " in format " + outputFormat);
+        }
+
         String s = "";
 
         for(Iterator<CSVField> fi = outputFormat.getFields().iterator(); fi.hasNext(); ) {
@@ -371,6 +381,12 @@ public class CSVFormatter {
     }
 
     private String externalizeEventViaIntrospection(Event event) {
+
+        if (log.isDebugEnabled()) {
+
+            log.trace(this + " externalizing event " + event + " via introspection");
+        }
+
 
         String s = "";
 
