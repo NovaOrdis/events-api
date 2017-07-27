@@ -185,9 +185,12 @@ public class JmxBus extends MetricSourceBase {
                 String attributeName = jbmd.getAttributeName();
                 value = mBeanServerConnection.getAttribute(on, attributeName);
 
-                log.debug("the JMX server returned " +
-                        value + (value == null ? "" : " (" + value.getClass().getSimpleName() + ")") +
-                        " for \"" + attributeName + "\"");
+                if (log.isTraceEnabled()) {
+
+                    log.trace(getAddress() + " returned " +
+                            value + (value == null ? "" : " (" + value.getClass().getSimpleName() + ")") +
+                            " for \"" + attributeName + "\"");
+                }
             }
             catch(Exception e) {
 
@@ -222,7 +225,10 @@ public class JmxBus extends MetricSourceBase {
 
     void setJmxClient(JmxClient c) {
 
-        log.debug(this + " sets the JMX client " + c);
+        if (log.isTraceEnabled()) {
+
+            log.trace(this + " sets the JMX client " + c);
+        }
 
         this.jmxClient = c;
 
