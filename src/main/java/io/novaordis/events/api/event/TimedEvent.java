@@ -19,7 +19,7 @@ package io.novaordis.events.api.event;
 import io.novaordis.utilities.time.Timestamp;
 
 /**
- * A timed event.
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Timed_Event
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/24/16

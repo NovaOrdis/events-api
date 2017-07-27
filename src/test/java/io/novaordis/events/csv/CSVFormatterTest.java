@@ -485,7 +485,7 @@ public class CSVFormatterTest {
     public void outputFormatToHeader_KnownMetric() throws Exception {
 
         MockAddress ma = new MockAddress("mock://mock-host:1000");
-        MockMetricDefinition mmd = new MockMetricDefinition("mock-metric-id", Long.class, ma);
+        MockMetricDefinition mmd = new MockMetricDefinition(ma, "mock-metric-id", Long.class);
         mmd.setSimpleLabel("TEST-SIMPLE-LABEL");
 
         CSVFormat format = new CSVFormat();

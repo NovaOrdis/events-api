@@ -63,6 +63,8 @@ public class CSVFormatTest {
         assertNotNull(f);
         assertEquals(String.class, f.getType());
         assertEquals("CSVField01", f.getName());
+
+        log.debug("constructor");
     }
 
     @Test
@@ -294,7 +296,7 @@ public class CSVFormatTest {
         assertTrue(f.getFields().isEmpty());
 
         MockAddress ma = new MockAddress("mock://mock-host:1000");
-        MockMetricDefinition mmd = new MockMetricDefinition("mock-metric", Long.class, ma);
+        MockMetricDefinition mmd = new MockMetricDefinition(ma, "mock-metric", Long.class);
 
         f.addField(mmd);
 

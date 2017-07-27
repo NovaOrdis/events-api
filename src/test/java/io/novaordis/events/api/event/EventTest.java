@@ -244,6 +244,23 @@ public abstract class EventTest {
         assertEquals(mp, event.getProperty("test-property"));
     }
 
+    @Test
+    public  void getPropertyByName_NullName() throws Exception {
+
+        Event event = getEventToTest();
+
+        try {
+
+            event.getProperty(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("null property name", msg);
+        }
+    }
+
     // line number -----------------------------------------------------------------------------------------------------
 
     @Test
@@ -278,6 +295,65 @@ public abstract class EventTest {
 
         e.setLineNumber(null);
         assertNull(e.getLineNumber());
+    }
+
+    // getProperty() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public  void getPropertyByName_NullKey() throws Exception {
+
+        Event event = getEventToTest();
+
+        try {
+
+            event.getPropertyByKey(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("null property key", msg);
+        }
+    }
+
+    @Test
+    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics_NoSuchName() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+
+        event.setProperty(sp);
+
+        assertNull(event.getPropertyByKey("I-am-sure-there-is-no-property-with-this-name"));
+    }
+
+    @Test
+    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+
+        event.setProperty(sp);
+
+        Property p = event.getPropertyByKey("test-property");
+
+        assertNotNull(p);
+
+        StringProperty sp2 = (StringProperty)p;
+
+        assertEquals("test-property", sp2.getName());
+        assertEquals("test-value", sp2.getValue());
+    }
+
+    @Test
+    public void getProperty_NonStringArgument() throws Exception {
+
+        Event event = getEventToTest();
+
+        Property p = event.getPropertyByKey(new Object());
+        assertNull(p);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

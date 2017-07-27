@@ -19,6 +19,9 @@ package io.novaordis.events.api.event;
 import java.util.Set;
 
 /**
+ *
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Event
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 1/24/16
  */
@@ -36,43 +39,95 @@ public interface Event {
     Set<Property> getProperties();
 
     /**
+     * Query the event and return the property with the given name, if it is carried by the event. This approach should
+     * work in most cases for simple events, that rely on a flat property namespace. However, in more complex situations
+     * when multiple properties with the same name are carried by the same event, use getProperty(Object) method.
+     *
      * @return null if there is no such property.
+     *
+     * @see Event#getPropertyByKey(Object)
+     *
+     * @exception IllegalArgumentException if the name is null.
      */
     Property getProperty(String name);
 
     /**
+     * Query the event and return the property corresponding to the given key. In most cases, when events carry
+     * properties belonging to a flat namespace, it is sufficient to use the property name as key, so
+     * getProperty(String) should work. However, in more complex situations when multiple properties with the same name
+     * are carried by the same event, a generic Object key can be used to discriminate properties.
+     *
+     * @return null if there is no such property.
+     *
+     * @see Event#getProperty(String)
+     *
+     * @exception IllegalArgumentException if the key is null.
+     */
+    Property getPropertyByKey(Object propertyKey);
+
+    /**
+     * Query the event and return the string property with the given name.
+     *
      * @return the corresponding StringProperty or null if there is no such StringProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a StringProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     StringProperty getStringProperty(String stringPropertyName);
 
     /**
+     * Query the event and return the Long property with the given name.
+     *
      * @return the corresponding LongProperty or null if there is no such LongProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a LongProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     LongProperty getLongProperty(String longPropertyName);
 
     /**
+     * Query the event and return the Integer property with the given name.
+     *
      * @return the corresponding IntegerProperty or null if there is no such IntegerProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a IntegerProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     IntegerProperty getIntegerProperty(String integerPropertyName);
 
     /**
+     * Query the event and return the Boolean property with the given name.
+     *
      * @return the corresponding BooleanProperty or null if there is no such BooleanProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a BooleanProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     BooleanProperty getBooleanProperty(String booleanPropertyName);
 
     /**
+     * Query the event and return the Map property with the given name.
+     *
      * @return the corresponding MapProperty or null if there is no such MapProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a MapProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     MapProperty getMapProperty(String mapPropertyName);
 
     /**
+     * Query the event and return the Lit property with the given name.
+     *
      * @return the corresponding ListProperty or null if there is no such ListProperty. Note that the method will
      * return null if a property with the given name exists, but it is not a ListProperty.
+     *
+     * @see Event#getProperty(String)
+     * @see Event#getPropertyByKey(Object)
      */
     ListProperty getListProperty(String listPropertyName);
 

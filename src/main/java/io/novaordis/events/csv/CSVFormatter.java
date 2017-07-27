@@ -285,7 +285,7 @@ public class CSVFormatter {
 
     private String externalizeEventInOutputFormat(CSVFormat outputFormat, Event event) {
 
-        if (log.isDebugEnabled()) {
+        if (log.isTraceEnabled()) {
 
             log.trace(this + " externalizing event " + event + " in format " + outputFormat);
         }
@@ -296,9 +296,9 @@ public class CSVFormatter {
 
             CSVField f = fi.next();
 
-            String fieldName = f.getName();
+            //String fieldName = f.getName();
 
-            if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(fieldName)) {
+            if (f.isTimestamp()) {
 
                 Timestamp timestamp = null;
 
@@ -321,10 +321,10 @@ public class CSVFormatter {
                 Object externalizedValue = null;
 
                 //
-                // attempt to locate a property with the given name
+                // attempt to locate a property related to the CSV field
                 //
 
-                Property p = event.getProperty(fieldName);
+                Property p = event.getPropertyByKey(f);
 
                 if (p != null) {
 
@@ -333,32 +333,50 @@ public class CSVFormatter {
                 else {
 
                     //
-                    // look for dots, map properties, etc.
+                    // attempt to located the property based on the name of the field
                     //
 
-                    int i;
-                    String mapKey = null;
+                    p = event.getProperty(f.getName());
 
-                    if ((i = fieldName.indexOf('.')) != -1) {
-
-                        //
-                        // map property
-                        //
-
-                        mapKey = fieldName.substring(i + 1);
-                        fieldName = fieldName.substring(0, i);
-                    }
-
-
-                    p = event.getProperty(fieldName);
-
-                    if (p instanceof MapProperty) {
-
-                        externalizedValue = ((MapProperty) p).externalizeValue(mapKey);
-                    }
-                    else if (p != null) {
+                    if (p != null) {
 
                         externalizedValue = p.externalizeValue();
+                    }
+                    else {
+
+                        //
+                        // look for dots, map properties, etc.
+                        //
+
+                        //
+                        // TODO Map Handling: hacky, review this
+                        //
+
+                        String fieldName = f.getName();
+
+                        int i;
+                        String mapKey = null;
+
+                        if ((i = fieldName.indexOf('.')) != -1) {
+
+                            //
+                            // map property
+                            //
+
+                            mapKey = fieldName.substring(i + 1);
+                            fieldName = fieldName.substring(0, i);
+                        }
+
+
+                        p = event.getProperty(fieldName);
+
+                        if (p instanceof MapProperty) {
+
+                            externalizedValue = ((MapProperty) p).externalizeValue(mapKey);
+                        } else if (p != null) {
+
+                            externalizedValue = p.externalizeValue();
+                        }
                     }
                 }
 
@@ -382,7 +400,7 @@ public class CSVFormatter {
 
     private String externalizeEventViaIntrospection(Event event) {
 
-        if (log.isDebugEnabled()) {
+        if (log.isTraceEnabled()) {
 
             log.trace(this + " externalizing event " + event + " via introspection");
         }

@@ -136,7 +136,7 @@ public class CSVFormat {
      */
     public void addTimestampField() {
 
-        CSVField f = new CSVFieldImpl(TimedEvent.TIMESTAMP_PROPERTY_NAME, Long.class);
+        CSVField f = new TimestampCSVField(TimedEvent.TIMESTAMP_PROPERTY_NAME);
         fields.add(f);
     }
 

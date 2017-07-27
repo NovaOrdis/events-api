@@ -22,6 +22,7 @@ import io.novaordis.events.api.event.FloatProperty;
 import io.novaordis.events.api.event.IntegerProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.StringProperty;
+import io.novaordis.events.api.event.TimedEvent;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -186,6 +187,23 @@ public class CSVFieldImplTest extends CSVFieldTest {
             String msg = e.getMessage();
             log.info(msg);
             assertTrue(msg.contains("invalid field type specification \"ms\""));
+        }
+    }
+
+    // timestamp handling ----------------------------------------------------------------------------------------------
+
+    @Test
+    public void csvFieldImplCannotBeUsedToRepresentTimestamps() throws Exception {
+
+        try {
+
+            new CSVFieldImpl(TimedEvent.TIMESTAMP_PROPERTY_NAME, Long.class);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("CSVFieldImpl cannot be used to represent timestamp fields, use TimestampCSVField", msg);
         }
     }
 

@@ -52,4 +52,10 @@ public interface CSVField {
      */
     Property toProperty(String s) throws IllegalArgumentException;
 
+    /**
+     * Timestamp fields are handled differently, so we need a type-level designator for it, we don't want to rely
+     * on the name heuristics.
+     */
+    boolean isTimestamp();
+
 }

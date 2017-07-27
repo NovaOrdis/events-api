@@ -85,6 +85,12 @@ public class MetricDefinitionBasedCSVField implements CSVField {
         }
     }
 
+    @Override
+    public boolean isTimestamp() {
+
+        return false;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public MetricDefinition getMetricDefinition() {

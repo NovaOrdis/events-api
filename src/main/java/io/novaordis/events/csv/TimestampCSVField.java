@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -14,16 +14,17 @@
  * limitations under the License.
  */
 
-package io.novaordis.events.api.metric;
-
-import io.novaordis.events.api.measure.MeasureUnit;
-import io.novaordis.utilities.address.Address;
+package io.novaordis.events.csv;
 
 /**
+ * A timestamp CSV field.
+ *
+ * The name is conventionally use TimedEvent.TIMESTAMP_PROPERTY_NAME and the type is Long.
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 8/4/16
+ * @since 2/6/16
  */
-abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
+public class TimestampCSVField extends CSVFieldImpl {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -31,58 +32,21 @@ abstract class MockMetricDefinitionBase extends MetricDefinitionBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Class type;
-    private MeasureUnit baseUnit;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(Address metricSourceAddress) {
+    public TimestampCSVField(String name) {
 
-        this(metricSourceAddress, null);
+        super(Long.class);
+        setName(name);
     }
 
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(Address metricSourceAddress, String id) {
+    @Override
+    public boolean isTimestamp() {
 
-        this(metricSourceAddress, id, null);
-    }
-
-    /**
-     * @param metricSourceAddress must always have a non-null source.
-     */
-    protected MockMetricDefinitionBase(Address metricSourceAddress, String id, Class type) {
-
-        super(metricSourceAddress);
-        setId(id);
-        this.type = type;
+        return true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
-
-    @Override
-    public Class getType() {
-
-        return type;
-    }
-
-    @Override
-    public MeasureUnit getBaseUnit() {
-
-        return baseUnit;
-    }
-
-    @Override
-    public String getDescription() {
-
-        throw new RuntimeException("getDescription() NOT YET IMPLEMENTED");
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

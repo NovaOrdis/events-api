@@ -91,12 +91,44 @@ public class GenericEvent implements Event {
     @Override
     public Property getProperty(String name) {
 
+        if (name == null)  {
+
+            throw new IllegalArgumentException("null property name");
+        }
+
         if (properties == null) {
 
             return null;
         }
 
         return properties.get(name);
+    }
+
+    /**
+     * The most generic implementation is semantically equivalent with getPropertyByName(). We assume the propertyKey
+     * is the property name, and we delegate to getPropertyByName(). Subclasses may override for more complex
+     * behavior.
+     */
+    @Override
+    public Property getPropertyByKey(Object propertyKey) {
+
+        if (propertyKey == null)  {
+
+            throw new IllegalArgumentException("null property key");
+        }
+
+        if (propertyKey instanceof String) {
+
+            //
+            // getPropertyByName() semantics
+            //
+
+            return getProperty((String) propertyKey);
+        }
+
+        log.warn("getProperty() for non-String key (" + propertyKey + ") is usually overridden by subclasses");
+
+        return null;
     }
 
     @Override

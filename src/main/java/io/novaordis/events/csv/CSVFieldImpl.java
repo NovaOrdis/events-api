@@ -24,6 +24,7 @@ import io.novaordis.events.api.event.IntegerProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.StringProperty;
+import io.novaordis.events.api.event.TimedEvent;
 
 import java.text.DateFormat;
 import java.text.Format;
@@ -106,7 +107,25 @@ public class CSVFieldImpl implements CSVField {
      */
     public CSVFieldImpl(String name, Class type) {
 
+        //
+        // we want to enforce using a specialized type for timestamps, so we do this
+        //
+
+        if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
+
+            throw new IllegalArgumentException(
+                    "CSVFieldImpl cannot be used to represent timestamp fields, use TimestampCSVField");
+        }
+
         this.name = name;
+        this.type = type;
+    }
+
+    /**
+     * For use by subclasses
+     */
+    protected CSVFieldImpl(Class type) {
+
         this.type = type;
     }
 
@@ -213,6 +232,16 @@ public class CSVFieldImpl implements CSVField {
         }
 
         throw new RuntimeException("toProperty() does not know how to handle " + getType());
+    }
+
+    @Override
+    public boolean isTimestamp() {
+
+        //
+        // the generic CSVFieldImpl cannot be used to represent a timestamp field, use TimestampCSVField for that
+        //
+
+        return false;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

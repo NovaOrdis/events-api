@@ -27,6 +27,7 @@ import org.junit.Test;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
@@ -66,6 +67,8 @@ public abstract class CSVFieldTest {
         assertEquals("something", f.getName());
         assertEquals(String.class, f.getType());
         assertNull(f.getFormat());
+        assertFalse(f.isTimestamp());
+
     }
 
     // toProperty() ----------------------------------------------------------------------------------------------------
