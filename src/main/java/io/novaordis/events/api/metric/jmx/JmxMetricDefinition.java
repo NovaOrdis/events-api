@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricDefinition;
 
+import javax.management.ObjectName;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/15/17
@@ -35,6 +37,8 @@ public interface JmxMetricDefinition extends MetricDefinition {
     String getKeyValuePairs();
 
     String getAttributeName();
+
+    ObjectName getObjectName();
 
 
 }

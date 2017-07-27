@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.jmx.JmxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -45,6 +46,8 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import static org.junit.Assert.fail;
+
 /**
  * Implementation identical with novaordis-jmx' test MockMBeanServerConnection.
  *
@@ -60,10 +63,12 @@ public class MockMBeanServerConnection implements MBeanServerConnection {
     // Static ----------------------------------------------------------------------------------------------------------
 
     private static final Map<ObjectName, List<Attribute>> content = new HashMap<>();
+    private static final Map<ObjectName, Exception> syntheticFailures = new HashMap<>();
 
     public static void clear() {
 
         content.clear();
+        syntheticFailures.clear();
     }
 
     public static void addAttribute(ObjectName on, String attributeName, Object value) {
@@ -98,6 +103,17 @@ public class MockMBeanServerConnection implements MBeanServerConnection {
 
             al.add(a);
         }
+    }
+
+    public static void configureFailure(ObjectName on, Exception e) {
+
+        if (!(e instanceof MBeanException) && !(e instanceof ReflectionException) && !(e instanceof IOException)) {
+
+            fail("we do not handle yet this type of synthetic failure: " + e);
+        }
+
+        //noinspection ThrowableResultOfMethodCallIgnored
+        syntheticFailures.put(on, e);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -166,6 +182,27 @@ public class MockMBeanServerConnection implements MBeanServerConnection {
     public Object getAttribute(ObjectName name, String attributeName)
             throws MBeanException, AttributeNotFoundException,
             InstanceNotFoundException, ReflectionException, IOException {
+
+        //noinspection ThrowableResultOfMethodCallIgnored
+        Exception e = syntheticFailures.get(name);
+
+        if (e != null) {
+
+            if (e instanceof MBeanException) {
+
+                throw ((MBeanException) e);
+            }
+            else if (e instanceof ReflectionException) {
+
+                throw ((ReflectionException) e);
+            }
+            else if (e instanceof IOException) {
+
+                throw (IOException) e;
+            }
+
+            fail("unknown synthetic failure type: " + e);
+        }
 
         List<Attribute> attributes = content.get(name);
 

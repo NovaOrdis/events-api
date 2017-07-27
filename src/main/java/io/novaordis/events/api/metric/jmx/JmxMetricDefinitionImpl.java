@@ -43,6 +43,7 @@ public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements Jmx
     private String domainName;
     private String keyValuePairs;
     private String attributeName;
+    private ObjectName objectName;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -65,8 +66,8 @@ public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements Jmx
 
         try {
 
-            ObjectName on = new ObjectName(objectNameString);
-            log.debug("ObjectName: " + on);
+            this.objectName = new ObjectName(objectNameString);
+            log.debug("ObjectName: " + objectName);
         }
         catch(MalformedObjectNameException e) {
 
@@ -97,6 +98,12 @@ public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements Jmx
     public String getAttributeName() {
 
         return attributeName;
+    }
+
+    @Override
+    public ObjectName getObjectName() {
+
+        return objectName;
     }
 
     // MetricDefinitionBase overrides ----------------------------------------------------------------------------------

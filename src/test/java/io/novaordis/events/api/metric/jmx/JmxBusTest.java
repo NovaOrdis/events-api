@@ -22,12 +22,17 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.jmx.JmxAddress;
+import io.novaordis.jmx.JmxException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
 import org.junit.After;
 import org.junit.Test;
 
+import javax.management.MBeanException;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import java.io.IOException;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -258,6 +263,254 @@ public class JmxBusTest extends MetricSourceTest {
         assertEquals("test.domain:service=Mock/TestAttribute", lp.getName());
         assertEquals(Long.class, lp.getType());
         assertEquals(7L, lp.getLong().longValue());
+
+        assertTrue(b.isStarted());
+    }
+
+    @Test
+    public void collect_IndividualMetricFails_MBeanException() throws Exception {
+
+        //
+        // first metric fails, the second succeeds
+        //
+
+        MockMBeanServerConnection.configureFailure(
+                new ObjectName("test:service=A"), new MBeanException(new RuntimeException(), "SYNTHETIC"));
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=B"), "Attr", 8L);
+
+        JmxBus b = getMetricSourceToTest("jmx://test:1000");
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "Attr");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        List<Property> properties = b.collect(mds);
+
+        assertEquals(2, properties.size());
+
+        Property p = properties.get(0);
+
+        //
+        // not collected
+        //
+        assertEquals("test:service=A/DoesNotMatter", p.getName());
+        assertNull(p.getValue());
+
+        Property p2 = properties.get(1);
+        LongProperty lp = (LongProperty) p2;
+        assertEquals("test:service=B/Attr", lp.getName());
+        assertEquals(Long.class, lp.getType());
+        assertEquals(8L, lp.getLong().longValue());
+
+        assertTrue(b.isStarted());
+    }
+
+    @Test
+    public void collect_IndividualMetricFails_AttributeNotFoundException() throws Exception {
+
+        //
+        // first metric fails, the second succeeds
+        //
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=A"), "AttrA", 1L);
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=B"), "AttrB", 2L);
+
+        JmxBus b = getMetricSourceToTest("jmx://test:1000");
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(
+                b.getAddress(), "test", "service=A", "IAmSureThereIsNoSuchAttribute");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        List<Property> properties = b.collect(mds);
+
+        assertEquals(2, properties.size());
+
+        Property p = properties.get(0);
+
+        //
+        // not collected
+        //
+        assertEquals("test:service=A/IAmSureThereIsNoSuchAttribute", p.getName());
+        assertNull(p.getValue());
+
+        Property p2 = properties.get(1);
+        LongProperty lp = (LongProperty) p2;
+        assertEquals("test:service=B/AttrB", lp.getName());
+        assertEquals(Long.class, lp.getType());
+        assertEquals(2L, lp.getLong().longValue());
+
+        assertTrue(b.isStarted());
+    }
+
+    @Test
+    public void collect_IndividualMetricFails_InstanceNotFoundException() throws Exception {
+
+        //
+        // first metric fails, the second succeeds
+        //
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=A"), "AttrA", 1L);
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=B"), "AttrB", 2L);
+
+        JmxBus b = getMetricSourceToTest("jmx://test:1000");
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(
+                b.getAddress(), "test", "service=IAmSureThereIsNoSuchService", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        List<Property> properties = b.collect(mds);
+
+        assertEquals(2, properties.size());
+
+        Property p = properties.get(0);
+
+        //
+        // not collected
+        //
+        assertEquals("test:service=IAmSureThereIsNoSuchService/DoesNotMatter", p.getName());
+        assertNull(p.getValue());
+
+        Property p2 = properties.get(1);
+        LongProperty lp = (LongProperty) p2;
+        assertEquals("test:service=B/AttrB", lp.getName());
+        assertEquals(Long.class, lp.getType());
+        assertEquals(2L, lp.getLong().longValue());
+
+        assertTrue(b.isStarted());
+    }
+
+    @Test
+    public void collect_IndividualMetricFails_ReflectionException() throws Exception {
+
+        //
+        // first metric fails, the second succeeds
+        //
+
+        MockMBeanServerConnection.configureFailure(
+                new ObjectName("test:service=A"), new ReflectionException(new RuntimeException(), "SYNTHETIC"));
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=B"), "Attr", 8L);
+
+        JmxBus b = getMetricSourceToTest("jmx://test:1000");
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "Attr");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        List<Property> properties = b.collect(mds);
+
+        assertEquals(2, properties.size());
+
+        Property p = properties.get(0);
+
+        //
+        // not collected
+        //
+        assertEquals("test:service=A/DoesNotMatter", p.getName());
+        assertNull(p.getValue());
+
+        Property p2 = properties.get(1);
+        LongProperty lp = (LongProperty) p2;
+        assertEquals("test:service=B/Attr", lp.getName());
+        assertEquals(Long.class, lp.getType());
+        assertEquals(8L, lp.getLong().longValue());
+
+        assertTrue(b.isStarted());
+    }
+
+    @Test
+    public void collect_JmxSourceFails_IOException() throws Exception {
+
+        //
+        // first metric succeeds, the second fails, but it does not matter, as IOException is a source-wide exception
+        //
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=A"), "AttrA", 1L);
+        MockMBeanServerConnection.configureFailure(new ObjectName("test:service=B"), new IOException("SYNTHETIC"));
+
+        JmxBus b = getMetricSourceToTest("jmx://test:1000");
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "AttrA");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        try {
+
+            b.collect(mds);
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
+
+            Throwable t = e.getCause();
+
+            assertTrue(t instanceof IOException);
+            String msg = t.getMessage();
+            assertEquals("SYNTHETIC", msg);
+        }
+
+        //
+        // we automatically stop the source on source-wide failure, so if it is a transient failure, we'll retry
+        //
+        assertFalse(b.isStarted());
+    }
+
+    @Test
+    public void collect_JmxSourceFails_JmxException() throws Exception {
+
+        //
+        // first metric succeeds, the second fails, but it does not matter, as JmxException is a source-wide exception
+        //
+
+        MockMBeanServerConnection.addAttribute(new ObjectName("test:service=A"), "AttrA", 1L);
+        MockJmxClientFactory mf = new MockJmxClientFactory();
+        mf.configureClientToFailOnGetMBeanServerConnection();
+
+        JmxBus b = new JmxBus("jmx://test:1000");
+        b.setJmxClientFactory(mf);
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "AttrA");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+
+        List<MetricDefinition> mds = Arrays.asList(md, md2);
+
+        b.start();
+
+        try {
+
+            b.collect(mds);
+            fail("should have thrown exception");
+        }
+        catch(MetricSourceException e) {
+
+            Throwable t = e.getCause();
+
+            assertTrue(t instanceof JmxException);
+            String msg = t.getMessage();
+            assertEquals("SYNTHETIC", msg);
+        }
+
+        //
+        // we automatically stop the source on source-wide failure, so if it is a transient failure, we'll retry
+        //
+        assertFalse(b.isStarted());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

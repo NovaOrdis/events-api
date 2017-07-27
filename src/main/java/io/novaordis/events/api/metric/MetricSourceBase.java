@@ -162,9 +162,10 @@ public abstract class MetricSourceBase implements MetricSource {
      *
      * @see MetricSource#collectMetrics(List)
      *
-     * @exception IllegalStateException if the source is not started. The source must be started by the calling layer.
-     * @exception IllegalArgumentException if the metric is not of the correct type.
-     * @throws MetricException by other underlying conditions.
+     * @throws IllegalStateException if the source is not started. The source must be started by the calling layer.
+     * @throws IllegalArgumentException if the metric is not of the correct type.
+     * @throws MetricSourceException when the source failed during collection.
+     * @throws MetricException when an individual metric processing failed in an unrecoverable way.
      */
     protected abstract List<Property> collect(List<MetricDefinition> metricDefinitions) throws MetricException;
 

@@ -102,7 +102,7 @@ public interface MetricDefinition {
      * Builds a property instance corresponding to the given value of the metric - it has the correct name, type, etc.
      * If the value is null, build an empty property, but also with the correct name, type, etc.
      *
-     * @throws MetricException
+     * @throws MetricException on failure to build the corresponding property from value.
      *
      * @see MetricDefinition#buildProperty()
      */

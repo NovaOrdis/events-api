@@ -25,12 +25,18 @@ import io.novaordis.jmx.JmxAddress;
 import io.novaordis.jmx.JmxClient;
 import io.novaordis.jmx.JmxClientFactory;
 import io.novaordis.jmx.JmxClientFactoryImpl;
+import io.novaordis.jmx.JmxException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 
+import javax.management.AttributeNotFoundException;
+import javax.management.InstanceNotFoundException;
+import javax.management.MBeanException;
 import javax.management.MBeanServerConnection;
 import javax.management.ObjectName;
+import javax.management.ReflectionException;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -180,7 +186,7 @@ public class JmxBus extends MetricSourceBase {
 
             try {
 
-                ObjectName on = new ObjectName(jbmd.getDomainName() + ":" + jbmd.getKeyValuePairs());
+                ObjectName on = jbmd.getObjectName();
                 MBeanServerConnection mBeanServerConnection = jmxClient.getMBeanServerConnection();
                 String attributeName = jbmd.getAttributeName();
                 value = mBeanServerConnection.getAttribute(on, attributeName);
@@ -192,13 +198,31 @@ public class JmxBus extends MetricSourceBase {
                             " for \"" + attributeName + "\"");
                 }
             }
-            catch(Exception e) {
+            catch(MBeanException | AttributeNotFoundException | InstanceNotFoundException | ReflectionException e) {
 
                 //
-                // at some time during the handling, we failed. Log and return a null-valued property
+                // these types of exceptions denote a problem with an individual metric, not with the source as a whole;
+                // we will continue to collect the other metrics and log the failure as warning. The entire call does
+                // NOT fail
                 //
 
                 log.warn("failed to collect " + md.getId() + " from " + this, e);
+            }
+            catch(JmxException | IOException e) {
+
+                //
+                // this is an indication that the JMX source, and not an individual metric, failed as a whole. An
+                // example of such occurrence is when a JBoss instance goes down: we get
+                // "org.jboss.remoting3.NotOpenException: Writes closed" here. When we are in this situation, we
+                // stop the source, in the hope this is a transient failure and the next attempt to start will clear
+                // it, and bubble the exception up.
+                //
+
+                log.warn(this + " detected source-wide failure: " + e.getMessage());
+
+                stop();
+
+                throw new MetricSourceException(e);
             }
 
             Property p = md.buildProperty(value);

@@ -22,6 +22,7 @@ import io.novaordis.jmx.JmxAddress;
 import org.junit.Test;
 
 import javax.management.MalformedObjectNameException;
+import javax.management.ObjectName;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -56,7 +57,25 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
         assertEquals("test.domain:service=TestService/testAttribute", d.getId());
     }
 
-    // getId() -------------------------------------------------------------------------------------------------
+    // identity --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void identity() throws Exception {
+
+        JmxBus bus = new JmxBus("jmx://localhost:1234");
+        JmxMetricDefinitionImpl m = new JmxMetricDefinitionImpl(
+                bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
+
+        assertEquals("test.domain:service=TestService/testAttribute", m.getId());
+        assertEquals("test.domain", m.getDomainName());
+        assertEquals("service=TestService", m.getKeyValuePairs());
+        assertEquals("testAttribute", m.getAttributeName());
+        assertEquals(new ObjectName("test.domain:service=TestService"), m.getObjectName());
+        assertEquals("localhost:1234/test.domain:service=TestService/testAttribute", m.getSimpleLabel());
+        assertEquals(new JmxAddress("jmx://localhost:1234"), m.getMetricSourceAddress());
+    }
+
+    // getId() ---------------------------------------------------------------------------------------------------------
 
     @Test
     public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {

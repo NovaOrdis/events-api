@@ -33,6 +33,8 @@ public class MockJmxClientFactory implements JmxClientFactory {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private boolean clientFailsOnGetMBeanServerConnection;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // JmxClientFactory implementation ---------------------------------------------------------------------------------
@@ -40,10 +42,22 @@ public class MockJmxClientFactory implements JmxClientFactory {
     @Override
     public JmxClient build(JmxAddress address) throws JmxException {
 
-        return new MockJmxClient(address);
+        MockJmxClient mc = new MockJmxClient(address);
+
+        if (clientFailsOnGetMBeanServerConnection) {
+
+            mc.configureToFailOnGetMBeanServerConnection();
+        }
+
+        return mc;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void configureClientToFailOnGetMBeanServerConnection() {
+
+        this.clientFailsOnGetMBeanServerConnection = true;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

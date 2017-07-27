@@ -44,6 +44,8 @@ public class MockJmxClient implements JmxClient {
 
     private MockMBeanServerConnection mockMBeanServerConnection;
 
+    private boolean failOnGetMBeanServerConnection;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public MockJmxClient(JmxAddress address) {
@@ -91,10 +93,20 @@ public class MockJmxClient implements JmxClient {
     @Override
     public MBeanServerConnection getMBeanServerConnection() throws JmxException {
 
+        if (failOnGetMBeanServerConnection) {
+
+            throw new JmxException("SYNTHETIC", new RuntimeException());
+        }
+
         return mockMBeanServerConnection;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    public void configureToFailOnGetMBeanServerConnection() {
+
+        this.failOnGetMBeanServerConnection = true;
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
