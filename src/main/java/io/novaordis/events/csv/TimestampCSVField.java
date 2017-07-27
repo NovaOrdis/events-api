@@ -16,6 +16,8 @@
 
 package io.novaordis.events.csv;
 
+import io.novaordis.events.api.event.TimedEvent;
+
 /**
  * A timestamp CSV field.
  *
@@ -33,6 +35,11 @@ public class TimestampCSVField extends CSVFieldImpl {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    public TimestampCSVField() {
+
+        super(TimedEvent.TIMESTAMP_PROPERTY_NAME, Long.class);
+    }
 
     public TimestampCSVField(String name) {
 

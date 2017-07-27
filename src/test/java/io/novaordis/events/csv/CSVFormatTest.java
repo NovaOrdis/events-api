@@ -23,7 +23,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Date;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
@@ -174,7 +173,7 @@ public class CSVFormatTest {
         assertEquals(4, fields.size());
 
         CSVField f = fields.get(0);
-        assertEquals(Date.class, f.getType());
+        assertEquals(Long.class, f.getType());
         assertEquals("timestamp", f.getName());
 
         CSVField f2 = fields.get(1);
@@ -216,6 +215,20 @@ public class CSVFormatTest {
         assertEquals("test", fd.getName());
         assertEquals(String.class, fd.getType());
         assertEquals(null, fd.getFormat());
+    }
+
+    @Test
+    public void constructor_Timestamp() throws Exception {
+
+        CSVFormat format = new CSVFormat("timestamp");
+
+        List<CSVField> fields = format.getFields();
+
+        assertEquals(1, fields.size());
+
+        CSVField f = fields.get(0);
+
+        assertTrue(f.isTimestamp());
     }
 
     // addField() ------------------------------------------------------------------------------------------------------
@@ -271,7 +284,7 @@ public class CSVFormatTest {
 
         assertTrue(f.getFields().isEmpty());
 
-        CSVField fd = new CSVFieldImpl("something (int)");
+        CSVField fd = CSVFieldFactory.fromFieldSpecification("something (int)");
 
         f.addField(fd);
 

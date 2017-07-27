@@ -27,13 +27,10 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.text.Format;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -55,21 +52,6 @@ public class CSVFieldImplTest extends CSVFieldTest {
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void unbalancedParentheses() throws Exception {
-
-        try {
-
-            new CSVFieldImpl("a)");
-            fail("should throw exception");
-        }
-        catch(CSVFormatException e) {
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.contains("unbalanced"));
-        }
-    }
-
-    @Test
     public void stringField() throws Exception {
 
         CSVFieldImpl f = new CSVFieldImpl("some-string", String.class);
@@ -78,122 +60,26 @@ public class CSVFieldImplTest extends CSVFieldTest {
         assertEquals(String.class, f.getType());
     }
 
-    @Test
-    public void stringField2() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("some-string(string)");
-
-        assertEquals("some-string", f.getName());
-        assertEquals(String.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_SimpleString() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("some-string");
-
-        assertEquals("some-string", f.getName());
-        assertEquals(String.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Time() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("timestamp(time:yy/MM/dd HH:mm:ss)");
-
-        assertEquals("timestamp", f.getName());
-        assertEquals(Date.class, f.getType());
-
-        Format format = f.getFormat();
-        assertTrue(format instanceof SimpleDateFormat);
-        SimpleDateFormat sdf = (SimpleDateFormat)format;
-
-        assertEquals(sdf.parse("16/01/01 01:01:01"),
-                new SimpleDateFormat("MM/dd/yy hh:mm:ss a").parse("01/01/16 01:01:01 AM"));
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Time_InvalidTimeFormatSpecification() throws Exception {
-
-        try {
-
-            new CSVFieldImpl("timestamp(time:blah)");
-        }
-        catch(CSVFormatException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.contains("invalid timestamp format \"blah\""));
-            IllegalArgumentException cause = (IllegalArgumentException)e.getCause();
-            assertNotNull(cause);
-        }
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Integer() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("a(int)");
-
-        assertEquals("a", f.getName());
-        assertEquals(Integer.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Integer_Space() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("something (int)");
-
-        assertEquals("something", f.getName());
-        assertEquals(Integer.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Long() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("a(long)");
-
-        assertEquals("a", f.getName());
-        assertEquals(Long.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Float() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("a(float)");
-
-        assertEquals("a", f.getName());
-        assertEquals(Float.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_Double() throws Exception {
-
-        CSVFieldImpl f = new CSVFieldImpl("a(double)");
-
-        assertEquals("a", f.getName());
-        assertEquals(Double.class, f.getType());
-    }
-
-    @Test
-    public void fieldSpecificationParsing_InvalidType() throws Exception {
-
-        try {
-
-            new CSVFieldImpl("fieldA(ms)");
-            fail("should throw exception");
-        }
-        catch(CSVFormatException e) {
-
-            String msg = e.getMessage();
-            log.info(msg);
-            assertTrue(msg.contains("invalid field type specification \"ms\""));
-        }
-    }
-
     // timestamp handling ----------------------------------------------------------------------------------------------
 
     @Test
-    public void csvFieldImplCannotBeUsedToRepresentTimestamps() throws Exception {
+    public void csvFieldImplCannotBeUsedToRepresentTimestamps_SpecificationConstructor() throws Exception {
+
+        try {
+
+            new CSVFieldImpl(TimedEvent.TIMESTAMP_PROPERTY_NAME, Long.class);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("CSVFieldImpl cannot be used to represent timestamp fields, use TimestampCSVField", msg);
+        }
+    }
+
+
+    @Test
+    public void csvFieldImplCannotBeUsedToRepresentTimestamps_ComponentConstructor() throws Exception {
 
         try {
 

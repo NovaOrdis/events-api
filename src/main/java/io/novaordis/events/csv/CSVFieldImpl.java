@@ -28,7 +28,6 @@ import io.novaordis.events.api.event.TimedEvent;
 
 import java.text.DateFormat;
 import java.text.Format;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 
 /**
@@ -94,31 +93,18 @@ public class CSVFieldImpl implements CSVField {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    /**
-     * Build a CSVField instance based on the given specification
-     */
-    public CSVFieldImpl(String specification) throws CSVFormatException {
-
-        parseFieldSpecification(specification);
-    }
-
-    /**
-     * Builds a "string" CSVField.
-     */
     public CSVFieldImpl(String name, Class type) {
 
-        //
-        // we want to enforce using a specialized type for timestamps, so we do this
-        //
+        this(name, type, null);
+    }
 
-        if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
-
-            throw new IllegalArgumentException(
-                    "CSVFieldImpl cannot be used to represent timestamp fields, use TimestampCSVField");
-        }
+    public CSVFieldImpl(String name, Class type, Format format) {
 
         this.name = name;
         this.type = type;
+        this.format = format;
+
+        timestampFieldConsistencyCheck();
     }
 
     /**
@@ -267,99 +253,18 @@ public class CSVFieldImpl implements CSVField {
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void parseFieldSpecification(String fieldSpecification) throws CSVFormatException {
 
-        if (fieldSpecification == null) {
+    /**
+     * We want to enforce using a specialized type for timestamps, so we check the name against known labels.
+     *
+     * @throws IllegalArgumentException if the name is among the labels we watch
+     */
+    private void timestampFieldConsistencyCheck() throws IllegalArgumentException {
 
-            throw new IllegalArgumentException("null field specification");
-        }
+        if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
 
-        int leftParenthesis = fieldSpecification.indexOf('(');
-        int rightParenthesis = fieldSpecification.indexOf(')');
-
-        if (leftParenthesis == -1) {
-
-            //
-            // no type information
-            //
-            if (rightParenthesis != -1) {
-
-                throw new CSVFormatException("unbalanced parentheses");
-            }
-
-            this.name = fieldSpecification;
-            this.type = String.class;
-        }
-        else {
-
-            //
-            // there is type information
-            //
-
-            this.name = fieldSpecification.substring(0, leftParenthesis).trim();
-
-            String typeSpecification = fieldSpecification.substring(leftParenthesis + 1, rightParenthesis);
-
-            if ("string".equals(typeSpecification)) {
-
-                this.type = String.class;
-            }
-            else if ("int".equals(typeSpecification)) {
-
-                this.type = Integer.class;
-            }
-            else if ("long".equals(typeSpecification)) {
-
-                this.type = Long.class;
-            }
-            else if ("float".equals(typeSpecification)) {
-
-                this.type = Float.class;
-            }
-            else if ("double".equals(typeSpecification)) {
-
-                this.type = Double.class;
-            }
-            else if (typeSpecification.startsWith("time")) {
-
-                this.type = Date.class;
-                parseTimeSpecification(typeSpecification);
-
-            }
-            else {
-
-                throw new CSVFormatException("invalid field type specification \"" + typeSpecification + "\"");
-            }
-        }
-    }
-
-    private void parseTimeSpecification(String timeSpecification) throws CSVFormatException {
-
-        //
-        // must start with "time"
-        //
-
-        if (!timeSpecification.startsWith("time")) {
-
-            throw new IllegalArgumentException("invalid time specification " + timeSpecification);
-        }
-
-        timeSpecification = timeSpecification.substring("time".length());
-
-        if (!timeSpecification.startsWith(":")) {
-
-            throw new CSVFormatException("invalid time specification \"" + timeSpecification + "\", missing ':'");
-        }
-
-        timeSpecification = timeSpecification.substring(1);
-
-        try {
-
-            format = new SimpleDateFormat(timeSpecification);
-        }
-        catch(Exception e) {
-
-            throw new CSVFormatException("invalid timestamp format \"" + timeSpecification + "\"", e);
+            throw new IllegalArgumentException(
+                    "CSVFieldImpl cannot be used to represent timestamp fields, use TimestampCSVField");
         }
     }
 

@@ -88,11 +88,11 @@ public class CSVFormat {
                 break;
             }
 
-            CSVFieldImpl field = new CSVFieldImpl(fieldSpec);
+            CSVField field = CSVFieldFactory.fromFieldSpecification(fieldSpec);
 
             if (field.getName().length() == 0) {
 
-                field.setName(nextUnnamedFieldName());
+                ((CSVFieldImpl)field).setName(nextUnnamedFieldName());
             }
 
             fields.add(field);
@@ -110,7 +110,7 @@ public class CSVFormat {
      */
     public void addField(String fieldSpecification) throws CSVFormatException {
 
-        CSVFieldImpl f = new CSVFieldImpl(fieldSpecification);
+        CSVField f = CSVFieldFactory.fromFieldSpecification(fieldSpecification);
         addField(f);
     }
 
