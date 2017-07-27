@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
+import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -74,6 +76,27 @@ public abstract class MetricDefinitionTest {
         String label = d.getLabel();
 
         assertNotNull(label);
+
+        //
+        // the source must show up in the label, unless it is local OS
+        //
+
+        Address a = d.getMetricSourceAddress();
+
+        if (a == null) {
+
+            fail("we expect an address");
+        }
+
+        if (a instanceof LocalOSAddress) {
+
+            assertFalse(label.startsWith(new LocalOSAddress().getLiteral()));
+        }
+        else {
+
+            String addressLiteral = a.getLiteral();
+            assertTrue(label.startsWith(addressLiteral + "/"));
+        }
     }
 
     @Test

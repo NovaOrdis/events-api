@@ -96,10 +96,10 @@ public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implement
 
         //
         // it would be nice if we could come up with a human readable label - we'll see how we do that; in the mean
-        // time, we'll just report path and attribute
+        // time, we'll just report the address literal, the path and the attribute
         //
 
-        return path.getPath() + "/" + attribute.getName();
+        return getMetricSourceAddress().getLiteral() + path.getPath() + "/" + attribute.getName();
     }
 
     @Override

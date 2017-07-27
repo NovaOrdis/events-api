@@ -82,9 +82,9 @@ public interface MetricDefinition {
 
     /**
      * A human readable string, possibly space separated, that is used to represent the metric in user-facing
-     * representations, such as a CSV file headers. The label includes, by default, the parantheses-enclosed measure
-     * unit, if the metric has a measure unit. For example, PhysicalMemoryTotal's label is
-     * "Total Physical Memory (bytes)"
+     * representations, such as a CSV file headers. The label includes, by default, the source address (unless the
+     * source address is the local OS) and the parantheses-enclosed measure unit, if the metric has a measure unit.
+     * For example, PhysicalMemoryTotal's label is "Total Physical Memory (bytes)".
      *
      * @param attributes different attributes to include within the label, such as measure unit, etc. If no label
      *                   attributes are specified, a simple label is generated.

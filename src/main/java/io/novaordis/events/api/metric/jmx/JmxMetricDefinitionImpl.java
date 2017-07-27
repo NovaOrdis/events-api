@@ -113,7 +113,7 @@ public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements Jmx
     @Override
     public String getSimpleLabel() {
 
-        return getId();
+        return getMetricSourceAddress().getLiteral() + "/" + getId();
     }
 
     @Override

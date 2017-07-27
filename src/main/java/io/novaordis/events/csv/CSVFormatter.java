@@ -78,6 +78,11 @@ public class CSVFormatter {
      */
     public static String outputFormatToHeader(CSVFormat outputFormat) {
 
+        if (log.isTraceEnabled()) {
+
+            log.trace("converting output format " + outputFormat + " to header line");
+        }
+
         String headerLine = "# ";
 
         List<CSVField> fields = outputFormat.getFields();
@@ -237,6 +242,12 @@ public class CSVFormatter {
      */
     public boolean isIgnoreFaults() {
         return ignoreFaults;
+    }
+
+    @Override
+    public String toString() {
+
+        return "CSVFormatter[" + Integer.toHexString(System.identityHashCode(this)) + "]";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

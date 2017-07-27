@@ -118,8 +118,8 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
-        assertEquals("/a=b/c=d/f", d.getSimpleLabel());
-        assertEquals("/a=b/c=d/f", d.getDescription());
+        assertEquals("localhost/a=b/c=d/f", d.getSimpleLabel());
+        assertEquals("localhost/a=b/c=d/f", d.getDescription());
     }
 
     @Test
@@ -144,8 +144,8 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
-        assertEquals("/a=b/c=d/f", d.getSimpleLabel());
-        assertEquals("/a=b/c=d/f", d.getDescription());
+        assertEquals("localhost/a=b/c=d/f", d.getSimpleLabel());
+        assertEquals("localhost/a=b/c=d/f", d.getDescription());
     }
 
     @Test
@@ -170,8 +170,8 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
-        assertEquals("/a=b/c=d/f", d.getSimpleLabel());
-        assertEquals("/a=b/c=d/f", d.getDescription());
+        assertEquals("bluehost/a=b/c=d/f", d.getSimpleLabel());
+        assertEquals("bluehost/a=b/c=d/f", d.getDescription());
     }
 
     @Test
@@ -196,8 +196,8 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
-        assertEquals("/a=b/c=d/f", d.getSimpleLabel());
-        assertEquals("/a=b/c=d/f", d.getDescription());
+        assertEquals("localhost:9999/a=b/c=d/f", d.getSimpleLabel());
+        assertEquals("localhost:9999/a=b/c=d/f", d.getDescription());
     }
 
     @Test
@@ -222,8 +222,8 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
         DmrAttribute attribute = d.getAttribute();
         assertEquals("f", attribute.getName());
 
-        assertEquals("/a=b/c=d/f", d.getSimpleLabel());
-        assertEquals("/a=b/c=d/f", d.getDescription());
+        assertEquals("blue:9999/a=b/c=d/f", d.getSimpleLabel());
+        assertEquals("blue:9999/a=b/c=d/f", d.getDescription());
     }
 
     @Test
