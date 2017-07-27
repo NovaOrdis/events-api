@@ -324,7 +324,18 @@ public class CSVFormatter {
                 // attempt to locate a property related to the CSV field
                 //
 
-                Property p = event.getPropertyByKey(f);
+                Object propertyKey;
+
+                if (f instanceof MetricDefinitionBasedCSVField) {
+
+                    propertyKey = ((MetricDefinitionBasedCSVField)f).getMetricDefinition();
+                }
+                else {
+
+                    propertyKey = f.getName();
+                }
+
+                Property p = event.getPropertyByKey(propertyKey);
 
                 if (p != null) {
 
