@@ -356,6 +356,21 @@ public abstract class EventTest {
         assertNull(p);
     }
 
+    // getRawRepresentation() ------------------------------------------------------------------------------------------
+
+    @Test
+    public void getRawRepresentation() throws Exception {
+
+        Event event = getEventToTest();
+
+        assertNull(event.getRawRepresentation());
+
+        event.setProperty(new StringProperty(Event.RAW_PROPERTY_NAME, "something"));
+
+        String rawRepresentation = event.getRawRepresentation();
+        assertEquals("something", rawRepresentation);
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

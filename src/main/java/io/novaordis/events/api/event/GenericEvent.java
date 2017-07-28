@@ -281,6 +281,19 @@ public class GenericEvent implements Event {
         }
     }
 
+    @Override
+    public String getRawRepresentation() {
+
+        StringProperty sp = getStringProperty(RAW_PROPERTY_NAME);
+
+        if (sp == null) {
+
+            return null;
+        }
+
+        return sp.getString();
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public List<Property> getPropertyList() {

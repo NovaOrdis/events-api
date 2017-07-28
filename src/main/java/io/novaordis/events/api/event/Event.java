@@ -170,4 +170,11 @@ public interface Event {
      */
     void setLineNumber(Long lineNumber);
 
+    /**
+     * Return the raw representation of the event: if it makes sense, the whole event is maintained in its raw
+     * (unparsed) format, as a StringProperty. Some implementations may decide this is inefficient, so this method
+     * may return null. The representation may also contain multiple lines.
+     */
+    String getRawRepresentation();
+
 }
