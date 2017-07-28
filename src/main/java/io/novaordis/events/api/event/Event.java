@@ -29,8 +29,16 @@ public interface Event {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
+    //
     // where it makes sense, it is maintained as a LongProperty
+    //
     String LINE_NUMBER_PROPERTY_NAME = "line-number";
+
+    //
+    // if it makes sense, the whole event is maintained in its raw (unparsed) format, as a StringProperty. Some
+    // implementations may decide this is inefficient, so expect to get null when querying for it.
+    //
+    String RAW_PROPERTY_NAME = "raw";
 
     // Static ----------------------------------------------------------------------------------------------------------
 
