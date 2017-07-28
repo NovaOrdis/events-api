@@ -16,17 +16,16 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericTimedEvent;
+import org.junit.Test;
+
+import static org.junit.Assert.assertFalse;
 
 /**
- * A query that selects all events.
- *
- * Equivalent with MatchAll.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class NullQuery implements Query {
+public class MatchNoneTest extends QueryTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -36,25 +35,28 @@ public class NullQuery implements Query {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Query implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean selects(Event e) {
-
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void selectsNone() {
+
+        MatchNone q = new MatchNone();
+
+        assertFalse(q.selects(new GenericTimedEvent()));
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected MatchNone getQueryToTest() throws Exception {
+
+        return new MatchNone();
+    }
+
 
     // Private ---------------------------------------------------------------------------------------------------------
 

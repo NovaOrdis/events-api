@@ -21,12 +21,12 @@ import io.novaordis.events.api.event.Event;
 /**
  * A query that selects all events.
  *
- * Equivalent with MatchAll.
+ * Equivalent with NullQuery.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class NullQuery implements Query {
+public class MatchAll implements Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -48,7 +48,6 @@ public class NullQuery implements Query {
 
         return true;
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

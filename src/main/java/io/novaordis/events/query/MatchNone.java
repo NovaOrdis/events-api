@@ -19,14 +19,14 @@ package io.novaordis.events.query;
 import io.novaordis.events.api.event.Event;
 
 /**
- * A query that selects all events.
+ * A query that selects no event.
  *
- * Equivalent with MatchAll.
+ * Equivalent with NullQuery.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class NullQuery implements Query {
+public class MatchNone implements Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -46,9 +46,8 @@ public class NullQuery implements Query {
             throw new IllegalArgumentException("null event");
         }
 
-        return true;
+        return false;
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 
