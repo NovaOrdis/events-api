@@ -81,7 +81,7 @@ public interface Query {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
-     * @return true if the event is selected the query, false otherwise.
+     * @return true if the event is selected by (matches) the query, false otherwise.
      *
      * @exception IllegalArgumentException on null events.
      */
