@@ -442,6 +442,36 @@ public class PropertyFactoryTest {
         assertNull(p2.getMeasureUnit());
     }
 
+    @Test
+    public void createTypeHeuristicsInstance_Float() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", 1.0f, null, null);
+
+        assertNotNull(p);
+
+        FloatProperty p2 = (FloatProperty)p;
+
+        assertEquals("test", p2.getName());
+        assertEquals(1.0f, p2.getFloat().floatValue(), 0.000001);
+        assertEquals(Float.class, p2.getType());
+        assertNull(p2.getMeasureUnit());
+    }
+
+    @Test
+    public void createTypeHeuristicsInstance_Double() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", 1.0d, null, null);
+
+        assertNotNull(p);
+
+        DoubleProperty p2 = (DoubleProperty)p;
+
+        assertEquals("test", p2.getName());
+        assertEquals(1.0d, p2.getDouble().floatValue(), 0.000001);
+        assertEquals(Double.class, p2.getType());
+        assertNull(p2.getMeasureUnit());
+    }
+
     // conversions -----------------------------------------------------------------------------------------------------
 
     @Test

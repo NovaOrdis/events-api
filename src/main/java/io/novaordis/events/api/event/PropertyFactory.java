@@ -299,6 +299,14 @@ public class PropertyFactory {
 
             return new LongProperty(name, (Long)value);
         }
+        else if (value instanceof Float) {
+
+            return new FloatProperty(name, (Float)value);
+        }
+        else if (value instanceof Double) {
+
+            return new DoubleProperty(name, (Double)value);
+        }
         else if (value instanceof String) {
 
             //
@@ -309,7 +317,8 @@ public class PropertyFactory {
         }
         else {
 
-            throw new RuntimeException("NOT YET IMPLEMENTED: support for type inference from " + value);
+            throw new RuntimeException(
+                    "NOT YET IMPLEMENTED: support for type inference from " + value + " (" + value.getClass() + ")");
         }
     }
 
