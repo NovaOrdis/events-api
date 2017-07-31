@@ -8,7 +8,7 @@
     <artifactId>events-api</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.2.1-SNAPSHOT-7</version>
+    <version>1.2.1-SNAPSHOT-8</version>
 
     <properties>
 
@@ -16,8 +16,8 @@
                Dependency Versions
         -->
 
-        <novaordis.jboss.version>1.0.8-SNAPSHOT-4</novaordis.jboss.version>
-        <novaordis.jmx.version>1.2.3-SNAPSHOT-1</novaordis.jmx.version>
+        <novaordis.jboss.version>1.0.8</novaordis.jboss.version>
+        <novaordis.jmx.version>1.2.3</novaordis.jmx.version>
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
