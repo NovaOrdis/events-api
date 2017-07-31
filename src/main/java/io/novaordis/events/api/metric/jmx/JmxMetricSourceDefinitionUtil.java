@@ -17,12 +17,13 @@
 package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.metric.MetricSourceDefinition;
+import io.novaordis.jboss.JBossInfo;
+import io.novaordis.jboss.JBossUtil;
 import io.novaordis.jmx.JmxAddress;
-import io.novaordis.utilities.Files;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.io.File;
+import java.io.IOException;
 import java.util.List;
 import java.util.Map;
 
@@ -110,61 +111,31 @@ public class JmxMetricSourceDefinitionUtil {
 
         log.debug("processing classpath element " + classpathElement);
 
-        String jbossCliClientJarName = "jboss-cli-client.jar";
+        //
+        // apply heuristics to decide what kind of JMX extension we are dealing with based on the content of the JAR
+        //
 
-        int i = classpathElement.indexOf(jbossCliClientJarName);
+        JBossInfo info = null;
 
-        if (i != -1) {
+        try {
+
+            info = JBossUtil.fromClientJar(classpathElement);
+
+        }
+        catch(IOException e) {
+
+            log.warn(e.getMessage());
+        }
+
+        if (info != null) {
 
             //
             // a JBoss EAP/WildFly JMX bus
             //
 
-            File d = new File(classpathElement.substring(0, i));
+            log.debug("identified JBoss client JAR: " + info);
 
-            if (!d.isDirectory()) {
-
-                log.warn("the directory in which " + jbossCliClientJarName + " was declared, does not exist: " + d);
-                return;
-            }
-
-            d = d.getParentFile();
-
-            if (!d.isDirectory()) {
-
-                log.warn("one of the parent directories of " + jbossCliClientJarName + ", does not exist: " + d);
-                return;
-            }
-
-            File jbossHome = d.getParentFile();
-
-            if (!jbossHome.isDirectory()) {
-
-                log.warn(jbossHome + " is not a valid JBoss home directory");
-                return;
-            }
-
-            File versionFile = new File(jbossHome, "version.txt");
-
-            if (!versionFile.isFile()) {
-
-                log.warn(versionFile + " does not exist");
-            }
-
-            String versionString;
-
-            try {
-
-                versionString = Files.read(versionFile);
-            }
-            catch(Exception e) {
-
-                log.warn("failed to read JBoss version file " + versionFile, e);
-                return;
-            }
-
-
-            if (versionString.contains("Version 6")) {
+            if (info.isEAP() && new Integer(6).equals(info.getMajorVersion())) {
 
                 //
                 // EAP 6
@@ -176,7 +147,7 @@ public class JmxMetricSourceDefinitionUtil {
             }
             else {
 
-                log.warn("failed to figure out JBoss version");
+                log.warn("we do not know to handle yet JBoss " + info.getVersion());
             }
         }
     }

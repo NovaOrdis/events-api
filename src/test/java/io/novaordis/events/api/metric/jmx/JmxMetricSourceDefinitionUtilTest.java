@@ -149,14 +149,12 @@ public class JmxMetricSourceDefinitionUtilTest {
         // create a valid JBoss home simulation with a version file
         //
 
-        File d = new File(scratchDirectory, "jboss-home/bin/client");
-        assertTrue(d.mkdirs());
-        File jbossCliClientJar = new File(d, "jboss-cli-client.jar");
-        io.novaordis.utilities.Files.write(jbossCliClientJar, "SYNTHETIC");
-        io.novaordis.utilities.Files.write(new File(d.getParentFile().getParentFile(), "version.txt"),
-                "Red Hat JBoss Enterprise Application Platform - Version 6.4.15.GA\n");
+        File f = new File(System.getProperty("basedir"),
+                "src/test/resources/data/miscellaneous/simulation-of-eap-6-jboss-cli-client.jar");
 
-        String classpathElement = jbossCliClientJar.getPath();
+        assertTrue(f.isFile());
+
+        String classpathElement = f.getPath();
 
         JmxMetricSourceDefinitionUtil.processClasspathElementHeuristics(address, classpathElement);
 
