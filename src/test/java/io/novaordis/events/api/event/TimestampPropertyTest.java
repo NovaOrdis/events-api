@@ -1,5 +1,5 @@
 /*
- * Copyright (c) 2016 Nova Ordis LLC
+ * Copyright (c) 2017 Nova Ordis LLC
  *
  * Licensed under the Apache License, Version 2.0 (the "License");
  * you may not use this file except in compliance with the License.
@@ -19,13 +19,13 @@ package io.novaordis.events.api.event;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertNotNull;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
  */
-public abstract class TimedEventTest extends EventTest {
+public class TimestampPropertyTest extends PropertyTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,50 +35,46 @@ public abstract class TimedEventTest extends EventTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void name() throws Exception {
+
+        TimestampProperty p = getPropertyToTest("test");
+
+        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, p.getName());
+    }
+
+    @Test
+    public void externalizeType() throws Exception {
+
+        Property p = getPropertyToTest("hj46hHT3");
+        String s = p.externalizeType();
+        assertNotNull(s);
+        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, s);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
-
-    // getTime() -------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void timestamp_NullTimestamp() throws Exception {
-
-        TimedEvent te = getEventToTest(null);
-        assertNull(te.getTime());
-    }
-
-    @Test
-    public void timestamp() throws Exception {
-
-        TimedEvent te = getEventToTest(1L);
-        assertEquals(1L, te.getTime().longValue());
-    }
-
-    // getProperty() ---------------------------------------------------------------------------------------------------
-
-    /**
-     * The timestamp should be accessible by its conventional property name.
-     */
-    @Test
-    public void getProperty_timestamp() throws Exception {
-
-
-        TimedEvent te = getEventToTest(125L);
-
-        te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
-
-
-    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected TimedEvent getEventToTest() throws Exception {
-        return getEventToTest(0L);
+    protected TimestampProperty getPropertyToTest(String name) {
+
+        //
+        // we ignore the name
+        //
+        return new TimestampProperty(1000L);
     }
 
-    protected abstract TimedEvent getEventToTest(Long timestamp) throws Exception;
+    @Override
+    protected Long getAppropriateValueForPropertyToTest() {
+
+        return 1000L;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
