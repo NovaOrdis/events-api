@@ -16,6 +16,8 @@
 
 package io.novaordis.events.query;
 
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
 import org.junit.Test;
 
@@ -57,6 +59,17 @@ public class MatchNoneTest extends QueryTest {
         return new MatchNone();
     }
 
+    @Override
+    protected Event getEventThatMatchesQuery() {
+
+        return null;
+    }
+
+    @Override
+    protected Event getEventThatDoesNotMatchQuery() {
+
+        return new GenericEvent();
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -16,6 +16,8 @@
 
 package io.novaordis.events.query;
 
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
 import io.novaordis.events.api.event.StringProperty;
 import org.junit.Test;
@@ -228,7 +230,6 @@ public class MixedQueryTest extends QueryTest {
         assertTrue(q.selects(e4));
     }
 
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -236,7 +237,21 @@ public class MixedQueryTest extends QueryTest {
     @Override
     protected Query getQueryToTest() throws Exception {
 
-        return new MixedQuery();
+        MixedQuery q = new MixedQuery();
+        q.addLiteral("test-field-name:test-value");
+        return q;
+    }
+
+    @Override
+    protected Event getEventThatMatchesQuery() {
+
+        return new GenericEvent(Collections.singletonList(new StringProperty("test-field-name", "test-value")));
+    }
+
+    @Override
+    protected Event getEventThatDoesNotMatchQuery() {
+
+        return new GenericEvent();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

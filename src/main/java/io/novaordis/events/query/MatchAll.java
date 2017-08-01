@@ -18,6 +18,8 @@ package io.novaordis.events.query;
 
 import io.novaordis.events.api.event.Event;
 
+import java.util.List;
+
 /**
  * A query that selects all events.
  *
@@ -47,6 +49,17 @@ public class MatchAll implements Query {
         }
 
         return true;
+    }
+
+    @Override
+    public List<Event> filter(List<Event> events) {
+
+        if (events == null) {
+
+            throw new IllegalArgumentException("null event list");
+        }
+
+        return events;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

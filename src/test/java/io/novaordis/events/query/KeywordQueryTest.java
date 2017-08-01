@@ -16,7 +16,10 @@
 
 package io.novaordis.events.query;
 
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.StringProperty;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -147,6 +150,18 @@ public class KeywordQueryTest extends QueryTest {
     protected KeywordQuery getQueryToTest() throws Exception {
 
         return new KeywordQuery("mock-keyword");
+    }
+
+    @Override
+    protected Event getEventThatMatchesQuery() {
+
+        return new GenericEvent(Collections.singletonList(new StringProperty("test-property-nane", "mock-keyword")));
+    }
+
+    @Override
+    protected Event getEventThatDoesNotMatchQuery() {
+
+        return new GenericEvent();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

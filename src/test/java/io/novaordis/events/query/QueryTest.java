@@ -16,13 +16,16 @@
 
 package io.novaordis.events.query;
 
+import io.novaordis.events.api.event.Event;
 import org.junit.Test;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -58,7 +61,7 @@ public abstract class QueryTest {
     @Test
     public void fromArguments_SingleKeywordQuery() throws Exception {
 
-        KeywordQuery q = (KeywordQuery)Query.fromArguments(new ArrayList<>(Arrays.asList("blue")), 0);
+        KeywordQuery q = (KeywordQuery)Query.fromArguments(new ArrayList<>(Collections.singletonList("blue")), 0);
         assertNotNull(q);
         assertEquals("blue", q.getKeyword());
     }
@@ -79,7 +82,8 @@ public abstract class QueryTest {
     @Test
     public void fromArguments_SingleFieldQuery() throws Exception {
 
-        FieldQuery q = (FieldQuery)Query.fromArguments(new ArrayList<>(Arrays.asList("some-field:some-value")), 0);
+        FieldQuery q = (FieldQuery)Query.fromArguments(
+                new ArrayList<>(Collections.singletonList("some-field:some-value")), 0);
         assertNotNull(q);
         assertEquals("some-field", q.getFieldName());
         assertEquals("some-value", q.getValue());
@@ -115,7 +119,7 @@ public abstract class QueryTest {
         assertEquals("red", q.getFieldQueries().get(0).getValue());
     }
 
-    // selects() -------------------------------------------------------------------------------------------------------
+    // selects() and filter() ------------------------------------------------------------------------------------------
 
     @Test
     public void selects_NullEvent() throws Exception {
@@ -134,11 +138,80 @@ public abstract class QueryTest {
         }
     }
 
+    @Test
+    public void filter_NullEventList() throws Exception {
+
+        Query q = getQueryToTest();
+
+        try {
+
+            q.filter(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("null event list", msg);
+        }
+    }
+
+    @Test
+    public void selects_and_filter() throws Exception {
+
+        Query q = getQueryToTest();
+
+        Event e = getEventThatMatchesQuery();
+        Event e2 = getEventThatDoesNotMatchQuery();
+
+        if (e != null) {
+
+            assertTrue(q.selects(e));
+        }
+
+        if (e2 != null) {
+
+            assertFalse(q.selects(e2));
+        }
+
+        List<Event> input = new ArrayList<>();
+
+        int expected = 0;
+
+        if (e != null) {
+
+            input.add(e);
+            expected ++;
+        }
+
+        if (e2 != null) {
+
+            input.add(e2);
+        }
+
+        List<Event> filtered = q.filter(input);
+
+        assertEquals(expected, filtered.size());
+
+        if (expected > 0) {
+            assertEquals(e, filtered.get(0));
+        }
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
     protected abstract Query getQueryToTest() throws Exception;
+
+    /**
+     * May return null if no such event exists.
+     */
+    protected abstract Event getEventThatMatchesQuery();
+
+    /**
+     * May return null if no such event exists.
+     */
+    protected abstract Event getEventThatDoesNotMatchQuery();
 
     // Private ---------------------------------------------------------------------------------------------------------
 

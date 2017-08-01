@@ -18,6 +18,9 @@ package io.novaordis.events.query;
 
 import io.novaordis.events.api.event.Event;
 
+import java.util.Collections;
+import java.util.List;
+
 /**
  * A query that selects no event.
  *
@@ -47,6 +50,17 @@ public class MatchNone implements Query {
         }
 
         return false;
+    }
+
+    @Override
+    public List<Event> filter(List<Event> events) {
+
+        if (events == null) {
+
+            throw new IllegalArgumentException("null event list");
+        }
+
+        return Collections.emptyList();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

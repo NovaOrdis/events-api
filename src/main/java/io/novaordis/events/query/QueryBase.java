@@ -17,17 +17,16 @@
 package io.novaordis.events.query;
 
 import io.novaordis.events.api.event.Event;
-import io.novaordis.events.api.event.GenericEvent;
-import io.novaordis.events.api.event.GenericTimedEvent;
-import org.junit.Test;
 
-import static org.junit.Assert.assertTrue;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/2/17
+ * @since 8/1/17
  */
-public class NullQueryTest extends QueryTest {
+public abstract class QueryBase implements Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -37,39 +36,54 @@ public class NullQueryTest extends QueryTest {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Public ----------------------------------------------------------------------------------------------------------
+    // Query implementation --------------------------------------------------------------------------------------------
 
-    // Tests -----------------------------------------------------------------------------------------------------------
+    /**
+     * May be overridden by subclasses for efficiency.
+     */
+    @Override
+    public List<Event> filter(List<Event> events) {
 
-    @Test
-    public void selectsAll() {
+        if (events == null) {
 
-        NullQuery q = new NullQuery();
+            throw new IllegalArgumentException("null event list");
+        }
 
-        assertTrue(q.selects(new GenericTimedEvent()));
+        if  (events.isEmpty()) {
+
+            return events;
+        }
+
+        List<Event> filtered = null;
+
+        for(Event e: events) {
+
+            if (selects(e)) {
+
+                if (filtered == null) {
+
+                    filtered = new ArrayList<>();
+                }
+
+                filtered.add(e);
+            }
+        }
+
+        if (filtered == null) {
+
+            return Collections.emptyList();
+        }
+        else {
+
+            return filtered;
+        }
     }
+
+    // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected NullQuery getQueryToTest() throws Exception {
-
-        return new NullQuery();
-    }
-
-    @Override
-    protected Event getEventThatMatchesQuery() {
-
-        return new GenericEvent();
-    }
-
-    @Override
-    protected Event getEventThatDoesNotMatchQuery() {
-
-        return null;
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

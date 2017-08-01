@@ -26,7 +26,7 @@ import io.novaordis.events.api.event.Property;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/19/17
  */
-public class KeywordQuery implements Query {
+public class KeywordQuery extends QueryBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

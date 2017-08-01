@@ -21,7 +21,8 @@ import io.novaordis.events.api.event.Event;
 import java.util.List;
 
 /**
- * A query is a combination of free format and structured text that can be used to filter a stream of events.
+ * A query is a combination of free format and structured text that can be used to filter a stream of events. An
+ * individual event must be selected by the query in order to "pass".
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
@@ -86,5 +87,15 @@ public interface Query {
      * @exception IllegalArgumentException on null events.
      */
     boolean selects(Event e);
+
+    /**
+     * Throw away events that do not match the query and only allow those that match in the final result. Convenience
+     * complementary method for selects(): if selects(e) returns true, then filtering a list that contains e will leave
+     * e in the result.
+     *
+     * @exception IllegalArgumentException on null list.
+     */
+    List<Event> filter(List<Event> events);
+
 
 }

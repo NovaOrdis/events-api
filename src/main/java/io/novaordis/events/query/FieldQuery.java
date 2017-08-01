@@ -28,7 +28,7 @@ import io.novaordis.events.api.event.Property;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/19/17
  */
-public class FieldQuery implements Query {
+public class FieldQuery extends QueryBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

@@ -16,8 +16,6 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-
 /**
  * A query that selects all events.
  *
@@ -26,7 +24,7 @@ import io.novaordis.events.api.event.Event;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class NullQuery implements Query {
+public class NullQuery extends MatchAll {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -35,20 +33,6 @@ public class NullQuery implements Query {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    // Query implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean selects(Event e) {
-
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

@@ -30,7 +30,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class MixedQuery implements Query {
+public class MixedQuery extends QueryBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

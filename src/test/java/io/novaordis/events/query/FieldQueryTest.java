@@ -16,7 +16,10 @@
 
 package io.novaordis.events.query;
 
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.StringProperty;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -211,6 +214,18 @@ public class FieldQueryTest extends QueryTest {
     protected FieldQuery getQueryToTest() throws Exception {
 
         return new FieldQuery("mock-property", "mock-value");
+    }
+
+    @Override
+    protected Event getEventThatMatchesQuery() {
+
+        return new GenericEvent(Collections.singletonList(new StringProperty("mock-property", "mock-value")));
+    }
+
+    @Override
+    protected Event getEventThatDoesNotMatchQuery() {
+
+        return new GenericEvent();
     }
 
     // Private ---------------------------------------------------------------------------------------------------------
