@@ -41,10 +41,12 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public GenericTimedEvent() {
+
         this((Timestamp)null);
     }
 
     public GenericTimedEvent(Long timestampUTC) {
+
         this(timestampUTC == null ? null : new TimestampImpl(timestampUTC));
     }
 
@@ -57,10 +59,12 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     }
 
     public GenericTimedEvent(List<Property> properties) {
+
         this(null, properties);
     }
 
     public GenericTimedEvent(long timestampUTC, List<Property> properties) {
+
         this(new TimestampImpl(timestampUTC), properties);
     }
 
@@ -87,6 +91,7 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     public Long getTime() {
 
         if (timestamp == null) {
+
             return null;
         }
 
@@ -109,12 +114,20 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
 
         if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
 
-            if (timestamp == null) {
+            //
+            // we call getTimestamp() and not use "timestamp" directly because some sub-classes
+            // (io.novaordis.events.api.gc.GCEventBase for example) mess with it.
+            //
+            // TODO review this and refactor
+            //
+            Timestamp ts = getTimestamp();
+
+            if (ts == null) {
 
                 return null;
             }
 
-            return new TimestampProperty(timestamp.getTime());
+            return new TimestampProperty(ts.getTime());
         }
 
         return super.getProperty(name);
@@ -125,7 +138,7 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     @Override
     public String toString() {
 
-        return timestamp + " event";
+        return getTimestamp() + " event";
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
