@@ -99,6 +99,27 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
         this.timestamp = timestamp;
     }
 
+    // GenericEvent overrides ------------------------------------------------------------------------------------------
+
+    /**
+     * We expose the timestamp as a dedicated property. However, if we are lacking a timestamp, we return null.
+     */
+    @Override
+    public Property getProperty(String name) {
+
+        if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
+
+            if (timestamp == null) {
+
+                return null;
+            }
+
+            return new TimestampProperty(timestamp.getTime());
+        }
+
+        return super.getProperty(name);
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     @Override

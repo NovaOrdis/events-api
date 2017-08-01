@@ -19,6 +19,7 @@ package io.novaordis.events.api.event;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 
 /**
@@ -59,15 +60,34 @@ public abstract class TimedEventTest extends EventTest {
      * The timestamp should be accessible by its conventional property name.
      */
     @Test
-    public void getProperty_timestamp() throws Exception {
+    public void getProperty_timestamp_Null() throws Exception {
 
+        TimedEvent te = getEventToTest(null);
+
+        assertNull(te.getTimestamp());
+        assertNull(te.getTime());
+
+        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+
+        assertNull(p);
+    }
+
+    /**
+     * The timestamp should be accessible by its conventional property name.
+     */
+    @Test
+    public void getProperty_timestamp_NotNull() throws Exception {
 
         TimedEvent te = getEventToTest(125L);
 
-        te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
 
+        assertNotNull(p);
 
+        long time = (Long)p.getValue();
+        assertEquals(125L, time);
     }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

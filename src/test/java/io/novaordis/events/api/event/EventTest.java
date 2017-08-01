@@ -245,7 +245,7 @@ public abstract class EventTest {
     }
 
     @Test
-    public  void getPropertyByName_NullName() throws Exception {
+    public void getPropertyByName_NullName() throws Exception {
 
         Event event = getEventToTest();
 
