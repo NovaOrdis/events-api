@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -142,7 +143,6 @@ public class GenericEvent implements Event {
 
         return null;
     }
-
 
     @Override
     public LongProperty getLongProperty(String name) {
@@ -309,34 +309,55 @@ public class GenericEvent implements Event {
 
     public void setStringProperty(String name, String value) {
 
+        setStringProperty(name, value, null);
+    }
+
+    public void setStringProperty(String name, String value, MeasureUnit mu) {
+
         if (value == null) {
+
             removeStringProperty(name);
         }
         else {
-            setProperty(new StringProperty(name, value));
+
+            setProperty(new StringProperty(name, value, mu));
         }
     }
 
     public void removeStringProperty(String name) {
 
         if (properties.get(name) instanceof StringProperty) {
+
             properties.remove(name);
         }
     }
 
     public void setLongProperty(String name, long value) {
-        setProperty(new LongProperty(name, value));
+
+        setLongProperty(name, value, null);
+    }
+
+    public void setLongProperty(String name, long value, MeasureUnit mu) {
+
+        setProperty(new LongProperty(name, value, mu));
     }
 
     public void removeLongProperty(String name) {
 
         if (properties.get(name) instanceof LongProperty) {
+
             properties.remove(name);
         }
     }
 
     public void setIntegerProperty(String name, int value) {
-        setProperty(new IntegerProperty(name, value));
+
+        setIntegerProperty(name, value, null);
+    }
+
+    public void setIntegerProperty(String name, int value, MeasureUnit mu) {
+
+        setProperty(new IntegerProperty(name, value, mu));
     }
 
     public void removeIntegerProperty(String name) {
@@ -360,11 +381,6 @@ public class GenericEvent implements Event {
     public <T> void setListProperty(String name, List<T> value) {
 
         setProperty(new ListProperty<>(name, value));
-    }
-
-    public void removeListProperty(String name) {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED e58237");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

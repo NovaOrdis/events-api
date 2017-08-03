@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MockMeasureUnit;
 import org.junit.Test;
 
 import java.util.ArrayList;
@@ -109,6 +110,7 @@ public class GenericEventTest extends EventTest {
         StringProperty sp = (StringProperty)ge.getProperty("test-property");
         assertEquals("test-property", sp.getName());
         assertEquals("value1", sp.getValue());
+        assertNull(sp.getMeasureUnit());
 
         ge.setStringProperty("test-property", "value2");
         assertEquals("value2", ge.getStringProperty("test-property").getValue());
@@ -116,31 +118,17 @@ public class GenericEventTest extends EventTest {
         StringProperty sp2 = (StringProperty)ge.getProperty("test-property");
         assertEquals("test-property", sp2.getName());
         assertEquals("value2", sp2.getValue());
+
+        ge.setStringProperty("test-property", null);
+        assertNull(ge.getProperty("test-property"));
+
+        MockMeasureUnit mmu = new MockMeasureUnit();
+        ge.setStringProperty("test-property", "blue", mmu);
+        StringProperty sp3 = (StringProperty)ge.getProperty("test-property");
+        assertEquals("test-property", sp3.getName());
+        assertEquals("blue", sp3.getValue());
+        assertEquals(mmu, sp3.getMeasureUnit());
     }
-
-    @Test
-    public void setLongProperty() throws Exception {
-
-        GenericEvent ge = getEventToTest();
-
-        assertNull(ge.getLongProperty("test-property"));
-
-        ge.setLongProperty("test-property", 7L);
-        assertEquals(7L, ge.getLongProperty("test-property").getValue());
-
-        LongProperty p = (LongProperty)ge.getProperty("test-property");
-        assertEquals("test-property", p.getName());
-        assertEquals(7L, p.getValue());
-
-        ge.setLongProperty("test-property", 8L);
-        assertEquals(8L, ge.getLongProperty("test-property").getValue());
-
-        LongProperty p2 = (LongProperty)ge.getProperty("test-property");
-        assertEquals("test-property", p2.getName());
-        assertEquals(8L, p2.getValue());
-    }
-
-    // removeStringProperty() ------------------------------------------------------------------------------------------
 
     @Test
     public void removeStringProperty() throws Exception {
@@ -170,7 +158,35 @@ public class GenericEventTest extends EventTest {
         ge.setStringProperty("test-name", null);
     }
 
-    // removeLongProperty() --------------------------------------------------------------------------------------------
+    @Test
+    public void setLongProperty() throws Exception {
+
+        GenericEvent ge = getEventToTest();
+
+        assertNull(ge.getLongProperty("test-property"));
+
+        ge.setLongProperty("test-property", 7L);
+        assertEquals(7L, ge.getLongProperty("test-property").getValue());
+
+        LongProperty p = (LongProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p.getName());
+        assertEquals(7L, p.getValue());
+        assertNull(p.getMeasureUnit());
+
+        ge.setLongProperty("test-property", 8L);
+        assertEquals(8L, ge.getLongProperty("test-property").getValue());
+
+        LongProperty p2 = (LongProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p2.getName());
+        assertEquals(8L, p2.getValue());
+
+        MockMeasureUnit mmu = new MockMeasureUnit();
+        ge.setLongProperty("test-property", 9L, mmu);
+        LongProperty p3 = (LongProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p3.getName());
+        assertEquals(9L, p3.getValue());
+        assertEquals(mmu, p3.getMeasureUnit());
+    }
 
     @Test
     public void removeLongProperty() throws Exception {
@@ -186,7 +202,35 @@ public class GenericEventTest extends EventTest {
         ge.removeLongProperty("test-name");
     }
 
-    // removeIntegerProperty() ------------------------------------------------------------------------------------------
+    @Test
+    public void setIntegerProperty() throws Exception {
+
+        GenericEvent ge = getEventToTest();
+
+        assertNull(ge.getIntegerProperty("test-property"));
+
+        ge.setIntegerProperty("test-property", 7);
+        assertEquals(7, ge.getIntegerProperty("test-property").getValue());
+
+        IntegerProperty p = (IntegerProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p.getName());
+        assertEquals(7, p.getValue());
+        assertNull(p.getMeasureUnit());
+
+        ge.setIntegerProperty("test-property", 8);
+        assertEquals(8, ge.getIntegerProperty("test-property").getValue());
+
+        IntegerProperty p2 = (IntegerProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p2.getName());
+        assertEquals(8, p2.getValue());
+
+        MockMeasureUnit mmu = new MockMeasureUnit();
+        ge.setIntegerProperty("test-property", 9, mmu);
+        IntegerProperty p3 = (IntegerProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p3.getName());
+        assertEquals(9, p3.getValue());
+        assertEquals(mmu, p3.getMeasureUnit());
+    }
 
     @Test
     public void removeIntegerProperty() throws Exception {
@@ -202,7 +246,28 @@ public class GenericEventTest extends EventTest {
         ge.removeIntegerProperty("test-name");
     }
 
-    // removeBooleanProperty() ------------------------------------------------------------------------------------------
+    @Test
+    public void setBooleanProperty() throws Exception {
+
+        GenericEvent ge = getEventToTest();
+
+        assertNull(ge.getBooleanProperty("test-property"));
+
+        ge.setBooleanProperty("test-property", true);
+        assertEquals(true, ge.getBooleanProperty("test-property").getValue());
+
+        BooleanProperty p = (BooleanProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p.getName());
+        assertEquals(true, p.getValue());
+        assertNull(p.getMeasureUnit());
+
+        ge.setBooleanProperty("test-property", false);
+        assertEquals(false, ge.getBooleanProperty("test-property").getValue());
+
+        BooleanProperty p2 = (BooleanProperty)ge.getProperty("test-property");
+        assertEquals("test-property", p2.getName());
+        assertEquals(false, p2.getValue());
+    }
 
     @Test
     public void removeBooleanProperty() throws Exception {
