@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
@@ -45,7 +47,13 @@ public class MapProperty extends PropertyBase {
     }
 
     public MapProperty(String name, Map<String, Object> value) {
-        super(name, value);
+
+        this(name, value, null);
+    }
+
+    public MapProperty(String name, Map<String, Object> value, MeasureUnit mu) {
+
+        super(name, value, mu);
     }
 
     // Property implementation -----------------------------------------------------------------------------------------

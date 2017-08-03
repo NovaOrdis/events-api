@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
@@ -31,11 +33,18 @@ public class LongProperty extends PropertyBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public LongProperty(String name) {
+
         this(name, null);
     }
 
     public LongProperty(String name, Long value) {
-        super(name, value);
+
+        this(name, value, null);
+    }
+
+    public LongProperty(String name, Long value, MeasureUnit mu) {
+
+        super(name, value, mu);
     }
 
     // Property implementation -----------------------------------------------------------------------------------------

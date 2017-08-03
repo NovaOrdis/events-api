@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -37,12 +39,18 @@ public class DateProperty extends PropertyBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public DateProperty(String name) {
+
         this(name, null);
     }
 
     public DateProperty(String name, Date value) {
 
-        super(name, value);
+        this(name, value, null);
+    }
+
+    public DateProperty(String name, Date value, MeasureUnit mu) {
+
+        super(name, value, mu);
         setFormat(DEFAULT_DATE_FORMAT);
     }
 

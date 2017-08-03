@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
@@ -31,11 +33,18 @@ public class DoubleProperty extends PropertyBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public DoubleProperty(String name) {
+
         this(name, null);
     }
 
     public DoubleProperty(String name, Double value) {
-        super(name, value);
+
+        this(name, value, null);
+    }
+
+    public DoubleProperty(String name, Double value, MeasureUnit mu) {
+
+        super(name, value, mu);
     }
 
     // Property implementation -----------------------------------------------------------------------------------------

@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
@@ -31,11 +33,18 @@ public class BooleanProperty extends PropertyBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public BooleanProperty(String name) {
+
         this(name, true);
     }
 
     public BooleanProperty(String name, Boolean value) {
-        super(name, value);
+
+        this(name, value, null);
+    }
+
+    public BooleanProperty(String name, Boolean value, MeasureUnit mu) {
+
+        super(name, value, mu);
     }
 
     // Property implementation -----------------------------------------------------------------------------------------

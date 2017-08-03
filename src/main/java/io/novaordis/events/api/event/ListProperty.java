@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 import java.text.Format;
 import java.util.Arrays;
 import java.util.Collections;
@@ -41,12 +43,17 @@ public class ListProperty<V> extends PropertyBase {
     @SafeVarargs
     public ListProperty(String name, V... elements) {
 
-        super(name, Arrays.asList(elements));
+        this(name, Arrays.asList(elements));
     }
 
     public ListProperty(String name, List<V> elements) {
 
-        super(name, elements);
+        this(name, elements, null);
+    }
+
+    public ListProperty(String name, List<V> elements, MeasureUnit mu) {
+
+        super(name, elements, mu);
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------

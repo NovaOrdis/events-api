@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.events.api.measure.MeasureUnit;
+
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
@@ -31,11 +33,18 @@ public class FloatProperty extends PropertyBase {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public FloatProperty(String name) {
+
         this(name, null);
     }
 
     public FloatProperty(String name, Float value) {
-        super(name, value);
+
+        this(name, value, null);
+    }
+
+    public FloatProperty(String name, Float value, MeasureUnit mu) {
+
+        super(name, value, mu);
     }
 
     // Property implementation -----------------------------------------------------------------------------------------
