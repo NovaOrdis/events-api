@@ -58,9 +58,11 @@ public interface Parser {
 
     /**
      * Processes the remaining accumulated state and closes the parser. A parser that was closed cannot be re-used,
-     * an attempt to invoke parse() on it will throw IllegalStateException.
+     * an attempt to invoke parse() on it will throw IllegalStateException. The last event returned by the close()
+     * invocation is an EndOfStreamEvent.
      *
-     * The invocation may return an empty list, but never null.
+     * The invocation may return an empty list (if it was redundantly invoked after the parser was closed), but never
+     * null.
      */
     List<Event> close() throws ParsingException;
 

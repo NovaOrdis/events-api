@@ -16,8 +16,11 @@
 
 package io.novaordis.events.api.parser;
 
+import io.novaordis.events.api.event.EndOfStreamEvent;
 import io.novaordis.events.api.event.Event;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
 
@@ -60,11 +63,34 @@ public abstract class ParserBase implements Parser {
     @Override
     public List<Event> close() throws ParsingException {
 
+        //
+        // protect against redundant calls, we already returned our EndOfStream on the first close() call
+        //
+
+        if (closed) {
+
+            return Collections.emptyList();
+        }
+
         List<Event> result = close(lineNumber.get());
+
+        List<Event> resultWithEndOfStream = new ArrayList<>(result.size() + 1);
+
+        for(Event e: result) {
+
+            if (e instanceof EndOfStreamEvent) {
+
+                throw new IllegalStateException("the sub-class must not return EndOfStream");
+            }
+
+            resultWithEndOfStream.add(e);
+        }
+
+        resultWithEndOfStream.add(new EndOfStreamEvent());
 
         closed = true;
 
-        return result;
+        return resultWithEndOfStream;
     }
 
     @Override
@@ -99,9 +125,12 @@ public abstract class ParserBase implements Parser {
     protected abstract List<Event> parse(long lineNumber, String line) throws ParsingException;
 
     /**
-     * Processes the remaining accumulated state. The super close() will actually close the parser.
+     * Processes the remaining accumulated state. The super close() will actually close the parser and issue the
+     * EnoOfStream as the last event in the event stream.
      *
      * The invocation may return an empty list, but never null.
+     *
+     * Also, the implementation MUST not return an EndOfStream among events, handling EndOfStream is THIS layer's job.
      *
      * @param lineNumber the line number of the last line in the text stream, when close() is called externally.
      *

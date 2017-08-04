@@ -16,12 +16,14 @@
 
 package io.novaordis.events.api.parser;
 
+import io.novaordis.events.api.event.EndOfStreamEvent;
 import io.novaordis.events.api.event.Event;
 import org.junit.Test;
 
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
 /**
@@ -53,7 +55,16 @@ public abstract class ParserTest {
 
         List<Event> events = p.close();
 
-        assertTrue(events.isEmpty());
+        assertEquals(1, events.size());
+        assertTrue(events.get(0) instanceof EndOfStreamEvent);
+
+        //
+        // redundantly close the parser
+        //
+
+        List<Event> events2 = p.close();
+
+        assertTrue(events2.isEmpty());
     }
 
     @Test
@@ -93,9 +104,32 @@ public abstract class ParserTest {
 
         assertEquals(2L, p.getLineNumber());
 
-        p.close();
+        List<Event> events = p.close();
 
         assertEquals(2L, p.getLineNumber());
+
+        //
+        // the last event in the list is EndOfStream
+        //
+
+        assertTrue(events.size() > 0);
+
+        for(int i = 0; i < events.size(); i ++) {
+
+            if (i < events.size() - 1) {
+
+                assertFalse(events.get(i) instanceof EndOfStreamEvent);
+            }
+            else {
+
+                //
+                // last one is EndOfStream
+                //
+                assertTrue(events.get(i) instanceof EndOfStreamEvent);
+            }
+        }
+
+        assertTrue(p.close().isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
