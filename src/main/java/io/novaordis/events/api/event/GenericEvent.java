@@ -295,10 +295,20 @@ public class GenericEvent implements Event {
     }
 
     @Override
-    public String getPreferredRepresentation() {
+    public String getPreferredRepresentation(String fieldSeparator) {
 
         //
-        // we explicitly return null at this level, we WANT the subclasses to override this to provide specific behavior
+        // we explicitly return null at this level, we want subclasses to override this to provide specific behavior
+        //
+
+        return null;
+    }
+
+    @Override
+    public String getPreferredRepresentationHeader(String fieldSeparator) {
+
+        //
+        // we explicitly return null at this level, we want subclasses to override this to provide specific behavior
         //
 
         return null;

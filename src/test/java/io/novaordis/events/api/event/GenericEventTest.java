@@ -317,7 +317,7 @@ public class GenericEventTest extends EventTest {
 
         GenericEvent e = getEventToTest();
 
-        assertNull(e.getPreferredRepresentation());
+        assertNull(e.getPreferredRepresentation("does not matter"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

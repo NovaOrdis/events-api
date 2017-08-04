@@ -379,7 +379,7 @@ public abstract class EventTest {
         Event event = getEventToTest();
 
         // we just make sure we don't throw any exception - subclasses may or may not return null
-        event.getPreferredRepresentation();
+        event.getPreferredRepresentation("does not matter");
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

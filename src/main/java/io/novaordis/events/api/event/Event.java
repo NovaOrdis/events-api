@@ -174,7 +174,13 @@ public interface Event {
      * Return the preferred representation, as presented by the event. This method is usually overridden by subclasses.
      * May return null.
      */
-    String getPreferredRepresentation();
+    String getPreferredRepresentation(String fieldSeparator);
+
+    /**
+     * Return the header line of the preferred representation, as presented by the event. This method is usually
+     * overridden by subclasses. May return null.
+     */
+    String getPreferredRepresentationHeader(String fieldSeparator);
 
     /**
      * Return the raw representation of the event: if it makes sense, the whole event is maintained in its raw
