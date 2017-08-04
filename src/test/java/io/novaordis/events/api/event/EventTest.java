@@ -371,6 +371,17 @@ public abstract class EventTest {
         assertEquals("something", rawRepresentation);
     }
 
+    // getRawRepresentation() ------------------------------------------------------------------------------------------
+
+    @Test
+    public void getPreferredRepresentation() throws Exception {
+
+        Event event = getEventToTest();
+
+        // we just make sure we don't throw any exception - subclasses may or may not return null
+        event.getPreferredRepresentation();
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

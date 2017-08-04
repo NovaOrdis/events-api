@@ -310,6 +310,16 @@ public class GenericEventTest extends EventTest {
         assertEquals("B", list2.get(1));
     }
 
+    // miscellaneous ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getPreferredRepresentation_ReturnsNullAtThisLevel() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        assertNull(e.getPreferredRepresentation());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

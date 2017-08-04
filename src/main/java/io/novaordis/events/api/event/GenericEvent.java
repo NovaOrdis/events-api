@@ -294,6 +294,16 @@ public class GenericEvent implements Event {
         return sp.getString();
     }
 
+    @Override
+    public String getPreferredRepresentation() {
+
+        //
+        // we explicitly return null at this level, we WANT the subclasses to override this to provide specific behavior
+        //
+
+        return null;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     public List<Property> getPropertyList() {
