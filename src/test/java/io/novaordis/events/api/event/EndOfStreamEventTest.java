@@ -36,6 +36,7 @@ public class EndOfStreamEventTest extends EventTest {
 
     @Override
     protected EndOfStreamEvent getEventToTest() throws Exception {
+
         return new EndOfStreamEvent();
     }
 

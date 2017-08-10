@@ -55,7 +55,7 @@ public class GenericTimedEventTest extends TimedEventTest {
         assertNull(gte.getTime());
         assertNull(gte.getTimestamp());
 
-        List<Property> result = gte.getPropertyList();
+        List<Property> result = gte.getProperties();
 
         assertEquals(input.size(), result.size());
 
@@ -85,7 +85,7 @@ public class GenericTimedEventTest extends TimedEventTest {
         Timestamp ts = gte.getTimestamp();
         assertEquals(t, ts.getTime());
 
-        List<Property> result = gte.getPropertyList();
+        List<Property> result = gte.getProperties();
 
         assertEquals(input.size(), result.size());
 

@@ -21,18 +21,15 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.HashSet;
+import java.util.Collections;
 import java.util.List;
-import java.util.Map;
-import java.util.Set;
 
 /**
  * A generic event, contains an arbitrary number of properties.
  *
  * It can be used as such, or it can be subclassed by more specialized events.
  *
- * It also maintains the relative orders of its properties, hence getPropertyList().
+ * The current implementation is not thread safe.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 2/1/16
@@ -47,15 +44,13 @@ public class GenericEvent implements Event {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private Map<String, Property> properties;
-    private List<String> orderedPropertyNames;
+    private List<Property> properties;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public GenericEvent() {
 
-        this.properties = new HashMap<>();
-        this.orderedPropertyNames = new ArrayList<>();
+        this.properties = new ArrayList<>();
     }
 
     /**
@@ -75,18 +70,18 @@ public class GenericEvent implements Event {
 
     // Event implementation --------------------------------------------------------------------------------------------
 
+    /**
+     * Returns a shallow copy of the internal storage.
+     */
     @Override
-    public Set<Property> getProperties() {
+    public List<Property> getProperties() {
 
-        HashSet<Property> result = new HashSet<>();
+        if (properties.isEmpty()) {
 
-        for(Property p: properties.values()) {
-            if (!result.add(p)) {
-                throw new IllegalStateException(this + " property map contains duplicate values");
-            }
+            return Collections.emptyList();
         }
 
-        return result;
+        return new ArrayList<>(properties);
     }
 
     @Override
@@ -97,12 +92,15 @@ public class GenericEvent implements Event {
             throw new IllegalArgumentException("null property name");
         }
 
-        if (properties == null) {
+        for (Property p : properties) {
 
-            return null;
+            if (name.equals(p.getName())) {
+
+                return p;
+            }
         }
 
-        return properties.get(name);
+        return null;
     }
 
     /**
@@ -130,6 +128,21 @@ public class GenericEvent implements Event {
         log.warn("getProperty() for non-String key (" + propertyKey + ") is usually overridden by subclasses");
 
         return null;
+    }
+
+    // Convenience typed accessors/mutators ----------------------------------------------------------------------------
+
+    @Override
+    public StringProperty setStringProperty(String name, String value) {
+
+        if (value == null) {
+
+            return removeStringProperty(name);
+        }
+        else {
+
+            return (StringProperty)setProperty(new StringProperty(name, value));
+        }
     }
 
     @Override
@@ -215,12 +228,28 @@ public class GenericEvent implements Event {
         String propertyName = property.getName();
 
         //
+        // look to see whether a property with the same name exists already
+        //
+
+        Property existent = null;
+        int existentIndex = -1;
+
+        for(Property p: properties) {
+
+            existentIndex++;
+
+            if (propertyName.equals(p.getName())) {
+
+                existent = p;
+                break;
+            }
+        }
+
+        //
         // if it is a MapProperty, merge contents
         //
 
         if (property instanceof MapProperty) {
-
-            Property existent = properties.get(propertyName);
 
             if (existent instanceof MapProperty) {
 
@@ -228,25 +257,27 @@ public class GenericEvent implements Event {
                 // merge instead of replacing
                 //
 
-                MapProperty existentMapProperty = (MapProperty) existent;
-                existentMapProperty.getMap().putAll(((MapProperty) property).getMap());
-                return existentMapProperty;
+                ((MapProperty)existent).getMap().putAll(((MapProperty) property).getMap());
+                return existent;
             }
         }
 
-        //
-        // only add it to the ordered property name list if it does not exist already
-        //
+        if (existent != null) {
 
-        if (!orderedPropertyNames.contains(propertyName)) {
-            orderedPropertyNames.add(propertyName);
+            //
+            // replace
+            //
+
+            properties.set(existentIndex, property);
+            return existent;
         }
 
         //
-        // replace
+        // add
         //
 
-        return properties.put(propertyName, property);
+        properties.add(property);
+        return null;
     }
 
     @Override
@@ -316,40 +347,9 @@ public class GenericEvent implements Event {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public List<Property> getPropertyList() {
+    public StringProperty removeStringProperty(String name) {
 
-        List<Property> result = new ArrayList<>();
-        //noinspection Convert2streamapi
-        for(String name: orderedPropertyNames) {
-            result.add(properties.get(name));
-        }
-
-        return result;
-    }
-
-    public void setStringProperty(String name, String value) {
-
-        setStringProperty(name, value, null);
-    }
-
-    public void setStringProperty(String name, String value, MeasureUnit mu) {
-
-        if (value == null) {
-
-            removeStringProperty(name);
-        }
-        else {
-
-            setProperty(new StringProperty(name, value, mu));
-        }
-    }
-
-    public void removeStringProperty(String name) {
-
-        if (properties.get(name) instanceof StringProperty) {
-
-            properties.remove(name);
-        }
+        return (StringProperty)removeProperty(name, String.class);
     }
 
     public void setLongProperty(String name, long value) {
@@ -362,12 +362,9 @@ public class GenericEvent implements Event {
         setProperty(new LongProperty(name, value, mu));
     }
 
-    public void removeLongProperty(String name) {
+    public LongProperty removeLongProperty(String name) {
 
-        if (properties.get(name) instanceof LongProperty) {
-
-            properties.remove(name);
-        }
+        return (LongProperty)removeProperty(name, Long.class);
     }
 
     public void setIntegerProperty(String name, int value) {
@@ -380,22 +377,19 @@ public class GenericEvent implements Event {
         setProperty(new IntegerProperty(name, value, mu));
     }
 
-    public void removeIntegerProperty(String name) {
+    public IntegerProperty removeIntegerProperty(String name) {
 
-        if (properties.get(name) instanceof IntegerProperty) {
-            properties.remove(name);
-        }
+        return (IntegerProperty)removeProperty(name, Integer.class);
     }
 
-    public void setBooleanProperty(String name, boolean value) {
-        setProperty(new BooleanProperty(name, value));
+    public BooleanProperty setBooleanProperty(String name, boolean value) {
+
+        return (BooleanProperty)setProperty(new BooleanProperty(name, value));
     }
 
-    public void removeBooleanProperty(String name) {
+    public BooleanProperty removeBooleanProperty(String name) {
 
-        if (properties.get(name) instanceof BooleanProperty) {
-            properties.remove(name);
-        }
+        return (BooleanProperty)removeProperty(name, Boolean.class);
     }
 
     public <T> void setListProperty(String name, List<T> value) {
@@ -404,6 +398,33 @@ public class GenericEvent implements Event {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * @return null if a property with the name AND type does not exist, not null otherwise.
+     */
+    Property removeProperty(String name, Class type) {
+
+        int index = -1;
+
+        for(Property p: properties) {
+
+            index ++;
+
+            if (p.getName().equals(name)) {
+
+                if (p.getType().equals(type)) {
+
+                    //
+                    // do remove
+                    //
+
+                    return properties.remove(index);
+                }
+            }
+        }
+
+        return null;
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

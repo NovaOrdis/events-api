@@ -20,11 +20,13 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
 /**
@@ -261,6 +263,109 @@ public abstract class EventTest {
         }
     }
 
+    // setProperty() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void setProperty_PreservesOrder() throws Exception {
+
+        Event e = getEventToTest();
+
+        List<Property> originalProperties = e.getProperties();
+        int originalPropertyCount = originalProperties.size();
+
+        e.setStringProperty("Z", "something");
+
+        List<Property> properties2 = e.getProperties();
+
+        assertEquals(originalPropertyCount + 1, properties2.size());
+
+        StringProperty p = (StringProperty)properties2.get(originalPropertyCount);
+
+        assertEquals("Z", p.getName());
+
+        e.setStringProperty("A", "something");
+
+        List<Property> properties3 = e.getProperties();
+
+        assertEquals(originalPropertyCount + 2, properties3.size());
+
+        StringProperty p2 = (StringProperty)properties3.get(originalPropertyCount);
+
+        assertEquals("Z", p2.getName());
+
+        StringProperty p3 = (StringProperty)properties3.get(originalPropertyCount + 1);
+
+        assertEquals("A", p3.getName());
+    }
+
+    @Test
+    public void setProperty_PreservesOrderEvenIfReplacesAnExistingProperty() throws Exception {
+
+        Event e = getEventToTest();
+
+        List<Property> originalProperties = e.getProperties();
+        int originalPropertyCount = originalProperties.size();
+
+        e.setStringProperty("Z", "Z value");
+        e.setStringProperty("A", "A value");
+
+        List<Property> properties = e.getProperties();
+
+        assertEquals(originalPropertyCount + 2, properties.size());
+
+        StringProperty p = (StringProperty) properties.get(originalPropertyCount);
+
+        assertEquals("Z", p.getName());
+        assertEquals("Z value", p.getString());
+
+        StringProperty p2 = (StringProperty) properties.get(originalPropertyCount + 1);
+
+        assertEquals("A", p2.getName());
+        assertEquals("A value", p2.getString());
+
+        //
+        // replace
+        //
+
+        StringProperty sp = e.setStringProperty("Z", "another Z value");
+        assertNotNull(sp);
+        assertEquals("Z value", sp.getValue());
+
+        List<Property> properties2 = e.getProperties();
+
+        assertEquals(originalPropertyCount + 2, properties2.size());
+
+        StringProperty p3 = (StringProperty) properties2.get(originalPropertyCount);
+
+        assertEquals("Z", p3.getName());
+        assertEquals("another Z value", p3.getString());
+
+        StringProperty p4 = (StringProperty) properties2.get(originalPropertyCount + 1);
+
+        assertEquals("A", p4.getName());
+        assertEquals("A value", p4.getString());
+    }
+
+    @Test
+    public void setProperty_ReplacesAnExistingProperties() throws Exception {
+
+        Event e = getEventToTest();
+
+        Property p = e.setStringProperty("Z", "Z value");
+        assertNull(p);
+
+        StringProperty p2 = e.setStringProperty("Z", "another Z value");
+
+        assertNotNull(p2);
+        assertEquals("Z", p2.getName());
+        assertEquals("Z value", p2.getString());
+
+        StringProperty p3 = (StringProperty)e.getProperty("Z");
+
+        assertEquals("Z", p3.getName());
+        assertEquals("another Z value", p3.getString());
+    }
+
     // line number -----------------------------------------------------------------------------------------------------
 
     @Test
@@ -354,6 +459,43 @@ public abstract class EventTest {
 
         Property p = event.getPropertyByKey(new Object());
         assertNull(p);
+    }
+
+    // getProperties() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getProperties_ReturnsACopyOfTheInternalStorage() throws Exception {
+
+        Event e = getEventToTest();
+
+        List<Property> originalProperties = e.getProperties();
+
+        e.setStringProperty("A", "B");
+
+        List<Property> properties = e.getProperties();
+
+        int lastPropertyIndex = properties.size() - 1;
+
+        assertEquals(properties.size(), originalProperties.size() + 1);
+        assertEquals("A", properties.get(lastPropertyIndex).getName());
+
+        properties.clear();
+
+        assertTrue(properties.isEmpty());
+
+        List<Property> properties2 = e.getProperties();
+
+        //
+        // makes sure the internal storage was not modified
+        //
+
+        assertEquals(properties2.size(), originalProperties.size() + 1);
+        assertEquals("A", properties2.get(lastPropertyIndex).getName());
+
+        for(int i = 0; i < lastPropertyIndex; i ++) {
+
+            assertEquals(originalProperties.get(0), properties2.get(0));
+        }
     }
 
     // getRawRepresentation() ------------------------------------------------------------------------------------------

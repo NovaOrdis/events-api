@@ -54,7 +54,7 @@ public class GenericEventTest extends EventTest {
 
         GenericEvent ge = new GenericEvent(input);
 
-        List<Property> result = ge.getPropertyList();
+        List<Property> result = ge.getProperties();
 
         assertEquals(input.size(), result.size());
 
@@ -75,7 +75,7 @@ public class GenericEventTest extends EventTest {
 
         GenericEvent ge = getEventToTest();
 
-        List<Property> props = ge.getPropertyList();
+        List<Property> props = ge.getProperties();
 
         int initialSize = props.size();
 
@@ -83,7 +83,7 @@ public class GenericEventTest extends EventTest {
         assertNull(ge.setProperty(new StringProperty("I", "val2")));
         assertNull(ge.setProperty(new StringProperty("A", "val3")));
 
-        props = ge.getPropertyList();
+        props = ge.getProperties();
 
         assertEquals(initialSize + 3, props.size());
 
@@ -121,13 +121,6 @@ public class GenericEventTest extends EventTest {
 
         ge.setStringProperty("test-property", null);
         assertNull(ge.getProperty("test-property"));
-
-        MockMeasureUnit mmu = new MockMeasureUnit();
-        ge.setStringProperty("test-property", "blue", mmu);
-        StringProperty sp3 = (StringProperty)ge.getProperty("test-property");
-        assertEquals("test-property", sp3.getName());
-        assertEquals("blue", sp3.getValue());
-        assertEquals(mmu, sp3.getMeasureUnit());
     }
 
     @Test
@@ -274,13 +267,18 @@ public class GenericEventTest extends EventTest {
 
         GenericEvent ge = getEventToTest();
 
-        ge.setBooleanProperty("test-name", true);
+        assertNull(ge.setBooleanProperty("test-name", true));
         assertTrue(ge.getBooleanProperty("test-name").getBoolean());
 
-        ge.removeBooleanProperty("test-name");
+        BooleanProperty p = ge.removeBooleanProperty("test-name");
+        assertNotNull(p);
+        assertEquals("test-name", p.getName());
+        assertTrue(p.getBoolean());
+
         assertNull(ge.getBooleanProperty("test-name"));
 
-        ge.removeBooleanProperty("test-name");
+        BooleanProperty p2 = ge.removeBooleanProperty("test-name");
+        assertNull(p2);
     }
 
     // setListProperty() -----------------------------------------------------------------------------------------------
@@ -318,6 +316,71 @@ public class GenericEventTest extends EventTest {
         GenericEvent e = getEventToTest();
 
         assertNull(e.getPreferredRepresentation("does not matter"));
+    }
+
+    // removeProperty() ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void removeProperty() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        List<Property> originalProperties = e.getProperties();
+
+        Property p = e.removeProperty("something", String.class);
+        assertNull(p);
+
+        assertNull(e.setStringProperty("A", "something"));
+
+        Property p2 = e.removeProperty("A", Long.class);
+
+        //
+        // won't remove anything, type does not match
+        //
+
+        assertNull(p2);
+
+        List<Property> properties = e.getProperties();
+        assertEquals(1, properties.size() - originalProperties.size());
+
+        Property p3 = null;
+
+        upper: for(Property pi: properties) {
+
+            for(Property pj: originalProperties) {
+
+                if (pi.equals(pj)) {
+
+                    continue upper;
+                }
+            }
+
+            p3 = pi;
+        }
+
+        assertTrue(p3 instanceof StringProperty);
+        assertEquals(p3.getName(), "A");
+        assertEquals(p3.getValue(), "something");
+
+        //
+        // do remove
+        //
+
+        Property p4 = e.removeProperty("A", String.class);
+        assertNotNull(p4);
+        assertTrue(p4 instanceof StringProperty);
+        assertEquals(p4.getName(), "A");
+        assertEquals(p4.getValue(), "something");
+
+        List<Property> properties2 = e.getProperties();
+
+
+        assertEquals(originalProperties.size(), properties2.size());
+
+        for(int i = 0; i < originalProperties.size(); i ++) {
+
+            assertTrue(originalProperties.get(0).equals(properties.get(0)));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

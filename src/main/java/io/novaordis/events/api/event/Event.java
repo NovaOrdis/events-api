@@ -16,7 +16,7 @@
 
 package io.novaordis.events.api.event;
 
-import java.util.Set;
+import java.util.List;
 
 /**
  *
@@ -44,7 +44,33 @@ public interface Event {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    Set<Property> getProperties();
+    /**
+     * Stores the property, replacing the old property with the same name, if it exists. The order in which the
+     * properties are set will be reflected in the order in which getProperties() returns them.
+     *
+     * If it is a map and the map already exists, the contents will be merged.
+     *
+     * If the implementation supports it, the order in which the properties are set is remembered, so methods
+     * like getPropertyList() make sense for those.
+     *
+     * @return the old property with the same name, or null if such a property does not exist.
+     *
+     * @exception IllegalArgumentException on null argument.
+     *
+     * @see Event#getProperties()
+     */
+    Property setProperty(Property property);
+
+    /**
+     * https://kb.novaordis.com/index.php/Events-api_Concepts#Property_Setting_Order
+     *
+     * @return the List of properties set on this event, in the order in which they were set. The implementations must
+     * guarantee that no two properties in the list have the same name. Implementations should advise whether they
+     * return the actual storage (efficient but not safe) or a copy of it (less efficient but safe)
+     *
+     * @see Event#setProperty(Property)
+     */
+    List<Property> getProperties();
 
     /**
      * Query the event and return the property with the given name, if it is carried by the event. This approach should
@@ -71,7 +97,12 @@ public interface Event {
      *
      * @exception IllegalArgumentException if the key is null.
      */
+    @Deprecated
     Property getPropertyByKey(Object propertyKey);
+
+    // Convenience typed accessors/mutators ----------------------------------------------------------------------------
+
+    StringProperty setStringProperty(String name, String value);
 
     /**
      * Query the event and return the string property with the given name.
@@ -138,20 +169,6 @@ public interface Event {
      * @see Event#getPropertyByKey(Object)
      */
     ListProperty getListProperty(String listPropertyName);
-
-    /**
-     * Stores the property, replacing the old one if exists.
-     *
-     * If it is a map and the map already exists, the contents will be merged.
-     *
-     * If the implementation supports it, the order in which the properties are set is remembered, so methods
-     * like getPropertyList() make sense for those.
-     *
-     * @return the old property with the same name, or null.
-     *
-     * @exception IllegalArgumentException on null argument.
-     */
-    Property setProperty(Property property);
 
     // Typed accessors -------------------------------------------------------------------------------------------------
 
