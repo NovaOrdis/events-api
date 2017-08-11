@@ -405,19 +405,19 @@ public abstract class EventTest {
     // getProperty() ---------------------------------------------------------------------------------------------------
 
     @Test
-    public  void getPropertyByName_NullKey() throws Exception {
+    public  void getProperty_NullName() throws Exception {
 
         Event event = getEventToTest();
 
         try {
 
-            event.getPropertyByKey(null);
+            event.getProperty(null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
 
             String msg = e.getMessage();
-            assertEquals("null property key", msg);
+            assertEquals("null property name", msg);
         }
     }
 
@@ -430,7 +430,7 @@ public abstract class EventTest {
 
         event.setProperty(sp);
 
-        assertNull(event.getPropertyByKey("I-am-sure-there-is-no-property-with-this-name"));
+        assertNull(event.getProperty("I-am-sure-there-is-no-property-with-this-name"));
     }
 
     @Test
@@ -442,7 +442,7 @@ public abstract class EventTest {
 
         event.setProperty(sp);
 
-        Property p = event.getPropertyByKey("test-property");
+        Property p = event.getProperty("test-property");
 
         assertNotNull(p);
 
@@ -450,15 +450,6 @@ public abstract class EventTest {
 
         assertEquals("test-property", sp2.getName());
         assertEquals("test-value", sp2.getValue());
-    }
-
-    @Test
-    public void getProperty_NonStringArgument() throws Exception {
-
-        Event event = getEventToTest();
-
-        Property p = event.getPropertyByKey(new Object());
-        assertNull(p);
     }
 
     // getProperties() -------------------------------------------------------------------------------------------------

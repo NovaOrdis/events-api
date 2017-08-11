@@ -73,32 +73,13 @@ public interface Event {
     List<Property> getProperties();
 
     /**
-     * Query the event and return the property with the given name, if it is carried by the event. This approach should
-     * work in most cases for simple events, that rely on a flat property namespace. However, in more complex situations
-     * when multiple properties with the same name are carried by the same event, use getProperty(Object) method.
+     * Query the event and return the property with the given name, if it is carried by the event.
      *
      * @return null if there is no such property.
-     *
-     * @see Event#getPropertyByKey(Object)
      *
      * @exception IllegalArgumentException if the name is null.
      */
     Property getProperty(String name);
-
-    /**
-     * Query the event and return the property corresponding to the given key. In most cases, when events carry
-     * properties belonging to a flat namespace, it is sufficient to use the property name as key, so
-     * getProperty(String) should work. However, in more complex situations when multiple properties with the same name
-     * are carried by the same event, a generic Object key can be used to discriminate properties.
-     *
-     * @return null if there is no such property.
-     *
-     * @see Event#getProperty(String)
-     *
-     * @exception IllegalArgumentException if the key is null.
-     */
-    @Deprecated
-    Property getPropertyByKey(Object propertyKey);
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 
@@ -111,7 +92,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a StringProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     StringProperty getStringProperty(String stringPropertyName);
 
@@ -122,7 +102,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a LongProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     LongProperty getLongProperty(String longPropertyName);
 
@@ -133,7 +112,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a IntegerProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     IntegerProperty getIntegerProperty(String integerPropertyName);
 
@@ -144,7 +122,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a BooleanProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     BooleanProperty getBooleanProperty(String booleanPropertyName);
 
@@ -155,7 +132,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a MapProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     MapProperty getMapProperty(String mapPropertyName);
 
@@ -166,7 +142,6 @@ public interface Event {
      * return null if a property with the given name exists, but it is not a ListProperty.
      *
      * @see Event#getProperty(String)
-     * @see Event#getPropertyByKey(Object)
      */
     ListProperty getListProperty(String listPropertyName);
 
