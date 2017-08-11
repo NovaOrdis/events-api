@@ -62,17 +62,6 @@ public interface Event {
     Property setProperty(Property property);
 
     /**
-     * https://kb.novaordis.com/index.php/Events-api_Concepts#Property_Setting_Order
-     *
-     * @return the List of properties set on this event, in the order in which they were set. The implementations must
-     * guarantee that no two properties in the list have the same name. Implementations should advise whether they
-     * return the actual storage (efficient but not safe) or a copy of it (less efficient but safe)
-     *
-     * @see Event#setProperty(Property)
-     */
-    List<Property> getProperties();
-
-    /**
      * Query the event and return the property with the given name, if it is carried by the event.
      *
      * @return null if there is no such property.
@@ -80,6 +69,30 @@ public interface Event {
      * @exception IllegalArgumentException if the name is null.
      */
     Property getProperty(String name);
+
+    /**
+     * https://kb.novaordis.com/index.php/Events-api_Concepts#Property_Setting_Order
+     *
+     * @return the List of properties set on this event, in the order in which they were set. The implementations must
+     * guarantee that no two properties in the list have the same name. Implementations should advise whether they
+     * return the actual storage (efficient but not safe) or a copy of it (less efficient but safe).
+     *
+     * @see Event#setProperty(Property)
+     */
+    List<Property> getProperties();
+
+    /**
+     * @return the List of properties that carry the specified type, set on this event, in the order in which they were
+     * set. The implementations must guarantee that no two properties in the list have the same name. Implementations
+     * should advise whether they return the actual storage (efficient but not safe) or a copy of it (less efficient but
+     * safe).
+     *
+     * @see Event#setProperty(Property)
+     * @see Property#getType()
+     */
+    List<Property> getProperties(Class type);
+
+    void clearProperties();
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 

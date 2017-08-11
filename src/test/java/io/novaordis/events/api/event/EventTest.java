@@ -20,10 +20,12 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -489,6 +491,83 @@ public abstract class EventTest {
         }
     }
 
+    // getProperties(type) ---------------------------------------------------------------------------------------------
+
+    @Test
+    public void getProperties_Type() throws Exception {
+
+        Event e = getEventToTest();
+
+        List<Property> originalProperties = e.getProperties(String.class);
+
+        e.setStringProperty("A", "B");
+
+        List<Property> properties = e.getProperties(String.class);
+
+        int lastPropertyIndex = properties.size() - 1;
+
+        assertEquals(properties.size(), originalProperties.size() + 1);
+        assertEquals("A", properties.get(lastPropertyIndex).getName());
+
+        //
+        // we make sure a copy of the list is returned, and not the storage itself
+        //
+
+        properties.clear();
+
+        assertTrue(properties.isEmpty());
+
+        List<Property> properties2 = e.getProperties(String.class);
+
+        //
+        // makes sure the internal storage was not modified
+        //
+
+        assertEquals(properties2.size(), originalProperties.size() + 1);
+        assertEquals("A", properties2.get(lastPropertyIndex).getName());
+
+        for(int i = 0; i < lastPropertyIndex; i ++) {
+
+            assertEquals(originalProperties.get(0), properties2.get(0));
+        }
+    }
+
+    @Test
+    public void getProperties_Type2() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.clearProperties();
+
+        assertTrue(e.getProperties().isEmpty());
+
+        assertTrue(e.getProperties(String.class).isEmpty());
+        assertTrue(e.getProperties(Long.class).isEmpty());
+        assertTrue(e.getProperties(Event.class).isEmpty());
+
+        e.setStringProperty("Z", "something");
+
+        List<Property> properties = e.getProperties(String.class);
+        assertTrue(e.getProperties(Long.class).isEmpty());
+        assertTrue(e.getProperties(Event.class).isEmpty());
+
+        assertEquals(1, properties.size());
+        assertEquals("Z", properties.get(0).getName());
+        assertEquals("something", properties.get(0).getValue());
+
+        e.setStringProperty("A", "something else");
+
+        List<Property> properties2 = e.getProperties(String.class);
+        assertTrue(e.getProperties(Long.class).isEmpty());
+        assertTrue(e.getProperties(Event.class).isEmpty());
+
+        assertEquals(2, properties2.size());
+        assertEquals("Z", properties2.get(0).getName());
+        assertEquals("something", properties2.get(0).getValue());
+        assertEquals("A", properties2.get(1).getName());
+        assertEquals("something else", properties2.get(1).getValue());
+    }
+
     // getRawRepresentation() ------------------------------------------------------------------------------------------
 
     @Test
@@ -617,6 +696,26 @@ public abstract class EventTest {
         assertNull(e.getEventProperty("test-name"));
 
         assertNull(e.removeEventProperty("no-such-event-property"));
+    }
+
+    // clearProperties() -----------------------------------------------------------------------------------------------
+
+    @Test
+    public void clearProperties() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setStringProperty("something-that-surely-does-not-exist-yet", "something");
+
+        assertFalse(e.getProperties().isEmpty());
+
+        e.clearProperties();
+
+        assertTrue(e.getProperties().isEmpty());
+        assertTrue(e.getProperties(String.class).isEmpty());
+        assertTrue(e.getProperties(Integer.class).isEmpty());
+        assertTrue(e.getProperties(Long.class).isEmpty());
+        assertTrue(e.getProperties(Event.class).isEmpty());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -84,6 +84,41 @@ public class GenericEvent implements Event {
         return new ArrayList<>(properties);
     }
 
+    /**
+     * Returns a shallow copy of the internal storage.
+     */
+    @Override
+    public List<Property> getProperties(Class type) {
+
+        if (properties.isEmpty()) {
+
+            return Collections.emptyList();
+        }
+
+        List<Property> result = null;
+
+        for(Property p: properties) {
+
+            if (p.getType().equals(type)) {
+
+                if (result == null) {
+
+                    result = new ArrayList<>();
+                }
+
+                result.add(p);
+            }
+        }
+
+        if (result != null) {
+
+            return result;
+        }
+
+        return Collections.emptyList();
+    }
+
+
     @Override
     public Property getProperty(String name) {
 
@@ -101,6 +136,12 @@ public class GenericEvent implements Event {
         }
 
         return null;
+    }
+
+    @Override
+    public void clearProperties() {
+
+        properties.clear();
     }
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
