@@ -515,6 +515,110 @@ public abstract class EventTest {
         event.getPreferredRepresentation("does not matter");
     }
 
+    // EventProperty convenience accessors/mutators --------------------------------------------------------------------
+
+    @Test
+    public void stringPropertyAccessorsMutators() throws Exception {
+
+        Event e = getEventToTest();
+
+        assertNull(e.getStringProperty("no-such-string-property"));
+
+        assertNull(e.setStringProperty("test-name", "test-value"));
+
+        StringProperty sp = e.getStringProperty("test-name");
+
+        assertEquals("test-name", sp.getName());
+        assertEquals(String.class, sp.getType());
+        assertEquals("test-value", sp.getString());
+        assertNull(sp.getMeasureUnit());
+        assertNull(sp.getFormat());
+
+        StringProperty sp2 = e.setStringProperty("test-name", "test-value-2");
+
+        assertEquals("test-name", sp2.getName());
+        assertEquals(String.class, sp2.getType());
+        assertEquals("test-value", sp2.getString());
+        assertNull(sp2.getMeasureUnit());
+        assertNull(sp2.getFormat());
+
+        StringProperty sp3 = e.getStringProperty("test-name");
+
+        assertEquals("test-name", sp3.getName());
+        assertEquals(String.class, sp3.getType());
+        assertEquals("test-value-2", sp3.getString());
+        assertNull(sp3.getMeasureUnit());
+        assertNull(sp3.getFormat());
+
+        assertNull(e.removeEventProperty("test-name"));
+
+        assertNotNull(e.getStringProperty("test-name"));
+
+        StringProperty sp4 = e.removeStringProperty("test-name");
+
+        assertEquals("test-name", sp4.getName());
+        assertEquals(String.class, sp4.getType());
+        assertEquals("test-value-2", sp4.getString());
+        assertNull(sp4.getMeasureUnit());
+        assertNull(sp4.getFormat());
+
+        assertNull(e.getStringProperty("test-name"));
+
+        assertNull(e.removeStringProperty("no-such-string-property"));
+    }
+
+    // EventProperty convenience accessors/mutators --------------------------------------------------------------------
+
+    @Test
+    public void eventPropertyAccessorsMutators() throws Exception {
+
+        Event e = getEventToTest();
+
+        assertNull(e.getEventProperty("no-such-event-property"));
+
+        assertNull(e.setEventProperty("test-name", new GenericTimedEvent(1L)));
+
+        EventProperty ep = e.getEventProperty("test-name");
+
+        assertEquals("test-name", ep.getName());
+        assertEquals(Event.class, ep.getType());
+        assertEquals(1L, ((TimedEvent) ep.getEvent()).getTime().longValue());
+        assertNull(ep.getMeasureUnit());
+        assertNull(ep.getFormat());
+
+        EventProperty ep2 = e.setEventProperty("test-name", new GenericTimedEvent(2L));
+
+        assertEquals("test-name", ep2.getName());
+        assertEquals(Event.class, ep2.getType());
+        assertEquals(1L, ((TimedEvent) ep2.getEvent()).getTime().longValue());
+        assertNull(ep2.getMeasureUnit());
+        assertNull(ep2.getFormat());
+
+        EventProperty ep3 = e.getEventProperty("test-name");
+
+        assertEquals("test-name", ep3.getName());
+        assertEquals(Event.class, ep3.getType());
+        assertEquals(2L, ((TimedEvent) ep3.getEvent()).getTime().longValue());
+        assertNull(ep3.getMeasureUnit());
+        assertNull(ep3.getFormat());
+
+        assertNull(e.removeStringProperty("test-name"));
+
+        assertNotNull(e.getEventProperty("test-name"));
+
+        EventProperty ep4 = e.removeEventProperty("test-name");
+
+        assertEquals("test-name", ep4.getName());
+        assertEquals(Event.class, ep4.getType());
+        assertEquals(2L, ((TimedEvent) ep4.getEvent()).getTime().longValue());
+        assertNull(ep4.getMeasureUnit());
+        assertNull(ep4.getFormat());
+
+        assertNull(e.getEventProperty("test-name"));
+
+        assertNull(e.removeEventProperty("no-such-event-property"));
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

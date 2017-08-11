@@ -83,6 +83,12 @@ public interface Event {
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 
+    // String property support -----------------------------------------------------------------------------------------
+
+    /**
+     * @return the current StringProperty that is being replaced by StringProperty passed as argument, if it exists, or
+     * null otherwise.
+     */
     StringProperty setStringProperty(String name, String value);
 
     /**
@@ -94,6 +100,40 @@ public interface Event {
      * @see Event#getProperty(String)
      */
     StringProperty getStringProperty(String stringPropertyName);
+
+    /**
+     * Remove the StringProperty with the given name, if it exists.
+     *
+     * @return the StringProperty that was removed, or null if no such property exists.
+     */
+    StringProperty removeStringProperty(String stringPropertyName);
+
+    // Event property support ------------------------------------------------------------------------------------------
+
+    /**
+     * @return the current EventProperty that is being replaced by EventProperty passed as argument, if it exists, or
+     * null otherwise.
+     */
+    EventProperty setEventProperty(String name, Event event);
+
+    /**
+     * Query the event and return the event property with the given name.
+     *
+     * @return the corresponding EventProperty or null if there is no such EventProperty. Note that the method will
+     * return null if a property with the given name exists, but it is not an EventProperty.
+     *
+     * @see Event#getProperty(String)
+     */
+    EventProperty getEventProperty(String eventPropertyName);
+
+    /**
+     * Remove the EventProperty with the given name, if it exists.
+     *
+     * @return the EventProperty that was removed, or null if no such property exists.
+     */
+    EventProperty removeEventProperty(String eventPropertyName);
+
+    // Long property support -------------------------------------------------------------------------------------------
 
     /**
      * Query the event and return the Long property with the given name.

@@ -105,6 +105,8 @@ public class GenericEvent implements Event {
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 
+    // String accessors/mutators ---------------------------------------------------------------------------------------
+
     @Override
     public StringProperty setStringProperty(String name, String value) {
 
@@ -129,6 +131,47 @@ public class GenericEvent implements Event {
 
         return null;
     }
+
+    @Override
+    public StringProperty removeStringProperty(String name) {
+
+        return (StringProperty)removeProperty(name, String.class);
+    }
+
+    // Event accessors/mutators ----------------------------------------------------------------------------------------
+
+    @Override
+    public EventProperty setEventProperty(String name, Event value) {
+
+        if (value == null) {
+
+            return removeEventProperty(name);
+        }
+        else {
+
+            return (EventProperty)setProperty(new EventProperty(name, value));
+        }
+    }
+
+    @Override
+    public EventProperty getEventProperty(String name) {
+
+        Property p = getProperty(name);
+
+        if (p != null && p instanceof EventProperty) {
+            return (EventProperty)p;
+        }
+
+        return null;
+    }
+
+    @Override
+    public EventProperty removeEventProperty(String name) {
+
+        return (EventProperty)removeProperty(name, Event.class);
+    }
+
+    // Long accessors/mutators -----------------------------------------------------------------------------------------
 
     @Override
     public LongProperty getLongProperty(String name) {
@@ -319,11 +362,6 @@ public class GenericEvent implements Event {
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
-
-    public StringProperty removeStringProperty(String name) {
-
-        return (StringProperty)removeProperty(name, String.class);
-    }
 
     public void setLongProperty(String name, long value) {
 
