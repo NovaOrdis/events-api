@@ -61,6 +61,17 @@ public abstract class ParserBase implements Parser {
     }
 
     @Override
+    public List<Event> flush() throws ParsingException {
+
+        if (closed) {
+
+            throw new IllegalStateException(this + " is closed");
+        }
+
+        return flush(lineNumber.get());
+    }
+
+    @Override
     public List<Event> close() throws ParsingException {
 
         //
@@ -125,7 +136,18 @@ public abstract class ParserBase implements Parser {
     protected abstract List<Event> parse(long lineNumber, String line) throws ParsingException;
 
     /**
-     * Processes the remaining accumulated state. The super close() will actually close the parser and issue the
+     * Process the accumulated state so far.
+     *
+     * The invocation may return an empty list, but never null.
+     *
+     * @param lineNumber the line number of the last line in the text stream, when close() is called externally.
+     *
+     * @see Parser#flush() ()
+     */
+    protected abstract List<Event> flush(long lineNumber) throws ParsingException;
+
+    /**
+     * Process the remaining accumulated state. The super close() will actually close the parser and issue the
      * EnoOfStream as the last event in the event stream.
      *
      * The invocation may return an empty list, but never null.

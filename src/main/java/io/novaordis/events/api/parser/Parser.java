@@ -57,12 +57,21 @@ public interface Parser {
     List<Event> parse(String line) throws ParsingException;
 
     /**
+     * @return all events accumulated so far, without closing the parser.
+     *
+     * @see Parser#close()
+     */
+    List<Event> flush() throws ParsingException;
+
+    /**
      * Processes the remaining accumulated state and closes the parser. A parser that was closed cannot be re-used,
      * an attempt to invoke parse() on it will throw IllegalStateException. The last event returned by the close()
      * invocation is an EndOfStreamEvent.
      *
      * The invocation may return an empty list (if it was redundantly invoked after the parser was closed), but never
      * null.
+     *
+     * @see Parser#flush()
      */
     List<Event> close() throws ParsingException;
 

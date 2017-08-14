@@ -25,6 +25,7 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -81,6 +82,7 @@ public abstract class ParserTest {
         try {
 
             p.parse("something");
+            fail("Should thrown exception");
         }
         catch(IllegalStateException e) {
 
@@ -130,6 +132,31 @@ public abstract class ParserTest {
         }
 
         assertTrue(p.close().isEmpty());
+    }
+
+    @Test
+    public void flush_EmptyParser() throws Exception {
+
+        Parser p = getParserToTest();
+
+        assertTrue(p.flush().isEmpty());
+
+        assertTrue(p.flush().isEmpty());
+
+        List<Event> last = p.close();
+        assertEquals(1, last.size());
+        assertTrue(last.get(0) instanceof EndOfStreamEvent);
+
+        try {
+
+            p.flush();
+            fail("Should thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("closed"));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
