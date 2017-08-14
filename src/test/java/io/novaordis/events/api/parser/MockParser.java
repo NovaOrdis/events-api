@@ -44,12 +44,6 @@ public class MockParser extends ParserBase {
     }
 
     @Override
-    protected List<Event> flush(long lineNumber) throws ParsingException {
-
-        return Collections.emptyList();
-    }
-
-    @Override
     protected List<Event> close(long lineNumber) throws ParsingException {
 
         return Collections.emptyList();

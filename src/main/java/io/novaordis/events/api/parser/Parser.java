@@ -56,12 +56,15 @@ public interface Parser {
      */
     List<Event> parse(String line) throws ParsingException;
 
-    /**
-     * @return all events accumulated so far, without closing the parser.
-     *
-     * @see Parser#close()
-     */
-    List<Event> flush() throws ParsingException;
+//    /**
+//     * TODO there was just a single situation when we needed this, and we could handle it in implementation, so we
+//     * decided to back off the change. If we ever need this again, we'll reconsider.
+//     *
+//     * @return all events accumulated so far, without closing the parser.
+//     *
+//     * @see Parser#close()
+//     */
+//    List<Event> flush() throws ParsingException;
 
     /**
      * Processes the remaining accumulated state and closes the parser. A parser that was closed cannot be re-used,
@@ -70,8 +73,6 @@ public interface Parser {
      *
      * The invocation may return an empty list (if it was redundantly invoked after the parser was closed), but never
      * null.
-     *
-     * @see Parser#flush()
      */
     List<Event> close() throws ParsingException;
 
