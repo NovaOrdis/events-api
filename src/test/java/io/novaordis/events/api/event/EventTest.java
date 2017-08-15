@@ -20,7 +20,6 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -494,6 +493,24 @@ public abstract class EventTest {
     // getProperties(type) ---------------------------------------------------------------------------------------------
 
     @Test
+    public void getProperties_NullType() throws Exception {
+
+        Event e = getEventToTest();
+
+
+        try {
+
+            e.getProperties(null);
+            fail("should throw exception");
+        }
+        catch(IllegalArgumentException iae) {
+
+            String msg = iae.getMessage();
+            assertTrue(msg.contains("null type"));
+        }
+    }
+
+    @Test
     public void getProperties_Type() throws Exception {
 
         Event e = getEventToTest();
@@ -566,6 +583,36 @@ public abstract class EventTest {
         assertEquals("something", properties2.get(0).getValue());
         assertEquals("A", properties2.get(1).getName());
         assertEquals("something else", properties2.get(1).getValue());
+    }
+
+    @Test
+    public void getProperties_TypeInheritance() throws Exception {
+
+        Event e = getEventToTest();
+
+        MockEvent me = new MockEvent();
+        GenericEvent ge = new GenericEvent();
+
+        e.setEventProperty("mock-property", me);
+        e.setEventProperty("generic-property", ge);
+
+        List<Property> properties = e.getProperties(Event.class);
+
+        assertEquals(2, properties.size());
+        assertEquals(me, properties.get(0).getValue());
+        assertEquals(ge, properties.get(1).getValue());
+
+        List<Property> properties2 = e.getProperties(MockEvent.class);
+
+        assertEquals(1, properties2.size());
+        assertEquals(me, properties2.get(0).getValue());
+
+        List<Property> properties3 = e.getProperties(GenericEvent.class);
+
+        // MockEvent is a GenericEvent
+        assertEquals(2, properties3.size());
+        assertEquals(me, properties3.get(0).getValue());
+        assertEquals(ge, properties3.get(1).getValue());
     }
 
     // getRawRepresentation() ------------------------------------------------------------------------------------------
@@ -660,7 +707,7 @@ public abstract class EventTest {
         EventProperty ep = e.getEventProperty("test-name");
 
         assertEquals("test-name", ep.getName());
-        assertEquals(Event.class, ep.getType());
+        assertEquals(GenericTimedEvent.class, ep.getType());
         assertEquals(1L, ((TimedEvent) ep.getEvent()).getTime().longValue());
         assertNull(ep.getMeasureUnit());
         assertNull(ep.getFormat());
@@ -668,7 +715,7 @@ public abstract class EventTest {
         EventProperty ep2 = e.setEventProperty("test-name", new GenericTimedEvent(2L));
 
         assertEquals("test-name", ep2.getName());
-        assertEquals(Event.class, ep2.getType());
+        assertEquals(GenericTimedEvent.class, ep2.getType());
         assertEquals(1L, ((TimedEvent) ep2.getEvent()).getTime().longValue());
         assertNull(ep2.getMeasureUnit());
         assertNull(ep2.getFormat());
@@ -676,7 +723,7 @@ public abstract class EventTest {
         EventProperty ep3 = e.getEventProperty("test-name");
 
         assertEquals("test-name", ep3.getName());
-        assertEquals(Event.class, ep3.getType());
+        assertEquals(GenericTimedEvent.class, ep3.getType());
         assertEquals(2L, ((TimedEvent) ep3.getEvent()).getTime().longValue());
         assertNull(ep3.getMeasureUnit());
         assertNull(ep3.getFormat());
@@ -688,7 +735,7 @@ public abstract class EventTest {
         EventProperty ep4 = e.removeEventProperty("test-name");
 
         assertEquals("test-name", ep4.getName());
-        assertEquals(Event.class, ep4.getType());
+        assertEquals(GenericTimedEvent.class, ep4.getType());
         assertEquals(2L, ((TimedEvent) ep4.getEvent()).getTime().longValue());
         assertNull(ep4.getMeasureUnit());
         assertNull(ep4.getFormat());
@@ -716,6 +763,93 @@ public abstract class EventTest {
         assertTrue(e.getProperties(Integer.class).isEmpty());
         assertTrue(e.getProperties(Long.class).isEmpty());
         assertTrue(e.getProperties(Event.class).isEmpty());
+    }
+
+    // removeProperty() ------------------------------------------------------------------------------------------------
+
+    @Test
+    public void removeProperty_NullName() throws Exception {
+
+        Event e = getEventToTest();
+
+        try {
+
+            e.removeProperty(null, String.class);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException iae) {
+
+            String msg = iae.getMessage();
+            assertTrue(msg.contains("null name"));
+        }
+    }
+
+    @Test
+    public void removeProperty_NullType() throws Exception {
+
+        Event e = getEventToTest();
+
+        try {
+
+            e.removeProperty("something", null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException iae) {
+
+            String msg = iae.getMessage();
+            assertTrue(msg.contains("null type"));
+        }
+    }
+
+    @Test
+    public void removeProperty_NoSuchProperty() throws Exception {
+
+        Event e = getEventToTest();
+        assertNull(e.removeProperty("no-such-property", String.class));
+    }
+
+    @Test
+    public void removeProperty_NameMatchesTypeDoesNot() throws Exception {
+
+        Event e = getEventToTest();
+        e.setStringProperty("test-property", "something");
+
+        assertNull(e.removeProperty("test-property", Long.class));
+
+        assertEquals("something", e.getStringProperty("test-property").getString());
+    }
+
+    @Test
+    public void removeProperty_ExistingPropertyHasNoType() throws Exception {
+
+        Event e = getEventToTest();
+
+        List<Property> original = e.getProperties();
+
+        e.setProperty(new UndefinedTypeProperty("something"));
+
+        assertNull(e.removeProperty("something", String.class));
+
+        List<Property> properties = e.getProperties();
+        assertEquals(original.size() + 1, properties.size());
+        Property p = properties.get(original.size());
+        assertEquals("something", p.getName());
+        assertNull(p.getType());
+    }
+
+    @Test
+    public void removeProperty() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setStringProperty("something", "something else");
+
+        Property p = e.removeProperty("something", String.class);
+
+        assertTrue(e.getProperties().isEmpty());
+
+        assertEquals("something", p.getName());
+        assertEquals("something else", p.getValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

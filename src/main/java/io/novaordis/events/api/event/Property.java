@@ -65,6 +65,9 @@ public interface Property extends Comparable<Property> {
      */
     void setValue(Object value);
 
+    /**
+     * @return the actual type of the value carried by the property. May return null.
+     */
     Class getType();
 
     /**

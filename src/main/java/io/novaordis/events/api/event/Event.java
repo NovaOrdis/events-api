@@ -87,10 +87,21 @@ public interface Event {
      * should advise whether they return the actual storage (efficient but not safe) or a copy of it (less efficient but
      * safe).
      *
+     * @param type the type of the property payload. If the property has a payload that extends or implements the
+     *             type, it will be returned.
+     *
      * @see Event#setProperty(Property)
      * @see Property#getType()
      */
     List<Property> getProperties(Class type);
+
+    /**
+     * Remove the specified property.
+     *
+     * @return null if a property with the name AND type does not exist, or the property instance that was just removed
+     * otherwise.
+     */
+    Property removeProperty(String name, Class type);
 
     void clearProperties();
 

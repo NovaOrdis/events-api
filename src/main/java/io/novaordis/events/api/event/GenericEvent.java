@@ -90,6 +90,11 @@ public class GenericEvent implements Event {
     @Override
     public List<Property> getProperties(Class type) {
 
+        if (type == null) {
+
+            throw new IllegalArgumentException("null type");
+        }
+
         if (properties.isEmpty()) {
 
             return Collections.emptyList();
@@ -99,7 +104,8 @@ public class GenericEvent implements Event {
 
         for(Property p: properties) {
 
-            if (p.getType().equals(type)) {
+            //noinspection unchecked
+            if (type.isAssignableFrom(p.getType())) {
 
                 if (result == null) {
 
@@ -142,6 +148,49 @@ public class GenericEvent implements Event {
     public void clearProperties() {
 
         properties.clear();
+    }
+
+    @Override
+    public Property removeProperty(String name, Class type) {
+
+        if (name == null) {
+
+            throw new IllegalArgumentException("null name");
+        }
+
+        if (type == null) {
+
+            throw new IllegalArgumentException("null type");
+        }
+
+        int index = -1;
+
+        for(Property p: properties) {
+
+            index ++;
+
+            if (p.getName().equals(name)) {
+
+                Class propertyType = p.getType();
+
+                if (propertyType == null) {
+
+                    continue;
+                }
+
+                //noinspection unchecked
+                if (type.isAssignableFrom(propertyType)) {
+
+                    //
+                    // do remove
+                    //
+
+                    return properties.remove(index);
+                }
+            }
+        }
+
+        return null;
     }
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
@@ -450,33 +499,6 @@ public class GenericEvent implements Event {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    /**
-     * @return null if a property with the name AND type does not exist, not null otherwise.
-     */
-    Property removeProperty(String name, Class type) {
-
-        int index = -1;
-
-        for(Property p: properties) {
-
-            index ++;
-
-            if (p.getName().equals(name)) {
-
-                if (p.getType().equals(type)) {
-
-                    //
-                    // do remove
-                    //
-
-                    return properties.remove(index);
-                }
-            }
-        }
-
-        return null;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

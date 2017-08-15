@@ -19,6 +19,7 @@ package io.novaordis.events.api.event;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.fail;
 
 /**
@@ -67,7 +68,7 @@ public class EventPropertyTest extends PropertyTest {
 
         assertEquals(1L, e3.getTime().longValue());
 
-        assertEquals(Event.class, p.getType());
+        assertEquals(GenericTimedEvent.class, p.getType());
     }
 
     @Test
@@ -88,6 +89,28 @@ public class EventPropertyTest extends PropertyTest {
         // assertEquals("test-name", sp.externalizeType());
 
         fail("RETURN HERE");
+    }
+
+    // getType()--------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getType_NoValue() {
+
+        EventProperty ep = new EventProperty("test");
+
+        assertNull(ep.getValue());
+        assertEquals(Event.class, ep.getType());
+    }
+
+    @Test
+    public void getType_SomeValue() {
+
+        MockEvent me = new MockEvent();
+        EventProperty ep = new EventProperty("test", me);
+
+        assertEquals(me, ep.getEvent());
+        assertEquals(me, ep.getValue());
+        assertEquals(MockEvent.class, ep.getType());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -47,6 +47,13 @@ public class EventProperty extends PropertyBase {
     @Override
     public Class getType() {
 
+        Event e = getEvent();
+
+        if (e != null) {
+
+            return e.getClass();
+        }
+
         return Event.class;
     }
 
