@@ -71,7 +71,7 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
         assertEquals("service=TestService", m.getKeyValuePairs());
         assertEquals("testAttribute", m.getAttributeName());
         assertEquals(new ObjectName("test.domain:service=TestService"), m.getObjectName());
-        assertEquals("localhost:1234/test.domain:service=TestService/testAttribute", m.getSimpleLabel());
+        assertEquals("jmx://localhost:1234/test.domain:service=TestService/testAttribute", m.getSimpleLabel());
         assertEquals(new JmxAddress("jmx://localhost:1234"), m.getMetricSourceAddress());
     }
 

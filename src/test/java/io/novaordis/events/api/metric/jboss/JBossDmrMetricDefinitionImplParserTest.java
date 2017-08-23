@@ -74,7 +74,7 @@ public class JBossDmrMetricDefinitionImplParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
-        assertEquals("localhost:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
+        assertEquals("jbosscli://localhost:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
                 d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
@@ -98,7 +98,8 @@ public class JBossDmrMetricDefinitionImplParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
-        assertEquals("localhost:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
+        assertEquals(
+                "jbosscli://localhost:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
                 d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
@@ -120,7 +121,8 @@ public class JBossDmrMetricDefinitionImplParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
-        assertEquals("admin@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
+        assertEquals(
+                "jbosscli://admin@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
                 d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());
@@ -142,7 +144,8 @@ public class JBossDmrMetricDefinitionImplParserTest {
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count", d.getId());
         assertEquals("/subsystem=messaging/hornetq-server=default/jms-queue=DLQ", d.getPath());
         assertEquals("message-count", d.getAttributeName());
-        assertEquals("admin@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
+        assertEquals(
+                "jbosscli://admin@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count",
                 d.getDescription());
         assertNull(d.getBaseUnit());
         assertNull(d.getType());

@@ -90,7 +90,7 @@ public class JmxBusTest extends MetricSourceTest {
         assertEquals(8888, a.getPort().intValue());
         assertNull(a.getUsername());
         assertNull(a.getPassword());
-        assertEquals("1.2.3.4:8888", b.getAddress().getLiteral());
+        assertEquals("jmx://1.2.3.4:8888", b.getAddress().getLiteral());
     }
 
     @Test
@@ -164,7 +164,7 @@ public class JmxBusTest extends MetricSourceTest {
         assertEquals(8888, a.getPort().intValue());
         assertEquals("admin", a.getUsername());
         assertEquals("admin123", new String(a.getPassword()));
-        assertEquals("admin@1.2.3.4:8888", b.getAddress().getLiteral());
+        assertEquals("jmx://admin@1.2.3.4:8888", b.getAddress().getLiteral());
     }
 
     @Test
@@ -179,7 +179,7 @@ public class JmxBusTest extends MetricSourceTest {
         assertEquals("adminpasswd", new String(a.getPassword()));
         assertEquals("admin", a.getUsername());
 
-        assertEquals("admin@1.2.3.4:2345", b.getAddress().getLiteral());
+        assertEquals("jmx://admin@1.2.3.4:2345", b.getAddress().getLiteral());
     }
 
     @Test
