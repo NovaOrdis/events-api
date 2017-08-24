@@ -35,27 +35,33 @@ public class ParsingException extends LineNumberException {
     // Public ----------------------------------------------------------------------------------------------------------
 
     public ParsingException(String message) {
+
         super(message);
     }
 
     public ParsingException(String message, Throwable cause) {
+
         super(message, cause);
     }
 
-    public ParsingException(String message, Long lineNumber) {
-        super(message, null, lineNumber, null);
+    public ParsingException(Long lineNumber, String message) {
+
+        super(lineNumber, null, message, null);
     }
 
-    public ParsingException(String message, Throwable cause, Long lineNumber) {
-        super(message, cause, lineNumber, null);
+    public ParsingException(Long lineNumber, String message, Throwable cause) {
+
+        super(lineNumber, null, message, cause);
     }
 
-    public ParsingException(String message, Long lineNumber, Integer positionInLine) {
-        super(message, null, lineNumber, positionInLine);
+    public ParsingException(Long lineNumber, Integer positionInLine, String message) {
+
+        super(lineNumber, positionInLine, message, null);
     }
 
-    public ParsingException(String message, Throwable cause, Long lineNumber, Integer positionInLine) {
-        super(message, cause, lineNumber, positionInLine);
+    public ParsingException(Long lineNumber, Integer positionInLine, String message, Throwable cause) {
+
+        super(lineNumber, positionInLine, message, cause);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

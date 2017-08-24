@@ -8,7 +8,7 @@
     <artifactId>events-api</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.2.2-SNAPSHOT-21</version>
+    <version>1.2.2-SNAPSHOT-22</version>
 
     <properties>
 
@@ -16,6 +16,7 @@
                Dependency Versions
         -->
 
+        <novaordis.utilities.version>4.7.11-SNAPSHOT-3</novaordis.utilities.version>
         <novaordis.jboss.version>1.0.10-SNAPSHOT-1</novaordis.jboss.version>
         <novaordis.jmx.version>1.2.5-SNAPSHOT-1</novaordis.jmx.version>
 
@@ -94,16 +95,11 @@
     </build>
 
     <dependencies>
+
         <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-api</artifactId>
-            <version>${slf4j.version}</version>
-        </dependency>
-        <dependency>
-            <groupId>org.slf4j</groupId>
-            <artifactId>slf4j-log4j12</artifactId>
-            <version>${slf4j.version}</version>
-            <scope>provided</scope>
+            <groupId>io.novaordis.utilities</groupId>
+            <artifactId>novaordis-utilities</artifactId>
+            <version>${novaordis.utilities.version}</version>
         </dependency>
         <dependency>
             <groupId>io.novaordis.jboss</groupId>
@@ -114,6 +110,18 @@
             <groupId>io.novaordis.jmx</groupId>
             <artifactId>novaordis-jmx</artifactId>
             <version>${novaordis.jmx.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-api</artifactId>
+            <version>${slf4j.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.slf4j</groupId>
+            <artifactId>slf4j-log4j12</artifactId>
+            <version>${slf4j.version}</version>
+            <scope>provided</scope>
         </dependency>
 
         <dependency>

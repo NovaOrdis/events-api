@@ -42,7 +42,7 @@ public class ParsingExceptionTest {
     public void constructor() throws Exception {
 
         RuntimeException cause = new RuntimeException();
-        ParsingException e = new ParsingException("test", cause, 10L, 11);
+        ParsingException e = new ParsingException(10L, 11, "test", cause);
         assertEquals("test", e.getMessage());
         assertEquals(cause, e.getCause());
         assertEquals(10L, e.getLineNumber().longValue());
