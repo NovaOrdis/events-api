@@ -53,6 +53,9 @@ public class GenericEvent implements Event {
         this(null, null);
     }
 
+    /**
+     * @param lineNumber may be null.
+     */
     public GenericEvent(long lineNumber) {
 
         this(lineNumber, null);
