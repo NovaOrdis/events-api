@@ -46,21 +46,67 @@ public class GenericEventTest extends EventTest {
     // constructor -----------------------------------------------------------------------------------------------------
 
     @Test
+    public void constructor_NoArgs() throws Exception {
+
+        GenericEvent e = new GenericEvent();
+        assertNull(e.getLineNumber());
+        assertTrue(e.getProperties().isEmpty());
+    }
+
+    @Test
+    public void constructor_LineNumber() throws Exception {
+
+        GenericEvent e = new GenericEvent(7L);
+        assertEquals(7L, e.getLineNumber().longValue());
+
+        assertEquals(1, e.getProperties().size());
+        LongProperty p = (LongProperty)e.getProperties().get(0);
+        assertEquals(7L, p.getLong().longValue());
+    }
+
+    @Test
     public void constructor_PropertyList() throws Exception {
 
         List<Property> input = new ArrayList<>();
         input.add(new IntegerProperty("test1", 1));
         input.add(new StringProperty("test2", "2"));
 
-        GenericEvent ge = new GenericEvent(input);
+        GenericEvent e = new GenericEvent(input);
 
-        List<Property> result = ge.getProperties();
+        assertNull(e.getLineNumber());
+
+        List<Property> result = e.getProperties();
 
         assertEquals(input.size(), result.size());
 
         for(int i = 0; i < input.size(); i ++) {
 
             Property ip = input.get(i);
+            Property op = result.get(i);
+
+            assertEquals(ip.getName(), op.getName());
+            assertEquals(ip.getValue(), op.getValue());
+        }
+    }
+
+    @Test
+    public void constructor_LineNumberAndPropertyList() throws Exception {
+
+        List<Property> input = new ArrayList<>();
+        input.add(new IntegerProperty("test1", 1));
+        input.add(new StringProperty("test2", "2"));
+
+        GenericEvent e = new GenericEvent(7L, input);
+
+        assertEquals(7L, e.getLineNumber().longValue());
+
+        List<Property> result = e.getProperties();
+
+        assertEquals(input.size() + 1, result.size());
+
+        for(int i = 1; i < input.size(); i ++) {
+
+            Property ip = input.get(i - 1);
             Property op = result.get(i);
 
             assertEquals(ip.getName(), op.getName());

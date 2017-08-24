@@ -50,21 +50,44 @@ public class GenericEvent implements Event {
 
     public GenericEvent() {
 
-        this.properties = new ArrayList<>();
+        this(null, null);
+    }
+
+    public GenericEvent(long lineNumber) {
+
+        this(lineNumber, null);
     }
 
     /**
      * @param properties the order matters, and it will be preserved as the event is processed downstream. The
      *                   implementation makes an internal shallow copy.
-
      */
     public GenericEvent(List<Property> properties) {
 
-        this();
+        this(null, properties);
+    }
 
-        //noinspection Convert2streamapi
-        for(Property p: properties) {
-            setProperty(p);
+    /**
+     * @param lineNumber may be null.
+     *
+     * @param properties the order matters, and it will be preserved as the event is processed downstream. The
+     *                   implementation makes an internal shallow copy. May be null, in which case will be ignored.
+     */
+    public GenericEvent(Long lineNumber, List<Property> properties) {
+
+        this.properties = new ArrayList<>();
+
+        if (lineNumber != null) {
+
+            setLineNumber(lineNumber);
+        }
+
+        if (properties != null) {
+
+            //noinspection Convert2streamapi
+            for (Property p : properties) {
+                setProperty(p);
+            }
         }
     }
 
