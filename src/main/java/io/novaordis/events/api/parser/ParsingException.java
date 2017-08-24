@@ -49,6 +49,11 @@ public class ParsingException extends LineNumberException {
         super(lineNumber, null, message, null);
     }
 
+    public ParsingException(Long lineNumber, Throwable cause) {
+
+        super(lineNumber, null, null, cause);
+    }
+
     public ParsingException(Long lineNumber, String message, Throwable cause) {
 
         super(lineNumber, null, message, cause);
