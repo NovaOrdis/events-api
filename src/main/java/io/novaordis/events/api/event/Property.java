@@ -22,12 +22,16 @@ import java.text.Format;
 import java.util.List;
 
 /**
- * A typed key/value pair. Optionally, it can have a measure unit, a format, etc.
+ * A name/value pair with additional attributes, such as type, measure unit, presentation format, etc., carried by an
+ * event. The value usually represents the snapshot in time of a certain runtime value, so that is why the terms
+ * "property" and "reading" are interchangeably used. An event cannot have two properties with the same name.
  *
- * Property instances encapsulate the values produced as the result of reading a metric, defined by a MetricDefinition.
+ * As a common use case, Properties are created based on a MetricDefinition.
  *
  * Property instances can be instantiate directly using the respective constructors, or they can be created with the
  * static factory PropertyFactory.createInstance(...).
+ *
+ * More: https://kb.novaordis.com/index.php/Events-api_Concepts#Property
  *
  * @see PropertyFactory
  *
