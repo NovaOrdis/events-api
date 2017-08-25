@@ -102,7 +102,7 @@ public class GenericEvent implements Event {
     @Override
     public List<Property> getProperties() {
 
-        if (properties.isEmpty()) {
+        if (properties == null || properties.isEmpty()) {
 
             return Collections.emptyList();
         }
