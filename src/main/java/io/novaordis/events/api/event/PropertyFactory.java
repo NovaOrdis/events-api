@@ -46,10 +46,12 @@ public class PropertyFactory {
      * conversion is attempted first, and if the conversion is successful, the property is created. Otherwise, an
      * IllegalArgumentException is thrown.
      *
-     * @param measureUnit null is acceptable
+     * @param type - may be null, in which case type heuristics apply.
      *
      * @param conversionFactor the double to multiply the given value to obtain the value to write into the property.
      *                         May be null, in which case it is ignored.
+     *
+     * @param measureUnit null is acceptable
      *
      * @exception IllegalArgumentException if the value and the type do not match, or a conversion from String to the
      * type in question fails.
