@@ -87,16 +87,56 @@ public class GenericTimedEventTest extends TimedEventTest {
 
         List<Property> result = gte.getProperties();
 
-        assertEquals(input.size(), result.size());
+        assertEquals(input.size() + 1, result.size());
+
+        TimestampProperty tp = (TimestampProperty)result.get(0);
+        assertEquals(7L, tp.getValue());
 
         for(int i = 0; i < input.size(); i ++) {
 
             Property ip = input.get(i);
-            Property op = result.get(i);
+            Property op = result.get(i + 1);
 
             assertEquals(ip.getName(), op.getName());
             assertEquals(ip.getValue(), op.getValue());
         }
+    }
+
+    // getProperties() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getProperties_NoOtherProperties() throws Exception {
+
+        GenericTimedEvent e = new GenericTimedEvent(7L);
+
+        List<Property> properties = e.getProperties();
+        assertEquals(1, properties.size());
+
+        TimestampProperty p = (TimestampProperty)properties.get(0);
+        assertEquals(7L, p.getValue());
+    }
+
+    @Test
+    public void getProperties_OtherPropertiesExist() throws Exception {
+
+        GenericTimedEvent e = new GenericTimedEvent(7L);
+
+        e.setStringProperty("something", "something else");
+        e.setIntegerProperty("something2", 1);
+
+        List<Property> properties = e.getProperties();
+        assertEquals(3, properties.size());
+
+        TimestampProperty p = (TimestampProperty)properties.get(0);
+        assertEquals(7L, p.getValue());
+
+        StringProperty p2 = (StringProperty)properties.get(1);
+        assertEquals("something", p2.getName());
+        assertEquals("something else", p2.getValue());
+
+        IntegerProperty p3 = (IntegerProperty)properties.get(2);
+        assertEquals("something2", p3.getName());
+        assertEquals(1, p3.getValue());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -19,6 +19,7 @@ package io.novaordis.events.api.event;
 import io.novaordis.utilities.time.Timestamp;
 import io.novaordis.utilities.time.TimestampImpl;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -131,6 +132,39 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
         }
 
         return super.getProperty(name);
+    }
+
+    /**
+     * We override this because the timestamp is also exposed as a property, so we need to generate one and insert
+     * it among the properties maintained by superclass.
+     *
+     * @return a shallow copy of the internal storage.
+     */
+    @Override
+    public List<Property> getProperties() {
+
+        List<Property> shallow = super.getProperties();
+
+        //
+        // TODO currently we do not account for the case where the timestamp is on a different position than 0
+        // in the list; we will need to return to this
+        //
+
+        Long time = getTime();
+
+        if (time == null) {
+
+            return shallow;
+
+        }
+
+
+        List<Property> result = new ArrayList<>(shallow.size() + 1);
+
+        result.add(new TimestampProperty(time));
+        result.addAll(shallow);
+
+        return result;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

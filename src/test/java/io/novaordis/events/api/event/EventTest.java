@@ -367,6 +367,36 @@ public abstract class EventTest {
         assertEquals("another Z value", p3.getString());
     }
 
+    @Test
+    public void setProperty_PropertyWithSameNameIsReplaced() throws Exception {
+
+        Event e = getEventToTest();
+
+        Property p = new StringProperty("something", "value 1");
+        e.setProperty(p);
+
+        assertEquals("value 1", e.getProperty("something").getValue());
+
+        Property p2 = new StringProperty("something", "value 2");
+        e.setProperty(p2);
+
+        assertEquals("value 2", e.getProperty("something").getValue());
+    }
+
+    @Test
+    public void setProperty_PropertyWithSameNameIsReplaced2() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setStringProperty("something", "value 1");
+
+        assertEquals("value 1", e.getProperty("something").getValue());
+
+        e.setStringProperty("something", "value 2");
+
+        assertEquals("value 2", e.getProperty("something").getValue());
+    }
+
     // line number -----------------------------------------------------------------------------------------------------
 
     @Test
