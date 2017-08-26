@@ -17,13 +17,17 @@
 package io.novaordis.events.api.event;
 
 import io.novaordis.utilities.time.Timestamp;
+import io.novaordis.utilities.time.TimestampImpl;
 import org.junit.Test;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -44,13 +48,97 @@ public class GenericTimedEventTest extends TimedEventTest {
     // constructor -----------------------------------------------------------------------------------------------------
 
     @Test
-    public void constructor_PropertyList() throws Exception {
+    public void constructor_PropertyList_MissingTimestamp() throws Exception {
 
         List<Property> input = new ArrayList<>();
         input.add(new IntegerProperty("test1", 1));
         input.add(new StringProperty("test2", "2"));
 
+        try {
+
+            new GenericTimedEvent(input);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("no timestamp property found"));
+        }
+    }
+
+    @Test
+    public void constructor_TimestampInPropertyList_NullDirectTimestampArgument() throws Exception {
+
+        List<Property> input = Collections.singletonList(new TimestampProperty(7L));
+
+        GenericTimedEvent gte = new GenericTimedEvent(null, input);
+
+        assertEquals(7L, gte.getTime().longValue());
+    }
+
+    @Test
+    public void constructor_TimestampInPropertyList_DifferentDirectTimestampArgument() throws Exception {
+
+        List<Property> input = Collections.singletonList(new TimestampProperty(8L));
+
+        try {
+            new GenericTimedEvent(new TimestampImpl(7L), input);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("conflicting timestamp values"));
+        }
+    }
+
+    @Test
+    public void constructor_TimestampInPropertyList_SameValueDirectTimestampArgument() throws Exception {
+
+        List<Property> input = Collections.singletonList(new TimestampProperty(7L));
+
+        GenericTimedEvent gte = new GenericTimedEvent(new TimestampImpl(7L), input);
+
+        assertEquals(7L, gte.getTime().longValue());
+    }
+
+    @Test
+    public void constructor_PropertyList() throws Exception {
+
+        List<Property> input = new ArrayList<>();
+        input.add(new TimestampProperty(7L));
+        input.add(new IntegerProperty("test1", 1));
+        input.add(new StringProperty("test2", "2"));
+
         GenericTimedEvent gte = new GenericTimedEvent(input);
+
+        assertEquals(7L, gte.getTime().longValue());
+
+        Timestamp ts = gte.getTimestamp();
+        assertEquals(7L, ts.getTime());
+
+        List<Property> result = gte.getProperties();
+
+        assertEquals(input.size(), result.size());
+
+        for(int i = 0; i < input.size(); i ++) {
+
+            Property ip = input.get(i);
+            Property op = result.get(i);
+
+            assertEquals(ip.getName(), op.getName());
+            assertEquals(ip.getValue(), op.getValue());
+        }
+    }
+
+    @Test
+    public void constructor_PropertyList_NullTimestamp() throws Exception {
+
+        List<Property> input = new ArrayList<>();
+        input.add(new IntegerProperty("test1", 1));
+        input.add(new StringProperty("test2", "2"));
+
+        GenericTimedEvent gte = new GenericTimedEvent(null, input);
 
         assertNull(gte.getTime());
         assertNull(gte.getTimestamp());
@@ -70,7 +158,7 @@ public class GenericTimedEventTest extends TimedEventTest {
     }
 
     @Test
-    public void constructor_PropertyList2() throws Exception {
+    public void constructor_PropertyList3() throws Exception {
 
         List<Property> input = new ArrayList<>();
         input.add(new IntegerProperty("test1", 1));
@@ -100,6 +188,28 @@ public class GenericTimedEventTest extends TimedEventTest {
             assertEquals(ip.getName(), op.getName());
             assertEquals(ip.getValue(), op.getValue());
         }
+    }
+
+    // setProperty() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void setProperty_TimestampProperty() throws Exception {
+
+        GenericTimedEvent e = getEventToTest();
+
+        assertNull(e.getTime());
+
+        Property old = e.setProperty(new TimestampProperty(7L));
+
+        assertNull(old);
+
+        assertEquals(7L, e.getTime().longValue());
+
+        Property old2 = e.setProperty(new TimestampProperty(8L));
+
+        assertEquals(7L, old2.getValue());
+
+        assertEquals(8L, e.getTime().longValue());
     }
 
     // getProperties() -------------------------------------------------------------------------------------------------

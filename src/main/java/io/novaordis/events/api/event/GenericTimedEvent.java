@@ -59,9 +59,17 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
         this.timestamp = timestamp;
     }
 
+    /**
+     * One of these properties MUST be a TimestampProperty, otherwise the constructor will throw an
+     * IllegalArgumentException.
+     *
+     * @param properties must contain at least one TimestampProperty.
+     *
+     * @exception IllegalArgumentException if the properties do not include a TimestampProperty.
+     */
     public GenericTimedEvent(List<Property> properties) {
 
-        this(null, properties);
+        this(null, insureTimestampPropertyExists(properties));
     }
 
     public GenericTimedEvent(long timestampUTC, List<Property> properties) {
@@ -73,11 +81,36 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
      * @param properties the implementation makes an internal shallow copy.
      *
      * @see Timestamp
+     *
+     * @exception IllegalArgumentException if the timestamp is set both with the direct argument and with a property
+     * and the values conflict
      */
     public GenericTimedEvent(Timestamp timestamp, List<Property> properties) {
 
         super(properties);
+
+        //
+        // protection against the situation when the timestamp is set with a property and as a direct argument
+        // and they have different values.
+        //
+
+        if (timestamp == null) {
+
+            //
+            // noop
+            //
+
+            return;
+        }
+
+        if (this.timestamp != null && this.timestamp.getTime() != timestamp.getTime()) {
+
+            throw new IllegalArgumentException(
+                    "conflicting timestamp values: " + timestamp + ", " + timestamp.getTime());
+        }
+
         this.timestamp = timestamp;
+
     }
 
     // TimedEvent implementation ---------------------------------------------------------------------------------------
@@ -106,6 +139,35 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     }
 
     // GenericEvent overrides ------------------------------------------------------------------------------------------
+
+    /**
+     * Override required to handle TimestampProperties. Everything else should be handled by superclass.
+     */
+    @Override
+    public Property setProperty(Property p) {
+
+        if (!(p instanceof TimestampProperty)) {
+
+            return super.setProperty(p);
+        }
+
+        //
+        // handling timestamp property
+        //
+
+        TimestampProperty tp = (TimestampProperty)p;
+
+        Timestamp previous = timestamp;
+
+        setTimestamp(new TimestampImpl((Long)tp.getValue()));
+
+        if (previous == null) {
+
+            return null;
+        }
+
+        return new TimestampProperty(previous.getTime());
+    }
 
     /**
      * We expose the timestamp as a dedicated property. However, if we are lacking a timestamp, we return null.
@@ -180,6 +242,23 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    /**
+     * @throws IllegalArgumentException if no TimestampProperty exists
+     */
+    private static List<Property> insureTimestampPropertyExists(List<Property> properties)
+            throws IllegalArgumentException {
+
+        for(Property p: properties) {
+
+            if (p instanceof TimestampProperty) {
+
+                return properties;
+            }
+        }
+
+        throw new IllegalArgumentException("no timestamp property found");
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

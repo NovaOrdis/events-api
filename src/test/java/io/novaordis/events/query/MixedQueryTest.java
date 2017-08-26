@@ -167,19 +167,21 @@ public class MixedQueryTest extends QueryTest {
 
         assertFalse(q.isKeywordMatchingCaseSensitive());
 
-        GenericTimedEvent e = new GenericTimedEvent(Collections.singletonList(new StringProperty("key", "blah")));
+        GenericTimedEvent e = new GenericTimedEvent(3L, Collections.singletonList(new StringProperty("key", "blah")));
         assertTrue(q.selects(e));
 
-        GenericTimedEvent e2 = new GenericTimedEvent(Collections.singletonList(new StringProperty("key", "Blah")));
+        GenericTimedEvent e2 = new GenericTimedEvent(4L, Collections.singletonList(new StringProperty("key", "Blah")));
         assertTrue(q.selects(e2));
 
-        GenericTimedEvent e3 = new GenericTimedEvent(Collections.singletonList(new StringProperty("key", "BlaH")));
+        GenericTimedEvent e3 = new GenericTimedEvent(5L, Collections.singletonList(new StringProperty("key", "BlaH")));
         assertTrue(q.selects(e3));
 
-        GenericTimedEvent e4 = new GenericTimedEvent(Collections.singletonList(new StringProperty("key", "BLAH")));
+        GenericTimedEvent e4 = new GenericTimedEvent(6L, Collections.singletonList(new StringProperty("key", "BLAH")));
         assertTrue(q.selects(e4));
 
-        GenericTimedEvent e5 = new GenericTimedEvent(Collections.singletonList(new StringProperty("key", "something")));
+        GenericTimedEvent e5 =
+                new GenericTimedEvent(7L, Collections.singletonList(new StringProperty("key", "something")));
+
         assertFalse(q.selects(e5));
     }
 
@@ -190,10 +192,10 @@ public class MixedQueryTest extends QueryTest {
 
         q.addLiteral("color:blue");
 
-        GenericTimedEvent e = new GenericTimedEvent(Collections.singletonList(new StringProperty("color", "blue")));
+        GenericTimedEvent e = new GenericTimedEvent(7L, Collections.singletonList(new StringProperty("color", "blue")));
         assertTrue(q.selects(e));
 
-        GenericTimedEvent e2 = new GenericTimedEvent(Collections.singletonList(new StringProperty("color", "red")));
+        GenericTimedEvent e2 = new GenericTimedEvent(8L, Collections.singletonList(new StringProperty("color", "red")));
         assertFalse(q.selects(e2));
     }
 

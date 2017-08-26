@@ -26,6 +26,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -86,6 +87,30 @@ public class GenericEventTest extends EventTest {
 
             assertEquals(ip.getName(), op.getName());
             assertEquals(ip.getValue(), op.getValue());
+        }
+    }
+
+    @Test
+    public void constructor_PropertyList_TimestampAmongThose() throws Exception {
+
+        List<Property> input = new ArrayList<>();
+        input.add(new IntegerProperty("test1", 1));
+        input.add(new TimestampProperty(7L));
+
+        //
+        // a timestamp property is not allowed among the property passed to a non-timed event constructor, to eliminate
+        // confusion
+        //
+
+        try {
+
+            new GenericEvent(input);
+            fail("should throw exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("timestamp property not allowed on a non-timed event"));
         }
     }
 
@@ -325,6 +350,23 @@ public class GenericEventTest extends EventTest {
 
         BooleanProperty p2 = ge.removeBooleanProperty("test-name");
         assertNull(p2);
+    }
+
+    @Test
+    public void setProperty_TimestampProperty() throws Exception {
+
+        GenericEvent ge = getEventToTest();
+
+        try {
+
+            ge.setProperty(new TimestampProperty(7L));
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("timestamp property not allowed on a non-timed event"));
+        }
     }
 
     // setListProperty() -----------------------------------------------------------------------------------------------

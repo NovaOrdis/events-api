@@ -63,7 +63,11 @@ public class GenericEvent implements Event {
 
     /**
      * @param properties the order matters, and it will be preserved as the event is processed downstream. The
-     *                   implementation makes an internal shallow copy.
+     *                   implementation makes an internal shallow copy. Note that TimestampProperties are not allowed
+     *                   among these properties, to eliminate confusion. If there's a need to specify a
+     *                   TimestampProperty, use a TimedEvent instead.
+     *
+     * @exception IllegalArgumentException if a TimestampProperty is found.
      */
     public GenericEvent(List<Property> properties) {
 
@@ -74,7 +78,11 @@ public class GenericEvent implements Event {
      * @param lineNumber may be null.
      *
      * @param properties the order matters, and it will be preserved as the event is processed downstream. The
-     *                   implementation makes an internal shallow copy. May be null, in which case will be ignored.
+     *                   implementation makes an internal shallow copy. May be null, in which case will be ignored. Note
+     *                   that TimestampProperties are not allowed among these properties, to eliminate confusion. If
+     *                   there's a need to specify a TimestampProperty, use a TimedEvent instead.
+     *
+     * @exception IllegalArgumentException if a TimestampProperty is found.
      */
     public GenericEvent(Long lineNumber, List<Property> properties) {
 
@@ -89,6 +97,7 @@ public class GenericEvent implements Event {
 
             //noinspection Convert2streamapi
             for (Property p : properties) {
+
                 setProperty(p);
             }
         }
@@ -349,12 +358,21 @@ public class GenericEvent implements Event {
         return null;
     }
 
+    /**
+     * @exception IllegalArgumentException if the property is a timestamp property. Timestamp properties are not
+     * allowed for non-timed events.
+     */
     @Override
     public Property setProperty(Property property) {
 
         if (property == null) {
 
             throw new IllegalArgumentException("null property");
+        }
+
+        if (property instanceof TimestampProperty) {
+
+            throw new IllegalArgumentException("timestamp property not allowed on a non-timed event");
         }
 
         String propertyName = property.getName();
