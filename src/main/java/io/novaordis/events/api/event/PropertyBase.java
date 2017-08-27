@@ -45,7 +45,7 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
      */
     protected PropertyBase(String name, Object value) {
 
-        this(name, value, null);
+        this(name, value, null, null);
     }
 
     /**
@@ -54,8 +54,28 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
      */
     protected PropertyBase(String name, Object value, MeasureUnit measureUnit) {
 
+        this(name, value, null, measureUnit);
+    }
+
+    /**
+     * @param name the property name
+     * @param format the format, may be null.
+     */
+    protected PropertyBase(String name, Object value, Format format) {
+
+        this(name, value, format, null);
+    }
+
+    /**
+     * @param name the property name
+     * @param format the format, may be null.
+     * @param measureUnit may be null.
+     */
+    protected PropertyBase(String name, Object value, Format format, MeasureUnit measureUnit) {
+
         this.name = name;
         this.value = value;
+        this.format = format;
         this.measureUnit = measureUnit;
     }
 

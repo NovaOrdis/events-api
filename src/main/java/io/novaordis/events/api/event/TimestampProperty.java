@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.event;
 
+import java.text.SimpleDateFormat;
+
 /**
  * A dedicated timestamp property that externalizes timestamp outside events.
  *
@@ -36,8 +38,19 @@ public class TimestampProperty extends PropertyBase {
 
     public TimestampProperty(long time) {
 
-        super(TimedEvent.TIMESTAMP_PROPERTY_NAME, time);
+        this(TimedEvent.TIMESTAMP_PROPERTY_NAME, time, null);
     }
+
+    public TimestampProperty(String name, long time) {
+
+        this(name, time, null);
+    }
+
+    public TimestampProperty(String name, long time, SimpleDateFormat format) {
+
+        super(name, time, format);
+    }
+
 
     // Property implementation -----------------------------------------------------------------------------------------
 

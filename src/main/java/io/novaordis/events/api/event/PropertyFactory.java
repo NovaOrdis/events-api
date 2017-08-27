@@ -18,6 +18,7 @@ package io.novaordis.events.api.event;
 
 import io.novaordis.events.api.measure.MeasureUnit;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Map;
 
@@ -274,6 +275,11 @@ public class PropertyFactory {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    private static final SimpleDateFormat[] TIME_FORMATS = {
+
+            new SimpleDateFormat("MM/dd/yy HH:mm:ss"),
+    };
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
@@ -312,7 +318,84 @@ public class PropertyFactory {
         else if (value instanceof String) {
 
             //
-            // TODO: when we attempt to convert to more specialized types?
+            // start with the most complex patterns and devolve as heuristics fail
+            //
+
+            String s = (String)value;
+
+            //
+            // time
+            //
+
+            for(SimpleDateFormat f: TIME_FORMATS) {
+
+                try {
+
+                    Date d = f.parse(s);
+
+                    //
+                    // heuristics succeeded
+                    //
+
+                    return new TimestampProperty(name, d.getTime(), f);
+                }
+                catch (Exception e) {
+
+                    //
+                    // conversion failed, heuristics did not work, go to next
+                    //
+                }
+            }
+
+            //
+            // float
+            //
+
+            if (s.contains(".")) {
+
+                try {
+
+                    float f = Float.parseFloat(s);
+
+                    //
+                    // heuristics succeeded
+                    //
+
+                    return new FloatProperty(name, f);
+
+                }
+                catch(Exception e) {
+
+                    //
+                    // conversion failed, heuristics did not work, go to next
+                    //
+                }
+            }
+
+            //
+            // integer
+            //
+
+            try {
+
+                int i = Integer.parseInt(s);
+
+                //
+                // heuristics succeeded
+                //
+
+                return new IntegerProperty(name, i);
+
+            }
+            catch(Exception e) {
+
+                //
+                // conversion failed, heuristics did not work, go to next
+                //
+            }
+
+            //
+            // catch all
             //
 
             return new StringProperty(name, (String)value);

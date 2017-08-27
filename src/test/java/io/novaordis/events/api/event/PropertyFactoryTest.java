@@ -21,6 +21,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
@@ -411,6 +412,22 @@ public class PropertyFactoryTest {
     }
 
     @Test
+    public void createTypeHeuristicsInstance_IntegerFromString() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", "7", null, null);
+
+        assertNotNull(p);
+
+        IntegerProperty ip = (IntegerProperty)p;
+
+        assertEquals("test", ip.getName());
+        assertEquals(7, ip.getValue());
+        assertEquals(7, ip.getInteger().intValue());
+        assertEquals(Integer.class, ip.getType());
+        assertNull(ip.getMeasureUnit());
+    }
+
+    @Test
     public void createTypeHeuristicsInstance_Long() throws Exception {
 
         Property p = PropertyFactory.createTypeHeuristicsInstance("test", 7L, null, null);
@@ -458,6 +475,21 @@ public class PropertyFactoryTest {
     }
 
     @Test
+    public void createTypeHeuristicsInstance_FloatFromString() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("test", "7.0", null, null);
+
+        assertNotNull(p);
+
+        FloatProperty p2 = (FloatProperty)p;
+
+        assertEquals("test", p2.getName());
+        assertEquals(7.0f, p2.getFloat().floatValue(), 0.000001);
+        assertEquals(Float.class, p2.getType());
+        assertNull(p2.getMeasureUnit());
+    }
+
+    @Test
     public void createTypeHeuristicsInstance_Double() throws Exception {
 
         Property p = PropertyFactory.createTypeHeuristicsInstance("test", 1.0d, null, null);
@@ -469,6 +501,29 @@ public class PropertyFactoryTest {
         assertEquals("test", p2.getName());
         assertEquals(1.0d, p2.getDouble().floatValue(), 0.000001);
         assertEquals(Double.class, p2.getType());
+        assertNull(p2.getMeasureUnit());
+    }
+
+    @Test
+    public void createTypeHeuristicsInstance_Timestamp_Pattern1() throws Exception {
+
+        Property p = PropertyFactory.createTypeHeuristicsInstance("something", "12/31/16 23:00:01", null, null);
+
+        assertNotNull(p);
+
+        TimestampProperty p2 = (TimestampProperty)p;
+
+        assertEquals("something", p2.getName());
+
+        String expectedFormat = "MM/dd/yy HH:mm:ss";
+
+        SimpleDateFormat f = (SimpleDateFormat)p2.getFormat();
+        assertEquals(expectedFormat, f.toPattern());
+
+        assertEquals((new SimpleDateFormat(expectedFormat)).parse("12/31/16 23:00:01").getTime(), p2.getValue());
+
+        assertEquals(Long.class, p2.getType());
+
         assertNull(p2.getMeasureUnit());
     }
 
