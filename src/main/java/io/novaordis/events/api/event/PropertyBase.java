@@ -73,7 +73,8 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
      */
     protected PropertyBase(String name, Object value, Format format, MeasureUnit measureUnit) {
 
-        this.name = name;
+        setName(name);
+
         this.value = value;
         this.format = format;
         this.measureUnit = measureUnit;
@@ -167,6 +168,7 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
     public String toString() {
 
         if (value == null) {
+
             return name;
         }
 
@@ -176,6 +178,14 @@ public abstract class PropertyBase implements Property, Comparable<Property> {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Some subclasses may want to change the name of the property after creation. TimestampProperty is an example.
+     */
+    protected void setName(String s) {
+
+        this.name = s;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

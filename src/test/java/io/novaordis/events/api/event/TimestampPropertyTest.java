@@ -55,6 +55,19 @@ public class TimestampPropertyTest extends PropertyTest {
         assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, s);
     }
 
+    @Test
+    @Override
+    public void setName() throws Exception {
+
+        PropertyBase p = getPropertyToTest("some name");
+
+        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, p.getName());
+
+        p.setName("another name");
+
+        assertEquals("another name", p.getName());
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

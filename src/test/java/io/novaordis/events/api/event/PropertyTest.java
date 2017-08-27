@@ -106,6 +106,20 @@ public abstract class PropertyTest {
         assertTrue(s.contains("hj46hHT3"));
     }
 
+    // setName() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void setName() throws Exception {
+
+        PropertyBase p = (PropertyBase)getPropertyToTest("some name");
+
+        assertEquals("some name", p.getName());
+
+        p.setName("another name");
+
+        assertEquals("another name", p.getName());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
