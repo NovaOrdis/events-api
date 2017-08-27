@@ -51,7 +51,6 @@ public class TimestampProperty extends PropertyBase {
         super(name, time, format);
     }
 
-
     // Property implementation -----------------------------------------------------------------------------------------
 
     @Override
@@ -72,6 +71,17 @@ public class TimestampProperty extends PropertyBase {
 
             throw new IllegalArgumentException(e);
         }
+    }
+
+    // PropertyBase overrides ------------------------------------------------------------------------------------------
+
+    /**
+     * Exposed setName() publicly, because we may need to "normalize" the property name after creation.
+     */
+    @Override
+    public void setName(String name) {
+
+        super.setName(name);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
