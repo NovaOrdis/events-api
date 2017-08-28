@@ -107,7 +107,7 @@ public interface Event {
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 
-    // String property support -----------------------------------------------------------------------------------------
+    // StringProperty Accessors/Mutators -------------------------------------------------------------------------------
 
     /**
      * @return the current StringProperty that is being replaced by StringProperty passed as argument, if it exists, or
@@ -132,7 +132,7 @@ public interface Event {
      */
     StringProperty removeStringProperty(String stringPropertyName);
 
-    // Event property support ------------------------------------------------------------------------------------------
+    // EventProperty Accessors/Mutators --------------------------------------------------------------------------------
 
     /**
      * @return the current EventProperty that is being replaced by EventProperty passed as argument, if it exists, or
@@ -157,7 +157,13 @@ public interface Event {
      */
     EventProperty removeEventProperty(String eventPropertyName);
 
-    // Long property support -------------------------------------------------------------------------------------------
+    // LongProperty Accessors/Mutators ---------------------------------------------------------------------------------
+
+    /**
+     * @return the current LongProperty that is being replaced by LongProperty passed as argument, if it exists, or
+     * null otherwise.
+     */
+    LongProperty setLongProperty(String name, Long value);
 
     /**
      * Query the event and return the Long property with the given name.
@@ -170,6 +176,15 @@ public interface Event {
     LongProperty getLongProperty(String longPropertyName);
 
     /**
+     * Remove the LongProperty with the given name, if it exists.
+     *
+     * @return the LongProperty that was removed, or null if no such property exists.
+     */
+    LongProperty removeLongProperty(String longPropertyName);
+
+    // IntegerProperty Accessors/Mutators ------------------------------------------------------------------------------
+
+    /**
      * Query the event and return the Integer property with the given name.
      *
      * @return the corresponding IntegerProperty or null if there is no such IntegerProperty. Note that the method will
@@ -178,6 +193,46 @@ public interface Event {
      * @see Event#getProperty(String)
      */
     IntegerProperty getIntegerProperty(String integerPropertyName);
+
+    /**
+     * @return the current IntegerProperty that is being replaced by IntegerProperty passed as argument, if it exists,
+     * or null otherwise.
+     */
+    IntegerProperty setIntegerProperty(String name, Integer value);
+
+    /**
+     * Remove the IntegerProperty with the given name, if it exists.
+     *
+     * @return the IntegerProperty that was removed, or null if no such property exists.
+     */
+    IntegerProperty removeIntegerProperty(String name);
+
+    // FloatProperty Accessors/Mutators --------------------------------------------------------------------------------
+
+    /**
+     * Query the event and return the Float property with the given name.
+     *
+     * @return the corresponding FloatProperty or null if there is no such FloatProperty. Note that the method will
+     * return null if a property with the given name exists, but it is not a FloatProperty.
+     *
+     * @see Event#getProperty(String)
+     */
+    FloatProperty getFloatProperty(String floatPropertyName);
+
+    /**
+     * @return the current FloatProperty that is being replaced by FloatProperty passed as argument, if it exists,
+     * or null otherwise.
+     */
+    FloatProperty setFloatProperty(String name, Float value);
+
+    /**
+     * Remove the FloatProperty with the given name, if it exists.
+     *
+     * @return the FloatProperty that was removed, or null if no such property exists.
+     */
+    FloatProperty removeFloatProperty(String name);
+
+    // BooleanProperty Accessors/Mutators ------------------------------------------------------------------------------
 
     /**
      * Query the event and return the Boolean property with the given name.

@@ -230,7 +230,7 @@ public class GenericEvent implements Event {
 
     // Convenience typed accessors/mutators ----------------------------------------------------------------------------
 
-    // String accessors/mutators ---------------------------------------------------------------------------------------
+    // StringProperty Accessors/Mutators -------------------------------------------------------------------------------
 
     @Override
     public StringProperty setStringProperty(String name, String value) {
@@ -263,7 +263,7 @@ public class GenericEvent implements Event {
         return (StringProperty)removeProperty(name, String.class);
     }
 
-    // Event accessors/mutators ----------------------------------------------------------------------------------------
+    // EventProperty Accessors/Mutators --------------------------------------------------------------------------------
 
     @Override
     public EventProperty setEventProperty(String name, Event value) {
@@ -304,6 +304,7 @@ public class GenericEvent implements Event {
         Property p = getProperty(name);
 
         if (p != null && p instanceof LongProperty) {
+
             return (LongProperty)p;
         }
 
@@ -311,16 +312,93 @@ public class GenericEvent implements Event {
     }
 
     @Override
+    public LongProperty setLongProperty(String name, Long value) {
+
+        if (value == null) {
+
+            return removeLongProperty(name);
+        }
+        else {
+
+            return (LongProperty)setProperty(new LongProperty(name, value));
+        }
+    }
+
+    @Override
+    public LongProperty removeLongProperty(String name) {
+
+        return (LongProperty)removeProperty(name, Long.class);
+    }
+
+    // IntegerProperty Accessors/Mutators ------------------------------------------------------------------------------
+
+    @Override
     public IntegerProperty getIntegerProperty(String name) {
 
         Property p = getProperty(name);
 
         if (p != null && p instanceof IntegerProperty) {
+
             return (IntegerProperty)p;
         }
 
         return null;
     }
+
+    @Override
+    public IntegerProperty setIntegerProperty(String name, Integer value) {
+
+        if (value == null) {
+
+            return removeIntegerProperty(name);
+        }
+        else {
+
+            return (IntegerProperty)setProperty(new IntegerProperty(name, value));
+        }
+    }
+
+    @Override
+    public IntegerProperty removeIntegerProperty(String name) {
+
+        return (IntegerProperty)removeProperty(name, Integer.class);
+    }
+
+    // FloatProperty Accessors/Mutators --------------------------------------------------------------------------------
+
+    @Override
+    public FloatProperty getFloatProperty(String name) {
+
+        Property p = getProperty(name);
+
+        if (p != null && p instanceof FloatProperty) {
+
+            return (FloatProperty)p;
+        }
+
+        return null;
+    }
+
+    @Override
+    public FloatProperty setFloatProperty(String name, Float value) {
+
+        if (value == null) {
+
+            return removeFloatProperty(name);
+        }
+        else {
+
+            return (FloatProperty)setProperty(new FloatProperty(name, value));
+        }
+    }
+
+    @Override
+    public FloatProperty removeFloatProperty(String name) {
+
+        return (FloatProperty)removeProperty(name, Float.class);
+    }
+
+    // BooleanProperty Accessors/Mutators ------------------------------------------------------------------------------
 
     @Override
     public BooleanProperty getBooleanProperty(String name) {
@@ -497,34 +575,16 @@ public class GenericEvent implements Event {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void setLongProperty(String name, long value) {
-
-        setLongProperty(name, value, null);
-    }
+    // Convenience accessors/mutators ----------------------------------------------------------------------------------
 
     public void setLongProperty(String name, long value, MeasureUnit mu) {
 
         setProperty(new LongProperty(name, value, mu));
     }
 
-    public LongProperty removeLongProperty(String name) {
-
-        return (LongProperty)removeProperty(name, Long.class);
-    }
-
-    public void setIntegerProperty(String name, int value) {
-
-        setIntegerProperty(name, value, null);
-    }
-
     public void setIntegerProperty(String name, int value, MeasureUnit mu) {
 
         setProperty(new IntegerProperty(name, value, mu));
-    }
-
-    public IntegerProperty removeIntegerProperty(String name) {
-
-        return (IntegerProperty)removeProperty(name, Integer.class);
     }
 
     public BooleanProperty setBooleanProperty(String name, boolean value) {

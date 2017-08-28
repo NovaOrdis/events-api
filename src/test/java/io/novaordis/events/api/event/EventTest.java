@@ -217,6 +217,63 @@ public abstract class EventTest {
     }
 
     @Test
+    public void getFloatProperty_NoSuchProperty() throws Exception {
+
+        Event event = getEventToTest();
+        assertNull(event.getFloatProperty("no-such-float-property"));
+    }
+
+    @Test
+    public void getFloatProperty_PropertyExistsButNotAFloat() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+        assertNull(event.setProperty(sp));
+
+        assertNull(event.getFloatProperty("test-property"));
+        assertEquals(sp, event.getProperty("test-property"));
+    }
+
+    @Test
+    public void getFloatProperty() throws Exception {
+
+        Event event = getEventToTest();
+
+        FloatProperty p = new FloatProperty("test-property", 1.1f);
+
+        assertNull(event.setProperty(p));
+
+        FloatProperty p2 = event.getFloatProperty("test-property");
+
+        assertEquals(p, p2);
+        assertEquals(p, event.getProperty("test-property"));
+
+        assertEquals(p2.getFloat(), 1.1f, 0.00001);
+
+        FloatProperty p3 = event.setFloatProperty("test-property", 3.3f);
+
+        assertEquals(1.1f, p3.getFloat(), 0.00001);
+
+        FloatProperty p4 = event.getFloatProperty("test-property");
+
+        assertEquals(p4.getFloat(), 3.3f, 0.00001);
+   }
+
+    @Test
+    public void removeFloatProperty() throws Exception {
+
+        Event event = getEventToTest();
+
+        assertNull(event.setFloatProperty("test-property", 1.1f));
+
+        FloatProperty p = event.removeFloatProperty("test-property");
+        assertEquals(1.1f, p.getFloat(), 0.0001);
+
+        assertNull(event.getFloatProperty("test-property"));
+    }
+
+    @Test
     public void getMapProperty_NoSuchProperty() throws Exception {
 
         Event event = getEventToTest();
