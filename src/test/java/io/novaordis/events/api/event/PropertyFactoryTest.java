@@ -297,6 +297,17 @@ public class PropertyFactoryTest {
     }
 
     @Test
+    public void createInstance_Date_Null() throws Exception {
+
+        DateProperty p = (DateProperty)PropertyFactory.createInstance("test", Date.class, null, null);
+
+        assertEquals("test", p.getName());
+        assertEquals(Date.class, p.getType());
+        assertNull(p.getDate());
+    }
+
+
+    @Test
     public void createInstance_Map() throws Exception {
 
         Map<String, String> map = new HashMap<>();

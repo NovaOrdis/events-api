@@ -254,7 +254,7 @@ public class PropertyFactory {
                 throw new RuntimeException("NOT YET IMPLEMENTED: conversion factor");
             }
 
-            result = new DateProperty(name, new Date(l));
+            result = new DateProperty(name, l == null ? null : new Date(l));
         }
         else if(Map.class.equals(type)) {
 
