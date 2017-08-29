@@ -53,12 +53,22 @@ public abstract class EventTest {
 
         Event event = getEventToTest();
 
+        //
+        // the event may come pre-loaded with properties
+        //
+
+        int offset = event.getProperties().size();
+
         Property old = event.setProperty(new StringProperty("test", "test-value"));
         assertNull(old);
 
         StringProperty p = (StringProperty)event.getProperty("test");
         assertEquals("test", p.getName());
         assertEquals("test-value", p.getString());
+
+        StringProperty pPrime = (StringProperty)event.getProperty(offset);
+        assertEquals("test", pPrime.getName());
+        assertEquals("test-value", pPrime.getString());
 
         old = event.setProperty(new StringProperty("test", "test-value-2"));
         assertNotNull(old);
@@ -68,6 +78,10 @@ public abstract class EventTest {
         StringProperty p2 = (StringProperty)event.getProperty("test");
         assertEquals("test", p2.getName());
         assertEquals("test-value-2", p2.getString());
+
+        StringProperty p2Prime = (StringProperty)event.getProperty(offset);
+        assertEquals("test", p2Prime.getName());
+        assertEquals("test-value-2", p2Prime.getString());
     }
 
     @Test
@@ -76,6 +90,7 @@ public abstract class EventTest {
         Event event = getEventToTest();
 
         try {
+
             event.setProperty(null);
             fail("should throw exception");
         }
@@ -258,7 +273,7 @@ public abstract class EventTest {
         FloatProperty p4 = event.getFloatProperty("test-property");
 
         assertEquals(p4.getFloat(), 3.3f, 0.00001);
-   }
+    }
 
     @Test
     public void removeFloatProperty() throws Exception {
@@ -319,6 +334,111 @@ public abstract class EventTest {
             String msg = e.getMessage();
             assertEquals("null property name", msg);
         }
+    }
+
+    // getProperty() ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public  void getProperty_NullName() throws Exception {
+
+        Event event = getEventToTest();
+
+        try {
+
+            event.getProperty(null);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertEquals("null property name", msg);
+        }
+    }
+
+    @Test
+    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics_NoSuchName() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+
+        event.setProperty(sp);
+
+        assertNull(event.getProperty("I-am-sure-there-is-no-property-with-this-name"));
+    }
+
+    @Test
+    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+
+        event.setProperty(sp);
+
+        Property p = event.getProperty("test-property");
+
+        assertNotNull(p);
+
+        StringProperty sp2 = (StringProperty)p;
+
+        assertEquals("test-property", sp2.getName());
+        assertEquals("test-value", sp2.getValue());
+    }
+
+    @Test
+    public void getProperty_Index_NegativeIndex() throws Exception {
+
+        Event event = getEventToTest();
+
+        try {
+
+            event.getProperty(-5);
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid property index"));
+            assertTrue(msg.contains("-5"));
+        }
+    }
+
+    @Test
+    public void getProperty_Index_NoSuchProperty() throws Exception {
+
+        Event event = getEventToTest();
+
+        assertNull(event.getProperty(120000));
+    }
+
+    @Test
+    public void getProperty_Index() throws Exception {
+
+        Event event = getEventToTest();
+
+        //
+        // the event may come pre-loaded with properties
+        //
+
+        int offset = event.getProperties().size();
+
+        event.setStringProperty("A", "a value");
+        event.setIntegerProperty("B", 2);
+        event.setLongProperty("C", 3L);
+
+        StringProperty p = (StringProperty)event.getProperty(offset);
+        assertEquals("A", p.getName());
+        assertEquals("a value", p.getValue());
+
+        IntegerProperty p2 = (IntegerProperty)event.getProperty(offset + 1);
+        assertEquals("B", p2.getName());
+        assertEquals(2, p2.getValue());
+
+        LongProperty p3 = (LongProperty)event.getProperty(offset + 2);
+        assertEquals("C", p3.getName());
+        assertEquals(3L, p3.getValue());
     }
 
     // setProperty() ---------------------------------------------------------------------------------------------------
@@ -488,56 +608,6 @@ public abstract class EventTest {
 
         e.setLineNumber(null);
         assertNull(e.getLineNumber());
-    }
-
-    // getProperty() ---------------------------------------------------------------------------------------------------
-
-    @Test
-    public  void getProperty_NullName() throws Exception {
-
-        Event event = getEventToTest();
-
-        try {
-
-            event.getProperty(null);
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            assertEquals("null property name", msg);
-        }
-    }
-
-    @Test
-    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics_NoSuchName() throws Exception {
-
-        Event event = getEventToTest();
-
-        StringProperty sp = new StringProperty("test-property", "test-value");
-
-        event.setProperty(sp);
-
-        assertNull(event.getProperty("I-am-sure-there-is-no-property-with-this-name"));
-    }
-
-    @Test
-    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics() throws Exception {
-
-        Event event = getEventToTest();
-
-        StringProperty sp = new StringProperty("test-property", "test-value");
-
-        event.setProperty(sp);
-
-        Property p = event.getProperty("test-property");
-
-        assertNotNull(p);
-
-        StringProperty sp2 = (StringProperty)p;
-
-        assertEquals("test-property", sp2.getName());
-        assertEquals("test-value", sp2.getValue());
     }
 
     // getProperties() -------------------------------------------------------------------------------------------------

@@ -180,6 +180,22 @@ public class GenericEvent implements Event {
     }
 
     @Override
+    public Property getProperty(int i) {
+
+        if (i < 0) {
+
+            throw new IllegalArgumentException("invalid property index: " + i);
+        }
+
+        if (i >= properties.size()) {
+
+            return null;
+        }
+
+        return properties.get(i);
+    }
+
+    @Override
     public void clearProperties() {
 
         properties.clear();

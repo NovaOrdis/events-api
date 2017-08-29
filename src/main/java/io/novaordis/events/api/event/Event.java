@@ -71,6 +71,16 @@ public interface Event {
     Property getProperty(String name);
 
     /**
+     * Query the event and return the property with the given index, if it is carried by the event. Properties indexes
+     * are 0-based.
+     *
+     * @return null if there is no such property.
+     *
+     * @exception IllegalArgumentException on negative indexes.
+     */
+    Property getProperty(int i);
+
+    /**
      * https://kb.novaordis.com/index.php/Events-api_Concepts#Property_Setting_Order
      *
      * @return the List of properties set on this event, in the order in which they were set. The implementations must
