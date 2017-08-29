@@ -49,6 +49,9 @@ public class PropertyFactory {
      *
      * @param type - may be null, in which case type heuristics apply.
      *
+     * @param value - may be null, in which case "missing value" typed properties or UndefinedTypeProperty will be
+     *              built.
+     *
      * @param conversionFactor the double to multiply the given value to obtain the value to write into the property.
      *                         May be null, in which case it is ignored.
      *
@@ -83,7 +86,7 @@ public class PropertyFactory {
 
             return new UndefinedTypeProperty(name);
         }
-        else if(String.class.equals(type)) {
+        else if (String.class.equals(type)) {
 
             if (value != null && !(value instanceof String)) {
 
@@ -93,7 +96,7 @@ public class PropertyFactory {
 
             result = new StringProperty(name, (String)value);
         }
-        else if(Integer.class.equals(type)) {
+        else if (Integer.class.equals(type)) {
 
             Integer i;
 
@@ -125,7 +128,7 @@ public class PropertyFactory {
 
             result = new IntegerProperty(name, i);
         }
-        else if(Long.class.equals(type)) {
+        else if (Long.class.equals(type)) {
 
             Long l;
 

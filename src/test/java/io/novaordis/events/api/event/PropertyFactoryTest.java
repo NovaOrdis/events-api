@@ -601,6 +601,32 @@ public class PropertyFactoryTest {
         }
     }
 
+    @Test
+    public void createInstance_NullValue_MissingValueSemantics_NullType() throws Exception {
+
+        UndefinedTypeProperty p = (UndefinedTypeProperty)PropertyFactory.createInstance("test", null, null, null);
+        assertEquals("test", p.getName());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void createInstance_NullValue_MissingValueSemantics_NonNullType_String() throws Exception {
+
+        StringProperty p = (StringProperty)PropertyFactory.createInstance("test", String.class, null, null);
+
+        assertEquals("test", p.getName());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void createInstance_NullValue_MissingValueSemantics_NonNullType_Integer() throws Exception {
+
+        IntegerProperty p = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, null, null);
+
+        assertEquals("test", p.getName());
+        assertNull(p.getValue());
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
