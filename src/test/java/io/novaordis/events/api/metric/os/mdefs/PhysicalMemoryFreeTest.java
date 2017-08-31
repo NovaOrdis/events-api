@@ -22,7 +22,7 @@ import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricSourceRepositoryImpl;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 

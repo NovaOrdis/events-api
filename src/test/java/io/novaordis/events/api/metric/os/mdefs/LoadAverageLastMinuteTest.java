@@ -17,10 +17,9 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.events.api.metric.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;

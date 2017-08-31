@@ -20,7 +20,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.events.api.metric.os.OSType;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
 import org.junit.Test;
 

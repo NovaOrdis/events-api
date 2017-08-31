@@ -24,6 +24,7 @@ import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.NativeExecutionResult;
 import io.novaordis.utilities.os.NativeExecutor;
+import io.novaordis.utilities.os.OSType;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

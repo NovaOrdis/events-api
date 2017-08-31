@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertNull;

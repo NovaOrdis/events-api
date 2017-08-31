@@ -25,6 +25,7 @@ import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.parser.ParsingException;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.os.OSType;
 
 import java.util.regex.Pattern;
 
