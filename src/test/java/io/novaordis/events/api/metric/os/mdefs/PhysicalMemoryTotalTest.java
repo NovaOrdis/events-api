@@ -17,11 +17,11 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +50,35 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals("PhysicalMemoryTotal", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Long.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal md = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals("Total Physical Memory", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("physical"));
         assertTrue(m.getDescription().toLowerCase().contains("memory"));
         assertTrue(m.getDescription().toLowerCase().contains("total"));
@@ -89,7 +89,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -119,7 +119,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -149,7 +149,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
         String expected = "typeperf -sc 1 \"\\Memory\\*\"";
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new LocalOSAddress());
+        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getWindowsCommand());
 
         try {
@@ -349,7 +349,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
     @Override
     protected PhysicalMemoryTotal getMetricDefinitionToTest() throws Exception {
 
-        return new PhysicalMemoryTotal(new LocalOSAddress());
+        return new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

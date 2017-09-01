@@ -19,6 +19,7 @@ package io.novaordis.events.api.metric.jboss;
 import io.novaordis.events.api.event.IntegerProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.MockMetricDefinition;
@@ -120,14 +121,16 @@ public class JBossControllerTest extends MetricSourceTest {
 
         mc.setAttributeValue("/test-path", "test-attribute-1", 7);
 
+        PropertyFactory f = new PropertyFactory();
+
         JBossDmrMetricDefinitionImpl mmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         //
         // this metric is not a JBoss DMR metric
         //
 
-        MockMetricDefinition mmd2 = new MockMetricDefinition(jbossSource.getAddress());
+        MockMetricDefinition mmd2 = new MockMetricDefinition(f, jbossSource.getAddress());
 
         List<MetricDefinition> definitions = Arrays.asList(mmd, mmd2);
 
@@ -165,15 +168,17 @@ public class JBossControllerTest extends MetricSourceTest {
 
         mc.setAttributeValue("/test-path", "test-attribute-1", 10);
 
+        PropertyFactory f = new PropertyFactory();
+
         //
         // test-attribute-2 does not exist on the controller
         //
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-1"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-1"));
 
         JBossDmrMetricDefinitionImpl jbmd2 = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-2"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute-2"));
 
         List<MetricDefinition> definitions = Arrays.asList(jbmd, jbmd2);
 
@@ -214,12 +219,14 @@ public class JBossControllerTest extends MetricSourceTest {
 
         mc.setAttributeValue("/test-path", "test-attribute", null);
 
+        PropertyFactory f = new PropertyFactory();
+
         //
         // test-attribute-2 does not exist on the controller
         //
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         List<MetricDefinition> definitions = Collections.singletonList(jbmd);
 
@@ -250,9 +257,10 @@ public class JBossControllerTest extends MetricSourceTest {
 
         assertNull(jbossSource.getControllerClient());
 
+        PropertyFactory f = new PropertyFactory();
 
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         //
         // this should trigger initialization, even if no properties are read
@@ -289,8 +297,10 @@ public class JBossControllerTest extends MetricSourceTest {
         // test-attribute-2 does not exist on the controller
         //
 
+        PropertyFactory f = new PropertyFactory();
+
         JBossDmrMetricDefinitionImpl jbmd = new JBossDmrMetricDefinitionImpl(
-                jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, jbossSource.getAddress(), new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         List<MetricDefinition> definitions = Collections.singletonList(jbmd);
 
@@ -520,7 +530,10 @@ public class JBossControllerTest extends MetricSourceTest {
     protected JBossDmrMetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress)
             throws Exception {
 
-        return new MockJBossDmrMetricDefinition(metricSourceAddress, new DmrPath("test=test"), new DmrAttribute("test"));
+        PropertyFactory f = new PropertyFactory();
+
+        return new MockJBossDmrMetricDefinition(
+                f, metricSourceAddress, new DmrPath("test=test"), new DmrAttribute("test"));
     }
 
     @Override

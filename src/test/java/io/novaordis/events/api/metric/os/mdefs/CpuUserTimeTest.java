@@ -17,11 +17,11 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -49,35 +49,35 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuUserTime md = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime md = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CpuUserTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuUserTime md = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime md = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuUserTime md = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime md = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuUserTime m = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime m = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CPU User Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuUserTime m = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime m = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("non-kernel"));
@@ -88,7 +88,7 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuUserTime m = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime m = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -118,7 +118,7 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        CpuUserTime m = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime m = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -146,7 +146,7 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuUserTime m = new CpuUserTime(new LocalOSAddress());
+        CpuUserTime m = new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -275,7 +275,7 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuUserTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuUserTime(new LocalOSAddress());
+        return new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.jmx;
 
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceException;
 import io.novaordis.events.api.metric.MetricSourceTest;
@@ -246,8 +247,10 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://example:1000");
 
+        PropertyFactory f = new PropertyFactory();
+
         JmxMetricDefinition md =
-                new JmxMetricDefinitionImpl(b.getAddress(), "test.domain", "service=Mock", "TestAttribute");
+                new JmxMetricDefinitionImpl(f, b.getAddress(), "test.domain", "service=Mock", "TestAttribute");
 
         List<MetricDefinition> mds = Collections.singletonList(md);
 
@@ -281,8 +284,10 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://test:1000");
 
-        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "DoesNotMatter");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "Attr");
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=A", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "Attr");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -321,9 +326,11 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://test:1000");
 
+        PropertyFactory f = new PropertyFactory();
+
         JmxMetricDefinition md = new JmxMetricDefinitionImpl(
-                b.getAddress(), "test", "service=A", "IAmSureThereIsNoSuchAttribute");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+                f, b.getAddress(), "test", "service=A", "IAmSureThereIsNoSuchAttribute");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "AttrB");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -362,9 +369,11 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://test:1000");
 
+        PropertyFactory f = new PropertyFactory();
+
         JmxMetricDefinition md = new JmxMetricDefinitionImpl(
-                b.getAddress(), "test", "service=IAmSureThereIsNoSuchService", "DoesNotMatter");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+                f, b.getAddress(), "test", "service=IAmSureThereIsNoSuchService", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "AttrB");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -405,8 +414,10 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://test:1000");
 
-        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "DoesNotMatter");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "Attr");
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=A", "DoesNotMatter");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "Attr");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -445,8 +456,10 @@ public class JmxBusTest extends MetricSourceTest {
 
         JmxBus b = getMetricSourceToTest("jmx://test:1000");
 
-        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "AttrA");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=A", "AttrA");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "AttrB");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -486,8 +499,10 @@ public class JmxBusTest extends MetricSourceTest {
         JmxBus b = new JmxBus("jmx://test:1000");
         b.setJmxClientFactory(mf);
 
-        JmxMetricDefinition md = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=A", "AttrA");
-        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(b.getAddress(), "test", "service=B", "AttrB");
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinition md = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=A", "AttrA");
+        JmxMetricDefinition md2 = new JmxMetricDefinitionImpl(f, b.getAddress(), "test", "service=B", "AttrB");
 
         List<MetricDefinition> mds = Arrays.asList(md, md2);
 
@@ -526,7 +541,10 @@ public class JmxBusTest extends MetricSourceTest {
             fail("we expect a JmxAddress but we got " + address);
         }
 
-        return new MockJmxMetricDefinition((JmxAddress)address, "test.domain", "service=MockService", "testAttribute");
+        PropertyFactory f = new PropertyFactory();
+
+        return new MockJmxMetricDefinition(
+                f, (JmxAddress)address, "test.domain", "service=MockService", "testAttribute");
     }
 
     @Override

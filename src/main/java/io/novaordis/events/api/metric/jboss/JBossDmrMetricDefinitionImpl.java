@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
@@ -49,10 +50,11 @@ public class JBossDmrMetricDefinitionImpl extends MetricDefinitionBase implement
      *
      * @throws IllegalArgumentException
      */
-    public JBossDmrMetricDefinitionImpl(Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
+    public JBossDmrMetricDefinitionImpl(
+            PropertyFactory propertyFactory, Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
             throws MetricDefinitionException {
 
-        super(metricSourceAddress);
+        super(propertyFactory, metricSourceAddress);
 
         this.path = path;
         this.attribute = attribute;

@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.jboss.JBossDmrMetricDefinitionImpl;
 import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionImpl;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
@@ -50,7 +51,9 @@ public class MetricDefinitionParserTest {
     @Test
     public void parse_LocalOSMetricDefinition_NullRepository() throws Exception {
 
-        MetricDefinition d = MetricDefinitionParser.parse("PhysicalMemoryFree");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, "PhysicalMemoryFree");
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
@@ -62,7 +65,9 @@ public class MetricDefinitionParserTest {
     @Test
     public void parse_NewLocalOSMetricDefinition() throws Exception {
 
-        MetricDefinition d = MetricDefinitionParser.parse("PhysicalMemoryFree");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, "PhysicalMemoryFree");
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
@@ -74,7 +79,9 @@ public class MetricDefinitionParserTest {
     @Test
     public void parse_NewRemoteOSMetricDefinition() throws Exception {
 
-        MetricDefinition d = MetricDefinitionParser.parse("ssh://test-remote-host:22/PhysicalMemoryFree");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, "ssh://test-remote-host:22/PhysicalMemoryFree");
 
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
 
@@ -87,7 +94,9 @@ public class MetricDefinitionParserTest {
 
         String mds = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        MetricDefinition d = MetricDefinitionParser.parse(mds);
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, mds);
 
         JBossDmrMetricDefinitionImpl jmd = (JBossDmrMetricDefinitionImpl)d;
 
@@ -104,7 +113,9 @@ public class MetricDefinitionParserTest {
         String mds =
                 "jbosscli://admin:passwd@1.2.3.4:9999/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        MetricDefinition d = MetricDefinitionParser.parse(mds);
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, mds);
 
         JBossDmrMetricDefinitionImpl jmd = (JBossDmrMetricDefinitionImpl)d;
 
@@ -121,7 +132,9 @@ public class MetricDefinitionParserTest {
         String s =
                 "jmx://admin:adminpasswd@1.2.3.4:2345/jboss.as:subsystem=messaging,hornetq-server=default,jms-queue=DLQ/messageCount";
 
-        MetricDefinition d = MetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = MetricDefinitionParser.parse(f, s);
 
         JmxMetricDefinitionImpl jmxm = (JmxMetricDefinitionImpl)d;
 

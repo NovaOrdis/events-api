@@ -54,8 +54,10 @@ public class PropertyFactoryTest {
 
     @Test
     public void createInstance_String() throws Exception {
+        
+        PropertyFactory f = new PropertyFactory();
 
-        StringProperty sp = (StringProperty)PropertyFactory.createInstance("test", String.class, "something", null);
+        StringProperty sp = (StringProperty)f.createInstance("test", String.class, "something", null);
 
         assertEquals("test", sp.getName());
         assertEquals(String.class, sp.getType());
@@ -65,7 +67,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_String_Null() throws Exception {
 
-        StringProperty sp = (StringProperty)PropertyFactory.createInstance("test", String.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        StringProperty sp = (StringProperty)f.createInstance("test", String.class, null, null);
         assertEquals("test", sp.getName());
         assertEquals(String.class, sp.getType());
         assertNull(sp.getString());
@@ -74,8 +78,11 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_String_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", String.class, 1, null);
+            
+            f.createInstance("test", String.class, 1, null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -85,7 +92,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Integer() throws Exception {
 
-        IntegerProperty ip = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, 1, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty ip = (IntegerProperty)f.createInstance("test", Integer.class, 1, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Integer.class, ip.getType());
@@ -95,7 +104,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Integer_NullMultiplicationFactor() throws Exception {
 
-        IntegerProperty ip = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, 1, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty ip = (IntegerProperty)f.createInstance("test", Integer.class, 1, null, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Integer.class, ip.getType());
@@ -105,7 +116,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Integer_MultiplicationFactor() throws Exception {
 
-        IntegerProperty ip = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, 1, 10d, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty ip = (IntegerProperty)f.createInstance("test", Integer.class, 1, 10d, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Integer.class, ip.getType());
@@ -115,7 +128,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Integer_Null() throws Exception {
 
-        IntegerProperty ip = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty ip = (IntegerProperty)f.createInstance("test", Integer.class, null, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Integer.class, ip.getType());
@@ -125,8 +140,10 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Integer_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Integer.class, "1", null);
+            f.createInstance("test", Integer.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -136,7 +153,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Long() throws Exception {
 
-        LongProperty ip = (LongProperty)PropertyFactory.createInstance("test", Long.class, 1L, null);
+        PropertyFactory f = new PropertyFactory();
+
+        LongProperty ip = (LongProperty)f.createInstance("test", Long.class, 1L, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Long.class, ip.getType());
@@ -146,7 +165,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Long_NullMultiplicationFactor() throws Exception {
 
-        LongProperty ip = (LongProperty)PropertyFactory.createInstance("test", Long.class, 1L, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        LongProperty ip = (LongProperty)f.createInstance("test", Long.class, 1L, null, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Long.class, ip.getType());
@@ -156,7 +177,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Long_MultiplicationFactor() throws Exception {
 
-        LongProperty ip = (LongProperty)PropertyFactory.createInstance("test", Long.class, 1L, 10d, null);
+        PropertyFactory f = new PropertyFactory();
+
+        LongProperty ip = (LongProperty)f.createInstance("test", Long.class, 1L, 10d, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Long.class, ip.getType());
@@ -166,7 +189,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Long_Null() throws Exception {
 
-        LongProperty ip = (LongProperty)PropertyFactory.createInstance("test", Long.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        LongProperty ip = (LongProperty)f.createInstance("test", Long.class, null, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Long.class, ip.getType());
@@ -176,8 +201,10 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Long_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Long.class, "1", null);
+            f.createInstance("test", Long.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -187,7 +214,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Double() throws Exception {
 
-        DoubleProperty dp = (DoubleProperty)PropertyFactory.createInstance("test", Double.class, 1d, null);
+        PropertyFactory f = new PropertyFactory();
+
+        DoubleProperty dp = (DoubleProperty)f.createInstance("test", Double.class, 1d, null);
 
         assertEquals("test", dp.getName());
         assertEquals(Double.class, dp.getType());
@@ -197,7 +226,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Double_NullMultiplicationFactor() throws Exception {
 
-        DoubleProperty dp = (DoubleProperty)PropertyFactory.createInstance("test", Double.class, 1d, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        DoubleProperty dp = (DoubleProperty)f.createInstance("test", Double.class, 1d, null, null);
 
         assertEquals("test", dp.getName());
         assertEquals(Double.class, dp.getType());
@@ -207,7 +238,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Double_MultiplicationFactor() throws Exception {
 
-        DoubleProperty dp = (DoubleProperty)PropertyFactory.createInstance("test", Double.class, 1d, 10d, null);
+        PropertyFactory f = new PropertyFactory();
+
+        DoubleProperty dp = (DoubleProperty)f.createInstance("test", Double.class, 1d, 10d, null);
 
         assertEquals("test", dp.getName());
         assertEquals(Double.class, dp.getType());
@@ -217,7 +250,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Double_Null() throws Exception {
 
-        DoubleProperty dp = (DoubleProperty)PropertyFactory.createInstance("test", Double.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        DoubleProperty dp = (DoubleProperty)f.createInstance("test", Double.class, null, null);
 
         assertEquals("test", dp.getName());
         assertEquals(Double.class, dp.getType());
@@ -227,8 +262,11 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Double_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Double.class, "1", null);
+            
+            f.createInstance("test", Double.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -238,7 +276,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Float() throws Exception {
 
-        FloatProperty fp = (FloatProperty)PropertyFactory.createInstance("test", Float.class, 1.1f, null);
+        PropertyFactory f = new PropertyFactory();
+
+        FloatProperty fp = (FloatProperty)f.createInstance("test", Float.class, 1.1f, null);
 
         assertEquals("test", fp.getName());
         assertEquals(Float.class, fp.getType());
@@ -248,7 +288,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Float_NullMultiplicationFactor() throws Exception {
 
-        FloatProperty fp = (FloatProperty)PropertyFactory.createInstance("test", Float.class, 1.1f, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        FloatProperty fp = (FloatProperty)f.createInstance("test", Float.class, 1.1f, null, null);
 
         assertEquals("test", fp.getName());
         assertEquals(Float.class, fp.getType());
@@ -258,7 +300,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Float_MultiplicationFactor() throws Exception {
 
-        FloatProperty fp = (FloatProperty)PropertyFactory.createInstance("test", Float.class, 1.1f, 10d, null);
+        PropertyFactory f = new PropertyFactory();
+
+        FloatProperty fp = (FloatProperty)f.createInstance("test", Float.class, 1.1f, 10d, null);
 
         assertEquals("test", fp.getName());
         assertEquals(Float.class, fp.getType());
@@ -268,7 +312,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Float_Null() throws Exception {
 
-        FloatProperty fp = (FloatProperty)PropertyFactory.createInstance("test", Float.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+        
+        FloatProperty fp = (FloatProperty)f.createInstance("test", Float.class, null, null);
 
         assertEquals("test", fp.getName());
         assertEquals(Float.class, fp.getType());
@@ -278,8 +324,10 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Float_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Float.class, "1", null);
+            f.createInstance("test", Float.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -289,7 +337,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Date() throws Exception {
 
-        DateProperty ip = (DateProperty)PropertyFactory.createInstance("test", Date.class, 1L, null);
+        PropertyFactory f = new PropertyFactory();
+        
+        DateProperty ip = (DateProperty)f.createInstance("test", Date.class, 1L, null);
 
         assertEquals("test", ip.getName());
         assertEquals(Date.class, ip.getType());
@@ -299,7 +349,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Date_Null() throws Exception {
 
-        DateProperty p = (DateProperty)PropertyFactory.createInstance("test", Date.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        DateProperty p = (DateProperty)f.createInstance("test", Date.class, null, null);
 
         assertEquals("test", p.getName());
         assertEquals(Date.class, p.getType());
@@ -310,8 +362,10 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Map() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         Map<String, String> map = new HashMap<>();
-        MapProperty mp = (MapProperty)PropertyFactory.createInstance("test", Map.class, map, null);
+        MapProperty mp = (MapProperty)f.createInstance("test", Map.class, map, null);
 
         assertEquals("test", mp.getName());
         assertEquals(Map.class, mp.getType());
@@ -321,7 +375,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Map_Null() throws Exception {
 
-        MapProperty mp = (MapProperty)PropertyFactory.createInstance("test", Map.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        MapProperty mp = (MapProperty)f.createInstance("test", Map.class, null, null);
 
         assertEquals("test", mp.getName());
         assertEquals(Map.class, mp.getType());
@@ -333,9 +389,11 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_Map_TypeMismatch() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            PropertyFactory.createInstance("test", Map.class, "1", null);
+            f.createInstance("test", Map.class, "1", null);
         }
         catch(IllegalArgumentException e) {
             log.info(e.getMessage());
@@ -345,7 +403,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_UnknownType_NullValue_NullMeasureUnit() throws Exception {
 
-        Property p = PropertyFactory.createInstance("test", null, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        Property p = f.createInstance("test", null, null, null);
 
         assertTrue(p instanceof UndefinedTypeProperty);
 
@@ -361,10 +421,12 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_UnknownType_NullValue_NonNullMeasureUnit() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
             // this is an invalid mode of invoking the method
-            PropertyFactory.createInstance("test", null, null, MemoryMeasureUnit.BYTE);
+            f.createInstance("test", null, null, MemoryMeasureUnit.BYTE);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -379,7 +441,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_TypeHeuristics_Integer() throws Exception {
 
-        IntegerProperty p = (IntegerProperty)PropertyFactory.createInstance("test", null, 1, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty p = (IntegerProperty)f.createInstance("test", null, 1, null);
         assertEquals("test", p.getName());
         assertEquals(1, p.getInteger().intValue());
     }
@@ -543,7 +607,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToIntegerConversion() throws Exception {
 
-        IntegerProperty ip = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, "1", null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty ip = (IntegerProperty)f.createInstance("test", Integer.class, "1", null);
 
         assertEquals("test", ip.getName());
         assertEquals(Integer.class, ip.getType());
@@ -553,8 +619,11 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToIntegerConversionFails() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Integer.class, "blah", null);
+            
+            f.createInstance("test", Integer.class, "blah", null);
             fail("should throw Exception");
         }
         catch(IllegalArgumentException e) {
@@ -567,7 +636,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToLongConversion() throws Exception {
 
-        LongProperty lp = (LongProperty)PropertyFactory.createInstance("test", Long.class, "1", null);
+        PropertyFactory f = new PropertyFactory();
+
+        LongProperty lp = (LongProperty)f.createInstance("test", Long.class, "1", null);
 
         assertEquals("test", lp.getName());
         assertEquals(Long.class, lp.getType());
@@ -577,8 +648,10 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToLongConversionFails() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
         try {
-            PropertyFactory.createInstance("test", Long.class, "blah", null);
+            
+            f.createInstance("test", Long.class, "blah", null);
             fail("should throw Exception");
         }
         catch(IllegalArgumentException e) {
@@ -591,7 +664,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToDoubleConversion() throws Exception {
 
-        DoubleProperty dp = (DoubleProperty)PropertyFactory.createInstance("test", Double.class, "1.1", null);
+        PropertyFactory f = new PropertyFactory();
+
+        DoubleProperty dp = (DoubleProperty)f.createInstance("test", Double.class, "1.1", null);
 
         assertEquals("test", dp.getName());
         assertEquals(Double.class, dp.getType());
@@ -601,8 +676,11 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_StringToDoubleConversionFails() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
-            PropertyFactory.createInstance("test", Double.class, "blah", null);
+            
+            f.createInstance("test", Double.class, "blah", null);
             fail("should throw Exception");
         }
         catch(IllegalArgumentException e) {
@@ -615,7 +693,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_NullValue_MissingValueSemantics_NullType() throws Exception {
 
-        UndefinedTypeProperty p = (UndefinedTypeProperty)PropertyFactory.createInstance("test", null, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        UndefinedTypeProperty p = (UndefinedTypeProperty)f.createInstance("test", null, null, null);
         assertEquals("test", p.getName());
         assertNull(p.getValue());
     }
@@ -623,7 +703,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_NullValue_MissingValueSemantics_NonNullType_String() throws Exception {
 
-        StringProperty p = (StringProperty)PropertyFactory.createInstance("test", String.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        StringProperty p = (StringProperty)f.createInstance("test", String.class, null, null);
 
         assertEquals("test", p.getName());
         assertNull(p.getValue());
@@ -632,7 +714,9 @@ public class PropertyFactoryTest {
     @Test
     public void createInstance_NullValue_MissingValueSemantics_NonNullType_Integer() throws Exception {
 
-        IntegerProperty p = (IntegerProperty)PropertyFactory.createInstance("test", Integer.class, null, null);
+        PropertyFactory f = new PropertyFactory();
+
+        IntegerProperty p = (IntegerProperty)f.createInstance("test", Integer.class, null, null);
 
         assertEquals("test", p.getName());
         assertNull(p.getValue());

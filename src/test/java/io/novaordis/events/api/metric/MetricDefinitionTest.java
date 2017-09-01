@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.LocalOSAddress;
@@ -138,9 +139,11 @@ public abstract class MetricDefinitionTest {
     @Test
     public void getInstance_UnknownInstance() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            MetricDefinitionParser.parse("we are pretty sure there's no such metric");
+            MetricDefinitionParser.parse(f, "we are pretty sure there's no such metric");
             fail("should throw exception");
         }
         catch(MetricDefinitionException e) {

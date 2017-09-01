@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import io.novaordis.utilities.address.AddressException;
@@ -53,7 +54,8 @@ public class JBossDmrMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JBossDmrMetricDefinitionImpl parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static JBossDmrMetricDefinitionImpl parse(
+            PropertyFactory propertyFactory, String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         String mds;
@@ -188,7 +190,7 @@ public class JBossDmrMetricDefinitionParser {
         // DO NOT add the source to the repository, let the upper layer to do it if they want to
         //
 
-        return new JBossDmrMetricDefinitionImpl(controllerAddress, path, attribute);
+        return new JBossDmrMetricDefinitionImpl(propertyFactory, controllerAddress, path, attribute);
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------

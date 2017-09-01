@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
@@ -53,10 +54,11 @@ public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements Jmx
      *
      * @throws IllegalArgumentException
      */
-    public JmxMetricDefinitionImpl(Address metricSourceAddress, String objectNameDomain,
-                                   String objectNameKeyValuePairs, String attributeName) throws MetricDefinitionException {
+    public JmxMetricDefinitionImpl(
+            PropertyFactory propertyFactory, Address metricSourceAddress, String objectNameDomain,
+            String objectNameKeyValuePairs, String attributeName) throws MetricDefinitionException {
 
-        super(metricSourceAddress);
+        super(propertyFactory, metricSourceAddress);
 
         //
         // we use the ObjectName constructor to parse, but we don't cache it

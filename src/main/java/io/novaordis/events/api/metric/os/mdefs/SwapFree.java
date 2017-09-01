@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
@@ -41,9 +42,9 @@ public class SwapFree extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public SwapFree(OSAddress osAddress) {
+    public SwapFree(PropertyFactory propertyFactory, OSAddress osAddress) {
 
-        super(osAddress);
+        super(propertyFactory, osAddress);
 
         this.TYPE = Long.class;
 

@@ -17,11 +17,11 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -51,35 +51,35 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals("PhysicalMemoryUsed", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Long.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed md = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals(MemoryMeasureUnit.BYTE, md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals("Used Physical Memory", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("physical"));
         assertTrue(m.getDescription().toLowerCase().contains("memory"));
         assertTrue(m.getDescription().toLowerCase().contains("used"));
@@ -90,7 +90,7 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -120,7 +120,7 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -148,7 +148,7 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new LocalOSAddress());
+        PhysicalMemoryUsed m = new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -341,7 +341,7 @@ public class PhysicalMemoryUsedTest extends OSMetricDefinitionTest {
 
     @Override
     protected PhysicalMemoryUsed getMetricDefinitionToTest() throws Exception {
-        return new PhysicalMemoryUsed(new LocalOSAddress());
+        return new PhysicalMemoryUsed(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

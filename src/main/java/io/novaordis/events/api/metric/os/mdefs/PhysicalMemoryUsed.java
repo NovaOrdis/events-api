@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
@@ -41,9 +42,9 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public PhysicalMemoryUsed(OSAddress osAddress) {
+    public PhysicalMemoryUsed(PropertyFactory propertyFactory, OSAddress osAddress) {
 
-        super(osAddress);
+        super(propertyFactory, osAddress);
 
         this.TYPE = Long.class;
 

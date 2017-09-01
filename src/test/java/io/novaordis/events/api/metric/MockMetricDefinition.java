@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.Address;
 
 /**
@@ -36,19 +37,19 @@ public class MockMetricDefinition extends MockMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MockMetricDefinition(Address metricSourceAddress) {
+    public MockMetricDefinition(PropertyFactory f, Address metricSourceAddress) {
 
-        this(metricSourceAddress, ID);
+        this(f, metricSourceAddress, ID);
     }
 
-    public MockMetricDefinition(Address metricSourceAddress, String id) {
+    public MockMetricDefinition(PropertyFactory f, Address metricSourceAddress, String id) {
 
-        this(metricSourceAddress, id, null);
+        this(f, metricSourceAddress, id, null);
     }
 
-    public MockMetricDefinition(Address metricSourceAddress, String id, Class type) {
+    public MockMetricDefinition(PropertyFactory f, Address metricSourceAddress, String id, Class type) {
 
-        super(metricSourceAddress, id, type);
+        super(f, metricSourceAddress, id, type);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.Address;
 
 /**
@@ -34,9 +35,9 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(Address metricSourceAddress) {
+    protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(PropertyFactory f, Address metricSourceAddress) {
 
-        super(metricSourceAddress);
+        super(f, metricSourceAddress);
 
         this.TYPE = Long.class;
 

@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.Address;
 
 /**
@@ -42,8 +43,8 @@ public class MockMetricDefinition2 extends MockMetricDefinitionBase {
      * @param metricSourceAddress must always have a non-null source.
      */
     @SuppressWarnings("unused")
-    protected MockMetricDefinition2(Address metricSourceAddress) {
-        super(metricSourceAddress);
+    protected MockMetricDefinition2(PropertyFactory f, Address metricSourceAddress) {
+        super(f, metricSourceAddress);
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------

@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.DoubleProperty;
 import io.novaordis.events.api.event.FloatProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
@@ -54,9 +55,9 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    protected OSMetricDefinitionBase(Address metricSourceAddress) {
+    protected OSMetricDefinitionBase(PropertyFactory propertyFactory, Address metricSourceAddress) {
 
-        super(metricSourceAddress);
+        super(propertyFactory, metricSourceAddress);
 
         //
         // For all OS metrics, the ID is conventionally the simple name of the class implementing the metric definition.

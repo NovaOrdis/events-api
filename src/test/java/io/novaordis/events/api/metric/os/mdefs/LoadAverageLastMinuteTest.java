@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
@@ -49,35 +50,35 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        LoadAverageLastMinute md = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute md = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertEquals("LoadAverageLastMinute", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        LoadAverageLastMinute md = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute md = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        LoadAverageLastMinute md = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute md = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertNull(md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertEquals("Last Minute Load Average", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("last"));
         assertTrue(m.getDescription().toLowerCase().contains("minute"));
         assertTrue(m.getDescription().toLowerCase().contains("utilization"));
@@ -88,7 +89,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -118,7 +119,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -146,7 +147,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        LoadAverageLastMinute m = new LoadAverageLastMinute(new LocalOSAddress());
+        LoadAverageLastMinute m = new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -274,7 +275,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
     @Override
     protected LoadAverageLastMinute getMetricDefinitionToTest() throws Exception {
-        return new LoadAverageLastMinute(new LocalOSAddress());
+        return new LoadAverageLastMinute(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

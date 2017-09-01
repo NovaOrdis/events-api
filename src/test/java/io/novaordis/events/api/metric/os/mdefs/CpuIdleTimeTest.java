@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.utilities.address.LocalOSAddress;
@@ -50,35 +51,35 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuIdleTime md = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime md = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CpuIdleTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuIdleTime md = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime md = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuIdleTime md = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime md = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuIdleTime m = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime m = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CPU Idle Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuIdleTime m = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime m = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("percentage"));
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("idle"));
@@ -89,7 +90,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuIdleTime m = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime m = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -119,7 +120,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        CpuIdleTime m = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime m = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -147,7 +148,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuIdleTime m = new CpuIdleTime(new LocalOSAddress());
+        CpuIdleTime m = new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -276,7 +277,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuIdleTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuIdleTime(new LocalOSAddress());
+        return new CpuIdleTime(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

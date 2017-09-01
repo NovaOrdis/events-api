@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.jboss.JBossDmrMetricDefinitionParser;
 import io.novaordis.events.api.metric.jmx.JmxMetricDefinitionParser;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionParser;
@@ -48,7 +49,8 @@ public class MetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      a metric source representation.
      */
-    public static MetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static MetricDefinition parse(
+            PropertyFactory propertyFactory, String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
 
@@ -74,7 +76,7 @@ public class MetricDefinitionParser {
         // ... then assume we're a JBoss CLI metric ...
         //
 
-        d = JBossDmrMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
+        d = JBossDmrMetricDefinitionParser.parse(propertyFactory, metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 
@@ -86,7 +88,7 @@ public class MetricDefinitionParser {
         // ... then assume we're a JMX metric ...
         //
 
-        d = JmxMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
+        d = JmxMetricDefinitionParser.parse(propertyFactory, metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 

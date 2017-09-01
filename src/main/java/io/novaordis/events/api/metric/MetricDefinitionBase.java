@@ -39,19 +39,29 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
 
     private Address sourceAddress;
 
+    private PropertyFactory propertyFactory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     /**
-     * @param sourceAddress must always have a non-null source address
+     * @param propertyFactory must always have a non-null property factory.
+     * @param sourceAddress must always have a non-null source address.
      */
-    protected MetricDefinitionBase(Address sourceAddress) {
+    protected MetricDefinitionBase(PropertyFactory propertyFactory, Address sourceAddress) {
 
         if (sourceAddress == null) {
 
-            throw new IllegalArgumentException("null metric ource address");
+            throw new IllegalArgumentException("null metric source address");
         }
 
+        if (propertyFactory == null) {
+
+            throw new IllegalArgumentException("null property factory");
+        }
+
+
         this.sourceAddress = sourceAddress;
+        this.propertyFactory = propertyFactory;
     }
 
     // MetricDefinition implementation ---------------------------------------------------------------------------------
@@ -107,7 +117,7 @@ public abstract class MetricDefinitionBase implements MetricDefinition {
         MeasureUnit mu = getBaseUnit();
 
         //noinspection UnnecessaryLocalVariable
-        Property p = PropertyFactory.createInstance(id, type, value, mu);
+        Property p = propertyFactory.createInstance(id, type, value, mu);
         return p;
     }
 

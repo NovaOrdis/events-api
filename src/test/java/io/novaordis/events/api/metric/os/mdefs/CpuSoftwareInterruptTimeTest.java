@@ -17,11 +17,11 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -49,35 +49,35 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CpuSoftwareInterruptTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime md = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CPU Software Interrupt Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("percentage"));
@@ -90,7 +90,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -118,7 +118,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -147,7 +147,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new LocalOSAddress());
+        CpuSoftwareInterruptTime m = new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -260,7 +260,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuSoftwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuSoftwareInterruptTime(new LocalOSAddress());
+        return new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

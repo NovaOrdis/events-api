@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.events.api.parser.ParsingException;
@@ -38,9 +39,9 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public LoadAverageLastTenMinutes(OSAddress osAddress) {
+    public LoadAverageLastTenMinutes(PropertyFactory propertyFactory, OSAddress osAddress) {
 
-        super(osAddress);
+        super(propertyFactory, osAddress);
 
         this.TYPE = Float.class;
 

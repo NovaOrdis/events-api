@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.utilities.address.Address;
 
@@ -38,12 +39,12 @@ public class MockJBossDmrMetricDefinition extends JBossDmrMetricDefinitionImpl {
      *                                   must be human-readable, as it will most likely end up in error messages.
      * @throws IllegalArgumentException
      */
-    public MockJBossDmrMetricDefinition(Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
+    public MockJBossDmrMetricDefinition(
+            PropertyFactory f, Address metricSourceAddress, DmrPath path, DmrAttribute attribute)
             throws MetricDefinitionException {
 
-        super(metricSourceAddress, path, attribute);
+        super(f, metricSourceAddress, path, attribute);
     }
-
 
     // Public ----------------------------------------------------------------------------------------------------------
 

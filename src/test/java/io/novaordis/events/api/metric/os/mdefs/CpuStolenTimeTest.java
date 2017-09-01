@@ -17,11 +17,11 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
-import io.novaordis.events.api.metric.os.LocalOS;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -49,35 +49,35 @@ public class CpuStolenTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        CpuStolenTime md = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime md = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CpuStolenTime", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        CpuStolenTime md = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime md = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        CpuStolenTime md = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime md = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Percentage.getInstance(), md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        CpuStolenTime m = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime m = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals("CPU Stolen Time", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        CpuStolenTime m = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime m = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("cpu"));
         assertTrue(m.getDescription().toLowerCase().contains("time"));
         assertTrue(m.getDescription().toLowerCase().contains("stolen"));
@@ -89,7 +89,7 @@ public class CpuStolenTimeTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        CpuStolenTime m = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime m = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -117,7 +117,7 @@ public class CpuStolenTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getMacCommand() throws Exception {
 
-        CpuStolenTime m = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime m = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
 
         assertNull(m.getMacCommand());
 
@@ -146,7 +146,7 @@ public class CpuStolenTimeTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        CpuStolenTime m = new CpuStolenTime(new LocalOSAddress());
+        CpuStolenTime m = new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -259,7 +259,7 @@ public class CpuStolenTimeTest extends OSMetricDefinitionTest {
     @Override
     protected CpuStolenTime getMetricDefinitionToTest() throws Exception {
 
-        return new CpuStolenTime(new LocalOSAddress());
+        return new CpuStolenTime(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

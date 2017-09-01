@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
@@ -77,7 +78,9 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         //
         String command = "hostname";
 
-        MockOSMetricDefinition md = new MockOSMetricDefinition("metric1", oss.getAddress(), command);
+        PropertyFactory f = new PropertyFactory();
+
+        MockOSMetricDefinition md = new MockOSMetricDefinition("metric1", f, oss.getAddress(), command);
 
         List<MetricDefinition> mds = Collections.singletonList(md);
 
@@ -98,14 +101,16 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         String commandThatWorksOnAllSupportedOSes = "hostname";
         String otherCommandThatWorksOnAllSupportedOSes = "whoami";
 
+        PropertyFactory f = new PropertyFactory();
+
         MockOSMetricDefinition md = new MockOSMetricDefinition(
-                "mock-metric-1", oss.getAddress(), commandThatWorksOnAllSupportedOSes);
+                "mock-metric-1", f, oss.getAddress(), commandThatWorksOnAllSupportedOSes);
 
         MockOSMetricDefinition md2 = new MockOSMetricDefinition(
-                "mock-metric-2", oss.getAddress(), commandThatWorksOnAllSupportedOSes);
+                "mock-metric-2", f, oss.getAddress(), commandThatWorksOnAllSupportedOSes);
 
         MockOSMetricDefinition md3 = new MockOSMetricDefinition(
-                "mock-metric-3", oss.getAddress(), otherCommandThatWorksOnAllSupportedOSes);
+                "mock-metric-3", f, oss.getAddress(), otherCommandThatWorksOnAllSupportedOSes);
 
         List<MetricDefinition> mds = Arrays.asList(md, md3, md2);
 
@@ -146,17 +151,19 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         oss.setNativeExecutor(me);
 
+        PropertyFactory f = new PropertyFactory();
+
         String command = "mock-command";
         String command2 = "mock-command-2";
         String command3 = "mock-command-3";
 
-        MockOSMetricDefinition md = new MockOSMetricDefinition("mock-metric", oss.getAddress(), command);
-        MockOSMetricDefinition md2 = new MockOSMetricDefinition("mock-metric-2", oss.getAddress(), command2);
-        MockOSMetricDefinition md3 = new MockOSMetricDefinition("mock-metric-3", oss.getAddress(), command3);
-        MockOSMetricDefinition md4 = new MockOSMetricDefinition("mock-metric-4", oss.getAddress(), command);
-        MockOSMetricDefinition md5 = new MockOSMetricDefinition("mock-metric-5", oss.getAddress(), command2);
-        MockOSMetricDefinition md6 = new MockOSMetricDefinition("mock-metric-6", oss.getAddress(), command);
-        MockOSMetricDefinition md7 = new MockOSMetricDefinition("mock-metric-7", oss.getAddress(), command2);
+        MockOSMetricDefinition md = new MockOSMetricDefinition("mock-metric", f, oss.getAddress(), command);
+        MockOSMetricDefinition md2 = new MockOSMetricDefinition("mock-metric-2", f, oss.getAddress(), command2);
+        MockOSMetricDefinition md3 = new MockOSMetricDefinition("mock-metric-3", f, oss.getAddress(), command3);
+        MockOSMetricDefinition md4 = new MockOSMetricDefinition("mock-metric-4", f, oss.getAddress(), command);
+        MockOSMetricDefinition md5 = new MockOSMetricDefinition("mock-metric-5", f, oss.getAddress(), command2);
+        MockOSMetricDefinition md6 = new MockOSMetricDefinition("mock-metric-6", f, oss.getAddress(), command);
+        MockOSMetricDefinition md7 = new MockOSMetricDefinition("mock-metric-7", f, oss.getAddress(), command2);
 
         // md3/command3 is only requested once
         List<MetricDefinition> mds = Arrays.asList(md, md2, md3, md4, md5, md6, md7, md, md2, md4, md5, md6, md7);
@@ -322,7 +329,9 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
             fail("we expect an OS address but we got this: " + metricSourceAddress);
         }
 
-        return new MockOSMetricDefinition((OSAddress)metricSourceAddress);
+        PropertyFactory f = new PropertyFactory();
+
+        return new MockOSMetricDefinition(f, (OSAddress)metricSourceAddress);
     }
 
     @Override

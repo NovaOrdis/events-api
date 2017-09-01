@@ -16,12 +16,11 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.events.api.metric.os.OSSourceBase;
 import io.novaordis.events.api.parser.ParsingException;
-import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
 
 import java.util.regex.Matcher;
@@ -43,9 +42,9 @@ public class CpuStolenTime extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuStolenTime(OSAddress osAddress) {
+    public CpuStolenTime(PropertyFactory propertyFactory, OSAddress osAddress) {
 
-        super(osAddress);
+        super(propertyFactory, osAddress);
 
         this.TYPE = Float.class;
 

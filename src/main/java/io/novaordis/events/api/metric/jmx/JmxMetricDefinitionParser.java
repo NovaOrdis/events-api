@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jmx.JmxAddress;
 import io.novaordis.utilities.address.Address;
@@ -49,7 +50,8 @@ public class JmxMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static JmxMetricDefinitionImpl parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static JmxMetricDefinitionImpl parse(
+            PropertyFactory propertyFactory, String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException, AddressException {
 
         boolean thisIsAJmxMetric = false;
@@ -153,7 +155,7 @@ public class JmxMetricDefinitionParser {
 
         try {
 
-            d = new JmxMetricDefinitionImpl(jmxBusAddress, domainName, keyValuePairs, attributeName);
+            d = new JmxMetricDefinitionImpl(propertyFactory, jmxBusAddress, domainName, keyValuePairs, attributeName);
         }
         catch(MetricDefinitionException e) {
 

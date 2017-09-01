@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.MockProperty;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
 
@@ -48,14 +49,14 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
      * Invoked by reflection.
      */
     @SuppressWarnings("unused")
-    public MockOSMetricDefinition(OSAddress osMetricSourceAddress) {
+    public MockOSMetricDefinition(PropertyFactory f, OSAddress osMetricSourceAddress) {
 
-        this(MockOSMetricDefinition.class.getSimpleName(), osMetricSourceAddress, null);
+        this(MockOSMetricDefinition.class.getSimpleName(), f, osMetricSourceAddress, null);
     }
 
-    public MockOSMetricDefinition(String id, OSAddress osMetricSourceAddress, String command) {
+    public MockOSMetricDefinition(String id, PropertyFactory f, OSAddress osMetricSourceAddress, String command) {
 
-        super(osMetricSourceAddress);
+        super(f, osMetricSourceAddress);
 
         setId(id);
 

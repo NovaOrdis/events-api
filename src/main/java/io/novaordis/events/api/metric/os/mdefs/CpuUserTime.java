@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
@@ -41,9 +42,9 @@ public class CpuUserTime extends OSMetricDefinitionBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public CpuUserTime(OSAddress osAddress) {
+    public CpuUserTime(PropertyFactory propertyFactory, OSAddress osAddress) {
 
-        super(osAddress);
+        super(propertyFactory, osAddress);
 
         this.TYPE = Float.class;
 

@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.MockOSSource;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
@@ -245,10 +246,12 @@ public abstract class MetricSourceTest {
 
         MetricSourceBase source = (MetricSourceBase)getMetricSourceToTest();
 
+        PropertyFactory f = new PropertyFactory();
+
         //
         // this metric should be rejected as it is not known by any of the actual implementations
         //
-        MetricDefinition md = new MockMetricDefinition(new AddressImpl("test"));
+        MetricDefinition md = new MockMetricDefinition(f, new AddressImpl("test"));
 
         source.start();
 
@@ -352,7 +355,9 @@ public abstract class MetricSourceTest {
      */
     protected MetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) throws Exception {
 
-        return new MockMetricDefinition(metricSourceAddress);
+        PropertyFactory f = new PropertyFactory();
+
+        return new MockMetricDefinition(f, metricSourceAddress);
     }
 
     /**

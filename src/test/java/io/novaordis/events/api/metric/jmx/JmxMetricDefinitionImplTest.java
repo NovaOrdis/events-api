@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jmx.JmxAddress;
@@ -63,8 +64,9 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     public void identity() throws Exception {
 
         JmxBus bus = new JmxBus("jmx://localhost:1234");
+        PropertyFactory f = new PropertyFactory();
         JmxMetricDefinitionImpl m = new JmxMetricDefinitionImpl(
-                bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
+                f, bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
 
         assertEquals("test.domain:service=TestService/testAttribute", m.getId());
         assertEquals("test.domain", m.getDomainName());
@@ -80,8 +82,10 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     @Test
     public void getDefinition_KeysAreRenderedInTheOriginalOrder() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         JmxMetricDefinitionImpl d = new JmxMetricDefinitionImpl(
-                new JmxAddress("jmx://test:70"), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
+                f, new JmxAddress("jmx://test:70"), "test.domain", "C=valC,B=valB,A=valA", "testAttribute");
 
         String definition = d.getId();
 
@@ -96,9 +100,11 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     @Test
     public void constructors_InvalidObjectName() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            new JmxMetricDefinitionImpl(new JmxAddress("test:80"), "test.domain", "999999", "testAttribute");
+            new JmxMetricDefinitionImpl(f, new JmxAddress("test:80"), "test.domain", "999999", "testAttribute");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -121,7 +127,8 @@ public class JmxMetricDefinitionImplTest extends JmxMetricDefinitionTest {
     protected JmxMetricDefinitionImpl getMetricDefinitionToTest() throws Exception {
 
         JmxBus bus = new JmxBus("jmx://localhost:1234");
-        return new JmxMetricDefinitionImpl(bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
+        PropertyFactory f = new PropertyFactory();
+        return new JmxMetricDefinitionImpl(f, bus.getAddress(), "test.domain", "service=TestService", "testAttribute");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

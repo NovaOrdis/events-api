@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
@@ -56,9 +57,11 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
     @Test
     public void constructor_NullArgument() throws Exception {
 
-        try {
+        PropertyFactory f = new PropertyFactory();
 
-            new JBossDmrMetricDefinitionImpl(null, null, null);
+        try {
+            
+            new JBossDmrMetricDefinitionImpl(f, null, null, null);
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -75,8 +78,10 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         JBossControllerAddress a = new JBossController().getAddress();
 
+        PropertyFactory f = new PropertyFactory();
+
         JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
-                a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -87,8 +92,10 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         JBossControllerAddress a = new JBossControllerAddress("admin:adminp@1.2.3.4:8888");
 
+        PropertyFactory f = new PropertyFactory();
+
         JBossDmrMetricDefinitionImpl d = new JBossDmrMetricDefinitionImpl(
-                a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
+                f, a, new DmrPath("test-path"), new DmrAttribute("test-attribute"));
 
         String definition = d.getId();
         assertEquals("/test-path/test-attribute", definition);
@@ -101,7 +108,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli:///a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -127,7 +136,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://localhost/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -153,7 +164,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://bluehost/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -179,7 +192,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://localhost:9999/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -205,7 +220,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
 
         String s = "jbosscli://blue:9999/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -229,9 +246,12 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
     @Test
     public void parse_InvalidMetricDefinition() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
+
         try {
 
-            JBossDmrMetricDefinitionParser.parse("jbosscli:///this-should-fail");
+            JBossDmrMetricDefinitionParser.parse(f, "jbosscli:///this-should-fail");
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -249,7 +269,9 @@ public class JBossDmrMetricDefinitionImplTest extends JBossDmrMetricDefinitionTe
     protected JBossDmrMetricDefinitionImpl getMetricDefinitionToTest() throws Exception {
 
         JBossControllerAddress address = new JBossControllerAddress();
-        return new JBossDmrMetricDefinitionImpl(address, new DmrPath("test=test"), new DmrAttribute("test") );
+        PropertyFactory f = new PropertyFactory();
+
+        return new JBossDmrMetricDefinitionImpl(f, address, new DmrPath("test=test"), new DmrAttribute("test") );
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

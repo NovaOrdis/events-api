@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jboss;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jboss.cli.model.JBossControllerAddress;
 import org.junit.Test;
@@ -49,7 +50,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+        
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
         assertNull(d);
     }
 
@@ -58,7 +61,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "I am pretty sure this is not a valid JBoss CLI metric definition";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+        
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
         assertNull(d);
     }
 
@@ -67,7 +72,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+        
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -88,7 +95,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -111,7 +120,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -134,7 +145,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
         String s =
                 "jbosscli://admin:apsswd@1.2.3.4:8888/subsystem=messaging/hornetq-server=default/jms-queue=DLQ/message-count";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -156,7 +169,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "something://admin@1.2.3.4:8888/test=test/test";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -166,7 +181,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "admin@1.2.3.4:8888";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -176,9 +193,11 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://something";
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            JBossDmrMetricDefinitionParser.parse(s);
+            JBossDmrMetricDefinitionParser.parse(f, s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -193,7 +212,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "admin:adminpassword@1.2.3.4:blah/test=test/test";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -203,9 +224,11 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://admin:adminpassword@1.2.3.4:blah/test=test/test";
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            JBossDmrMetricDefinitionParser.parse(s);
+            JBossDmrMetricDefinitionParser.parse(f, s);
             fail("should have thrown exception");
         }
         catch(MetricDefinitionException e) {
@@ -225,7 +248,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://some-host:1000/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -245,7 +270,9 @@ public class JBossDmrMetricDefinitionImplParserTest {
 
         String s = "jbosscli://some-user:some-password@some-host:1000/a=b/c=d/f";
 
-        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JBossDmrMetricDefinitionImpl d = JBossDmrMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 

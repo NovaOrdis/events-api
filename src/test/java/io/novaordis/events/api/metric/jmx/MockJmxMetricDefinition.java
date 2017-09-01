@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.jmx.JmxAddress;
 
@@ -38,11 +39,11 @@ public class MockJmxMetricDefinition extends JmxMetricDefinitionImpl {
      *                                   must be human-readable, as it will most likely end up in error messages.
      * @throws IllegalArgumentException
      */
-    public MockJmxMetricDefinition(JmxAddress metricSourceAddress, String objectNameDomain,
+    public MockJmxMetricDefinition(PropertyFactory f, JmxAddress metricSourceAddress, String objectNameDomain,
                                    String objectNameKeyValuePairs, String attributeName)
             throws MetricDefinitionException {
 
-        super(metricSourceAddress, objectNameDomain, objectNameKeyValuePairs, attributeName);
+        super(f, metricSourceAddress, objectNameDomain, objectNameKeyValuePairs, attributeName);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

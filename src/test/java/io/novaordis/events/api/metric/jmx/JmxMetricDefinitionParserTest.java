@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.jmx;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressException;
@@ -52,7 +53,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
         assertNull(d);
     }
 
@@ -61,7 +64,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "I am pretty sure this is not a valid JMX metric definition";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
         assertNull(d);
     }
 
@@ -70,7 +75,9 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "something://admin:passwd@1.2.3.4:8888/test:service=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        PropertyFactory f = new PropertyFactory();
+
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -80,9 +87,11 @@ public class JmxMetricDefinitionParserTest {
 
         String s = "jmx://admin:passwd@1.2.3.4:8888/something";
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
-            JmxMetricDefinitionParser.parse(s);
+            JmxMetricDefinitionParser.parse(f, s);
         }
         catch(MetricDefinitionException e) {
 
@@ -94,9 +103,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NoDomainNameInObjectName_NoProtocolPrefix() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "admin:passwd@1.2.3.4:8888/something";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -104,11 +115,13 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_ProtocolPrefixed_InvalidJmxBusAddress() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "jmx://admin:apsswd@1.2.3.4:blah/test.domain:service=Test,subService=Test/testAttribute";
 
         try {
 
-            JmxMetricDefinitionParser.parse(s);
+            JmxMetricDefinitionParser.parse(f, s);
         }
         catch(MetricDefinitionException e) {
 
@@ -124,9 +137,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NotProtocolPrefixed_InvalidJmxBusAddress() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "admin:apsswd@1.2.3.4:blah/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -134,11 +149,13 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_ProtocolPrefixed_NoAttributeName() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test";
 
         try {
 
-            JmxMetricDefinitionParser.parse(s);
+            JmxMetricDefinitionParser.parse(f, s);
         }
         catch(MetricDefinitionException e) {
 
@@ -150,9 +167,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NotProtocolPrefixed_NoAttributeName() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -160,11 +179,13 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_ProtocolPrefixed_InvalidObjectName() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "jmx://1.2.3.4:8888/test.domain:999999/testAttribute";
 
         try {
 
-            JmxMetricDefinitionParser.parse(s);
+            JmxMetricDefinitionParser.parse(f, s);
         }
         catch(MetricDefinitionException e) {
 
@@ -179,9 +200,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NotProtocolPrefixed_InvalidObjectName() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "1.2.3.4:8888/test.domain:999999/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNull(d);
     }
@@ -189,9 +212,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_ProtocolPrefixed_NullRepository() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -210,9 +235,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_ProtocolPrefixed() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "jmx://admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -231,9 +258,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NotProtocolPrefixed_NullRepository() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 
@@ -252,9 +281,11 @@ public class JmxMetricDefinitionParserTest {
     @Test
     public void parse_NotProtocolPrefixed() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         String s = "admin:apsswd@1.2.3.4:8888/test.domain:service=Test,subService=Test/testAttribute";
 
-        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(s);
+        JmxMetricDefinitionImpl d = JmxMetricDefinitionParser.parse(f, s);
 
         assertNotNull(d);
 

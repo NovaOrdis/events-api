@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
@@ -222,7 +223,10 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     @Override
     protected DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem getMetricDefinitionToTest() throws Exception {
 
-        return new DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(new LocalOSAddress());
+        PropertyFactory f = new PropertyFactory();
+        LocalOSAddress a = new LocalOSAddress();
+
+        return new DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(f, a);
     }
 
 

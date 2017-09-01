@@ -17,10 +17,10 @@
 package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
-import io.novaordis.events.api.metric.os.LocalOS;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
-import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.address.LocalOSAddress;
+import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
@@ -50,35 +50,35 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
     @Test
     public void getId() throws Exception {
 
-        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertEquals("LoadAverageLastTenMinutes", md.getId());
     }
 
     @Test
     public void getType() throws Exception {
 
-        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertEquals(Float.class, md.getType());
     }
 
     @Test
     public void getBaseUnit() throws Exception {
 
-        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes md = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertNull(md.getBaseUnit());
     }
 
     @Test
     public void getSimpleLabel() throws Exception {
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertEquals("Last Ten Minutes Load Average", m.getSimpleLabel());
     }
 
     @Test
     public void getDescription() throws Exception {
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertTrue(m.getDescription().toLowerCase().contains("ten"));
         assertTrue(m.getDescription().toLowerCase().contains("utilization"));
     }
@@ -88,7 +88,7 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getLinuxCommand());
 
         try {
@@ -118,7 +118,7 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
 
         String expected = "/usr/bin/top -l 1 -n 0";
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertEquals(expected, m.getMacCommand());
 
         try {
@@ -146,7 +146,7 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new LocalOSAddress());
+        LoadAverageLastTenMinutes m = new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
         assertNull(m.getWindowsCommand());
 
         try {
@@ -274,7 +274,7 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
 
     @Override
     protected LoadAverageLastTenMinutes getMetricDefinitionToTest() throws Exception {
-        return new LoadAverageLastTenMinutes(new LocalOSAddress());
+        return new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

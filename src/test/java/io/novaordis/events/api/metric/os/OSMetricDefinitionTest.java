@@ -17,6 +17,7 @@
 package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
@@ -107,7 +108,9 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         String literal = osmd.getClass().getSimpleName();
 
-        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(literal);
+        PropertyFactory f = new PropertyFactory();
+
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(f, literal);
 
         assertEquals(osmd2.getClass(), osmd.getClass());
     }
@@ -119,7 +122,9 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         String literal = osmd.getClass().getSimpleName();
 
-        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(literal);
+        PropertyFactory f = new PropertyFactory();
+
+        OSMetricDefinition osmd2 = (OSMetricDefinition)MetricDefinitionParser.parse(f, literal);
 
         assertEquals(osmd2.getClass(), osmd.getClass());
     }
@@ -129,8 +134,10 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void preRefactoring_StaticScopeAfterTwoDifferentClassesAreLoaded() throws Exception {
 
-        PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(new MockOSSource().getAddress());
-        PhysicalMemoryUsed pmu = new PhysicalMemoryUsed(new MockOSSource().getAddress());
+        PropertyFactory f = new PropertyFactory();
+
+        PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(f, new MockOSSource().getAddress());
+        PhysicalMemoryUsed pmu = new PhysicalMemoryUsed(f, new MockOSSource().getAddress());
 
         assertEquals("Total Physical Memory", pmt.getLabel());
         assertEquals("Used Physical Memory", pmu.getLabel());
