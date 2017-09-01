@@ -64,7 +64,8 @@ public class MetricDefinitionParser {
         // assume we're an OS metric ...
         //
 
-        MetricDefinition d = OSMetricDefinitionParser.parse(metricSourceAndMetricDefinitionRepresentation);
+        MetricDefinition d =
+                OSMetricDefinitionParser.parse(propertyFactory, metricSourceAndMetricDefinitionRepresentation);
 
         if (d != null) {
 

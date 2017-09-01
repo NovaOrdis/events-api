@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSource;
@@ -50,7 +51,8 @@ public class OSMetricDefinitionParser {
      * @param metricSourceAndMetricDefinitionRepresentation a metric definition representation, optionally including
      *                                                      the OS metric source representation.
      */
-    public static MetricDefinition parse(String metricSourceAndMetricDefinitionRepresentation)
+    public static MetricDefinition parse(
+            PropertyFactory propertyFactory, String metricSourceAndMetricDefinitionRepresentation)
             throws MetricDefinitionException {
 
         int sourceSeparatorIndex = metricSourceAndMetricDefinitionRepresentation.lastIndexOf('/');
@@ -101,6 +103,7 @@ public class OSMetricDefinitionParser {
                 c = (Class<MetricSource>) Class.forName(fqcn);
 
                 if (c != null) {
+
                     break;
                 }
             }
@@ -146,8 +149,8 @@ public class OSMetricDefinitionParser {
 
         try {
 
-            Constructor<MetricSource> constructor = c.getConstructor(OSAddress.class);
-            md = (MetricDefinition)constructor.newInstance(address);
+            Constructor<MetricSource> constructor = c.getConstructor(PropertyFactory.class, OSAddress.class);
+            md = (MetricDefinition)constructor.newInstance(propertyFactory, address);
 
         }
         catch(Exception e) {

@@ -16,6 +16,7 @@
 
 package io.novaordis.events.api.metric.os;
 
+import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
@@ -53,18 +54,22 @@ public class OSMetricDefinitionParserTest {
     @Test
     public void parse_NoSuchOSMetric() throws Exception {
 
-        MetricDefinition d = OSMetricDefinitionParser.parse("IAmPrettySureThereIsNoSuchOsMetric");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = OSMetricDefinitionParser.parse(f, "IAmPrettySureThereIsNoSuchOsMetric");
         assertNull(d);
     }
 
     @Test
     public void parse_ReflectionFailure() throws Exception {
 
+        PropertyFactory f = new PropertyFactory();
+
         try {
 
             MockOSMetricDefinition.setFailInConstructor(true);
 
-            OSMetricDefinitionParser.parse("MockOSMetricDefinition");
+            OSMetricDefinitionParser.parse(f, "MockOSMetricDefinition");
             fail("should have thrown exception");
         }
         catch(MetricException e) {
@@ -86,7 +91,9 @@ public class OSMetricDefinitionParserTest {
     @Test
     public void parse_LocalOS() throws Exception {
 
-        MetricDefinition d = OSMetricDefinitionParser.parse("PhysicalMemoryFree");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = OSMetricDefinitionParser.parse(f, "PhysicalMemoryFree");
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
@@ -98,7 +105,9 @@ public class OSMetricDefinitionParserTest {
     @Test
     public void parse_RemoteOS() throws Exception {
 
-        MetricDefinition d = OSMetricDefinitionParser.parse("ssh://1.2.3.4/PhysicalMemoryFree");
+        PropertyFactory f = new PropertyFactory();
+
+        MetricDefinition d = OSMetricDefinitionParser.parse(f, "ssh://1.2.3.4/PhysicalMemoryFree");
         PhysicalMemoryFree m = (PhysicalMemoryFree)d;
         assertNotNull(m);
 
