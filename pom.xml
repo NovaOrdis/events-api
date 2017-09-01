@@ -8,7 +8,7 @@
     <artifactId>events-api</artifactId>
     <packaging>jar</packaging>
 
-    <version>1.2.2-SNAPSHOT-37</version>
+    <version>1.2.2-SNAPSHOT-38</version>
 
     <properties>
 
@@ -19,6 +19,7 @@
         <novaordis.utilities.version>4.7.11-SNAPSHOT-5</novaordis.utilities.version>
         <novaordis.jboss.version>1.0.10</novaordis.jboss.version>
         <novaordis.jmx.version>1.2.5-SNAPSHOT-1</novaordis.jmx.version>
+        <novaordis.ssh.version>1.0.0-SNAPSHOT-2</novaordis.ssh.version>
 
         <slf4j.version>1.7.12</slf4j.version>
         <junit.version>4.12</junit.version>
@@ -110,6 +111,11 @@
             <groupId>io.novaordis.jmx</groupId>
             <artifactId>novaordis-jmx</artifactId>
             <version>${novaordis.jmx.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.ssh</groupId>
+            <artifactId>novaordis-ssh</artifactId>
+            <version>${novaordis.ssh.version}</version>
         </dependency>
 
         <dependency>
