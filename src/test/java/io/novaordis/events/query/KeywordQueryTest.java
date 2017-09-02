@@ -77,7 +77,7 @@ public class KeywordQueryTest extends QueryTest {
         //
         // by default matching is not case sensitive
         //
-        assertFalse(q.isMatchingCaseSensitive());
+        assertFalse(q.isCaseSensitive());
     }
 
     // selects() -------------------------------------------------------------------------------------------------------
@@ -119,7 +119,7 @@ public class KeywordQueryTest extends QueryTest {
 
         KeywordQuery q = new KeywordQuery("blue");
 
-        q.setMatchingCaseSensitive(true);
+        q.setCaseSensitive(true);
 
         GenericTimedEvent e = new GenericTimedEvent();
         e.setStringProperty("test1", "Something is Blue here");

@@ -21,8 +21,11 @@ import io.novaordis.events.api.event.Event;
 import java.util.List;
 
 /**
- * A query is a combination of free format and structured text that can be used to filter a stream of events. An
- * individual event must be selected by the query in order to "pass".
+ * A query is a combination of free format and structured text that is interpreted by the events runtime to filter a
+ * stream of events. An individual event must be selected by the query (match) in order to be considered for further
+ * processing.
+ *
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Query
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
@@ -30,6 +33,8 @@ import java.util.List;
 public interface Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    String CASE_SENSITIVE_MODIFIER_LITERAL = "--case-sensitive";
 
     // Static ----------------------------------------------------------------------------------------------------------
 

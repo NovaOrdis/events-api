@@ -36,7 +36,7 @@ public class KeywordQuery extends QueryBase {
 
     private String keyword;
 
-    private boolean matchingCaseSensitive;
+    private boolean caseSensitive;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -53,7 +53,7 @@ public class KeywordQuery extends QueryBase {
         // by default matching is not case sensitive
         //
 
-        this.matchingCaseSensitive = false;
+        this.caseSensitive = false;
     }
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -72,8 +72,8 @@ public class KeywordQuery extends QueryBase {
 
             if (o instanceof String) {
 
-                String target = matchingCaseSensitive ? (String)o : ((String)o).toLowerCase();
-                String searchKey = matchingCaseSensitive ? keyword : keyword.toLowerCase();
+                String target = caseSensitive ? (String)o : ((String)o).toLowerCase();
+                String searchKey = caseSensitive ? keyword : keyword.toLowerCase();
 
                 if (target.contains(searchKey)) {
 
@@ -98,14 +98,14 @@ public class KeywordQuery extends QueryBase {
         return keyword;
     }
 
-    public boolean isMatchingCaseSensitive() {
+    public boolean isCaseSensitive() {
 
-        return matchingCaseSensitive;
+        return caseSensitive;
     }
 
-    public void setMatchingCaseSensitive(boolean b) {
+    public void setCaseSensitive(boolean b) {
 
-        this.matchingCaseSensitive = b;
+        this.caseSensitive = b;
     }
 
     @Override

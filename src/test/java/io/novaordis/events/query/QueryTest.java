@@ -64,6 +64,7 @@ public abstract class QueryTest {
         KeywordQuery q = (KeywordQuery)Query.fromArguments(new ArrayList<>(Collections.singletonList("blue")), 0);
         assertNotNull(q);
         assertEquals("blue", q.getKeyword());
+        assertFalse(q.isCaseSensitive());
     }
 
     @Test
@@ -117,6 +118,30 @@ public abstract class QueryTest {
         assertEquals(1, q.getFieldQueries().size());
         assertEquals("color", q.getFieldQueries().get(0).getFieldName());
         assertEquals("red", q.getFieldQueries().get(0).getValue());
+    }
+
+    @Test
+    public void fromArguments_CaseSensitive() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("--case-sensitive", "red"));
+
+        KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
+
+        assertNotNull(q);
+
+        assertTrue(q.isCaseSensitive());
+    }
+
+    @Test
+    public void fromArguments_CaseSensitive2() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("red", "--case-sensitive"));
+
+        KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
+
+        assertNotNull(q);
+
+        assertTrue(q.isCaseSensitive());
     }
 
     // selects() and filter() ------------------------------------------------------------------------------------------

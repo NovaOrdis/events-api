@@ -19,6 +19,7 @@ package io.novaordis.events.query;
 import io.novaordis.events.api.event.Event;
 
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
 
@@ -92,7 +93,11 @@ public class MixedQuery extends QueryBase {
             throw new IllegalArgumentException("null literal");
         }
 
-        if (literal.contains(":")) {
+        if (CASE_SENSITIVE_MODIFIER_LITERAL.equals(literal)) {
+
+            keywordMatchingCaseSensitive = true;
+        }
+        else if (literal.contains(":")) {
 
             FieldQuery q = new FieldQuery(literal);
             fieldQueries.add(q);
@@ -105,11 +110,24 @@ public class MixedQuery extends QueryBase {
     }
 
     /**
-     * @return the internal storage so handle with care
+     * @return a copy of the internal storage
      */
     public List<KeywordQuery> getKeywordQueries() {
 
-        return keywordQueries;
+        if (keywordQueries.isEmpty()) {
+
+            return Collections.emptyList();
+        }
+
+        ArrayList<KeywordQuery> result = new ArrayList<>();
+
+        for(KeywordQuery k: keywordQueries) {
+
+            k.setCaseSensitive(isKeywordMatchingCaseSensitive());
+            result.add(k);
+        }
+
+        return result;
     }
 
     public boolean isKeywordMatchingCaseSensitive() {
