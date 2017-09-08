@@ -116,6 +116,12 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     // TimedEvent implementation ---------------------------------------------------------------------------------------
 
     @Override
+    public boolean isTimed() {
+
+        return true;
+    }
+
+    @Override
     public Timestamp getTimestamp() {
 
         return timestamp;

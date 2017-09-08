@@ -452,6 +452,12 @@ public class GenericEvent implements Event {
         return null;
     }
 
+    @Override
+    public boolean isTimed() {
+
+        return false;
+    }
+
     /**
      * @exception IllegalArgumentException if the property is a timestamp property. Timestamp properties are not
      * allowed for non-timed events.

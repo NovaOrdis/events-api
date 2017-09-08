@@ -23,6 +23,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -137,6 +138,15 @@ public class GenericEventTest extends EventTest {
             assertEquals(ip.getName(), op.getName());
             assertEquals(ip.getValue(), op.getValue());
         }
+    }
+
+    // isTimed() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void isTimed() throws Exception {
+
+        GenericEvent e = getEventToTest();
+        assertFalse(e.isTimed());
     }
 
     // setProperty() ---------------------------------------------------------------------------------------------------

@@ -21,6 +21,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -38,6 +39,15 @@ public abstract class TimedEventTest extends EventTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // isTimed() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void isTimed() throws Exception {
+
+        TimedEvent e = getEventToTest();
+        assertTrue(e.isTimed());
+    }
+
     // getTime() -------------------------------------------------------------------------------------------------------
 
     @Test
@@ -54,13 +64,13 @@ public abstract class TimedEventTest extends EventTest {
         assertEquals(1L, te.getTime().longValue());
     }
 
-    // getProperty() ---------------------------------------------------------------------------------------------------
+    // getProperty() by name -------------------------------------------------------------------------------------------
 
     /**
      * The timestamp should be accessible by its conventional property name.
      */
     @Test
-    public void getProperty_timestamp_Null() throws Exception {
+    public void getProperty_ByName_timestamp_Null() throws Exception {
 
         TimedEvent te = getEventToTest(null);
 
@@ -76,7 +86,7 @@ public abstract class TimedEventTest extends EventTest {
      * The timestamp should be accessible by its conventional property name.
      */
     @Test
-    public void getProperty_timestamp_NotNull() throws Exception {
+    public void getProperty_ByName_timestamp_NotNull() throws Exception {
 
         TimedEvent te = getEventToTest(125L);
 
@@ -88,6 +98,7 @@ public abstract class TimedEventTest extends EventTest {
         assertEquals(125L, time);
     }
 
+    // getProperty() by index ------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
 

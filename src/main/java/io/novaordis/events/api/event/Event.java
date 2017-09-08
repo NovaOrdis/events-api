@@ -45,6 +45,12 @@ public interface Event {
     // Public ----------------------------------------------------------------------------------------------------------
 
     /**
+     * @return true for timed events (whose timestamps can then be accessed via
+     * TimedEvent.getTimestamp()/TimedEvent.getTime() invocations) and false for non-timed events.
+     */
+    boolean isTimed();
+
+    /**
      * Stores the property, replacing the old property with the same name, if it exists. The order in which the
      * properties are set will be reflected in the order in which getProperties() returns them.
      *

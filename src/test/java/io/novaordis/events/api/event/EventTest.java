@@ -336,10 +336,10 @@ public abstract class EventTest {
         }
     }
 
-    // getProperty() ---------------------------------------------------------------------------------------------------
+    // getProperty() by name -------------------------------------------------------------------------------------------
 
     @Test
-    public  void getProperty_NullName() throws Exception {
+    public  void getProperty_ByName_NullName() throws Exception {
 
         Event event = getEventToTest();
 
@@ -356,7 +356,7 @@ public abstract class EventTest {
     }
 
     @Test
-    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics_NoSuchName() throws Exception {
+    public void getProperty_ByName_StringArgumentsImplyGetPropertyByNameSemantics_NoSuchName() throws Exception {
 
         Event event = getEventToTest();
 
@@ -368,7 +368,7 @@ public abstract class EventTest {
     }
 
     @Test
-    public void getProperty_StringArgumentsImplyGetPropertyByNameSemantics() throws Exception {
+    public void getProperty_ByName_StringArgumentsImplyGetPropertyByNameSemantics() throws Exception {
 
         Event event = getEventToTest();
 
@@ -386,8 +386,10 @@ public abstract class EventTest {
         assertEquals("test-value", sp2.getValue());
     }
 
+    // getProperty() by index ------------------------------------------------------------------------------------------
+
     @Test
-    public void getProperty_Index_NegativeIndex() throws Exception {
+    public void getProperty_ByIndex_NegativeIndex() throws Exception {
 
         Event event = getEventToTest();
 
@@ -406,7 +408,7 @@ public abstract class EventTest {
     }
 
     @Test
-    public void getProperty_Index_NoSuchProperty() throws Exception {
+    public void getProperty_ByIndex_NoSuchProperty() throws Exception {
 
         Event event = getEventToTest();
 
@@ -414,7 +416,7 @@ public abstract class EventTest {
     }
 
     @Test
-    public void getProperty_Index() throws Exception {
+    public void getProperty_ByIndex() throws Exception {
 
         Event event = getEventToTest();
 
