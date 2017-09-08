@@ -36,17 +36,17 @@ public class TimestampProperty extends PropertyBase {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public TimestampProperty(long time) {
+    public TimestampProperty(Long time) {
 
         this(TimedEvent.TIMESTAMP_PROPERTY_NAME, time, null);
     }
 
-    public TimestampProperty(String name, long time) {
+    public TimestampProperty(String name, Long time) {
 
         this(name, time, null);
     }
 
-    public TimestampProperty(String name, long time, SimpleDateFormat format) {
+    public TimestampProperty(String name, Long time, SimpleDateFormat format) {
 
         super(name, time, format);
     }

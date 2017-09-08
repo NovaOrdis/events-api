@@ -396,7 +396,6 @@ public abstract class EventTest {
         try {
 
             event.getProperty(-5);
-
             fail("should have thrown exception");
         }
         catch(IllegalArgumentException e) {
@@ -632,8 +631,6 @@ public abstract class EventTest {
 
         properties.clear();
 
-        assertTrue(properties.isEmpty());
-
         List<Property> properties2 = e.getProperties();
 
         //
@@ -645,7 +642,18 @@ public abstract class EventTest {
 
         for(int i = 0; i < lastPropertyIndex; i ++) {
 
-            assertEquals(originalProperties.get(0), properties2.get(0));
+            Property op = originalProperties.get(i);
+            Property p = properties2.get(i);
+
+
+            if (op instanceof TimestampProperty) {
+
+                assertEquals(op.getValue(), p.getValue());
+            }
+            else {
+
+                assertTrue(op.equals(p));
+            }
         }
     }
 
@@ -715,7 +723,14 @@ public abstract class EventTest {
 
         e.clearProperties();
 
-        assertTrue(e.getProperties().isEmpty());
+        if (e.isTimed()) {
+
+            assertEquals(1, e.getProperties().size());
+        }
+        else {
+
+            assertTrue(e.getProperties().isEmpty());
+        }
 
         assertTrue(e.getProperties(String.class).isEmpty());
         assertTrue(e.getProperties(Long.class).isEmpty());
@@ -906,6 +921,9 @@ public abstract class EventTest {
 
     // clearProperties() -----------------------------------------------------------------------------------------------
 
+    /**
+     * Will be overridden in TimedEventTest, because the behavior is different.
+     */
     @Test
     public void clearProperties() throws Exception {
 
@@ -1005,7 +1023,15 @@ public abstract class EventTest {
 
         Property p = e.removeProperty("something", String.class);
 
-        assertTrue(e.getProperties().isEmpty());
+
+        if (e.isTimed()) {
+
+            assertEquals(1, e.getProperties().size());
+        }
+        else {
+
+            assertTrue(e.getProperties().isEmpty());
+        }
 
         assertEquals("something", p.getName());
         assertEquals("something else", p.getValue());

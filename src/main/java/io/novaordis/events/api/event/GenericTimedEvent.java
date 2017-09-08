@@ -183,23 +183,34 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
 
         if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
 
-            //
-            // we call getTimestamp() and not use "timestamp" directly because some sub-classes
-            // (io.novaordis.events.api.gc.GCEventBase for example) mess with it.
-            //
-            // TODO review this and refactor
-            //
-            Timestamp ts = getTimestamp();
-
-            if (ts == null) {
-
-                return null;
-            }
-
-            return new TimestampProperty(ts.getTime());
+            return new TimestampProperty(getTime());
         }
 
         return super.getProperty(name);
+    }
+
+    /**
+     * The overridden behavior accounts for the presence of the timestamp.
+     */
+    @Override
+    public Property getProperty(int i) {
+
+        if (i < 0) {
+
+            throw new IllegalArgumentException("invalid property index: " + i);
+        }
+        else if (i == 0) {
+
+            //
+            // 0 has a special meaning for timed properties, it refers to the timestamp
+            //
+
+            return new TimestampProperty(getTime());
+        }
+        else {
+
+            return super.getProperty(i - 1);
+        }
     }
 
     /**
@@ -218,18 +229,8 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
         // in the list; we will need to return to this
         //
 
-        Long time = getTime();
-
-        if (time == null) {
-
-            return shallow;
-
-        }
-
-
         List<Property> result = new ArrayList<>(shallow.size() + 1);
-
-        result.add(new TimestampProperty(time));
+        result.add(new TimestampProperty(getTime()));
         result.addAll(shallow);
 
         return result;

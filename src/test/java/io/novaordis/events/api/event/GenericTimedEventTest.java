@@ -145,12 +145,15 @@ public class GenericTimedEventTest extends TimedEventTest {
 
         List<Property> result = gte.getProperties();
 
-        assertEquals(input.size(), result.size());
+        assertEquals(input.size() + 1, result.size());
+
+        TimestampProperty tp = (TimestampProperty)result.get(0);
+        assertNull(tp.getValue());
 
         for(int i = 0; i < input.size(); i ++) {
 
             Property ip = input.get(i);
-            Property op = result.get(i);
+            Property op = result.get(i + 1);
 
             assertEquals(ip.getName(), op.getName());
             assertEquals(ip.getValue(), op.getValue());

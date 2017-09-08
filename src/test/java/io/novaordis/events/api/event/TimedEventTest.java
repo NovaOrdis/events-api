@@ -16,9 +16,13 @@
 
 package io.novaordis.events.api.event;
 
+import io.novaordis.utilities.time.TimestampImpl;
 import org.junit.Test;
 
+import java.util.List;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -36,6 +40,36 @@ public abstract class TimedEventTest extends EventTest {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    // clearProperties() -----------------------------------------------------------------------------------------------
+
+    /**
+     * Overridden in TimedEventTest, because the behavior is different for timed events.
+     */
+    @Test
+    @Override
+    public void clearProperties() throws Exception {
+
+        Event e = getEventToTest();
+
+        e.setStringProperty("something-that-surely-does-not-exist-yet", "something");
+
+        assertFalse(e.getProperties().isEmpty());
+
+        e.clearProperties();
+
+        assertFalse(e.getProperties().isEmpty());
+
+        TimestampProperty tp = (TimestampProperty)e.getProperties().get(0);
+        assertNotNull(tp);
+
+        assertTrue(e.getProperties(String.class).isEmpty());
+        assertTrue(e.getProperties(Integer.class).isEmpty());
+        assertTrue(e.getProperties(Long.class).isEmpty());
+        assertTrue(e.getProperties(Event.class).isEmpty());
+    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
@@ -79,7 +113,8 @@ public abstract class TimedEventTest extends EventTest {
 
         TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
 
-        assertNull(p);
+        assertNotNull(p);
+        assertNull(p.getValue());
     }
 
     /**
@@ -99,6 +134,224 @@ public abstract class TimedEventTest extends EventTest {
     }
 
     // getProperty() by index ------------------------------------------------------------------------------------------
+
+    @Test
+    public void getProperty_ByIndex_NullTimestamp() throws Exception {
+
+        TimedEvent e = getEventToTest(null);
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p = (TimestampProperty)e.getProperty(0);
+        assertNull(p.getValue());
+
+        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertNull(p2.getValue());
+
+        //
+        // other properties
+        //
+
+        assertNull(e.getProperty(1));
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties = e.getProperties();
+
+        assertEquals(1, properties.size());
+
+        TimestampProperty p3 = (TimestampProperty)e.getProperty(0);
+        assertNull(p3.getValue());
+
+        //
+        // add properties
+        //
+
+        e.setStringProperty("A", "A value");
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p4 = (TimestampProperty)e.getProperty(0);
+        assertNull(p4.getValue());
+
+        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertNull(p5.getValue());
+
+        //
+        // other properties
+        //
+
+        assertEquals("A value", e.getProperty(1).getValue());
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties2 = e.getProperties();
+
+        assertEquals(2, properties2.size());
+
+        TimestampProperty p6 = (TimestampProperty)properties2.get(0);
+        assertNull(p6.getValue());
+
+        assertEquals("A value", properties2.get(1).getValue());
+
+        //
+        // set timestamp
+        //
+
+        e.setTimestamp(new TimestampImpl(7L));
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p7 = (TimestampProperty)e.getProperty(0);
+        assertEquals(7L, p7.getValue());
+
+        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertEquals(7L, p8.getValue());
+
+        //
+        // other properties
+        //
+
+        assertEquals("A value", e.getProperty(1).getValue());
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties3 = e.getProperties();
+
+        assertEquals(2, properties3.size());
+
+        TimestampProperty p9 = (TimestampProperty)properties3.get(0);
+        assertEquals(7L, p9.getValue());
+
+        assertEquals("A value", properties3.get(1).getValue());
+    }
+
+    @Test
+    public void getProperty_ByIndex_NonNullTimestamp() throws Exception {
+
+        TimedEvent e = getEventToTest(8L);
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p = (TimestampProperty)e.getProperty(0);
+        assertEquals(8L, p.getValue());
+
+        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertEquals(8L, p2.getValue());
+
+        //
+        // other properties
+        //
+
+        assertNull(e.getProperty(1));
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties = e.getProperties();
+
+        assertEquals(1, properties.size());
+
+        TimestampProperty p3 = (TimestampProperty)e.getProperty(0);
+        assertEquals(8L, p3.getValue());
+
+        //
+        // add properties
+        //
+
+        e.setStringProperty("A", "A value");
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p4 = (TimestampProperty)e.getProperty(0);
+        assertEquals(8L, p4.getValue());
+
+        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertEquals(8L, p5.getValue());
+
+        //
+        // other properties
+        //
+
+        assertEquals("A value", e.getProperty(1).getValue());
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties2 = e.getProperties();
+
+        assertEquals(2, properties2.size());
+
+        TimestampProperty p6 = (TimestampProperty)properties2.get(0);
+        assertEquals(8L, p6.getValue());
+
+        assertEquals("A value", properties2.get(1).getValue());
+
+        //
+        // set timestamp
+        //
+
+        e.setTimestamp(new TimestampImpl(80L));
+
+        //
+        // timestamp
+        //
+
+        TimestampProperty p7 = (TimestampProperty)e.getProperty(0);
+        assertEquals(80L, p7.getValue());
+
+        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        assertEquals(80L, p8.getValue());
+
+        //
+        // other properties
+        //
+
+        assertEquals("A value", e.getProperty(1).getValue());
+
+        assertNull(e.getProperty(2));
+
+        //
+        // getProperties()
+        //
+
+        List<Property> properties3 = e.getProperties();
+
+        assertEquals(2, properties3.size());
+
+        TimestampProperty p9 = (TimestampProperty)properties3.get(0);
+        assertEquals(80L, p9.getValue());
+
+        assertEquals("A value", properties3.get(1).getValue());
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
