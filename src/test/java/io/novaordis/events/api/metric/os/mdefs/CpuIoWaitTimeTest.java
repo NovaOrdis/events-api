@@ -90,85 +90,21 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
         CpuIoWaitTime m = new CpuIoWaitTime(new PropertyFactory(), new LocalOSAddress());
-        assertEquals(expected, m.getLinuxCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.LINUX;
-
-            String s = m.getCommand();
-            assertEquals(expected, s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertEquals(expected, m.getCommand(OSType.LINUX));
     }
 
     @Test
     public void getMacCommand() throws Exception {
 
         CpuIoWaitTime m = new CpuIoWaitTime(new PropertyFactory(), new LocalOSAddress());
-
-        assertNull(m.getMacCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.MAC;
-
-            String s = m.getCommand();
-            assertNull(s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertNull(m.getCommand(OSType.MAC));
     }
 
     @Test
     public void getWindowsCommand() throws Exception {
 
         CpuIoWaitTime m = new CpuIoWaitTime(new PropertyFactory(), new LocalOSAddress());
-        assertNull(m.getWindowsCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.WINDOWS;
-
-            String s = m.getCommand();
-            assertNull(s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertNull(m.getCommand(OSType.WINDOWS));
     }
 
     // parseCommandOutput() --------------------------------------------------------------------------------------------

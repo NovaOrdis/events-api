@@ -27,6 +27,8 @@ import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.utilities.ParsingException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.OSType;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.regex.Pattern;
 
@@ -37,6 +39,8 @@ import java.util.regex.Pattern;
 public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implements OSMetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(OSMetricDefinitionBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -88,44 +92,28 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // OSMetricDefinition implementation -------------------------------------------------------------------------------
 
     @Override
-    public String getCommand() {
+    public String getCommand(OSType osType) {
 
-        OSType t = OSType.getCurrent();
+        String command;
 
-        if (OSType.LINUX.equals(t)) {
+        if (OSType.LINUX.equals(osType)) {
 
-            return LINUX_COMMAND;
+            command = LINUX_COMMAND;
         }
-        else if (OSType.MAC.equals(t)) {
+        else if (OSType.MAC.equals(osType)) {
 
-            return MAC_COMMAND;
+            command = MAC_COMMAND;
         }
-        else if (OSType.WINDOWS.equals(t)) {
+        else if (OSType.WINDOWS.equals(osType)) {
 
-            return WINDOWS_COMMAND;
+            command = WINDOWS_COMMAND;
         }
         else {
 
-            throw new IllegalStateException(t + " not supported yet");
+            throw new IllegalStateException(osType + " not supported yet");
         }
-    }
 
-    @Override
-    public String getLinuxCommand() {
-
-        return LINUX_COMMAND;
-    }
-
-    @Override
-    public String getMacCommand() {
-
-        return MAC_COMMAND;
-    }
-
-    @Override
-    public String getWindowsCommand() {
-
-        return WINDOWS_COMMAND;
+        return command;
     }
 
     @Override
@@ -186,7 +174,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
         }
         catch(Exception e) {
 
-            log.warn("failed to parse \"" + getCommand() + "\" output: \n\n" + commandExecutionStdout + "\n", e);
+            log.warn("failed to parse \"" + getCommand(t) + "\" output: \n\n" + commandExecutionStdout + "\n", e);
         }
 
         return result;

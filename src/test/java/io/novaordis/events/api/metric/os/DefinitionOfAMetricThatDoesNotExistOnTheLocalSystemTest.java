@@ -64,78 +64,12 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     // others ----------------------------------------------------------------------------------------------------------
 
     @Test
-    public void getCommand_Linux() throws Exception {
+    public void getCommand() throws Exception {
 
         DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem d = getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Linux
-            //
-
-            OSType.current = OSType.LINUX;
-
-            assertNull(d.getCommand());
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
-    @Test
-    public void getCommand_Mac() throws Exception {
-
-        OSMetricDefinition d = getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.MAC;
-
-            assertNull(d.getCommand());
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
-    @Test
-    public void getCommand_Windows() throws Exception {
-
-        OSMetricDefinition d = getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Windows
-            //
-
-            OSType.current = OSType.WINDOWS;
-
-            assertNull(d.getCommand());
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertNull(d.getCommand(OSType.LINUX));
+        assertNull(d.getCommand(OSType.MAC));
+        assertNull(d.getCommand(OSType.WINDOWS));
     }
 
     @Test

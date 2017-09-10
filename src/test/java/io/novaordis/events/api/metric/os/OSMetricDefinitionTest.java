@@ -208,121 +208,6 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         assertFalse(description.isEmpty());
     }
 
-    // getCommand() ----------------------------------------------------------------------------------------------------
-
-    @Test
-    public void getCommand_Linux() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Linux
-            //
-
-            OSType.current = OSType.LINUX;
-
-            String s = d.getCommand();
-            assertEquals(d.getLinuxCommand(), s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
-    @Test
-    public void getCommand_Mac() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.MAC;
-
-            String s = d.getCommand();
-            assertEquals(d.getMacCommand(), s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
-    @Test
-    public void getCommand_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to Windows
-            //
-
-            OSType.current = OSType.WINDOWS;
-
-            String s = d.getCommand();
-            assertEquals(d.getWindowsCommand(), s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
-    @Test
-    public void getCommand_UnsupportedOS() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            //
-            // set the "current" OS to something that is not supported
-            //
-
-            OSType.current = OSType.TEST;
-
-            d.getCommand();
-
-            fail("should have thrown exception");
-        }
-        catch(IllegalStateException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.contains("not supported yet"));
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
-    }
-
     // per-OS parse*CommandOutput() ------------------------------------------------------------------------------------
 
     @Test
@@ -330,7 +215,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getLinuxCommand() == null) {
+        if (d.getCommand(OSType.LINUX) == null) {
 
             //
             // we don't read this metric on Linux, parseLinuxCommandOutput() should not be invoked
@@ -358,7 +243,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getMacCommand() == null) {
+        if (d.getCommand(OSType.MAC) == null) {
 
             //
             // we don't read this metric on Mac, getMacCommand() should not be invoked
@@ -386,7 +271,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getWindowsCommand() == null) {
+        if (d.getCommand(OSType.WINDOWS) == null) {
 
             //
             // we don't read this metric on Windows, getWindowsCommand() should not be invoked

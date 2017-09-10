@@ -46,7 +46,6 @@ public abstract class OSSourceBase extends MetricSourceBase {
     // Constants -------------------------------------------------------------------------------------------------------
 
     private static final Logger log = LoggerFactory.getLogger(OSSourceBase.class);
-    private static final boolean trace = log.isTraceEnabled();
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -89,25 +88,20 @@ public abstract class OSSourceBase extends MetricSourceBase {
             throw new IllegalStateException(this + " not started");
         }
 
-        if (trace) { log.trace(this + " collecting " + metricDefinitions); }
+        if (log.isTraceEnabled()) {
 
-        List<OSMetricDefinition> osMetricDefinitions = new ArrayList<>();
+            log.trace(this + " collecting " + metricDefinitions);
+        }
+
+        OSType thisOs = OSType.getCurrent();
         Map<String, String> commandOutputs = new HashMap<>();
+        List<OSMetricDefinition> osMetricDefinitions = new ArrayList<>();
 
         for(MetricDefinition d: metricDefinitions) {
 
-            //
-            // all metric definitions must be OSMetricDefinitions
-            //
+            OSMetricDefinition osmd = insureOSMetricDefinition(d);
 
-            if (!(d instanceof OSMetricDefinition)) {
-
-                throw new IllegalArgumentException(
-                        this + " does not handle " + d + ", an " + OSMetricDefinition.class.getSimpleName() + " is expected");
-            }
-
-            OSMetricDefinition osmd = (OSMetricDefinition)d;
-            String command = osmd.getCommand();
+            String command = osmd.getCommand(thisOs);
 
             //
             // command may be null, when we know the metric definition is not available for a specific O/S
@@ -116,8 +110,9 @@ public abstract class OSSourceBase extends MetricSourceBase {
             if (command == null) {
 
                 log.debug(d + " not available on " + OSType.getCurrent());
-            }
-            else {
+            } else {
+
+                log.debug(osmd + " is collected on " + OSType.getCurrent() + " by executing \"" + command  + "\"") ;
 
                 commandOutputs.put(command, null);
             }
@@ -129,7 +124,10 @@ public abstract class OSSourceBase extends MetricSourceBase {
         // execute all commands
         //
 
-        if (trace) { log.trace(this + " will execute the following commands: " + commandListToString(commandOutputs.keySet())); }
+        if (log.isTraceEnabled()) {
+
+            log.trace(this + " will execute the following commands: " + commandListToString(commandOutputs.keySet()));
+        }
 
         //
         // TODO if more than one command, execute in parallel
@@ -138,10 +136,11 @@ public abstract class OSSourceBase extends MetricSourceBase {
         for(String command: commandOutputs.keySet()) {
 
             //
-            // execute the command and associate the output with the command
+            // execute the command and associate the command output with the command
             //
 
             String stdout = execute(command);
+
             commandOutputs.put(command, stdout);
         }
 
@@ -153,13 +152,14 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
         for(OSMetricDefinition osmd: osMetricDefinitions) {
 
-            String commandOutput = commandOutputs.get(osmd.getCommand());
+            String commandOutput = commandOutputs.get(osmd.getCommand(thisOs));
 
             //
             // the command output will be null in case the metric is not available on the current O/S so
             // parseCommandOutput() implementations must be able to handle that
             //
             Property p = osmd.parseCommandOutput(commandOutput);
+
             results.add(p);
         }
 
@@ -183,7 +183,10 @@ public abstract class OSSourceBase extends MetricSourceBase {
      */
     String execute(String command) {
 
-        if (trace) { log.trace(this + " executing \"" + command + "\" on " + nativeExecutor); }
+        if (log.isTraceEnabled()) {
+
+            log.trace(this + " executing \"" + command + "\" on " + nativeExecutor);
+        }
 
         String stdout = null;
 
@@ -272,6 +275,21 @@ public abstract class OSSourceBase extends MetricSourceBase {
         }
 
         return s;
+    }
+
+    /**
+     * The method insures the instance is a OSMetricDefinition and performs the cast, or throws an
+     * IllegalArgumentException otherwise.
+     */
+    private OSMetricDefinition insureOSMetricDefinition(MetricDefinition d) {
+
+        if (!(d instanceof OSMetricDefinition)) {
+
+            throw new IllegalArgumentException(this + " does not handle " + d + ", an " +
+                    OSMetricDefinition.class.getSimpleName() + " is expected");
+        }
+
+        return (OSMetricDefinition)d;
     }
 
     // Inner classes ---------------------------------------------------------------------------------------------------

@@ -21,6 +21,7 @@ import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.os.OSType;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -71,24 +72,9 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
     // MetricDefinition implementation ---------------------------------------------------------------------------------
 
     @Override
-    public String getCommand() {
+    public String getCommand(OSType t) {
 
         return command;
-    }
-
-    @Override
-    public String getLinuxCommand() {
-        throw new RuntimeException("getLinuxCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getMacCommand() {
-        throw new RuntimeException("getMacCommand() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    public String getWindowsCommand() {
-        throw new RuntimeException("getWindowsCommand() NOT YET IMPLEMENTED");
     }
 
     @Override

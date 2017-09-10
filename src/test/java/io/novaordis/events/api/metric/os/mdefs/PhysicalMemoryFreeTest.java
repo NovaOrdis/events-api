@@ -90,28 +90,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
         String expected = "/usr/bin/top -b -n 1 -p 0";
 
         PhysicalMemoryFree m = new PhysicalMemoryFree(new PropertyFactory(), new LocalOSAddress());
-        assertEquals(expected, m.getLinuxCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.LINUX;
-
-            String s = m.getCommand();
-            assertEquals(expected, s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertEquals(expected, m.getCommand(OSType.LINUX));
     }
 
     @Test
@@ -120,28 +99,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
         String expected = "/usr/bin/top -l 1 -n 0";
 
         PhysicalMemoryFree m = new PhysicalMemoryFree(new PropertyFactory(), new LocalOSAddress());
-        assertEquals(expected, m.getMacCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.MAC;
-
-            String s = m.getCommand();
-            assertEquals(expected, s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertEquals(expected, m.getCommand(OSType.MAC));
     }
 
     @Test
@@ -150,28 +108,7 @@ public class PhysicalMemoryFreeTest extends OSMetricDefinitionTest {
         String expected = "typeperf -sc 1 \"\\Memory\\*\"";
 
         PhysicalMemoryFree m = new PhysicalMemoryFree(new PropertyFactory(), new LocalOSAddress());
-        assertEquals(expected, m.getWindowsCommand());
-
-        try {
-
-            //
-            // set the "current" OS to Mac
-            //
-
-            OSType.current = OSType.WINDOWS;
-
-            String s = m.getCommand();
-            assertEquals(expected, s);
-
-        }
-        finally {
-
-            //
-            // restore the "current" system
-            //
-
-            OSType.reset();
-        }
+        assertEquals(expected, m.getCommand(OSType.WINDOWS));
     }
 
     // parseCommandOutput() --------------------------------------------------------------------------------------------
