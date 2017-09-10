@@ -23,7 +23,7 @@ import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
-import io.novaordis.events.api.parser.ParsingException;
+import io.novaordis.utilities.ParsingException;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
