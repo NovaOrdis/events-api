@@ -24,12 +24,14 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.OSType;
+import io.novaordis.utilities.parsing.ParsingException;
+import io.novaordis.utilities.parsing.PreParsedContent;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.regex.Pattern;
 
 /**
@@ -45,14 +47,35 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // Static ----------------------------------------------------------------------------------------------------------
 
     protected Class TYPE;
+
     protected String DESCRIPTION;
+
     protected MeasureUnit BASE_UNIT;
+
     protected String LABEL;
-    protected String LINUX_COMMAND; // null means the metric is not available on Linux
+
+    //
+    // source files
+    //
+    protected File LINUX_SOURCE_FILE; // null means the metric is not available in a file on Linux
+
+    protected File MAC_SOURCE_FILE;  // null means the metric is not available in a file on MAC
+
+    protected File WINDOWS_SOURCE_FILE;  // null means the metric is not available in a file on MAC
+
+    //
+    // OS commands
+    //
+    protected String LINUX_COMMAND; // null means the metric is not available as output of a command on Linux
+
     protected Pattern LINUX_PATTERN;
-    protected String MAC_COMMAND;  // null means the metric is not available on Mac
+
+    protected String MAC_COMMAND;  // null means the metric is not available as output of a command on Mac
+
     protected Pattern MAC_PATTERN;
-    protected String WINDOWS_COMMAND;  // null means the metric is not available on Windows
+
+    protected String WINDOWS_COMMAND;  // null means the metric is not available as output of a command on Windows
+
     protected Pattern WINDOWS_PATTERN;
 
     // Attributes ------------------------------------------------------------------------------------------------------
@@ -92,6 +115,96 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // OSMetricDefinition implementation -------------------------------------------------------------------------------
 
     @Override
+    public File getSourceFile(OSType osType) {
+
+        File sourceFile;
+
+        if (OSType.LINUX.equals(osType)) {
+
+            sourceFile = LINUX_SOURCE_FILE;
+        }
+        else if (OSType.MAC.equals(osType)) {
+
+            sourceFile = MAC_SOURCE_FILE;
+        }
+        else if (OSType.WINDOWS.equals(osType)) {
+
+            sourceFile = WINDOWS_SOURCE_FILE;
+        }
+        else {
+
+            throw new IllegalStateException(osType + " not supported yet");
+        }
+
+        return sourceFile;
+    }
+
+    @Override
+    public Property parseSourceFileContent(OSType osTypes, byte[] sourceFileContent, PreParsedContent previousReading) {
+
+        Property result = getPropertyInstance(getId(), getType(), getBaseUnit());
+
+        if (sourceFileContent == null) {
+
+            //
+            // this means the metric cannot be read from a file on the target system, and the method must be prepared
+            // to handle this situation by manufacturing a null-value property.
+            //
+
+            return result;
+        }
+
+        String methodName = null;
+        Object value = null;
+        boolean knownOS = true;
+
+        OSType t = OSType.getCurrent();
+
+        try {
+
+            if (OSType.LINUX.equals(t)) {
+
+                methodName = "parseLinuxSourceFileContent";
+                value = parseLinuxSourceFileContent(sourceFileContent, previousReading);
+            }
+            else if (OSType.MAC.equals(t)) {
+
+                methodName = "parseMacSourceFileContent";
+                value = parseMacSourceFileContent(sourceFileContent, previousReading);
+            }
+            else if (OSType.WINDOWS.equals(t)) {
+
+                methodName = "parseWindowsSourceFileContent";
+                value = parseWindowsSourceFileContent(sourceFileContent, previousReading);
+            }
+            else {
+
+                knownOS = false;
+                log.warn("OS type " + t + " not supported yet");
+            }
+
+            //
+            // the method must always return a non-null value, if null is seen here, it is an implementation error
+            //
+
+            if (knownOS && value == null) {
+
+                log.warn(getClass().getName() + "." + methodName + "(...) incorrectly implemented, it returns null");
+            }
+
+            result.setValue(value);
+
+        }
+        catch(Exception e) {
+
+            log.warn("failed to parse the content of the source file \"" + getSourceFile(t), e);
+        }
+
+        return result;
+    }
+
+
+    @Override
     public String getCommand(OSType osType) {
 
         String command;
@@ -117,7 +230,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     }
 
     @Override
-    public Property parseCommandOutput(String commandExecutionStdout) {
+    public Property parseCommandOutput(OSType osType, String commandExecutionStdout, PreParsedContent previousReading) {
 
         Property result = getPropertyInstance(getId(), getType(), getBaseUnit());
 
@@ -193,27 +306,78 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // Protected -------------------------------------------------------------------------------------------------------
 
     //
-    // Command output parsing for various OSes -------------------------------------------------------------------------
+    // Source file content parsing for various OSes --------------------------------------------------------------------
     //
 
     /**
-     * @return the value corresponding to this metric definition, as extracted from the output of the associated
-     * MacOS command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
-     * layer may throw an IllegalStateException. The value must be expressed in the BASE_UNIT declared above,
-     * otherwise the calling layer may throw an IllegalStateException.
+     * @param previousReading optional pre-parsed content of the previous reading.
+     *
+     * @return the value corresponding to this metric definition, as extracted from the associated source file content.
+     * The type of the value must match TYPE for this class, as declared above, otherwise the calling layer may throw
+     * an IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling
+     * layer may throw an IllegalStateException.
      *
      * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
-     * command output, the method must throw an exception containing a human readable message. Any exceptions, checked
-     * or unchecked, should be thrown immediately - the calling layer will log appropriately.
+     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
+     * unchecked, should be thrown immediately - the calling layer will log appropriately.
      *
-     * If the metric is not available on MacOS, the calling layer must not invoke this method.
+     * If the metric is not available on Linux, the calling layer must not invoke this method.
      *
      * @see MetricDefinition#getBaseUnit()
      * @see MetricDefinition#getBaseUnit()
      *
-     * @exception ParsingException if the expected patters cannot be matched.
+     * @exception ParsingException on invalid content.
      */
-    protected abstract Object parseMacCommandOutput(String commandOutput) throws Exception;
+    protected abstract Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException;
+
+    /**
+     * @param previousReading optional pre-parsed content of the previous reading.
+     *
+     * @return the value corresponding to this metric definition, as extracted from the associated source file content.
+     * The type of the value must match TYPE for this class, as declared above, otherwise the calling layer may throw
+     * an IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling
+     * layer may throw an IllegalStateException.
+     *
+     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
+     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
+     * unchecked, should be thrown immediately - the calling layer will log appropriately.
+     *
+     * If the metric is not available on Mac, the calling layer must not invoke this method.
+     *
+     * @see MetricDefinition#getBaseUnit()
+     * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException on invalid content.
+     */
+    protected abstract Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException;
+
+    /**
+     * @param previousReading optional pre-parsed content of the previous reading.
+     *
+     * @return the value corresponding to this metric definition, as extracted from the associated source file content.
+     * The type of the value must match TYPE for this class, as declared above, otherwise the calling layer may throw
+     * an IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling
+     * layer may throw an IllegalStateException.
+     *
+     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
+     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
+     * unchecked, should be thrown immediately - the calling layer will log appropriately.
+     *
+     * If the metric is not available on Windows, the calling layer must not invoke this method.
+     *
+     * @see MetricDefinition#getBaseUnit()
+     * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException on invalid content.
+     */
+    protected abstract Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException;
+
+    //
+    // Command output parsing for various OSes -------------------------------------------------------------------------
+    //
 
     /**
      * @return the value corresponding to this metric definition, as extracted from the output of the associated
@@ -232,7 +396,27 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @exception ParsingException if the expected patters cannot be matched.
      */
-    protected abstract Object parseLinuxCommandOutput(String commandOutput) throws Exception;
+    protected abstract Object parseLinuxCommandOutput(String commandOutput) throws ParsingException;
+
+    /**
+     * @return the value corresponding to this metric definition, as extracted from the output of the associated
+     * MacOS command. The type of the value must match TYPE for this class, as declared above, otherwise the calling
+     * layer may throw an IllegalStateException. The value must be expressed in the BASE_UNIT declared above,
+     * otherwise the calling layer may throw an IllegalStateException.
+     *
+     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
+     * command output, the method must throw an exception containing a human readable message. Any exceptions, checked
+     * or unchecked, should be thrown immediately - the calling layer will log appropriately.
+     *
+     * If the metric is not available on MacOS, the calling layer must not invoke this method.
+     *
+     * @see MetricDefinition#getBaseUnit()
+     * @see MetricDefinition#getBaseUnit()
+     *
+     * @exception ParsingException if the expected patters cannot be matched.
+     */
+    protected abstract Object parseMacCommandOutput(String commandOutput) throws ParsingException;
+
 
     /**
      * @return the value corresponding to this metric definition, as extracted from the output of the associated
@@ -251,7 +435,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @exception ParsingException if the expected patters cannot be matched.
      */
-    protected abstract Object parseWindowsCommandOutput(String commandOutput) throws Exception;
+    protected abstract Object parseWindowsCommandOutput(String commandOutput) throws ParsingException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

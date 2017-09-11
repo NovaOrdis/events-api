@@ -16,12 +16,12 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.event.MockProperty;
-import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.OSType;
+import io.novaordis.utilities.parsing.ParsingException;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -78,26 +78,44 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
     }
 
     @Override
-    public Property parseCommandOutput(String commandExecutionStdout) {
-
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-        return new MockProperty(getId(), commandExecutionStdout);
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+//    @Override
+//    public Property parseCommandOutput(String commandExecutionStdout) {
+//
+//        //
+//        // we return the command execution stdout as value of the property, to allow for extra consistency testing
+//        //
+//        return new MockProperty(getId(), commandExecutionStdout);
+//    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 

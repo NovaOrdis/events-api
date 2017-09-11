@@ -20,14 +20,19 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * See https://kb.novaordis.com/index.php/Proc-meminfo#Physical_Memory_Used_by_Processes
+ * The amount of physical memory used by processes. It is calculated with the formula:
+ *
+ *   Used Physical Memory = MemTotal - MemFree - Buffers - Cached
+ *
+ *  https://kb.novaordis.com/index.php/Events_OS_Metrics#PhysicalMemoryUsed
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -70,16 +75,37 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
         this.MAC_PATTERN = Pattern.compile(
                 "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
-
-        this.WINDOWS_COMMAND = null;
-        this.WINDOWS_PATTERN = null;
-
     }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+    // Public ----------------------------------------------------------------------------------------------------------
+
+    // Package protected -----------------------------------------------------------------------------------------------
+
+    // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -91,14 +117,20 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
         String usedMemoryUnit = m.group(1);
         String usedMemory = m.group(4);
 
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
-        return value;
+        try {
+            //noinspection UnnecessaryLocalVariable
+            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
+            return value;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = MAC_PATTERN.matcher(commandOutput);
 
@@ -110,14 +142,20 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
         String usedMemory = m.group(1);
         String usedMemoryUnit = m.group(2);
 
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
+        try {
+            //noinspection UnnecessaryLocalVariable
+            Long value = MemoryArithmetic.parse(usedMemory, usedMemoryUnit, (MemoryMeasureUnit)getBaseUnit());
 
-        return value;
+            return value;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
 
@@ -128,12 +166,6 @@ public class PhysicalMemoryUsed extends OSMetricDefinitionBase {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }
-
-    // Public ----------------------------------------------------------------------------------------------------------
-
-    // Package protected -----------------------------------------------------------------------------------------------
-
-    // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
 

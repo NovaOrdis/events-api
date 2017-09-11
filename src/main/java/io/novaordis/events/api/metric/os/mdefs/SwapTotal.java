@@ -20,14 +20,17 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * See https://kb.novaordis.com/index.php/Proc-meminfo#SwapTotal
+ * The total amount of swap available.
+ *
+ * https://kb.novaordis.com/index.php/Events_OS_Metrics#SwapTotal
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -62,11 +65,6 @@ public class SwapTotal extends OSMetricDefinitionBase {
         this.LINUX_PATTERN = Pattern.compile(
                 "([KMGiB]+) *Swap *: *([0-9]+) total, *([0-9]+) free, *([0-9]+) used\\.");
 
-        this.MAC_COMMAND = null;
-        this.MAC_PATTERN = null;
-
-        this.WINDOWS_COMMAND =  null;
-        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -76,7 +74,28 @@ public class SwapTotal extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -88,19 +107,25 @@ public class SwapTotal extends OSMetricDefinitionBase {
         String memoryUnit = m.group(1);
         String s = m.group(2);
 
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(s, memoryUnit, (MemoryMeasureUnit) BASE_UNIT);
-        return value;
+        try {
+            //noinspection UnnecessaryLocalVariable
+            Long value = MemoryArithmetic.parse(s, memoryUnit, (MemoryMeasureUnit) BASE_UNIT);
+            return value;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         throw new IllegalStateException(this + " not available on Mac");
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

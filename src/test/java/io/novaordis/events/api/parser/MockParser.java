@@ -17,7 +17,7 @@
 package io.novaordis.events.api.parser;
 
 import io.novaordis.events.api.event.Event;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 
 import java.util.Collections;
 import java.util.List;

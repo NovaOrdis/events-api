@@ -20,14 +20,19 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * See https://kb.novaordis.com/index.php/Vmstat#sy
+ * The percentage of total CPU time spent executing system calls on behalf of processes.
+ *
+ * https://kb.novaordis.com/index.php/Events_OS_Metrics#CpuKernelTime
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
@@ -54,6 +59,8 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
 
         this.DESCRIPTION = "Percentage of total CPU time spent running kernel code (system time).";
 
+        this.LINUX_SOURCE_FILE = new File("/proc/stat");
+
         this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
         //
@@ -70,8 +77,6 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
         this.MAC_PATTERN = Pattern.compile(
                 "CPU usage: +([0-9]+\\.[0-9]+)% user, +([0-9]+\\.[0-9]+)% sys, +([0-9]+\\.[0-9]+)% idle");
 
-        this.WINDOWS_COMMAND =  null;
-        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -81,7 +86,29 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -92,13 +119,20 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
 
         String sy = m.group(2);
 
-        //noinspection UnnecessaryLocalVariable
-        Float f = PercentageArithmetic.parse(sy);
-        return f;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Float f = PercentageArithmetic.parse(sy);
+            return f;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = MAC_PATTERN.matcher(commandOutput);
 
@@ -109,13 +143,20 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
 
         String sys = m.group(2);
 
-        //noinspection UnnecessaryLocalVariable
-        Float f = PercentageArithmetic.parse(sys);
-        return f;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Float f = PercentageArithmetic.parse(sys);
+            return f;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

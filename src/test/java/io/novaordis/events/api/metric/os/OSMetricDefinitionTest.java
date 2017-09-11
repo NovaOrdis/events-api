@@ -23,13 +23,15 @@ import io.novaordis.events.api.metric.MetricDefinitionParser;
 import io.novaordis.events.api.metric.MetricDefinitionTest;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryTotal;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
-import io.novaordis.utilities.ParsingException;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
+import io.novaordis.utilities.parsing.ParsingException;
+import io.novaordis.utilities.parsing.PreParsedContent;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.File;
 import java.util.Collections;
 import java.util.List;
 
@@ -79,9 +81,11 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         assertEquals(1, measurements.size());
 
         Property p = measurements.get(0);
+
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getBaseUnit(), p.getMeasureUnit());
         assertEquals(d.getType(), p.getType());
+
         Object value = p.getValue();
 
         if (value == null) {
@@ -99,7 +103,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         }
     }
 
-    // parse() ---------------------------------------------------------------------------------------------------------
+    // MetricDefinitionParser.parse() ----------------------------------------------------------------------------------
 
     @Test
     public void parse() throws Exception {
@@ -133,6 +137,8 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
     @Test
     public void preRefactoring_StaticScopeAfterTwoDifferentClassesAreLoaded() throws Exception {
+
+        fail("return here and understand, possibly expand");
 
         PropertyFactory f = new PropertyFactory();
 
@@ -208,7 +214,375 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         assertFalse(description.isEmpty());
     }
 
-    // per-OS parse*CommandOutput() ------------------------------------------------------------------------------------
+    // getSourceFile() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getSourceFile_Generic() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        File linuxSourceFile = d.getSourceFile(OSType.LINUX);
+
+        if (OSType.LINUX.equals(OSType.getCurrent()) && linuxSourceFile != null) {
+
+            assertTrue(linuxSourceFile.isFile());
+            assertTrue(linuxSourceFile.canRead());
+        }
+
+        File macSourceFile = d.getSourceFile(OSType.MAC);
+
+        if (OSType.MAC.equals(OSType.getCurrent()) && macSourceFile != null) {
+
+            assertTrue(macSourceFile.isFile());
+            assertTrue(macSourceFile.canRead());
+        }
+
+        File windowsSourceFile = d.getSourceFile(OSType.WINDOWS);
+
+        if (OSType.WINDOWS.equals(OSType.getCurrent()) && windowsSourceFile != null) {
+
+            assertTrue(windowsSourceFile.isFile());
+            assertTrue(windowsSourceFile.canRead());
+        }
+    }
+
+    // parseSourceFileContent() ----------------------------------------------------------------------------------------
+
+    @Test
+    public void parseSourceFileContent_InvalidReading_Linux() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseSourceFileContent(OSType.LINUX, output.getBytes(), previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_InvalidReading_Mac() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.MAC, output, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_InvalidReading_Windows() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.WINDOWS, output, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_Null_Linux() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.LINUX, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_Null_Mac() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.MAC, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_Null_Windows() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.WINDOWS, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public abstract void parseSourceFileContent_ValidLinuxOutput() throws Exception;
+
+    @Test
+    public abstract void parseSourceFileContent_ValidMacOutput() throws Exception;
+
+    @Test
+    public abstract void parseSourceFileContent_ValidWindowsOutput() throws Exception;
+
+    // parseLinuxSourceFileContent()/parseMacSourceFileContent()/parseWindowsSourceFileContent() -----------------------
+
+    @Test
+    public void parseLinuxSourceFileContent_InvalidReading() throws Exception {
+
+        OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getCommand(OSType.LINUX) == null) {
+
+            //
+            // we don't read this metric on Linux, parseLinuxCommandOutput() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid Linux command output";
+
+        try {
+
+            d.parseLinuxCommandOutput(output);
+            fail("should have thrown exception");
+        }
+        catch(ParsingException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("failed to match pattern"));
+        }
+    }
+
+    @Test
+    public void parseMacSourceFileContent_InvalidReading() throws Exception {
+
+        OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getCommand(OSType.MAC) == null) {
+
+            //
+            // we don't read this metric on Mac, getMacCommand() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid Mac command output";
+
+        try {
+
+            d.parseMacCommandOutput(output);
+            fail("should have thrown exception");
+        }
+        catch(ParsingException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("failed to match pattern"));
+        }
+    }
+
+    @Test
+    public void parseWindowsSourceFileContent_InvalidReading() throws Exception {
+
+        OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        if (d.getCommand(OSType.WINDOWS) == null) {
+
+            //
+            // we don't read this metric on Windows, getWindowsCommand() should not be invoked
+            //
+
+            return;
+        }
+
+        String output = "invalid Windows command output";
+
+        try {
+
+            d.parseWindowsCommandOutput(output);
+            fail("should have thrown exception");
+        }
+        catch(ParsingException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("failed to match pattern"));
+        }
+    }
+
+    // parseCommandOutput() --------------------------------------------------------------------------------------------
+
+    @Test
+    public void parseCommandOutput_InvalidReading_Linux() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid output we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.LINUX, output, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_InvalidReading_Mac() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid output we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.MAC, output, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_InvalidReading_Windows() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        String output = "I am pretty sure this is not valid output we can parse the metric from";
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.WINDOWS, output, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_Null_Linux() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.LINUX, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_Null_Mac() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.MAC, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseCommandOutput_Null_Windows() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        Property p;
+
+        PreParsedContent previousReading = null;
+
+        //noinspection ConstantConditions
+        p = d.parseCommandOutput(OSType.WINDOWS, null, previousReading);
+
+        assertEquals(d.getId(), p.getName());
+        assertEquals(d.getType(), p.getType());
+        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+        assertNull(p.getValue());
+    }
+
+    @Test
+    public abstract void parseCommandOutput_ValidLinuxOutput() throws Exception;
+
+    @Test
+    public abstract void parseCommandOutput_ValidMacOutput() throws Exception;
+
+    @Test
+    public abstract void parseCommandOutput_ValidWindowsOutput() throws Exception;
+
+    // parseLinuxCommandOutput()/parseMacCommandOutput()/parseWindowsCommandOutput() -----------------------------------
 
     @Test
     public void parseLinuxCommandOutput_InvalidReading() throws Exception {
@@ -224,7 +598,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             return;
         }
 
-        String output = "invalid output";
+        String output = "invalid Linux command output";
 
         try {
 
@@ -252,7 +626,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             return;
         }
 
-        String output = "invalid output";
+        String output = "invalid Mac command output";
 
         try {
 
@@ -280,7 +654,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             return;
         }
 
-        String output = "invalid output";
+        String output = "invalid Windows command output";
 
         try {
 
@@ -293,161 +667,6 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
             assertTrue(msg.contains("failed to match pattern"));
         }
     }
-
-    // parseCommandOutput() --------------------------------------------------------------------------------------------
-
-    @Test
-    public void parseCommandOutput_InvalidReading_Linux() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.LINUX;
-            p = d.parseCommandOutput(output);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_InvalidReading_Mac() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.MAC;
-            p = d.parseCommandOutput(output);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_InvalidReading_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.WINDOWS;
-            p = d.parseCommandOutput(output);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Linux() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.LINUX;
-            p = d.parseCommandOutput(null);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Mac() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.MAC;
-            p = d.parseCommandOutput(null);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        try {
-
-            OSType.current = OSType.WINDOWS;
-            p = d.parseCommandOutput(null);
-        }
-        finally {
-
-            OSType.reset();
-        }
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public abstract void parseCommandOutput_ValidLinuxOutput() throws Exception;
-
-    @Test
-    public abstract void parseCommandOutput_ValidMacOutput() throws Exception;
-
-    @Test
-    public abstract void parseCommandOutput_ValidWindowsOutput() throws Exception;
 
     // Package protected -----------------------------------------------------------------------------------------------
 

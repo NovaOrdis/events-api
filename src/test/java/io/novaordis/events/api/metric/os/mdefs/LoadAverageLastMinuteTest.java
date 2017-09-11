@@ -109,6 +109,34 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
         assertNull(m.getCommand(OSType.WINDOWS));
     }
 
+    // getSourceFile() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getSourceFile() throws Exception {
+
+        LoadAverageLastMinute m = getMetricDefinitionToTest();
+        assertNull(m.getSourceFile(OSType.LINUX));
+        assertNull(m.getSourceFile(OSType.MAC));
+        assertNull(m.getSourceFile(OSType.WINDOWS));
+    }
+
+    // parseSourceFileContent() ----------------------------------------------------------------------------------------
+
+    @Override
+    public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidLinuxOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void parseSourceFileContent_ValidMacOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidMacOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidWindowsOutput() NOT YET IMPLEMENTED");
+    }
+
     // parseCommandOutput() --------------------------------------------------------------------------------------------
 
     //
@@ -132,19 +160,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
         LoadAverageLastMinute d = getMetricDefinitionToTest();
 
-        Property p;
-
-        try {
-
-            OSType.current = OSType.LINUX;
-
-            p = d.parseCommandOutput(output);
-
-        }
-        finally {
-
-            OSType.reset();
-        }
+        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -175,19 +191,7 @@ public class LoadAverageLastMinuteTest extends OSMetricDefinitionTest {
 
         LoadAverageLastMinute d = getMetricDefinitionToTest();
 
-        Property p;
-
-        try {
-
-            OSType.current = OSType.MAC;
-
-            p = d.parseCommandOutput(output);
-
-        }
-        finally {
-
-            OSType.reset();
-        }
+        Property p = d.parseCommandOutput(OSType.MAC, output, null);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

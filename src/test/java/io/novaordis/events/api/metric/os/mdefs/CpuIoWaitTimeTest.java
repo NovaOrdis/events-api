@@ -24,6 +24,8 @@ import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
 import org.junit.Test;
 
+import java.io.File;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
@@ -107,6 +109,34 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
         assertNull(m.getCommand(OSType.WINDOWS));
     }
 
+    // getSourceFile() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void getSourceFile() throws Exception {
+
+        CpuIoWaitTime m = getMetricDefinitionToTest();
+        assertEquals(new File("/proc/stat"), m.getSourceFile(OSType.LINUX));
+        assertNull(m.getSourceFile(OSType.MAC));
+        assertNull(m.getSourceFile(OSType.WINDOWS));
+    }
+
+    // parseSourceFileContent() ----------------------------------------------------------------------------------------
+
+    @Override
+    public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidLinuxOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void parseSourceFileContent_ValidMacOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidMacOutput() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidWindowsOutput() NOT YET IMPLEMENTED");
+    }
+
     // parseCommandOutput() --------------------------------------------------------------------------------------------
 
     //
@@ -130,19 +160,7 @@ public class CpuIoWaitTimeTest extends OSMetricDefinitionTest {
 
         CpuIoWaitTime d = getMetricDefinitionToTest();
 
-        Property p;
-
-        try {
-
-            OSType.current = OSType.LINUX;
-
-            p = d.parseCommandOutput(output);
-
-        }
-        finally {
-
-            OSType.reset();
-        }
+        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

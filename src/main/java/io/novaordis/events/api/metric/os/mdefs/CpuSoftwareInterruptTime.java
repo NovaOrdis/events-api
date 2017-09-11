@@ -20,14 +20,18 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
+import java.io.File;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * See https://kb.novaordis.com/index.php/Vmstat#si_2
+ * The percentage of total CPU time spent servicing software interrupts.
+ *
+ *  https://kb.novaordis.com/index.php/Events_OS_Metrics#CpuSoftwareInterruptTime
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -55,6 +59,8 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
 
         this.DESCRIPTION = "Percentage of total CPU time spent time spent spent servicing software interrupts.";
 
+        this.LINUX_SOURCE_FILE = new File("/proc/stat");
+
         this.LINUX_COMMAND = "/usr/bin/top -b -n 1 -p 0";
 
         //
@@ -63,11 +69,6 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
         this.LINUX_PATTERN = Pattern.compile(
                 "%Cpu.*: +([0-9]+\\.[0-9]) us, +([0-9]+\\.[0-9]) sy, +([0-9]+\\.[0-9]) ni, +([0-9]+\\.[0-9]) id, +([0-9]+\\.[0-9]) wa, +([0-9]+\\.[0-9]) hi, +([0-9]+\\.[0-9]) si, +([0-9]+\\.[0-9]) st");
 
-        this.MAC_COMMAND = null;
-        this.MAC_PATTERN = null;
-
-        this.WINDOWS_COMMAND =  null;
-        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -77,7 +78,29 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -88,19 +111,26 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
 
         String si = m.group(7);
 
-        //noinspection UnnecessaryLocalVariable
-        Float f = PercentageArithmetic.parse(si);
-        return f;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Float f = PercentageArithmetic.parse(si);
+            return f;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         throw new IllegalStateException(this + " not available on Mac");
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

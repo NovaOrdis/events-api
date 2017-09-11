@@ -19,13 +19,16 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
+ * https://kb.novaordis.com/index.php/Events_OS_Metrics#LoadAverageLastTenMinutes
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
@@ -67,8 +70,6 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
         this.MAC_PATTERN = Pattern.compile(
                 "Load Avg: +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+), +([0-9]+\\.[0-9]+)");
 
-        this.WINDOWS_COMMAND =  null;
-        this.WINDOWS_PATTERN = null;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -78,7 +79,28 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -89,13 +111,20 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
 
         String s = m.group(3);
 
-        //noinspection UnnecessaryLocalVariable
-        Float f = PercentageArithmetic.parse(s);
-        return f;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Float f = PercentageArithmetic.parse(s);
+            return f;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = MAC_PATTERN.matcher(commandOutput);
 
@@ -106,13 +135,20 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
 
         String s = m.group(3);
 
-        //noinspection UnnecessaryLocalVariable
-        Float f = PercentageArithmetic.parse(s);
-        return f;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Float f = PercentageArithmetic.parse(s);
+            return f;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         throw new RuntimeException("NOT YET IMPLEMENTED");
     }

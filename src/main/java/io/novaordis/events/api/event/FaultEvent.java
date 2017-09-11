@@ -16,7 +16,7 @@
 
 package io.novaordis.events.api.event;
 
-import io.novaordis.utilities.LineNumberException;
+import io.novaordis.utilities.parsing.LineNumberException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>

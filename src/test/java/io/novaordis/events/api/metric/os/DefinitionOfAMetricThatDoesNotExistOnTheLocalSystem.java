@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.parsing.ParsingException;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 /**
  * Simulates a metric that does not exits on the system.
@@ -63,17 +65,32 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
     // OSMetricDefinitionBase overrides --------------------------------------------------------------------------------
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
         throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 

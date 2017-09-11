@@ -158,7 +158,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
             // the command output will be null in case the metric is not available on the current O/S so
             // parseCommandOutput() implementations must be able to handle that
             //
-            Property p = osmd.parseCommandOutput(commandOutput);
+            Property p = osmd.parseCommandOutput(thisOs, commandOutput, null);
 
             results.add(p);
         }

@@ -20,16 +20,17 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
-import io.novaordis.utilities.ParsingException;
+import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.parsing.PreParsedContent;
 
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * See https://kb.novaordis.com/index.php/Proc-meminfo#MemFree
+ * The amount of physical RAM, left unused by the system.
  *
- * https://kb.novaordis.com/index.php/Proc-meminfo#Physical_Memory_Used_by_Processes
+ * https://kb.novaordis.com/index.php/Events_OS_Metrics#PhysicalMemoryFree
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
@@ -84,7 +85,28 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws Exception {
+    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+            throws ParsingException {
+
+        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
@@ -96,13 +118,20 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
         String memoryUnit = m.group(1);
         String freeMemory = m.group(3);
 
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
-        return value;
+        try {
+
+            //noinspection UnnecessaryLocalVariable
+            Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+            return value;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws Exception {
+    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = MAC_PATTERN.matcher(commandOutput);
 
@@ -114,13 +143,19 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
         String unusedMemory = m.group(3);
         String unusedMemoryUnit = m.group(4);
 
-        //noinspection UnnecessaryLocalVariable
-        Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
-        return value;
+        try {
+            //noinspection UnnecessaryLocalVariable
+            Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+            return value;
+        }
+        catch(Exception e) {
+
+            throw new ParsingException(e);
+        }
     }
 
     @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws Exception {
+    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
 
         Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
 
