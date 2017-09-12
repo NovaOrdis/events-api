@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
+import io.novaordis.linux.CPUStats;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.parsing.PreParsedContent;
@@ -79,26 +80,27 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseLinuxSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+        PreParsedContent[] preParsedContent = distributePreParsedContent(content, previousReading);
+        float value = ((CPUStats) preParsedContent[1]).getSoftirqTimePercentage((CPUStats) preParsedContent[2]);
+        return new InternalMetricReadingContainer(value, preParsedContent[0]);
     }
 
     @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseMacSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseWindowsSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
-
 
     @Override
     protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {

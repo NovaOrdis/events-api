@@ -65,21 +65,21 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
     // OSMetricDefinitionBase overrides --------------------------------------------------------------------------------
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
-        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+    protected InternalMetricReadingContainer parseLinuxSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new ParsingException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
-        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+    protected InternalMetricReadingContainer parseMacSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
-        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+    protected InternalMetricReadingContainer parseWindowsSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override

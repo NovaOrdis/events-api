@@ -307,9 +307,14 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
     @Override
     protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
 
-        File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading0.txt");
-        assertTrue(f.isFile());
-        return Files.readAllBytes(f.toPath());
+        if (OSType.LINUX.equals(osType)) {
+
+            File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading0.txt");
+            assertTrue(f.isFile());
+            return Files.readAllBytes(f.toPath());
+        }
+
+        return null;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -80,7 +80,6 @@ public class CpuUserTime extends OSMetricDefinitionBase {
         //
         this.MAC_PATTERN = Pattern.compile(
                 "CPU usage: +([0-9]+\\.[0-9]+)% user, +([0-9]+\\.[0-9]+)% sys, +([0-9]+\\.[0-9]+)% idle");
-
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -99,17 +98,17 @@ public class CpuUserTime extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseMacSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseWindowsSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
