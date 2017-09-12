@@ -197,7 +197,18 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
                         osType + ", it returns null");
             }
 
+            if (log.isTraceEnabled()) {
+
+                log.trace(this + " computed based on current reading " +
+                        (lastReading == null ? "only" : "and previous reading") + ": " + value);
+            }
+
             this.lastReading = mrc ==  null ? null : mrc.getPreParsedContent();
+
+            if (log.isTraceEnabled() && lastReading != null) {
+
+                log.trace(this + " stored reading " + lastReading);
+            }
 
             result.setValue(value);
         }
@@ -265,7 +276,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
         try {
 
-            mrc = parseCommandOutput(osType, commandExecutionStdout, null);
+            mrc = parseCommandOutput(osType, commandExecutionStdout, lastReading);
 
             //
             // the method must always return a non-null value, if null is seen here, it is an implementation error
@@ -279,11 +290,22 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
                         osType + ", it returns null");
             }
 
+            if (log.isTraceEnabled()) {
+
+                log.trace(this + " computed based on current reading " +
+                        (lastReading == null ? "only" : "and previous reading") + ": " + value);
+            }
+
             //
             // not used preParsedContent yet
             //
 
             // PreParsedContent thisReading = mrc ==  null ? null : mrc.getPreParsedContent();
+
+            if (log.isTraceEnabled() && lastReading != null) {
+
+                log.trace(this + " stored reading " + lastReading);
+            }
 
             result.setValue(value);
         }

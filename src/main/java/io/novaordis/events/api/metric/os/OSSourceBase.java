@@ -93,10 +93,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
             throw new IllegalStateException(this + " not started");
         }
 
-        if (log.isTraceEnabled()) {
-
-            log.trace(this + " collecting " + metricDefinitions);
-        }
+        log.debug(this + " collecting " + metricDefinitions);
 
         OSType thisOs = OSType.getCurrent();
 
@@ -121,13 +118,19 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
             if (sourceFile != null) {
 
-                log.debug(osmd + " is collected on " + OSType.getCurrent() + " by parsing " + sourceFile);
+                if (log.isTraceEnabled()) {
+
+                    log.trace(osmd + " is collected on " + OSType.getCurrent() + " by parsing " + sourceFile);
+                }
 
                 sourceFileContents.put(sourceFile, null);
             }
             else if (command != null) {
 
-                log.debug(osmd + " is collected on " + OSType.getCurrent() + " by executing \"" + command  + "\"") ;
+                if (log.isTraceEnabled()) {
+
+                    log.trace(osmd + " is collected on " + OSType.getCurrent() + " by executing \"" + command + "\"");
+                }
 
                 commandOutputs.put(command, null);
             }
@@ -143,10 +146,10 @@ public abstract class OSSourceBase extends MetricSourceBase {
         // read all files and temporarily cache the content in memory
         //
 
-        if (log.isTraceEnabled() && !sourceFileContents.isEmpty()) {
+        if (!sourceFileContents.isEmpty()) {
 
-            log.trace(this +
-                    " will read the following file(s): " + toCommaSeparatedList(sourceFileContents.keySet(), false));
+            log.debug(this + " will read the following file(s): " +
+                    toCommaSeparatedList(sourceFileContents.keySet(), false));
         }
 
         for(File file: sourceFileContents.keySet()) {
@@ -163,10 +166,10 @@ public abstract class OSSourceBase extends MetricSourceBase {
         // execute all commands and temporarily cache the stdout in memory
         //
 
-        if (log.isTraceEnabled() && !commandOutputs.isEmpty()) {
+        if (!commandOutputs.isEmpty()) {
 
-            log.trace(this +
-                    " will execute the following command(s): " + toCommaSeparatedList(commandOutputs.keySet(), true));
+            log.debug(this + " will execute the following command(s): " +
+                    toCommaSeparatedList(commandOutputs.keySet(), true));
         }
 
         for(String command: commandOutputs.keySet()) {
