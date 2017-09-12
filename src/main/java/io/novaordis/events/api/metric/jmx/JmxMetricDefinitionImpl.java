@@ -21,6 +21,8 @@ import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
 import io.novaordis.events.api.metric.MetricDefinitionException;
 import io.novaordis.utilities.address.Address;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import javax.management.MalformedObjectNameException;
 import javax.management.ObjectName;
@@ -34,6 +36,8 @@ import javax.management.ObjectName;
 public class JmxMetricDefinitionImpl extends MetricDefinitionBase implements JmxMetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(JmxMetricDefinition.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 

@@ -19,8 +19,6 @@ package io.novaordis.events.api.metric;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.utilities.address.Address;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 /**
  * https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Definition
@@ -31,8 +29,6 @@ import org.slf4j.LoggerFactory;
 public interface MetricDefinition {
 
     // Constants -------------------------------------------------------------------------------------------------------
-
-    Logger log = LoggerFactory.getLogger(MetricDefinition.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
