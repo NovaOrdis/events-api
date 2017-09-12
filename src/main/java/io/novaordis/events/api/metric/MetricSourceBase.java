@@ -82,7 +82,7 @@ public abstract class MetricSourceBase implements MetricSource {
             throw new IllegalArgumentException("null metric definition list");
         }
 
-        insureAllDefinitionsAreAssociatedWithThisAddress(metricDefinitions);
+        insureAllDefinitionsAreBoundToThisAddress(metricDefinitions);
 
         if (!isStarted()) {
 
@@ -177,7 +177,7 @@ public abstract class MetricSourceBase implements MetricSource {
 
     // Private ---------------------------------------------------------------------------------------------------------
 
-    private void insureAllDefinitionsAreAssociatedWithThisAddress(List<MetricDefinition> metricDefinitions)
+    private void insureAllDefinitionsAreBoundToThisAddress(List<MetricDefinition> metricDefinitions)
             throws MetricSourceException {
 
         if (metricDefinitions == null) {
@@ -189,9 +189,15 @@ public abstract class MetricSourceBase implements MetricSource {
 
         for(MetricDefinition d: metricDefinitions) {
 
-            if (!thisAddress.equals(d.getMetricSourceAddress())) {
+            Address mdBinding = d.getMetricSourceAddress();
 
-                throw new MetricSourceException(d + " has a different source than " + this);
+            if (mdBinding == null) {
+
+                throw new MetricSourceException(d + " is not bound to any source");
+            }
+            else if (!thisAddress.equals(mdBinding)) {
+
+                throw new MetricSourceException(d + " is bound to a different source than " + this + ": " + mdBinding);
             }
         }
     }

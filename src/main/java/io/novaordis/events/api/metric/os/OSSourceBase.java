@@ -231,9 +231,9 @@ public abstract class OSSourceBase extends MetricSourceBase {
     }
 
     /**
-     * Read the file and return the content as a byte[]. If reading fails for any reason (file not available, I/O error,
-     * etc.) return null and log human interpretable warnings. The method mustn't knowingly throw any unchecked
-     * exception.
+     * Read the metric value source file and return the content as a byte[]. If reading fails for any reason (file not
+     * available, I/O error, etc.) return null and log human interpretable warnings. The method mustn't knowingly throw
+     * any unchecked exception.
      */
     byte[] read(File file) {
 

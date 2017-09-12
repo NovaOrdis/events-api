@@ -112,7 +112,7 @@ public abstract class MetricSourceTest {
     }
 
     @Test
-    public void collectMetrics_DefinitionsHaveDifferentSources() throws Exception {
+    public void collectMetrics_DefinitionBoundToADifferentSource() throws Exception {
 
         MetricSource source = getMetricSourceToTest();
 
@@ -130,7 +130,9 @@ public abstract class MetricSourceTest {
         catch(MetricSourceException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("has a different source than"));
+            assertTrue(msg.contains("is bound to a different source than"));
+            assertTrue(msg.contains("" + source));
+            assertTrue(msg.contains("" + source2));
         }
     }
 

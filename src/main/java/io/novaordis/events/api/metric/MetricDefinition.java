@@ -23,7 +23,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 /**
- * https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Definitions
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Metric_Definition
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16

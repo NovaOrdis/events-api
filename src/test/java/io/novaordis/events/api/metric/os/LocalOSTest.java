@@ -68,7 +68,7 @@ public class LocalOSTest extends OSSourceBaseTest {
 
     @Test
     @Override
-    public void collectMetrics_DefinitionsHaveDifferentSources() throws Exception {
+    public void collectMetrics_DefinitionBoundToADifferentSource() throws Exception {
 
         //
         // this test does not make sense of LocalOS, all LocalOS instances are equivalent

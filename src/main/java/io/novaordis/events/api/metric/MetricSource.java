@@ -84,7 +84,7 @@ public interface MetricSource {
      *
      * @param metricDefinitions a non-null, possibly empty, list of metrics to collect.
      *
-     * @exception MetricSourceException if metric definitions do not list this source among their sources.
+     * @exception MetricSourceException if a metric definition present in the list is not bound to this source.
      *      This indicates a programming error, not a runtime collection failure.
      *
      * @exception IllegalArgumentException if the list is null (may be empty though).
