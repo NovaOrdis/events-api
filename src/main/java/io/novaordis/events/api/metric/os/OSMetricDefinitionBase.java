@@ -60,6 +60,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     //
     // source files
     //
+
     protected File LINUX_SOURCE_FILE; // null means the metric is not available in a file on Linux
 
     protected File MAC_SOURCE_FILE;  // null means the metric is not available in a file on MAC
@@ -69,6 +70,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     //
     // OS commands
     //
+
     protected String LINUX_COMMAND; // null means the metric is not available as output of a command on Linux
 
     protected Pattern LINUX_PATTERN;
@@ -342,8 +344,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException;
+    protected abstract InternalMetricReadingContainer parseLinuxSourceFileContent(
+            byte[] content, PreParsedContent previousReading) throws ParsingException;
 
     /**
      * @param previousReading optional pre-parsed content of the previous reading. May be null.
@@ -368,8 +370,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException;
+    protected abstract InternalMetricReadingContainer parseMacSourceFileContent(
+            byte[] content, PreParsedContent previousReading) throws ParsingException;
 
     /**
      * @param previousReading optional pre-parsed content of the previous reading. May be null.
@@ -394,8 +396,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException;
+    protected abstract InternalMetricReadingContainer parseWindowsSourceFileContent(
+            byte[] content, PreParsedContent previousReading) throws ParsingException;
 
     //
     // Command output parsing for various OSes -------------------------------------------------------------------------
@@ -438,7 +440,6 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception ParsingException if the expected patters cannot be matched.
      */
     protected abstract Object parseMacCommandOutput(String commandExecutionStdout) throws ParsingException;
-
 
     /**
      * @return the value (not Property, which will be assembled at the upper layer) corresponding to this metric
