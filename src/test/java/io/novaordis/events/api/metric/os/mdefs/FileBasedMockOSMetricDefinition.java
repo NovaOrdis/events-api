@@ -16,36 +16,32 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
-import io.novaordis.events.api.event.MockProperty;
-import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
-import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.parsing.PreParsedContent;
 
+import java.io.File;
+
 /**
+ * Use this mock OSMetricDefinition to experiment with metric definitions that create metric values from file content.
+ *
+ * @see CommandBasedMockOSMetricDefinition
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/3/16
  */
-public class MockOSMetricDefinition extends OSMetricDefinitionBase {
+public class FileBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    private static boolean FAIL_IN_CONSTRUCTOR = false;
-
-    public static void setFailInConstructor(boolean b) {
-
-        FAIL_IN_CONSTRUCTOR = b;
-    }
-
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private String command;
+    private File file;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -53,47 +49,32 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
      * Invoked by reflection.
      */
     @SuppressWarnings("unused")
-    public MockOSMetricDefinition(PropertyFactory f, OSAddress osMetricSourceAddress) {
+    public FileBasedMockOSMetricDefinition(PropertyFactory f, OSAddress osMetricSourceAddress) {
 
-        this(MockOSMetricDefinition.class.getSimpleName(), f, osMetricSourceAddress, null);
+        this(FileBasedMockOSMetricDefinition.class.getSimpleName(), f, osMetricSourceAddress, null);
     }
 
-    public MockOSMetricDefinition(String id, PropertyFactory f, OSAddress osMetricSourceAddress, String command) {
+    public FileBasedMockOSMetricDefinition(String id, PropertyFactory f, OSAddress osMetricSourceAddress, File file) {
 
         super(f, osMetricSourceAddress);
 
         setId(id);
 
-        this.command = command;
-
-        this.TYPE = Integer.class;
-
-        if (FAIL_IN_CONSTRUCTOR) {
-
-            throw new RuntimeException("SYNTHETIC");
-        }
+        this.file = file;
     }
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
-    @Override
-    public String getCommand(OSType t) {
-
-        return command;
-    }
-
-    @Override
-    public Property parseCommandOutput(OSType osType, String commandExecutionStdout, PreParsedContent previousReading) {
-
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-        return new MockProperty(getId(), commandExecutionStdout);
-    }
 
     @Override
     protected InternalMetricReadingContainer parseLinuxSourceFileContent
             (byte[] content, PreParsedContent previousReading) throws ParsingException {
+
+        //
+        // we return the command execution stdout as value of the property, to allow for extra consistency testing
+        //
+        //return new MockProperty(getId(), commandExecutionStdout);
+
 
         throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
@@ -126,7 +107,7 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
 
     @Override
     protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-        
+
         throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 

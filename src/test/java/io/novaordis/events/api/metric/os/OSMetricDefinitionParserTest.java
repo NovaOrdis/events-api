@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.os;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricException;
 import io.novaordis.events.api.metric.MetricDefinition;
-import io.novaordis.events.api.metric.os.mdefs.MockOSMetricDefinition;
+import io.novaordis.events.api.metric.os.mdefs.CommandBasedMockOSMetricDefinition;
 import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryFree;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.AddressImpl;
@@ -67,15 +67,15 @@ public class OSMetricDefinitionParserTest {
 
         try {
 
-            MockOSMetricDefinition.setFailInConstructor(true);
+            CommandBasedMockOSMetricDefinition.setFailInConstructor(true);
 
-            OSMetricDefinitionParser.parse(f, "MockOSMetricDefinition");
+            OSMetricDefinitionParser.parse(f, "CommandBasedMockOSMetricDefinition");
             fail("should have thrown exception");
         }
         catch(MetricException e) {
 
             String msg = e.getMessage();
-            assertEquals("failed to instantiate metric \"MockOSMetricDefinition\"", msg);
+            assertEquals("failed to instantiate metric \"CommandBasedMockOSMetricDefinition\"", msg);
 
             InvocationTargetException cause = (InvocationTargetException)e.getCause();
 
@@ -84,7 +84,7 @@ public class OSMetricDefinitionParserTest {
         }
         finally {
 
-            MockOSMetricDefinition.setFailInConstructor(false);
+            CommandBasedMockOSMetricDefinition.setFailInConstructor(false);
         }
     }
 

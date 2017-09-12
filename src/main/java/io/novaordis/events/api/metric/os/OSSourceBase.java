@@ -36,7 +36,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * A metric source whose all metrics can be obtained executing OS commands.
+ * A metric source for which all metrics can be obtained by reading and parsing content of files that are available to
+ * the corresponding OS, or by executing OS commands and parsing the result.
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/5/17
@@ -94,6 +95,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
         }
 
         OSType thisOs = OSType.getCurrent();
+
         Map<String, String> commandOutputs = new HashMap<>();
         List<OSMetricDefinition> osMetricDefinitions = new ArrayList<>();
 
@@ -110,7 +112,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
             if (command == null) {
 
                 log.debug(d + " not available on " + OSType.getCurrent());
-            } else {
+            }
+            else {
 
                 log.debug(osmd + " is collected on " + OSType.getCurrent() + " by executing \"" + command  + "\"") ;
 
@@ -152,7 +155,8 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
         for(OSMetricDefinition osmd: osMetricDefinitions) {
 
-            String commandOutput = commandOutputs.get(osmd.getCommand(thisOs));
+            String commandKey = osmd.getCommand(thisOs);
+            String commandOutput = commandOutputs.get(commandKey);
 
             //
             // the command output will be null in case the metric is not available on the current O/S so

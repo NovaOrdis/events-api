@@ -10,7 +10,7 @@
     <appender name="CONSOLE" class="org.apache.log4j.ConsoleAppender">
         <errorHandler class="org.apache.log4j.helpers.OnlyOnceErrorHandler"/>
         <param name="Target" value="System.out"/>
-        <param name="Threshold" value="DEBUG"/>
+        <param name="Threshold" value="TRACE"/>
         <layout class="org.apache.log4j.PatternLayout">
             <param name="ConversionPattern" value="@%t %d{ABSOLUTE} %-5p [%c{1}] %m%n"/>
         </layout>
@@ -34,6 +34,7 @@
     </category>
 
     <root>
+        <level value="TRACE"/>
         <appender-ref ref="CONSOLE"/>
         <!-- <appender-ref ref="FILE"/> -->
     </root>

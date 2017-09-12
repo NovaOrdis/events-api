@@ -351,6 +351,13 @@ public abstract class MetricSourceTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
+     * @param addresses needed to simulate "different" metric source. If not specified, the default metric source
+     *                is returned. Only the first argument is used, if more than one is sent, we will throw
+     *                IllegalArgumentException.
+     */
+    protected abstract MetricSource getMetricSourceToTest(String... addresses) throws Exception;
+
+    /**
      * Gives the sub-classes a chance to provide more specialized mocks.
      */
     protected MetricDefinition getCorrespondingMockMetricDefinition(Address metricSourceAddress) throws Exception {
@@ -360,12 +367,6 @@ public abstract class MetricSourceTest {
         return new MockMetricDefinition(f, metricSourceAddress);
     }
 
-    /**
-     * @param addresses needed to simulate "different" metric source. If not specified, the default metric source
-     *                is returned. Only the first argument is used, if more than one is sent, we will throw
-     *                IllegalArgumentException.
-     */
-    protected abstract MetricSource getMetricSourceToTest(String... addresses) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

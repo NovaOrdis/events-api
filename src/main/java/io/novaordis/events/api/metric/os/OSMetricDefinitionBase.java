@@ -411,7 +411,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @exception ParsingException if the expected patters cannot be matched.
      */
-    protected abstract Object parseLinuxCommandOutput(String commandOutput) throws ParsingException;
+    protected abstract Object parseLinuxCommandOutput(String commandExecutionStdout) throws ParsingException;
 
     /**
      * @return the value (not Property, which will be assembled at the upper layer) corresponding to this metric
@@ -430,7 +430,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @exception ParsingException if the expected patters cannot be matched.
      */
-    protected abstract Object parseMacCommandOutput(String commandOutput) throws ParsingException;
+    protected abstract Object parseMacCommandOutput(String commandExecutionStdout) throws ParsingException;
 
 
     /**
@@ -450,7 +450,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      *
      * @exception ParsingException if the expected patters cannot be matched.
      */
-    protected abstract Object parseWindowsCommandOutput(String commandOutput) throws ParsingException;
+    protected abstract Object parseWindowsCommandOutput(String commandExecutionStdout) throws ParsingException;
 
     // Protected static ------------------------------------------------------------------------------------------------
 
@@ -489,9 +489,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
         return result;
     }
 
-    // Private ---------------------------------------------------------------------------------------------------------
-
-    private Property getPropertyInstance(String id, Class c, MeasureUnit u) {
+    protected Property getPropertyInstance(String id, Class c, MeasureUnit u) {
 
         //
         // (.) TODO if I am ever in the situation to modify this, add a static Property.getInstance() to
@@ -525,6 +523,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
         throw new RuntimeException("NOT YET IMPLEMENTED: getPropertyInstance(...) for " + c);
     }
+
+    // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

@@ -18,6 +18,8 @@ package io.novaordis.events.api.metric;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.utilities.address.Address;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 
@@ -28,6 +30,8 @@ import java.util.List;
 public abstract class MetricSourceBase implements MetricSource {
 
     // Constants -------------------------------------------------------------------------------------------------------
+
+    private static final Logger log = LoggerFactory.getLogger(MetricSourceBase.class);
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -62,8 +66,8 @@ public abstract class MetricSourceBase implements MetricSource {
     }
 
     /**
-     * The base implementation of this method insures that all metric definitions are associated with the source
-     * the method is invoked on, and it also starts the source, if not started already.
+     * The base implementation of this method insures that all metric definitions are associated with the source the
+     * method is invoked on, and it also starts the source, if not started already.
      *
      * @throws MetricSourceException if a metric definition is associated with a different metric source than
      *      this one, if the source is not started and cannot be started.
@@ -81,6 +85,8 @@ public abstract class MetricSourceBase implements MetricSource {
         insureAllDefinitionsAreAssociatedWithThisAddress(metricDefinitions);
 
         if (!isStarted()) {
+
+            log.debug(this + " requested to collect metrics, but not started; starting now ...");
 
             start();
         }
