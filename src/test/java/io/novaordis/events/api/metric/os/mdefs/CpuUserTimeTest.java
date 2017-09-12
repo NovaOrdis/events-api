@@ -128,14 +128,15 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
     // parseSourceFileContent() ----------------------------------------------------------------------------------------
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
+    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
 
         CpuUserTime m = getMetricDefinitionToTest();
 
         assertNotNull(m.getSourceFile(OSType.LINUX));
 
-        // simulate the first reading
+        // simulate the first reading, valid content
 
         String firstReading =
                 "cpu  1 2 3 4 5 6 7 8 9 10\n" +
@@ -164,7 +165,7 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
         assertEquals(1f / 55, f.floatValue(), 0.00001);
 
-        // simulate the second reading
+        // simulate the second reading, valid content
 
         String secondReading =
                 "cpu  11 22 33 44 55 66 77 88 99 110\n" +
@@ -188,8 +189,9 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
         assertEquals(10f / 550, f2.floatValue(), 0.00001);
     }
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidMacOutput() throws Exception {
+    public void parseSourceFileContent_ValidMacContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -200,8 +202,9 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
         assertNull(m.getSourceFile(OSType.MAC));
     }
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
+    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -285,14 +288,6 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
         //
     }
 
-    @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
-
-        File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading0.txt");
-        assertTrue(f.isFile());
-        return Files.readAllBytes(f.toPath());
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -301,6 +296,14 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
     protected CpuUserTime getMetricDefinitionToTest() throws Exception {
 
         return new CpuUserTime(new PropertyFactory(), new LocalOSAddress());
+    }
+
+    @Override
+    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+
+        File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading0.txt");
+        assertTrue(f.isFile());
+        return Files.readAllBytes(f.toPath());
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

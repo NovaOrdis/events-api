@@ -98,7 +98,6 @@ public class CpuHardwareInterruptTime extends OSMetricDefinitionBase {
         throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
 
-
     @Override
     protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
 

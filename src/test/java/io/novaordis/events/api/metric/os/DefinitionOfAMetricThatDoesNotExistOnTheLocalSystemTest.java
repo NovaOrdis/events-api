@@ -63,20 +63,20 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidLinuxOutput() NOT YET IMPLEMENTED");
+    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidLinuxContent() NOT YET IMPLEMENTED");
     }
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidMacOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidMacOutput() NOT YET IMPLEMENTED");
+    public void parseSourceFileContent_ValidMacContent() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidMacContent() NOT YET IMPLEMENTED");
     }
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidWindowsOutput() NOT YET IMPLEMENTED");
+    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
+        throw new RuntimeException("parseSourceFileContent_ValidWindowsContent() NOT YET IMPLEMENTED");
     }
 
     // others ----------------------------------------------------------------------------------------------------------

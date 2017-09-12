@@ -121,8 +121,9 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
 
     // parseSourceFileContent() ----------------------------------------------------------------------------------------
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
+    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -133,8 +134,9 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
         assertNull(m.getSourceFile(OSType.LINUX));
     }
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidMacOutput() throws Exception {
+    public void parseSourceFileContent_ValidMacContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -145,8 +147,9 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
         assertNull(m.getSourceFile(OSType.MAC));
     }
 
+    @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
+    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 

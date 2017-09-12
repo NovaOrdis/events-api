@@ -451,13 +451,13 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public abstract void parseSourceFileContent_ValidLinuxOutput() throws Exception;
+    public abstract void parseSourceFileContent_ValidLinuxContent() throws Exception;
 
     @Test
-    public abstract void parseSourceFileContent_ValidMacOutput() throws Exception;
+    public abstract void parseSourceFileContent_ValidMacContent() throws Exception;
 
     @Test
-    public abstract void parseSourceFileContent_ValidWindowsOutput() throws Exception;
+    public abstract void parseSourceFileContent_ValidWindowsContent() throws Exception;
 
     // parseLinuxSourceFileContent()/parseMacSourceFileContent()/parseWindowsSourceFileContent() -----------------------
 
