@@ -16,6 +16,8 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.MockProperty;
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
@@ -64,13 +66,15 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
 
         this.command = command;
 
+        this.TYPE = Integer.class;
+
         if (FAIL_IN_CONSTRUCTOR) {
 
             throw new RuntimeException("SYNTHETIC");
         }
     }
 
-    // MetricDefinition implementation ---------------------------------------------------------------------------------
+    // Overrides -------------------------------------------------------------------------------------------------------
 
     @Override
     public String getCommand(OSType t) {
@@ -79,44 +83,50 @@ public class MockOSMetricDefinition extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    public Property parseCommandOutput(OSType osType, String commandExecutionStdout, PreParsedContent previousReading) {
+
+        //
+        // we return the command execution stdout as value of the property, to allow for extra consistency testing
+        //
+        return new MockProperty(getId(), commandExecutionStdout);
+    }
+
+    @Override
+    protected InternalMetricReadingContainer parseLinuxSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+
         throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseMacSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+
         throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
-            throws ParsingException {
+    protected InternalMetricReadingContainer parseWindowsSourceFileContent
+            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+
         throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
 
-//    @Override
-//    public Property parseCommandOutput(String commandExecutionStdout) {
-//
-//        //
-//        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-//        //
-//        return new MockProperty(getId(), commandExecutionStdout);
-//    }
-
     @Override
     protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
+
         throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
     protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
+
         throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
     }
 
     @Override
     protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
+        
         throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
     }
 

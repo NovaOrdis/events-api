@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.DoubleProperty;
 import io.novaordis.events.api.event.FloatProperty;
+import io.novaordis.events.api.event.IntegerProperty;
 import io.novaordis.events.api.event.LongProperty;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
@@ -497,7 +498,13 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
         // io.novaordis.events.api.event.Property and fully implement there
         //
 
-        if (Long.class.equals(c)) {
+        if (Integer.class.equals(c)) {
+
+            IntegerProperty p = new IntegerProperty(id);
+            p.setMeasureUnit(u);
+            return p;
+        }
+        else if (Long.class.equals(c)) {
 
             LongProperty p = new LongProperty(id);
             p.setMeasureUnit(u);
