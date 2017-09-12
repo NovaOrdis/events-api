@@ -222,16 +222,10 @@ public class SwapFreeTest extends OSMetricDefinitionTest {
     }
 
     @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
 
         // no source file for this type of metric
         return null;
-    }
-
-    @Override
-    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
-
-        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -78,9 +78,9 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
         this.MAC_PATTERN = Pattern.compile(
                 "PhysMem: ([0-9]+)([MG]+) used .* ([0-9]+)([MG]+) unused");
 
-        this.WINDOWS_COMMAND =  "typeperf -sc 1 \"\\Memory\\*\"";
+        //this.WINDOWS_COMMAND =  "typeperf -sc 1 \"\\Memory\\*\"";
 
-        this.WINDOWS_PATTERN = Pattern.compile("TBD");
+        //this.WINDOWS_PATTERN = Pattern.compile("TBD");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -154,18 +154,6 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
             }
 
 
-        }
-        else if (OSType.WINDOWS.equals(osType)) {
-
-            Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
-
-            if (!m.find()) {
-
-                throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
-
-            }
-
-            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
         else {
 

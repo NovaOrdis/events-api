@@ -137,13 +137,13 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     }
 
     @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
 
         return null;
     }
 
     @Override
-    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+    protected String getValidCommandOutputToTest(OSType osType, int seed) throws Exception {
 
         throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }

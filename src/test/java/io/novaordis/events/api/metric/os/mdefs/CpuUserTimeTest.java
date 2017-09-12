@@ -311,22 +311,19 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
     }
 
     @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
 
         if (OSType.LINUX.equals(osType)) {
 
-            File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading-0.txt");
+            File f = new File(
+                    System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading-" + seed + ".txt");
+
             assertTrue(f.isFile());
+
             return Files.readAllBytes(f.toPath());
         }
 
         return null;
-    }
-
-    @Override
-    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
-
-        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

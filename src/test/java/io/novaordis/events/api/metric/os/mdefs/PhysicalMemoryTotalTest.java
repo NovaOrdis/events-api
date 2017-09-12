@@ -107,10 +107,12 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
     @Test
     public void getWindowsCommand() throws Exception {
 
-        String expected = "typeperf -sc 1 \"\\Memory\\*\"";
+        // noop
 
-        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
-        assertEquals(expected, m.getCommand(OSType.WINDOWS));
+//        String expected = "typeperf -sc 1 \"\\Memory\\*\"";
+//
+//        PhysicalMemoryTotal m = new PhysicalMemoryTotal(new PropertyFactory(), new LocalOSAddress());
+//        assertEquals(expected, m.getCommand(OSType.WINDOWS));
     }
 
     // getSourceFile() -------------------------------------------------------------------------------------------------
@@ -320,16 +322,10 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
     }
 
     @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
 
         // no source file for this type of metric
         return null;
-    }
-
-    @Override
-    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
-
-        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -98,6 +98,8 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    private PreParsedContent lastReading;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     protected OSMetricDefinitionBase(PropertyFactory propertyFactory, Address metricSourceAddress) {
@@ -181,7 +183,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
         try {
 
-            mrc = parseSourceFileContent(osType, sourceFileContent, null);
+            mrc = parseSourceFileContent(osType, sourceFileContent, lastReading);
 
             //
             // the method must always return a non-null value, if null is seen here, it is an implementation error
@@ -195,7 +197,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
                         osType + ", it returns null");
             }
 
-            PreParsedContent thisReading = mrc ==  null ? null : mrc.getPreParsedContent();
+            this.lastReading = mrc ==  null ? null : mrc.getPreParsedContent();
 
             result.setValue(value);
         }
@@ -277,7 +279,11 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
                         osType + ", it returns null");
             }
 
-            PreParsedContent thisReading = mrc ==  null ? null : mrc.getPreParsedContent();
+            //
+            // not used preParsedContent yet
+            //
+
+            // PreParsedContent thisReading = mrc ==  null ? null : mrc.getPreParsedContent();
 
             result.setValue(value);
         }
@@ -300,6 +306,14 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // Package protected static ----------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * May be null.
+     */
+    protected PreParsedContent getLastReading() {
+
+        return lastReading;
+    }
 
     //
     // Source file content parsing for various OSes --------------------------------------------------------------------

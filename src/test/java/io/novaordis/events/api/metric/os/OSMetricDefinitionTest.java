@@ -298,6 +298,70 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
+    public void parseSourceFileContent_LastReadingTesting() throws Exception {
+
+        OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
+
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
+
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
+
+            if (d.getSourceFile(osType) == null) {
+
+                continue;
+            }
+
+            //
+            // first reading, there's no history
+            //
+
+            PreParsedContent lastReading = d.getLastReading();
+            assertNull(lastReading);
+
+            byte[] c = getValidSourceFileContentToTest(osType, 0);
+
+            Property p = d.parseSourceFileContent(osType, c);
+            assertNotNull(p);
+            assertNotNull(p.getValue());
+
+            PreParsedContent lastReading2 = d.getLastReading();
+            assertNotNull(lastReading2);
+
+            //
+            // second reading there's history
+            //
+
+            byte[] c2 = getValidSourceFileContentToTest(osType, 1);
+
+            Property p2 = d.parseSourceFileContent(osType, c2);
+            assertNotNull(p2);
+            assertNotNull(p2.getValue());
+
+            PreParsedContent lastReading3 = d.getLastReading();
+            assertNotNull(lastReading3);
+
+            assertFalse(lastReading3.equals(lastReading2));
+
+            //
+            // third reading there's history
+            //
+
+            byte[] c3 = getValidSourceFileContentToTest(osType, 2);
+
+            Property p3 = d.parseSourceFileContent(osType, c3);
+            assertNotNull(p3);
+            assertNotNull(p3.getValue());
+
+            PreParsedContent lastReading4 = d.getLastReading();
+            assertNotNull(lastReading4);
+
+            assertFalse(lastReading4.equals(lastReading2));
+            assertFalse(lastReading4.equals(lastReading3));
+        }
+    }
+
+    @Test
     public abstract void parseSourceFileContent_ValidLinuxContent() throws Exception;
 
     @Test
@@ -386,27 +450,29 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         //noinspection Convert2streamapi
         for(OSType osType: osTypes) {
 
-            if (d.getSourceFile(osType) != null) {
+            if (d.getSourceFile(osType) == null) {
 
                 //
                 // if we get a null d.getSourceFile(osType), we are not supposed to call parseSourceFileContent(), will
                 // throw IllegalStateException
                 //
 
-                PreParsedContent invalidPreviousReading = new MockPreParsedContent();
+                continue;
+            }
 
-                byte[] content = getValidSourceFileContentToTest(osType);
+            byte[] content = getValidSourceFileContentToTest(osType, 0);
 
-                try {
+            PreParsedContent invalidPreviousReading = new MockPreParsedContent();
 
-                    d.parseSourceFileContent(osType, content, invalidPreviousReading);
-                    fail("should have thrown exception");
-                }
-                catch(ParsingException e) {
+            try {
 
-                    String msg = e.getMessage();
-                    assertTrue(msg.matches(".*not a .* instance.*"));
-                }
+                d.parseSourceFileContent(osType, content, invalidPreviousReading);
+                fail("should have thrown exception");
+            }
+            catch(IllegalArgumentException e) {
+
+                String msg = e.getMessage();
+                assertTrue(msg.matches(".*not a .* instance.*"));
             }
         }
     }
@@ -550,28 +616,28 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         //noinspection Convert2streamapi
         for(OSType osType: osTypes) {
 
-            if (d.getCommand(osType) != null) {
+            if (d.getCommand(osType) == null) {
+
+                continue;
 
                 //
                 // if we get a null d.getCommand(osType), we are not supposed to call parseCommandOutput(), will throw
                 // IllegalStateException
                 //
-
-                PreParsedContent invalidPreviousReading = new MockPreParsedContent();
-
-                String s = getValidCommandOutputToTest(osType);
-
-                try {
-
-                    d.parseCommandOutput(osType, s, invalidPreviousReading);
-                    fail("should have thrown exception");
-                }
-                catch(ParsingException e) {
-
-                    String msg = e.getMessage();
-                    assertTrue(msg.matches(".*not a .* instance.*"));
-                }
             }
+
+
+            PreParsedContent invalidPreviousReading = new MockPreParsedContent();
+
+            String s = getValidCommandOutputToTest(osType, 0);
+
+            //
+            // for the time being we're not using the previous reading with command outputs, so nothing should happen
+            //
+
+            InternalMetricReadingContainer c = d.parseCommandOutput(osType, s, invalidPreviousReading);
+            assertNull(c.getPreParsedContent());
+            assertNotNull(c.getPropertyValue());
         }
     }
 
@@ -580,14 +646,42 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     // Protected -------------------------------------------------------------------------------------------------------
 
     /**
+     * @param seed - different seeds should produce different values.
+     *
      * May return null if there is no valid content for this OS.
      */
-    protected abstract byte[] getValidSourceFileContentToTest(OSType osType) throws Exception;
+    protected abstract byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception;
 
     /**
      * May return null if there is no valid command for this OS.
+     *
+     * The base class returns a value that works in most of situations. If more specialized behavior is needed,
+     * override.
      */
-    protected abstract String getValidCommandOutputToTest(OSType osType) throws Exception;
+    protected String getValidCommandOutputToTest(OSType osType, int seed) throws Exception {
+
+        if (OSType.LINUX.equals(osType)) {
+
+            return
+                    "top - 13:35:46 up 63 days,  7:50,  1 user,  load average: 0.02, 0.05, 0.05\n" +
+                            "Tasks:  84 total,   1 running,  83 sleeping,   0 stopped,   0 zombie\n" +
+                            "%Cpu(s):  0.0 us,  0.3 sy,  0.0 ni, 99.7 id,  0.0 wa,  0.0 hi,  0.0 si,  0.0 st\n" +
+                            "KiB Mem :  1016488 total,   142512 free,    76984 used,   796992 buff/cache\n" +
+                            "KiB Swap:        0 total,        0 free,        0 used.   709812 avail Mem";
+
+        }
+        else if (OSType.MAC.equals(osType)) {
+
+            return
+                    "Processes: 244 total, 2 running, 12 stuck, 230 sleeping, 1509 threads                                                                                                                                                                          13:35:02\n" +
+                            "Load Avg: 2.06, 2.10, 2.00  CPU usage: 5.0% user, 3.41% sys, 91.58% idle   SharedLibs: 174M resident, 0B data, 24M linkedit. MemRegions: 61258 total, 5831M resident, 132M private, 1641M shared. PhysMem: 12G used (1406M wired), 3913M unused.\n" +
+                            "VM: 637G vsize, 1352M framework vsize, 0(0) swapins, 0(0) swapouts. Networks: packets: 10427436/13G in, 4953154/376M out. Disks: 269280/7493M read, 456064/31G written.";
+        }
+        else {
+
+            return null;
+        }
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
