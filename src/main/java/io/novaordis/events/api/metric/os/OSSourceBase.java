@@ -203,7 +203,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
 
             if (fileContent != null) {
 
-                p = osmd.parseSourceFileContent(thisOs, fileContent, null);
+                p = osmd.parseSourceFileContent(thisOs, fileContent);
             }
             else {
 
@@ -212,7 +212,7 @@ public abstract class OSSourceBase extends MetricSourceBase {
                 // parseCommandOutput() implementations must be able to handle that
                 //
 
-                p = osmd.parseCommandOutput(thisOs, commandOutput, null);
+                p = osmd.parseCommandOutput(thisOs, commandOutput);
             }
 
             results.add(p);

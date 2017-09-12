@@ -89,22 +89,8 @@ public class FileBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        return parseMockFileContent(content, previousReading);
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        return parseMockFileContent(content, previousReading);
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+    protected InternalMetricReadingContainer parseSourceFileContent
+            (OSType osType, byte[] content, PreParsedContent previousReading) throws ParsingException {
 
         return parseMockFileContent(content, previousReading);
     }

@@ -20,6 +20,7 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.parsing.PreParsedContent;
@@ -80,24 +81,10 @@ public class LoadAverageLastFiveMinutes extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+    protected InternalMetricReadingContainer parseSourceFileContent
+            (OSType osType, byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new ParsingException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+        throw new IllegalStateException(this + " cannot be extracted from a file on " + osType);
     }
 
     @Override

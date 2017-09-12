@@ -183,7 +183,7 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
 
         SwapTotal d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
+        Property p = d.parseCommandOutput(OSType.LINUX, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

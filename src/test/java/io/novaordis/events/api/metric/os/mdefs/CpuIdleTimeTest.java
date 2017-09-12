@@ -157,7 +157,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         //noinspection ConstantConditions
         InternalMetricReadingContainer r =
-                m.parseLinuxSourceFileContent(firstFileContentReading.getBytes(), previousReading);
+                m.parseSourceFileContent(OSType.LINUX, firstFileContentReading.getBytes(), previousReading);
 
         Float f = (Float)r.getPropertyValue();
 
@@ -189,7 +189,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
                         "softirq 3995572696 7 1762568953 35455 456569428 0 0 12771 767863139 0 1008522943\n";
 
         InternalMetricReadingContainer r2 =
-                m.parseLinuxSourceFileContent(secondFileContentReading.getBytes(), previousReading);
+                m.parseSourceFileContent(OSType.LINUX, secondFileContentReading.getBytes(), previousReading);
 
         Float f2 = (Float)r2.getPropertyValue();
         previousReading = r2.getPreParsedContent();
@@ -252,7 +252,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         CpuIdleTime d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
+        Property p = d.parseCommandOutput(OSType.LINUX, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -283,7 +283,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         CpuIdleTime d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.MAC, output, null);
+        Property p = d.parseCommandOutput(OSType.MAC, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

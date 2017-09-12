@@ -184,7 +184,7 @@ public class LoadAverageLastFiveMinutesTest extends OSMetricDefinitionTest {
 
         LoadAverageLastFiveMinutes d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
+        Property p = d.parseCommandOutput(OSType.LINUX, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -215,7 +215,7 @@ public class LoadAverageLastFiveMinutesTest extends OSMetricDefinitionTest {
 
         LoadAverageLastFiveMinutes d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.MAC, output, null);
+        Property p = d.parseCommandOutput(OSType.MAC, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

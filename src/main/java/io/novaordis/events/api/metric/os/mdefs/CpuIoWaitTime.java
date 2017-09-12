@@ -22,6 +22,7 @@ import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.linux.CPUStats;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.parsing.PreParsedContent;
@@ -83,26 +84,19 @@ public class CpuIoWaitTime extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+    protected InternalMetricReadingContainer parseSourceFileContent
+            (OSType osType, byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        PreParsedContent[] preParsedContent = distributePreParsedContent(content, previousReading);
-        float value = ((CPUStats) preParsedContent[1]).getIowaitTimePercentage((CPUStats) preParsedContent[2]);
-        return new InternalMetricReadingContainer(value, preParsedContent[0]);
-    }
+        if (OSType.LINUX.equals(osType)) {
 
-    @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+            PreParsedContent[] preParsedContent = distributePreParsedContent(content, previousReading);
+            float value = ((CPUStats) preParsedContent[1]).getIowaitTimePercentage((CPUStats) preParsedContent[2]);
+            return new InternalMetricReadingContainer(value, preParsedContent[0]);
+        }
+        else {
 
-        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+            throw new IllegalStateException(this + " cannot be extracted from a file on " + osType);
+        }
     }
 
     @Override

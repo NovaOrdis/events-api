@@ -183,7 +183,7 @@ public class SwapUsedTest extends OSMetricDefinitionTest {
 
         SwapUsed d = getMetricDefinitionToTest();
 
-        Property p = d.parseCommandOutput(OSType.LINUX, output, null);
+        Property p = d.parseCommandOutput(OSType.LINUX, output);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());

@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os;
 
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.utilities.address.Address;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.parsing.PreParsedContent;
 
@@ -65,21 +66,10 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
     // OSMetricDefinitionBase overrides --------------------------------------------------------------------------------
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-        throw new ParsingException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
-    }
+    protected InternalMetricReadingContainer parseSourceFileContent
+            (OSType osType, byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-    @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-        throw new ParsingException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-        throw new ParsingException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+        throw new IllegalStateException(this + " cannot be extracted from a file on " + osType);
     }
 
     @Override

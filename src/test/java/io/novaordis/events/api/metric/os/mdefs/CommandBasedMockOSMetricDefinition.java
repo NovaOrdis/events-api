@@ -94,24 +94,10 @@ public class CommandBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
     //
 
     @Override
-    protected InternalMetricReadingContainer parseLinuxSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
+    protected InternalMetricReadingContainer parseSourceFileContent
+            (OSType osType, byte[] content, PreParsedContent previousReading) throws ParsingException {
 
         throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseMacSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected InternalMetricReadingContainer parseWindowsSourceFileContent
-            (byte[] content, PreParsedContent previousReading) throws ParsingException {
-
-        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     //
