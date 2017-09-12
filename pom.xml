@@ -17,7 +17,7 @@
         -->
 
         <novaordis.utilities.version>4.7.11-SNAPSHOT-8</novaordis.utilities.version>
-        <novaordis.jboss.version>1.0.0-SNAPSHOT-2</novaordis.jboss.version>
+        <novaordis.linux.version>1.0.0-SNAPSHOT-7</novaordis.linux.version>
         <novaordis.jboss.version>1.0.10</novaordis.jboss.version>
         <novaordis.jmx.version>1.2.5-SNAPSHOT-1</novaordis.jmx.version>
         <novaordis.ssh.version>1.0.0-SNAPSHOT-2</novaordis.ssh.version>
@@ -117,6 +117,11 @@
             <groupId>io.novaordis.ssh</groupId>
             <artifactId>novaordis-ssh</artifactId>
             <version>${novaordis.ssh.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>io.novaordis.linux</groupId>
+            <artifactId>novaordis-linux</artifactId>
+            <version>${novaordis.linux.version}</version>
         </dependency>
 
         <dependency>

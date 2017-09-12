@@ -79,6 +79,8 @@ public interface OSMetricDefinition extends MetricDefinition {
      * invalid content, or because the content is null, the method must return a valid Property instance containing
      * a null value. The method must not throw an exception in this case. The implementation should also log as WARN
      * more details on why collection failed, in case of a non-null argument.
+     *
+     * @exception IllegalArgumentException if the previous reading instance does not have the appropriate type.
      */
     Property parseSourceFileContent(OSType osType, byte[] sourceFileContent, PreParsedContent previousReading);
 
@@ -110,6 +112,8 @@ public interface OSMetricDefinition extends MetricDefinition {
      * command output is null, the method must return a valid Property instance containing a null value. The method
      * must not throw an exception in this case. The implementation should also log as WARN more details on why
      * collection failed, in case of a non-null argument.
+     *
+     * @exception IllegalArgumentException if the previous reading instance does not have the appropriate type.
      */
     Property parseCommandOutput(OSType osType, String commandExecutionStdout, PreParsedContent previousReading);
 

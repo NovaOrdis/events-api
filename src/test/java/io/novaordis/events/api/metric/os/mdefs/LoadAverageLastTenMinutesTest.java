@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
+import io.novaordis.events.api.metric.os.OSMetricDefinition;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
@@ -123,17 +124,38 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
 
     @Override
     public void parseSourceFileContent_ValidLinuxOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidLinuxOutput() NOT YET IMPLEMENTED");
+
+        OSMetricDefinition m = getMetricDefinitionToTest();
+
+        //
+        // no source file for this OSType yet, test is a noop
+        //
+
+        assertNull(m.getSourceFile(OSType.LINUX));
     }
 
     @Override
     public void parseSourceFileContent_ValidMacOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidMacOutput() NOT YET IMPLEMENTED");
+
+        OSMetricDefinition m = getMetricDefinitionToTest();
+
+        //
+        // no source file for this OSType yet, test is a noop
+        //
+
+        assertNull(m.getSourceFile(OSType.MAC));
     }
 
     @Override
     public void parseSourceFileContent_ValidWindowsOutput() throws Exception {
-        throw new RuntimeException("parseSourceFileContent_ValidWindowsOutput() NOT YET IMPLEMENTED");
+
+        OSMetricDefinition m = getMetricDefinitionToTest();
+
+        //
+        // no source file for this OSType yet, test is a noop
+        //
+
+        assertNull(m.getSourceFile(OSType.WINDOWS));
     }
 
     // parseCommandOutput() --------------------------------------------------------------------------------------------
@@ -215,7 +237,15 @@ public class LoadAverageLastTenMinutesTest extends OSMetricDefinitionTest {
 
     @Override
     protected LoadAverageLastTenMinutes getMetricDefinitionToTest() throws Exception {
+
         return new LoadAverageLastTenMinutes(new PropertyFactory(), new LocalOSAddress());
+    }
+
+    @Override
+    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+
+        // no source file for this type of metric
+        return null;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

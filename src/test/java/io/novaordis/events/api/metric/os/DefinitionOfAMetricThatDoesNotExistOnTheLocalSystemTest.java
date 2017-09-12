@@ -117,6 +117,12 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
         //
     }
 
+    @Override
+    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+
+        return null;
+    }
+
     @Test
     @Override
     public void parseCommandOutput_InvalidReading_Linux() throws Exception {

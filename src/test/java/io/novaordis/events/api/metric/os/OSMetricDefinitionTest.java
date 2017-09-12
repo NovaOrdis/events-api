@@ -138,8 +138,6 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public void preRefactoring_StaticScopeAfterTwoDifferentClassesAreLoaded() throws Exception {
 
-        fail("return here and understand, possibly expand");
-
         PropertyFactory f = new PropertyFactory();
 
         PhysicalMemoryTotal pmt = new PhysicalMemoryTotal(f, new MockOSSource().getAddress());
@@ -253,14 +251,14 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
 
-        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+        byte[] c = "I am pretty sure this is not valid source file content we can parse the metric from".getBytes();
 
         Property p;
 
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseSourceFileContent(OSType.LINUX, output.getBytes(), previousReading);
+        p = d.parseSourceFileContent(OSType.LINUX, c, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -273,14 +271,14 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
 
-        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+        byte[] c = "I am pretty sure this is not valid source file content we can parse the metric from".getBytes();
 
         Property p;
 
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseCommandOutput(OSType.MAC, output, previousReading);
+        p = d.parseSourceFileContent(OSType.MAC, c, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -293,14 +291,14 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
 
         OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
 
-        String output = "I am pretty sure this is not valid source file content we can parse the metric from";
+        byte[] c = "I am pretty sure this is not valid source file content we can parse the metric from".getBytes();
 
         Property p;
 
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseCommandOutput(OSType.WINDOWS, output, previousReading);
+        p = d.parseSourceFileContent(OSType.WINDOWS, c, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -318,7 +316,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseCommandOutput(OSType.LINUX, null, previousReading);
+        p = d.parseSourceFileContent(OSType.LINUX, null, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -336,7 +334,7 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseCommandOutput(OSType.MAC, null, previousReading);
+        p = d.parseSourceFileContent(OSType.MAC, null, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
@@ -354,12 +352,102 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        p = d.parseCommandOutput(OSType.WINDOWS, null, previousReading);
+        p = d.parseSourceFileContent(OSType.WINDOWS, null, previousReading);
 
         assertEquals(d.getId(), p.getName());
         assertEquals(d.getType(), p.getType());
         assertEquals(d.getBaseUnit(), p.getMeasureUnit());
         assertNull(p.getValue());
+    }
+
+    @Test
+    public void parseSourceFileContent_InvalidPreviousReading_Linux() throws Exception {
+
+        byte[] c = getValidSourceFileContentToTest(OSType.LINUX);
+
+        if (c == null) {
+
+            //
+            // no valid source file for this OS, noop
+            //
+
+            return;
+        }
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        MockPreParsedContent mc = new MockPreParsedContent();
+
+        try {
+
+            d.parseSourceFileContent(OSType.LINUX, c, mc);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.matches(".*not a .* instance.*"));
+        }
+    }
+
+    @Test
+    public void parseSourceFileContent_InvalidPreviousReading_Mac() throws Exception {
+
+        byte[] c = getValidSourceFileContentToTest(OSType.MAC);
+
+        if (c == null) {
+
+            //
+            // no valid source file for this OS, noop
+            //
+
+            return;
+        }
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        MockPreParsedContent mc = new MockPreParsedContent();
+
+        try {
+
+            d.parseSourceFileContent(OSType.MAC, c, mc);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.matches(".*not a .* instance.*"));
+        }
+    }
+
+    @Test
+    public void parseSourceFileContent_InvalidPreviousReading_Windows() throws Exception {
+
+        byte[] c = getValidSourceFileContentToTest(OSType.WINDOWS);
+
+        if (c == null) {
+
+            //
+            // no valid source file for this OS, noop
+            //
+
+            return;
+        }
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        MockPreParsedContent mc = new MockPreParsedContent();
+
+        try {
+
+            d.parseSourceFileContent(OSType.WINDOWS, c, mc);
+            fail("should have thrown exception");
+        }
+        catch(IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.matches(".*not a .* instance.*"));
+        }
     }
 
     @Test
@@ -671,6 +759,11 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * May return null if there is no valid content for this OS.
+     */
+    protected abstract byte[] getValidSourceFileContentToTest(OSType osType) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -19,7 +19,10 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
+import io.novaordis.events.api.metric.os.MetricReading;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
+import io.novaordis.linux.CPUStats;
+import io.novaordis.linux.ProcStat;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.parsing.PreParsedContent;
@@ -29,7 +32,8 @@ import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
 /**
- * The percentage of total CPU time spent executing code in user mode.
+ * The percentage of total CPU time spent executing code in user mode since the last reading, or, if no last reading
+ * is available, since the data collection began.
  *
  * See https://kb.novaordis.com/index.php/Events_OS_Metrics#CpuUserTime
  *
@@ -87,21 +91,33 @@ public class CpuUserTime extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
-        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+        // the previous reading must be a ProcStat, otherwise we throw an illegal argument
+
+        if (previousReading != null && !(previousReading instanceof ProcStat)) {
+
+            throw new IllegalArgumentException(
+                    previousReading + " not a " + ProcStat.class.getSimpleName() + " instance");
+        }
+
+        ProcStat c = new ProcStat(content);
+        CPUStats cpuStats = c.getCumulativeCPUStatistics();
+        CPUStats pr = previousReading == null ? null : ((ProcStat)previousReading).getCumulativeCPUStatistics();
+        float value = cpuStats.getUserTimePercentage(pr);
+        return new MetricReading(value, c);
     }
 
     @Override
-    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");

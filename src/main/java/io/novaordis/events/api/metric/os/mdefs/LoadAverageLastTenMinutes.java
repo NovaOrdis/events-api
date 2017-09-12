@@ -18,6 +18,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.PercentageArithmetic;
+import io.novaordis.events.api.metric.os.MetricReading;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
@@ -79,21 +80,21 @@ public class LoadAverageLastTenMinutes extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected Object parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected Object parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected MetricReading parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
