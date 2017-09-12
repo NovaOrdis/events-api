@@ -22,6 +22,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinition;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
+import io.novaordis.linux.CPUStats;
 import io.novaordis.linux.ProcStat;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
@@ -162,7 +163,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
 
         previousReading = r.getPreParsedContent();
         assertNotNull(previousReading);
-        assertEquals(55L, ((ProcStat)previousReading).getCumulativeCPUStatistics().getTotalTime());
+        assertEquals(55L, ((CPUStats)previousReading).getTotalTime());
 
         //
         // the statistics are calculated since the beginning
@@ -195,7 +196,7 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
 
         assertEquals(20f / 550, f2.floatValue(), 0.00001);
 
-        assertEquals(605L, ((ProcStat)previousReading).getCumulativeCPUStatistics().getTotalTime());
+        assertEquals(605L, ((CPUStats)previousReading).getTotalTime());
     }
 
     @Test

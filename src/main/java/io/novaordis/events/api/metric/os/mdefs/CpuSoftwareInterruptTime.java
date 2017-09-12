@@ -21,6 +21,7 @@ import io.novaordis.events.api.measure.Percentage;
 import io.novaordis.events.api.measure.PercentageArithmetic;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
+import io.novaordis.events.api.metric.os.PreParsedContentPair;
 import io.novaordis.linux.CPUStats;
 import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
@@ -86,9 +87,9 @@ public class CpuSoftwareInterruptTime extends OSMetricDefinitionBase {
 
         if (OSType.LINUX.equals(osType)) {
 
-            PreParsedContent[] preParsedContent = distributePreParsedContent(content, previousReading);
-            float value = ((CPUStats) preParsedContent[1]).getSoftirqTimePercentage((CPUStats) preParsedContent[2]);
-            return new InternalMetricReadingContainer(value, preParsedContent[0]);
+            PreParsedContentPair pp = processPreParsedContent(content, previousReading);
+            float value = ((CPUStats) pp.getCurrent()).getSoftirqTimePercentage((CPUStats) pp.getPrevious());
+            return new InternalMetricReadingContainer(value, pp.getCurrent());
 
         }
         else {

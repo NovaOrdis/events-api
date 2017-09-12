@@ -200,7 +200,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
             if (log.isTraceEnabled()) {
 
                 log.trace(this + " computed based on current reading " +
-                        (lastReading == null ? "only" : "and previous reading") + ": " + value);
+                        (lastReading == null ? "only" : "and previous reading") + ", computed value: " + value);
             }
 
             this.lastReading = mrc ==  null ? null : mrc.getPreParsedContent();
@@ -293,7 +293,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
             if (log.isTraceEnabled()) {
 
                 log.trace(this + " computed based on current reading " +
-                        (lastReading == null ? "only" : "and previous reading") + ": " + value);
+                        (lastReading == null ? "only" : "and previous reading") + ", computed value: " + value);
             }
 
             //
@@ -411,38 +411,30 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     // Protected static ------------------------------------------------------------------------------------------------
 
     /**
-     * Performs common processing that needs to be done with the parsed content, in a way that is subclass agnostic;
-     * the method can be used by all subclasses.
+     * Performs common processing that needs to be done with the parsed and pre-parsed content, in a way that is
+     * subclass agnostic; the method can be used by all subclasses.
      *
-     * @return a PreParsedContent[3], with the ProcStats instance on the first position, corresponding CPUStats instance
-     * on the second position, and the previous CPUStats reading - which can be null, if not available - on the third
-     * position.
+     * @return a PreParsedContentPair, which contains the current CPUStats instance, as extracted from the content,
+     * and the previous CPUStats reading, which may be null, if not available.
      */
-    protected static PreParsedContent[] distributePreParsedContent(
-            byte[] content, PreParsedContent prevReading) throws ParsingException {
+    protected static PreParsedContentPair processPreParsedContent(
+            byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        // the previous reading must be a ProcStat, otherwise we throw an illegal argument
+        // the previous reading must be a CPUStats, otherwise we throw an illegal argument
 
-        if (prevReading != null && !(prevReading instanceof ProcStat)) {
+        if (previousReading != null && !(previousReading instanceof CPUStats)) {
 
             throw new IllegalArgumentException(
-                    prevReading + " not a " + ProcStat.class.getSimpleName() + " instance");
+                    previousReading + " not a " + CPUStats.class.getSimpleName() + " instance");
         }
 
-        ProcStat previousReading = (ProcStat) prevReading;
-
-        PreParsedContent[] result = new PreParsedContent[3];
+        CPUStats prev = (CPUStats)previousReading;
 
         ProcStat procStat = new ProcStat(content);
-        result[0] = procStat;
 
-        CPUStats cpuStats = procStat.getCumulativeCPUStatistics();
-        result[1] = cpuStats;
+        CPUStats crt = procStat.getCumulativeCPUStatistics();
 
-        CPUStats previousCpuStats = previousReading == null ? null : previousReading.getCumulativeCPUStatistics();
-        result[2] = previousCpuStats;
-
-        return result;
+        return new PreParsedContentPair(crt, prev);
     }
 
     protected Property getPropertyInstance(String id, Class c, MeasureUnit u) {
