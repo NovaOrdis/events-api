@@ -24,6 +24,8 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricDefinitionBase;
+import io.novaordis.linux.CPUStats;
+import io.novaordis.linux.ProcStat;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
@@ -304,7 +306,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
         return LABEL;
     }
 
-    // Package protected -----------------------------------------------------------------------------------------------
+    // Package protected static ----------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
@@ -334,7 +336,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract MetricReading parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected abstract InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException;
 
     /**
@@ -359,7 +361,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract MetricReading parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected abstract InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException;
 
     /**
@@ -384,7 +386,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception IllegalArgumentException if the previous reading is of inappropriate type.
      *
      */
-    protected abstract MetricReading parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected abstract InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException;
 
     //
@@ -448,6 +450,43 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * @exception ParsingException if the expected patters cannot be matched.
      */
     protected abstract Object parseWindowsCommandOutput(String commandOutput) throws ParsingException;
+
+    // Protected static ------------------------------------------------------------------------------------------------
+
+    /**
+     * Performs common processing that needs to be done with the parsed content, in a way that is subclass agnostic;
+     * the method can be used by all subclasses.
+     *
+     * @return a PreParsedContent[3], with the ProcStats instance on the first position, corresponding CPUStats instance
+     * on the second position, and the previous CPUStats reading - which can be null, if not available - on the third
+     * position.
+     */
+    protected static PreParsedContent[] distributePreParsedContent(
+            byte[] content, PreParsedContent prevReading) throws ParsingException {
+
+        // the previous reading must be a ProcStat, otherwise we throw an illegal argument
+
+        if (prevReading != null && !(prevReading instanceof ProcStat)) {
+
+            throw new IllegalArgumentException(
+                    prevReading + " not a " + ProcStat.class.getSimpleName() + " instance");
+        }
+
+        ProcStat previousReading = (ProcStat) prevReading;
+
+        PreParsedContent[] result = new PreParsedContent[3];
+
+        ProcStat procStat = new ProcStat(content);
+        result[0] = procStat;
+
+        CPUStats cpuStats = procStat.getCumulativeCPUStatistics();
+        result[1] = cpuStats;
+
+        CPUStats previousCpuStats = previousReading == null ? null : previousReading.getCumulativeCPUStatistics();
+        result[2] = previousCpuStats;
+
+        return result;
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

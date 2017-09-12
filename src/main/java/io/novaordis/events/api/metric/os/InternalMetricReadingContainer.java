@@ -25,7 +25,7 @@ import io.novaordis.utilities.parsing.PreParsedContent;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 9/11/17
  */
-public class MetricReading {
+public class InternalMetricReadingContainer {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,7 +38,7 @@ public class MetricReading {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public MetricReading(Object propertyValue, PreParsedContent preParsedContent) {
+    public InternalMetricReadingContainer(Object propertyValue, PreParsedContent preParsedContent) {
 
         this.propertyValue = propertyValue;
         this.preParsedContent = preParsedContent;

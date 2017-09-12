@@ -19,7 +19,7 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.MemoryArithmetic;
 import io.novaordis.events.api.measure.MemoryMeasureUnit;
-import io.novaordis.events.api.metric.os.MetricReading;
+import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.address.OSAddress;
@@ -89,21 +89,21 @@ public class PhysicalMemoryTotal extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override
-    protected MetricReading parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected InternalMetricReadingContainer parseLinuxSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected MetricReading parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected InternalMetricReadingContainer parseMacSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
     }
 
     @Override
-    protected MetricReading parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
+    protected InternalMetricReadingContainer parseWindowsSourceFileContent(byte[] content, PreParsedContent previousReading)
             throws ParsingException {
 
         throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");

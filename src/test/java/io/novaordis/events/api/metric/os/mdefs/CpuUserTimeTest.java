@@ -19,9 +19,10 @@ package io.novaordis.events.api.metric.os.mdefs;
 import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.measure.Percentage;
-import io.novaordis.events.api.metric.os.MetricReading;
+import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinition;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionTest;
+import io.novaordis.linux.ProcStat;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.PreParsedContent;
@@ -138,10 +139,10 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
         // simulate the first reading, valid content
 
-        String firstReading =
+        String firstFileContentReading =
                 "cpu  1 2 3 4 5 6 7 8 9 10\n" +
                         "cpu0 1 2 3 4 5 6 7 8 9 10\n" +
-                        "intr 5784556411 57 10 0 0 1010 0 3 0 0 0 26 0 15 0 0 0 0 0 0 0 0 0 0 0 0 60919192 0 1168871 0 24 0 320148013 6061 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n" +
+                        "intr 5784556411 57 10 0 0 1010\n" +
                         "ctxt 9216607429\n" +
                         "btime 1499371654\n" +
                         "processes 8116472\n" +
@@ -153,11 +154,18 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
         PreParsedContent previousReading = null;
 
         //noinspection ConstantConditions
-        MetricReading r = m.parseLinuxSourceFileContent(firstReading.getBytes(), previousReading);
+        InternalMetricReadingContainer r =
+                m.parseLinuxSourceFileContent(firstFileContentReading.getBytes(), previousReading);
 
         Float f = (Float)r.getPropertyValue();
 
+        //
+        // current reading becomes the previous reading
+        //
+
         previousReading = r.getPreParsedContent();
+        assertNotNull(previousReading);
+        assertEquals(55L, ((ProcStat)previousReading).getCumulativeCPUStatistics().getTotalTime());
 
         //
         // the statistics are calculated since the beginning
@@ -167,10 +175,10 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
 
         // simulate the second reading, valid content
 
-        String secondReading =
+        String secondFileContentReading =
                 "cpu  11 22 33 44 55 66 77 88 99 110\n" +
                         "cpu0 11 22 33 44 55 66 77 88 99 110\n" +
-                        "intr 5784556411 57 10 0 0 1010 0 3 0 0 0 26 0 15 0 0 0 0 0 0 0 0 0 0 0 0 60919192 0 1168871 0 24 0 320148013 6061 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0 0\n" +
+                        "intr 5784556411 57 10 0 0 1010\n" +
                         "ctxt 9216607429\n" +
                         "btime 1499371654\n" +
                         "processes 8116472\n" +
@@ -178,15 +186,19 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
                         "procs_blocked 0\n" +
                         "softirq 3995572696 7 1762568953 35455 456569428 0 0 12771 767863139 0 1008522943\n";
 
-        MetricReading r2 = m.parseLinuxSourceFileContent(secondReading.getBytes(), previousReading);
+        InternalMetricReadingContainer r2 =
+                m.parseLinuxSourceFileContent(secondFileContentReading.getBytes(), previousReading);
 
         Float f2 = (Float)r2.getPropertyValue();
+        previousReading = r2.getPreParsedContent();
 
         //
         // the statistics are calculated for the last interval
         //
 
         assertEquals(10f / 550, f2.floatValue(), 0.00001);
+
+        assertEquals(605L, ((ProcStat)previousReading).getCumulativeCPUStatistics().getTotalTime());
     }
 
     @Test
