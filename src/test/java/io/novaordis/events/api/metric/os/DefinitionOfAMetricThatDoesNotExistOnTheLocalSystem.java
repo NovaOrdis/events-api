@@ -73,18 +73,10 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem extends OSMetri
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
-        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
-    }
+    protected InternalMetricReadingContainer parseCommandOutput
+            (OSType osType, String commandExecutionStdout, PreParsedContent previousReading) throws ParsingException {
 
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
-        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
+        throw new IllegalStateException(this + " cannot be extracted from a command output on " + osType);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

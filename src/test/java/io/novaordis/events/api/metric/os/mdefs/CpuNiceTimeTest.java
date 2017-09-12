@@ -276,24 +276,6 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
         //
     }
 
-    @Test
-    @Override
-    public void parseMacCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
-    @Test
-    @Override
-    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -315,6 +297,12 @@ public class CpuNiceTimeTest extends OSMetricDefinitionTest {
         }
 
         return null;
+    }
+
+    @Override
+    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+
+        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

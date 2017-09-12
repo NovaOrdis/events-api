@@ -230,10 +230,6 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     // parseCommandOutput() --------------------------------------------------------------------------------------------
 
-    //
-    // invalid readings are tested in superclass
-    //
-
     @Test
     @Override
     public void parseCommandOutput_ValidLinuxOutput() throws Exception {
@@ -279,24 +275,6 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
         //
     }
 
-    @Test
-    @Override
-    public void parseMacCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
-    @Test
-    @Override
-    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -318,6 +296,12 @@ public class CpuHardwareInterruptTimeTest extends OSMetricDefinitionTest {
         }
 
         return null;
+    }
+
+    @Override
+    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+
+        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

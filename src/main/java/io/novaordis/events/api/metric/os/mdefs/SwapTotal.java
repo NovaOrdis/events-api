@@ -83,39 +83,36 @@ public class SwapTotal extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput(
+            OSType osType, String commandOutput, PreParsedContent previousReading) throws ParsingException {
 
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+        if (OSType.LINUX.equals(osType)) {
 
-        if (!m.find()) {
+            Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
-            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            if (!m.find()) {
+
+                throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            }
+
+            String memoryUnit = m.group(1);
+            String s = m.group(2);
+
+            try {
+
+                Long value = MemoryArithmetic.parse(s, memoryUnit, (MemoryMeasureUnit) BASE_UNIT);
+
+                return new InternalMetricReadingContainer(value, null);
+            }
+            catch(Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
+        else {
 
-        String memoryUnit = m.group(1);
-        String s = m.group(2);
-
-        try {
-            //noinspection UnnecessaryLocalVariable
-            Long value = MemoryArithmetic.parse(s, memoryUnit, (MemoryMeasureUnit) BASE_UNIT);
-            return value;
+            throw new IllegalStateException(this + " cannot be extracted from a command output on " + osType);
         }
-        catch(Exception e) {
-
-            throw new ParsingException(e);
-        }
-    }
-
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new IllegalStateException(this + " not available on Mac");
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

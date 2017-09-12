@@ -105,57 +105,57 @@ public class CpuKernelTime extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput(
+            OSType osType, String commandOutput, PreParsedContent previousReading) throws ParsingException {
 
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+        if (OSType.LINUX.equals(osType)) {
 
-        if (!m.find()) {
+            Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
-            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            if (!m.find()) {
+
+                throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            }
+
+            String sy = m.group(2);
+
+            try {
+
+                Float f = PercentageArithmetic.parse(sy);
+
+                return new InternalMetricReadingContainer(f, null);
+            }
+            catch(Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
+        else if (OSType.MAC.equals(osType)) {
 
-        String sy = m.group(2);
+            Matcher m = MAC_PATTERN.matcher(commandOutput);
 
-        try {
+            if (!m.find()) {
 
-            //noinspection UnnecessaryLocalVariable
-            Float f = PercentageArithmetic.parse(sy);
-            return f;
+                throw new ParsingException("failed to match pattern " + MAC_PATTERN.pattern());
+            }
+
+            String sys = m.group(2);
+
+            try {
+
+                Float f = PercentageArithmetic.parse(sys);
+
+                return new InternalMetricReadingContainer(f, null);
+            }
+            catch(Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
-        catch(Exception e) {
+        else {
 
-            throw new ParsingException(e);
+            throw new IllegalStateException(this + " cannot be extracted from a command output on " + osType);
         }
-    }
-
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
-
-        Matcher m = MAC_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern " + MAC_PATTERN.pattern());
-        }
-
-        String sys = m.group(2);
-
-        try {
-
-            //noinspection UnnecessaryLocalVariable
-            Float f = PercentageArithmetic.parse(sys);
-            return f;
-        }
-        catch(Exception e) {
-
-            throw new ParsingException(e);
-        }
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

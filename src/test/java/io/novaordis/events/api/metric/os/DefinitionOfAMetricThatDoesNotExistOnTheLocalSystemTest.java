@@ -99,66 +99,6 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
         assertNull(d.getCommand(OSType.WINDOWS));
     }
 
-    @Test
-    @Override
-    public void parseLinuxCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
-    @Test
-    @Override
-    public void parseMacCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
-    @Test
-    @Override
-    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
-    @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
-
-        return null;
-    }
-
-    @Test
-    @Override
-    public void parseCommandOutput_InvalidReading_Linux() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
-    @Test
-    @Override
-    public void parseCommandOutput_InvalidReading_Mac() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
-    @Test
-    @Override
-    public void parseCommandOutput_InvalidReading_Windows() throws Exception {
-
-        //
-        // noop - the method will never be called, and if it is, we don't care about the result
-        //
-    }
-
     @Override
     public void parseCommandOutput_ValidLinuxOutput() throws Exception {
 
@@ -196,6 +136,17 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
         return new DefinitionOfAMetricThatDoesNotExistOnTheLocalSystem(f, a);
     }
 
+    @Override
+    protected byte[] getValidSourceFileContentToTest(OSType osType) throws Exception {
+
+        return null;
+    }
+
+    @Override
+    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+
+        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -211,24 +211,6 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
         //
     }
 
-    @Test
-    @Override
-    public void parseMacCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
-    @Test
-    @Override
-    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
-
-        //
-        // TODO noop for the time being, revisit when implementing Windows support
-        //
-    }
-
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
@@ -244,6 +226,12 @@ public class SwapTotalTest extends OSMetricDefinitionTest {
 
         // no source file for this type of metric
         return null;
+    }
+
+    @Override
+    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+
+        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

@@ -100,21 +100,10 @@ public class FileBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
     //
 
     @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput
+            (OSType osType, String commandExecutionStdout, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseMacCommandOutput() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new RuntimeException("parseLinuxCommandOutput() NOT YET IMPLEMENTED");
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new RuntimeException("parseWindowsCommandOutput() NOT YET IMPLEMENTED");
+        throw new RuntimeException("parseCommandOutput() NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

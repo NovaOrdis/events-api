@@ -26,6 +26,7 @@ import io.novaordis.events.api.metric.os.mdefs.PhysicalMemoryUsed;
 import io.novaordis.utilities.address.LocalOSAddress;
 import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
+import io.novaordis.utilities.parsing.PreParsedContent;
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -277,6 +278,34 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
         }
     }
 
+    @Test
+    public void parseSourceFileContent_Null() throws Exception {
+
+        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
+
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
+
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
+
+            Property p = d.parseSourceFileContent(osType, null);
+
+            assertEquals(d.getId(), p.getName());
+            assertEquals(d.getType(), p.getType());
+            assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+            assertNull(p.getValue());
+        }
+    }
+
+    @Test
+    public abstract void parseSourceFileContent_ValidLinuxContent() throws Exception;
+
+    @Test
+    public abstract void parseSourceFileContent_ValidMacContent() throws Exception;
+
+    @Test
+    public abstract void parseSourceFileContent_ValidWindowsContent() throws Exception;
+
     // protected parseSourceFileContent() ------------------------------------------------------------------------------
 
     @Test
@@ -315,325 +344,121 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public void parseSourceFileContent_Null_Linux() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseSourceFileContent(OSType.LINUX, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseSourceFileContent_Null_Mac() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseSourceFileContent(OSType.MAC, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseSourceFileContent_Null_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseSourceFileContent(OSType.WINDOWS, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-//    @Test
-//    public void parseSourceFileContent_InvalidPreviousReading_Linux() throws Exception {
-//
-//        byte[] c = getValidSourceFileContentToTest(OSType.LINUX);
-//
-//        if (c == null) {
-//
-//            //
-//            // no valid source file for this OS, noop
-//            //
-//
-//            return;
-//        }
-//
-//        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-//
-//        try {
-//
-//            d.parseSourceFileContent(OSType.LINUX, c);
-//            fail("should have thrown exception");
-//        }
-//        catch(IllegalArgumentException e) {
-//
-//            String msg = e.getMessage();
-//            assertTrue(msg.matches(".*not a .* instance.*"));
-//        }
-//    }
-
-    @Test
-    public void parseSourceFileContent_InvalidPreviousReading_Mac() throws Exception {
-
-        byte[] c = getValidSourceFileContentToTest(OSType.MAC);
-
-        if (c == null) {
-
-            //
-            // no valid source file for this OS, noop
-            //
-
-            return;
-        }
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            d.parseSourceFileContent(OSType.MAC, c);
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.matches(".*not a .* instance.*"));
-        }
-    }
-
-    @Test
-    public void parseSourceFileContent_InvalidPreviousReading_Windows() throws Exception {
-
-        byte[] c = getValidSourceFileContentToTest(OSType.WINDOWS);
-
-        if (c == null) {
-
-            //
-            // no valid source file for this OS, noop
-            //
-
-            return;
-        }
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        try {
-
-            d.parseSourceFileContent(OSType.WINDOWS, c);
-            fail("should have thrown exception");
-        }
-        catch(IllegalArgumentException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.matches(".*not a .* instance.*"));
-        }
-    }
-
-    @Test
-    public abstract void parseSourceFileContent_ValidLinuxContent() throws Exception;
-
-    @Test
-    public abstract void parseSourceFileContent_ValidMacContent() throws Exception;
-
-    @Test
-    public abstract void parseSourceFileContent_ValidWindowsContent() throws Exception;
-
-    // parseLinuxSourceFileContent()/parseMacSourceFileContent()/parseWindowsSourceFileContent() -----------------------
-
-    @Test
-    public void parseLinuxSourceFileContent_InvalidReading() throws Exception {
+    public void parseSourceFileContent_protected_InvalidReading() throws Exception {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getCommand(OSType.LINUX) == null) {
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-            //
-            // we don't read this metric on Linux, parseLinuxCommandOutput() should not be invoked
-            //
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-            return;
-        }
+            if (d.getSourceFile(osType) != null) {
 
-        String output = "invalid Linux command output";
+                //
+                // if we get a null d.getSourceFile(osType), we are not supposed to call parseSourceFileContent(), will
+                // throw IllegalStateException
+                //
 
-        try {
+                byte[] b = "invalid source file content".getBytes();
 
-            d.parseLinuxCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
+                try {
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
-        }
-    }
+                    d.parseSourceFileContent(osType, b, null);
+                    fail("should have thrown exception");
+                }
+                catch(ParsingException e) {
 
-    @Test
-    public void parseMacSourceFileContent_InvalidReading() throws Exception {
-
-        OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
-
-        if (d.getCommand(OSType.MAC) == null) {
-
-            //
-            // we don't read this metric on Mac, getMacCommand() should not be invoked
-            //
-
-            return;
-        }
-
-        String output = "invalid Mac command output";
-
-        try {
-
-            d.parseMacCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
-
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
+                    String msg = e.getMessage();
+                    assertNotNull(msg);
+                }
+            }
         }
     }
 
     @Test
-    public void parseWindowsSourceFileContent_InvalidReading() throws Exception {
+    public void parseSourceFileContent_protected_InvalidPreviousReading() throws Exception {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getCommand(OSType.WINDOWS) == null) {
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-            //
-            // we don't read this metric on Windows, getWindowsCommand() should not be invoked
-            //
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-            return;
-        }
+            if (d.getSourceFile(osType) != null) {
 
-        String output = "invalid Windows command output";
+                //
+                // if we get a null d.getSourceFile(osType), we are not supposed to call parseSourceFileContent(), will
+                // throw IllegalStateException
+                //
 
-        try {
+                PreParsedContent invalidPreviousReading = new MockPreParsedContent();
 
-            d.parseWindowsCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
+                byte[] content = getValidSourceFileContentToTest(osType);
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
+                try {
+
+                    d.parseSourceFileContent(osType, content, invalidPreviousReading);
+                    fail("should have thrown exception");
+                }
+                catch(ParsingException e) {
+
+                    String msg = e.getMessage();
+                    assertTrue(msg.matches(".*not a .* instance.*"));
+                }
+            }
         }
     }
 
     // parseCommandOutput() --------------------------------------------------------------------------------------------
 
     @Test
-    public void parseCommandOutput_InvalidReading_Linux() throws Exception {
+    public void parseCommandOutput_InvalidReading() throws Exception {
 
         OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
 
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-        Property p;
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-        p = d.parseCommandOutput(OSType.LINUX, output);
+            if (d.getCommand(osType) != null) {
 
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
+                //
+                // if we get a null d.getCommand(osType), we are not supposed to call parseCommandOutput(), will throw
+                // IllegalStateException
+                //
+
+                String output = "I am pretty sure this is not valid output we can parse the metric from";
+
+                Property p = d.parseCommandOutput(osType, output);
+
+                assertEquals(d.getId(), p.getName());
+                assertEquals(d.getType(), p.getType());
+                assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+                assertNull(p.getValue());
+            }
+        }
     }
 
     @Test
-    public void parseCommandOutput_InvalidReading_Mac() throws Exception {
+    public void parseCommandOutput_Null() throws Exception {
 
         OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
 
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-        Property p;
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-        p = d.parseCommandOutput(OSType.MAC, output);
+            Property p = d.parseCommandOutput(osType, null);
 
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_InvalidReading_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        String output = "I am pretty sure this is not valid output we can parse the metric from";
-
-        Property p;
-
-        p = d.parseCommandOutput(OSType.WINDOWS, output);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Linux() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseCommandOutput(OSType.LINUX, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Mac() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseCommandOutput(OSType.MAC, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
-    }
-
-    @Test
-    public void parseCommandOutput_Null_Windows() throws Exception {
-
-        OSMetricDefinition d = (OSMetricDefinition)getMetricDefinitionToTest();
-
-        Property p;
-
-        p = d.parseCommandOutput(OSType.WINDOWS, null);
-
-        assertEquals(d.getId(), p.getName());
-        assertEquals(d.getType(), p.getType());
-        assertEquals(d.getBaseUnit(), p.getMeasureUnit());
-        assertNull(p.getValue());
+            assertEquals(d.getId(), p.getName());
+            assertEquals(d.getType(), p.getType());
+            assertEquals(d.getBaseUnit(), p.getMeasureUnit());
+            assertNull(p.getValue());
+        }
     }
 
     @Test
@@ -645,89 +470,108 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     @Test
     public abstract void parseCommandOutput_ValidWindowsOutput() throws Exception;
 
-    // parseLinuxCommandOutput()/parseMacCommandOutput()/parseWindowsCommandOutput() -----------------------------------
+    // protected parseCommandOutput() ------------------------------------------------------------------------------
 
     @Test
-    public void parseLinuxCommandOutput_InvalidReading() throws Exception {
+    public void parseCommandOutput_protected_NotSupposedToCall() throws Exception {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getCommand(OSType.LINUX) == null) {
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-            //
-            // we don't read this metric on Linux, parseLinuxCommandOutput() should not be invoked
-            //
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-            return;
-        }
+            if (d.getCommand(osType) == null) {
 
-        String output = "invalid Linux command output";
+                //
+                // if we get a null d.getCommand(osType), we are not supposed to call parseCommandOutput(), will throw
+                // IllegalStateException, so we test that
+                //
 
-        try {
+                String s = "does not matter";
 
-            d.parseLinuxCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
+                try {
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
+
+                    d.parseCommandOutput(osType, s, null);
+                    fail("should have thrown exception");
+                }
+                catch(IllegalStateException e) {
+
+                    String msg = e.getMessage();
+                    assertTrue(msg.contains("cannot be extracted from a command output on"));
+                    assertTrue(msg.contains(osType.toString()));
+                }
+            }
         }
     }
 
     @Test
-    public void parseMacCommandOutput_InvalidReading() throws Exception {
+    public void parseCommandOutput_protected_InvalidReading() throws Exception {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getCommand(OSType.MAC) == null) {
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-            //
-            // we don't read this metric on Mac, getMacCommand() should not be invoked
-            //
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-            return;
-        }
+            if (d.getCommand(osType) != null) {
 
-        String output = "invalid Mac command output";
+                //
+                // if we get a null d.getCommand(osType), we are not supposed to call parseCommandOutput(), will throw
+                // IllegalStateException
+                //
 
-        try {
+                String output = "invalid command output";
 
-            d.parseMacCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
+                try {
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
+                    d.parseCommandOutput(osType, output, null);
+                    fail("should have thrown exception");
+                }
+                catch(ParsingException e) {
+
+                    String msg = e.getMessage();
+                    assertTrue(msg.contains("failed to match pattern"));
+                }
+            }
         }
     }
 
     @Test
-    public void parseWindowsCommandOutput_InvalidReading() throws Exception {
+    public void parseCommandOutput_protected_InvalidPreviousReading() throws Exception {
 
         OSMetricDefinitionBase d = (OSMetricDefinitionBase)getMetricDefinitionToTest();
 
-        if (d.getCommand(OSType.WINDOWS) == null) {
+        List<OSType> osTypes = Arrays.asList(OSType.LINUX, OSType.MAC, OSType.WINDOWS);
 
-            //
-            // we don't read this metric on Windows, getWindowsCommand() should not be invoked
-            //
+        //noinspection Convert2streamapi
+        for(OSType osType: osTypes) {
 
-            return;
-        }
+            if (d.getCommand(osType) != null) {
 
-        String output = "invalid Windows command output";
+                //
+                // if we get a null d.getCommand(osType), we are not supposed to call parseCommandOutput(), will throw
+                // IllegalStateException
+                //
 
-        try {
+                PreParsedContent invalidPreviousReading = new MockPreParsedContent();
 
-            d.parseWindowsCommandOutput(output);
-            fail("should have thrown exception");
-        }
-        catch(ParsingException e) {
+                String s = getValidCommandOutputToTest(osType);
 
-            String msg = e.getMessage();
-            assertTrue(msg.contains("failed to match pattern"));
+                try {
+
+                    d.parseCommandOutput(osType, s, invalidPreviousReading);
+                    fail("should have thrown exception");
+                }
+                catch(ParsingException e) {
+
+                    String msg = e.getMessage();
+                    assertTrue(msg.matches(".*not a .* instance.*"));
+                }
+            }
         }
     }
 
@@ -739,6 +583,11 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
      * May return null if there is no valid content for this OS.
      */
     protected abstract byte[] getValidSourceFileContentToTest(OSType osType) throws Exception;
+
+    /**
+     * May return null if there is no valid command for this OS.
+     */
+    protected abstract String getValidCommandOutputToTest(OSType osType) throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

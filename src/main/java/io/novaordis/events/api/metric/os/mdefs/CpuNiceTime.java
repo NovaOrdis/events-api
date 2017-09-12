@@ -96,39 +96,34 @@ public class CpuNiceTime extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput(
+            OSType osType, String commandOutput, PreParsedContent previousReading) throws ParsingException {
 
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+        if (OSType.LINUX.equals(osType)) {
 
-        if (!m.find()) {
+            Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
-            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            if (!m.find()) {
+
+                throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            }
+
+            String ni = m.group(3);
+
+            try {
+
+                Float f = PercentageArithmetic.parse(ni);
+
+                return new InternalMetricReadingContainer(f, null);
+            } catch (Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
+        else {
 
-        String ni = m.group(3);
-
-        try {
-
-            //noinspection UnnecessaryLocalVariable
-            Float f = PercentageArithmetic.parse(ni);
-            return f;
+            throw new IllegalStateException(this + " cannot be extracted from a command output on " + osType);
         }
-        catch(Exception e) {
-
-            throw new ParsingException(e);
-        }
-    }
-
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new IllegalStateException(this + " not available on Mac");
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

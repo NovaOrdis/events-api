@@ -94,65 +94,70 @@ public class PhysicalMemoryFree extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected Object parseLinuxCommandOutput(String commandOutput) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput(
+            OSType osType, String commandOutput, PreParsedContent previousReading) throws ParsingException {
 
-        Matcher m = LINUX_PATTERN.matcher(commandOutput);
+        if (OSType.LINUX.equals(osType)) {
 
-        if (!m.find()) {
+            Matcher m = LINUX_PATTERN.matcher(commandOutput);
 
-            throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            if (!m.find()) {
+
+                throw new ParsingException("failed to match pattern " + LINUX_PATTERN.pattern());
+            }
+
+            String memoryUnit = m.group(1);
+            String freeMemory = m.group(3);
+
+            try {
+
+                Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+
+                return new InternalMetricReadingContainer(value, null);
+            }
+            catch(Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
+        else if (OSType.MAC.equals(osType)) {
 
-        String memoryUnit = m.group(1);
-        String freeMemory = m.group(3);
+            Matcher m = MAC_PATTERN.matcher(commandOutput);
 
-        try {
+            if (!m.find()) {
 
-            //noinspection UnnecessaryLocalVariable
-            Long value = MemoryArithmetic.parse(freeMemory, memoryUnit, (MemoryMeasureUnit)BASE_UNIT);
-            return value;
+                throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
+            }
+
+            String unusedMemory = m.group(3);
+            String unusedMemoryUnit = m.group(4);
+
+            try {
+
+                Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
+
+                return new InternalMetricReadingContainer(value, null);
+            }
+            catch(Exception e) {
+
+                throw new ParsingException(e);
+            }
         }
-        catch(Exception e) {
+        else if (OSType.WINDOWS.equals(osType)) {
 
-            throw new ParsingException(e);
+            Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
+
+            if (!m.find()) {
+
+                throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
+            }
+
+            throw new RuntimeException("NOT YET IMPLEMENTED");
         }
-    }
+        else {
 
-    @Override
-    protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
-
-        Matcher m = MAC_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern \"" + MAC_PATTERN.pattern() + "\"");
+            throw new IllegalStateException(this + " cannot be extracted from a command output on " + osType);
         }
-
-        String unusedMemory = m.group(3);
-        String unusedMemoryUnit = m.group(4);
-
-        try {
-            //noinspection UnnecessaryLocalVariable
-            Long value = MemoryArithmetic.parse(unusedMemory, unusedMemoryUnit, (MemoryMeasureUnit)BASE_UNIT);
-            return value;
-        }
-        catch(Exception e) {
-
-            throw new ParsingException(e);
-        }
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandOutput) throws ParsingException {
-
-        Matcher m = WINDOWS_PATTERN.matcher(commandOutput);
-
-        if (!m.find()) {
-
-            throw new ParsingException("failed to match pattern " + WINDOWS_PATTERN.pattern());
-        }
-
-        throw new RuntimeException("NOT YET IMPLEMENTED");
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

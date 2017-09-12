@@ -323,6 +323,12 @@ public class CpuUserTimeTest extends OSMetricDefinitionTest {
         return null;
     }
 
+    @Override
+    protected String getValidCommandOutputToTest(OSType osType) throws Exception {
+
+        throw new RuntimeException("getValidCommandOutputToTest() NOT YET IMPLEMENTED");
+    }
+
     // Private ---------------------------------------------------------------------------------------------------------
 
     // Inner classes ---------------------------------------------------------------------------------------------------

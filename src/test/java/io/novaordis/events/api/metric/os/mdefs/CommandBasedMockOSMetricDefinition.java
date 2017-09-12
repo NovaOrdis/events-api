@@ -111,33 +111,14 @@ public class CommandBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
     }
 
     @Override
-    protected Object parseMacCommandOutput(String commandExecutionStdout) throws ParsingException {
+    protected InternalMetricReadingContainer parseCommandOutput
+            (OSType osType, String commandExecutionStdout, PreParsedContent previousReading) throws ParsingException {
 
         //
         // we return the command execution stdout as value of the property, to allow for extra consistency testing
         //
 
-        return commandExecutionStdout;
-    }
-
-    @Override
-    protected Object parseLinuxCommandOutput(String commandExecutionStdout) throws ParsingException {
-
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-
-        return commandExecutionStdout;
-    }
-
-    @Override
-    protected Object parseWindowsCommandOutput(String commandExecutionStdout) throws ParsingException {
-
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-
-        return commandExecutionStdout;
+        return new InternalMetricReadingContainer(commandExecutionStdout, null);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
