@@ -87,6 +87,12 @@ public class MockSshConnection extends MockNativeExecutor implements SshConnecti
         return delegate.getCommandExecutionHistory();
     }
 
+    @Override
+    public void putNativeExecutionResult(String command, NativeExecutionResult result) {
+
+        delegate.putNativeExecutionResult(command, result);
+    }
+
     // SshConnection implementation ------------------------------------------------------------------------------------
 
     @Override

@@ -158,7 +158,7 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
         }
 
         String methodName = null;
-        Object value = null;
+        InternalMetricReadingContainer mrc = null;
         boolean knownOS = true;
 
         try {
@@ -166,17 +166,17 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
             if (OSType.LINUX.equals(osTypes)) {
 
                 methodName = "parseLinuxSourceFileContent";
-                value = parseLinuxSourceFileContent(sourceFileContent, previousReading);
+                mrc = parseLinuxSourceFileContent(sourceFileContent, previousReading);
             }
             else if (OSType.MAC.equals(osTypes)) {
 
                 methodName = "parseMacSourceFileContent";
-                value = parseMacSourceFileContent(sourceFileContent, previousReading);
+                mrc = parseMacSourceFileContent(sourceFileContent, previousReading);
             }
             else if (OSType.WINDOWS.equals(osTypes)) {
 
                 methodName = "parseWindowsSourceFileContent";
-                value = parseWindowsSourceFileContent(sourceFileContent, previousReading);
+                mrc = parseWindowsSourceFileContent(sourceFileContent, previousReading);
             }
             else {
 
@@ -188,10 +188,14 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
             // the method must always return a non-null value, if null is seen here, it is an implementation error
             //
 
+            Object value = mrc ==  null ? null : mrc.getPropertyValue();
+
             if (knownOS && value == null) {
 
                 log.warn(getClass().getName() + "." + methodName + "(...) incorrectly implemented, it returns null");
             }
+
+            PreParsedContent thisReading = mrc ==  null ? null : mrc.getPreParsedContent();
 
             result.setValue(value);
 
@@ -324,9 +328,10 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling layer
      * may throw an IllegalStateException.
      *
-     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
-     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
-     * unchecked, should be thrown immediately - the calling layer will log appropriately.
+     * The method must ALWAYS return a non-null container value, as well as a non-null contained value. If the value
+     * cannot be successfully extracted because of invalid content, the method must throw an exception containing a
+     * human readable message. Any exceptions, checked or unchecked, should be thrown immediately - the calling layer
+     * will log appropriately.
      *
      * If the metric is not available on Linux, the calling layer must not invoke this method.
      *
@@ -349,9 +354,10 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling layer
      * may throw an IllegalStateException.
      *
-     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
-     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
-     * unchecked, should be thrown immediately - the calling layer will log appropriately.
+     * The method must ALWAYS return a non-null container value, as well as a non-null contained value. If the value
+     * cannot be successfully extracted because of invalid content, the method must throw an exception containing a
+     * human readable message. Any exceptions, checked or unchecked, should be thrown immediately - the calling layer
+     * will log appropriately.
      *
      * If the metric is not available on Mac, the calling layer must not invoke this method.
      *
@@ -374,9 +380,10 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
      * IllegalStateException. The value must be expressed in the BASE_UNIT declared above, otherwise the calling layer
      * may throw an IllegalStateException.
      *
-     * The method must ALWAYS return a non-null value. If the value cannot be successfully extracted because of invalid
-     * content, the method must throw an exception containing a human readable message. Any exceptions, checked or
-     * unchecked, should be thrown immediately - the calling layer will log appropriately.
+     * The method must ALWAYS return a non-null container value, as well as a non-null contained value. If the value
+     * cannot be successfully extracted because of invalid content, the method must throw an exception containing a
+     * human readable message. Any exceptions, checked or unchecked, should be thrown immediately - the calling layer
+     * will log appropriately.
      *
      * If the metric is not available on Windows, the calling layer must not invoke this method.
      *

@@ -22,12 +22,18 @@ import io.novaordis.events.api.event.PropertyFactory;
 import io.novaordis.events.api.metric.MetricDefinition;
 import io.novaordis.events.api.metric.MetricSourceTest;
 import io.novaordis.events.api.metric.os.mdefs.CommandBasedMockOSMetricDefinition;
+import io.novaordis.events.api.metric.os.mdefs.FileBasedMockOSMetricDefinition;
 import io.novaordis.utilities.address.Address;
 import io.novaordis.utilities.address.OSAddress;
 import io.novaordis.utilities.os.NativeExecutionException;
+import io.novaordis.utilities.os.NativeExecutionResult;
+import org.junit.After;
+import org.junit.Before;
 import org.junit.Test;
 
+import java.io.File;
 import java.net.InetAddress;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -50,9 +56,35 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    protected File scratchDirectory;
+
+    protected File baseDirectory;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    @Before
+    public void before() throws Exception {
+
+        String projectBaseDirName = System.getProperty("basedir");
+        scratchDirectory = new File(projectBaseDirName, "target/test-scratch");
+        assertTrue(scratchDirectory.isDirectory());
+
+        baseDirectory = new File(System.getProperty("basedir"));
+        assertTrue(baseDirectory.isDirectory());
+    }
+
+    @After
+    public void after() throws Exception {
+
+        //
+        // scratch directory cleanup
+        //
+
+        assertTrue(io.novaordis.utilities.Files.rmdir(scratchDirectory, false));
+
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -139,7 +171,7 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertEquals(v, v3);
 
         //
-        // insure that only two commands were executed about the source
+        // insure that only two commands were executed by the source
         //
     }
 
@@ -195,33 +227,128 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
         assertEquals("mock-command", commands.get(0));
         assertEquals("mock-command-2", commands.get(1));
         assertEquals("mock-command-3", commands.get(2));
-
     }
 
     @Test
     public final void collectMetrics_ValueExtractedFromFile() throws Exception {
 
-//        OSSourceBase oss = getMetricSourceToTest();
-//
-//        PropertyFactory f = new PropertyFactory();
-//
-//        CommandBasedMockOSMetricDefinition md = new CommandBasedMockOSMetricDefinition("test-metric", f, oss.getAddress(), command);
-//
-//        List<MetricDefinition> mds = Collections.singletonList(md);
-//
-//        List<Property> result = oss.collectMetrics(mds);
-//
-//        assertEquals(1, result.size());
-//
-//        MockProperty p = (MockProperty)result.get(0);
-//
-//        assertEquals("metric1", p.getName());
+        OSSourceBase oss = getMetricSourceToTest();
+
+        PropertyFactory f = new PropertyFactory();
+
+        File file = new File(scratchDirectory, "mock-source-file");
+        Files.write(file.toPath(), "A".getBytes());
+        assertTrue(file.isFile());
+
+        FileBasedMockOSMetricDefinition md =
+                new FileBasedMockOSMetricDefinition("test-metric", f, oss.getAddress(), file);
+
+        List<MetricDefinition> mds = Collections.singletonList(md);
+
+        List<Property> result = oss.collectMetrics(mds);
+
+        assertEquals(1, result.size());
+
+        MockProperty p = (MockProperty)result.get(0);
+
+        assertEquals("test-metric", p.getName());
+        assertEquals("A", p.getValue());
     }
 
     @Test
     public final void collectMetrics_ValuesExtractedFromCommandsAndFiles() throws Exception {
 
-//        fail("return here");
+        OSSourceBase oss = getMetricSourceToTest();
+
+        MockNativeExecutor me = getCorrespondingMockNativeExecutor();
+
+        oss.setNativeExecutor(me);
+
+        PropertyFactory f = new PropertyFactory();
+
+        File file = new File(scratchDirectory, "mock-source-file");
+        Files.write(file.toPath(), "A".getBytes());
+        assertTrue(file.isFile());
+
+        File file2 = new File(scratchDirectory, "mock-source-file-2");
+        Files.write(file2.toPath(), "B".getBytes());
+        assertTrue(file2.isFile());
+
+        //
+        // metrics share files, which are supposed to be read once
+        //
+
+        FileBasedMockOSMetricDefinition md =
+                new FileBasedMockOSMetricDefinition("test-metric", f, oss.getAddress(), file);
+
+        FileBasedMockOSMetricDefinition md2 =
+                new FileBasedMockOSMetricDefinition("test-metric-2", f, oss.getAddress(), file2);
+
+        FileBasedMockOSMetricDefinition md3 =
+                new FileBasedMockOSMetricDefinition("test-metric-3", f, oss.getAddress(), file);
+
+        FileBasedMockOSMetricDefinition md4 =
+                new FileBasedMockOSMetricDefinition("test-metric-4", f, oss.getAddress(), file2);
+
+        String command = "mock-command-1";
+        me.putNativeExecutionResult(command, new NativeExecutionResult(0, "C", "", false, false));
+
+        String command2 = "mock-command-2";
+        me.putNativeExecutionResult(command2, new NativeExecutionResult(0, "D", "", false, false));
+
+        //
+        // metrics share commands, which are supposed to be executed once
+        //
+
+        CommandBasedMockOSMetricDefinition md5 =
+                new CommandBasedMockOSMetricDefinition("test-metric-5", f, oss.getAddress(), command);
+
+        CommandBasedMockOSMetricDefinition md6 =
+                new CommandBasedMockOSMetricDefinition("test-metric-6", f, oss.getAddress(), command2);
+
+        CommandBasedMockOSMetricDefinition md7 =
+                new CommandBasedMockOSMetricDefinition("test-metric-7", f, oss.getAddress(), command);
+
+        CommandBasedMockOSMetricDefinition md8 =
+                new CommandBasedMockOSMetricDefinition("test-metric-8", f, oss.getAddress(), command2);
+
+        List<MetricDefinition> mds = Arrays.asList(md, md5, md2, md6, md3, md7, md4, md8);
+
+        List<Property> result = oss.collectMetrics(mds);
+
+        assertEquals(8, result.size());
+
+        MockProperty p = (MockProperty)result.get(0);
+        assertEquals("test-metric", p.getName());
+        assertEquals("A", p.getValue());
+
+        MockProperty p2 = (MockProperty)result.get(1);
+        assertEquals("test-metric-5", p2.getName());
+        assertEquals("C", p2.getValue());
+
+        MockProperty p3 = (MockProperty)result.get(2);
+        assertEquals("test-metric-2", p3.getName());
+        assertEquals("B", p3.getValue());
+
+        MockProperty p4 = (MockProperty)result.get(3);
+        assertEquals("test-metric-6", p4.getName());
+        assertEquals("D", p4.getValue());
+
+        MockProperty p5 = (MockProperty)result.get(4);
+        assertEquals("test-metric-3", p5.getName());
+        assertEquals("A", p5.getValue());
+
+        MockProperty p6 = (MockProperty)result.get(5);
+        assertEquals("test-metric-7", p6.getName());
+        assertEquals("C", p6.getValue());
+
+        MockProperty p7 = (MockProperty)result.get(6);
+        assertEquals("test-metric-4", p7.getName());
+        assertEquals("B", p7.getValue());
+
+        MockProperty p8 = (MockProperty)result.get(7);
+        assertEquals("test-metric-8", p8.getName());
+        assertEquals("D", p8.getValue());
     }
 
     // execute() -------------------------------------------------------------------------------------------------------
@@ -343,6 +470,41 @@ public abstract class OSSourceBaseTest extends MetricSourceTest {
 
         String hostname = InetAddress.getLocalHost().getHostName();
         assertTrue(stdout.startsWith(hostname));
+    }
+
+    // read() ----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void read_Null() throws Exception {
+
+        OSSourceBase ms = getMetricSourceToTest();
+
+        assertNull(ms.read(null));
+    }
+
+    @Test
+    public void read_NonExistentFile() throws Exception {
+
+        OSSourceBase ms = getMetricSourceToTest();
+
+        File f = new File("/I/am/pretty/sure/there/is/no/such/file.txt");
+
+        assertNull(ms.read(f));
+    }
+
+    @Test
+    public void read() throws Exception {
+
+        OSSourceBase ms = getMetricSourceToTest();
+
+        File f = new File(baseDirectory, "src/test/resources/data/metric/proc-stat-reading-0.txt");
+        assertTrue(f.isFile());
+
+        byte[] content = ms.read(f);
+
+        byte[] content2 = Files.readAllBytes(f.toPath());
+
+        assertEquals(new String(content), new String(content2));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

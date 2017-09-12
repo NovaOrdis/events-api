@@ -16,10 +16,14 @@
 
 package io.novaordis.events.api.metric.os.mdefs;
 
+import io.novaordis.events.api.event.MockProperty;
+import io.novaordis.events.api.event.Property;
 import io.novaordis.events.api.event.PropertyFactory;
+import io.novaordis.events.api.measure.MeasureUnit;
 import io.novaordis.events.api.metric.os.InternalMetricReadingContainer;
 import io.novaordis.events.api.metric.os.OSMetricDefinitionBase;
 import io.novaordis.utilities.address.OSAddress;
+import io.novaordis.utilities.os.OSType;
 import io.novaordis.utilities.parsing.ParsingException;
 import io.novaordis.utilities.parsing.PreParsedContent;
 
@@ -65,33 +69,49 @@ public class FileBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
 
     // Overrides -------------------------------------------------------------------------------------------------------
 
+    @Override
+    protected Property getPropertyInstance(String id, Class c, MeasureUnit u) {
+
+        //
+        // needed to produce "blank" properties
+        //
+        return new MockProperty(id);
+    }
+
+    //
+    // file content handling overrides ---------------------------------------------------------------------------------
+    //
+
+    @Override
+    public File getSourceFile(OSType osType) {
+
+        return file;
+    }
 
     @Override
     protected InternalMetricReadingContainer parseLinuxSourceFileContent
             (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        //
-        // we return the command execution stdout as value of the property, to allow for extra consistency testing
-        //
-        //return new MockProperty(getId(), commandExecutionStdout);
-
-
-        throw new RuntimeException("parseLinuxSourceFileContent() NOT YET IMPLEMENTED");
+        return parseMockFileContent(content, previousReading);
     }
 
     @Override
     protected InternalMetricReadingContainer parseMacSourceFileContent
             (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseMacSourceFileContent() NOT YET IMPLEMENTED");
+        return parseMockFileContent(content, previousReading);
     }
 
     @Override
     protected InternalMetricReadingContainer parseWindowsSourceFileContent
             (byte[] content, PreParsedContent previousReading) throws ParsingException {
 
-        throw new RuntimeException("parseWindowsSourceFileContent() NOT YET IMPLEMENTED");
+        return parseMockFileContent(content, previousReading);
     }
+
+    //
+    // command-handling overrides --------------------------------------------------------------------------------------
+    //
 
     @Override
     protected Object parseMacCommandOutput(String commandOutput) throws ParsingException {
@@ -118,6 +138,11 @@ public class FileBasedMockOSMetricDefinition extends OSMetricDefinitionBase {
     // Protected -------------------------------------------------------------------------------------------------------
 
     // Private ---------------------------------------------------------------------------------------------------------
+
+    private InternalMetricReadingContainer parseMockFileContent(byte[] content, PreParsedContent preParsedContent) {
+
+        return new InternalMetricReadingContainer(new String(content), preParsedContent);
+    }
 
     // Inner classes ---------------------------------------------------------------------------------------------------
 

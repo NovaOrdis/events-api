@@ -317,7 +317,7 @@ public class CpuIdleTimeTest extends OSMetricDefinitionTest {
 
         if (OSType.LINUX.equals(osType)) {
 
-            File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading0.txt");
+            File f = new File(System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading-0.txt");
             assertTrue(f.isFile());
             return Files.readAllBytes(f.toPath());
         }
