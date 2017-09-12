@@ -386,7 +386,6 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
     protected abstract InternalMetricReadingContainer parseCommandOutput
         (OSType osType, String commandExecutionStdout, PreParsedContent previousReading) throws ParsingException;
 
-
     // Protected static ------------------------------------------------------------------------------------------------
 
     /**
@@ -423,7 +422,6 @@ public abstract class OSMetricDefinitionBase extends MetricDefinitionBase implem
 
         return result;
     }
-
 
     protected Property getPropertyInstance(String id, Class c, MeasureUnit u) {
 

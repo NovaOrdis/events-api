@@ -29,7 +29,6 @@ import io.novaordis.utilities.parsing.PreParsedContent;
 import org.junit.Test;
 
 import java.io.File;
-import java.nio.file.Files;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
@@ -131,7 +130,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
+    public void parseSourceFileContent_LINUX_ValidContent() throws Exception {
 
         CpuSoftwareInterruptTime m = getMetricDefinitionToTest();
 
@@ -203,7 +202,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidMacContent() throws Exception {
+    public void parseSourceFileContent_MAC_ValidContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -216,7 +215,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
+    public void parseSourceFileContent_WINDOWS_ValidContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -235,7 +234,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+    public void parseCommandOutput_LINUX_ValidOutput() throws Exception {
 
         String output =
 
@@ -262,7 +261,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidMacOutput() throws Exception {
+    public void parseCommandOutput_MAC_ValidOutput() throws Exception {
 
         //
         // there is no valid mac output
@@ -271,7 +270,7 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+    public void parseCommandOutput_WINDOWS_ValidOutput() throws Exception {
 
         //
         // TODO noop for the time being, revisit when implementing Windows support
@@ -286,22 +285,6 @@ public class CpuSoftwareInterruptTimeTest extends OSMetricDefinitionTest {
     protected CpuSoftwareInterruptTime getMetricDefinitionToTest() throws Exception {
 
         return new CpuSoftwareInterruptTime(new PropertyFactory(), new LocalOSAddress());
-    }
-
-    @Override
-    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
-
-        if (OSType.LINUX.equals(osType)) {
-
-            File f = new File(
-                    System.getProperty("basedir"), "src/test/resources/data/metric/proc-stat-reading-" + seed + ".txt");
-
-            assertTrue(f.isFile());
-
-            return Files.readAllBytes(f.toPath());
-        }
-
-        return null;
     }
 
     // Private ---------------------------------------------------------------------------------------------------------

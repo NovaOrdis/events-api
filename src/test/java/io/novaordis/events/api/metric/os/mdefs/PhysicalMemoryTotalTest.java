@@ -130,7 +130,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
+    public void parseSourceFileContent_LINUX_ValidContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -143,7 +143,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidMacContent() throws Exception {
+    public void parseSourceFileContent_MAC_ValidContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -156,7 +156,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
+    public void parseSourceFileContent_WINDOWS_ValidContent() throws Exception {
 
         OSMetricDefinition m = getMetricDefinitionToTest();
 
@@ -175,7 +175,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+    public void parseCommandOutput_LINUX_ValidOutput() throws Exception {
 
         String output =
 
@@ -202,7 +202,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidMacOutput() throws Exception {
+    public void parseCommandOutput_MAC_ValidOutput() throws Exception {
 
         String output =
 
@@ -234,7 +234,7 @@ public class PhysicalMemoryTotalTest extends OSMetricDefinitionTest {
 
     @Test
     @Override
-    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+    public void parseCommandOutput_WINDOWS_ValidOutput() throws Exception {
 
         //
         // TODO noop for the time being, revisit when implementing Windows support

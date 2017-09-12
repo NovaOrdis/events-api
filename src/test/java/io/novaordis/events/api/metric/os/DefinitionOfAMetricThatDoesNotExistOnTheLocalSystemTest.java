@@ -63,7 +63,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidLinuxContent() throws Exception {
+    public void parseSourceFileContent_LINUX_ValidContent() throws Exception {
 
         //
         // noop
@@ -72,7 +72,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidMacContent() throws Exception {
+    public void parseSourceFileContent_MAC_ValidContent() throws Exception {
 
         //
         // noop
@@ -81,7 +81,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
 
     @Test
     @Override
-    public void parseSourceFileContent_ValidWindowsContent() throws Exception {
+    public void parseSourceFileContent_WINDOWS_ValidContent() throws Exception {
 
         //
         // noop
@@ -100,7 +100,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     }
 
     @Override
-    public void parseCommandOutput_ValidLinuxOutput() throws Exception {
+    public void parseCommandOutput_LINUX_ValidOutput() throws Exception {
 
         //
         // noop - the method will never be called, and if it is, we don't care about the result
@@ -108,7 +108,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     }
 
     @Override
-    public void parseCommandOutput_ValidMacOutput() throws Exception {
+    public void parseCommandOutput_MAC_ValidOutput() throws Exception {
 
         //
         // noop - the method will never be called, and if it is, we don't care about the result
@@ -116,7 +116,7 @@ public class DefinitionOfAMetricThatDoesNotExistOnTheLocalSystemTest extends OSM
     }
 
     @Override
-    public void parseCommandOutput_ValidWindowsOutput() throws Exception {
+    public void parseCommandOutput_WINDOWS_ValidOutput() throws Exception {
 
         //
         // noop - the method will never be called, and if it is, we don't care about the result

@@ -32,6 +32,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.File;
+import java.nio.file.Files;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -362,13 +363,13 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public abstract void parseSourceFileContent_ValidLinuxContent() throws Exception;
+    public abstract void parseSourceFileContent_LINUX_ValidContent() throws Exception;
 
     @Test
-    public abstract void parseSourceFileContent_ValidMacContent() throws Exception;
+    public abstract void parseSourceFileContent_MAC_ValidContent() throws Exception;
 
     @Test
-    public abstract void parseSourceFileContent_ValidWindowsContent() throws Exception;
+    public abstract void parseSourceFileContent_WINDOWS_ValidContent() throws Exception;
 
     // protected parseSourceFileContent() ------------------------------------------------------------------------------
 
@@ -528,13 +529,13 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
     }
 
     @Test
-    public abstract void parseCommandOutput_ValidLinuxOutput() throws Exception;
+    public abstract void parseCommandOutput_LINUX_ValidOutput() throws Exception;
 
     @Test
-    public abstract void parseCommandOutput_ValidMacOutput() throws Exception;
+    public abstract void parseCommandOutput_MAC_ValidOutput() throws Exception;
 
     @Test
-    public abstract void parseCommandOutput_ValidWindowsOutput() throws Exception;
+    public abstract void parseCommandOutput_WINDOWS_ValidOutput() throws Exception;
 
     // protected parseCommandOutput() ------------------------------------------------------------------------------
 
@@ -649,10 +650,28 @@ public abstract class OSMetricDefinitionTest extends MetricDefinitionTest {
      * @param seed - different seeds should produce different values.
      *
      * May return null if there is no valid content for this OS.
+     *
+     * The base class returns a value that works in most of situations. If more specialized behavior is needed,
+     * override.
      */
-    protected abstract byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception;
+    protected byte[] getValidSourceFileContentToTest(OSType osType, int seed) throws Exception {
+
+        if (OSType.LINUX.equals(osType)) {
+
+            File f = new File(System.getProperty("basedir"),
+                    "src/test/resources/data/metric/proc-stat-reading-" + seed + ".txt");
+
+            assertTrue(f.isFile());
+
+            return Files.readAllBytes(f.toPath());
+        }
+
+        return null;
+    }
 
     /**
+     * @param seed - different seeds should produce different values.
+     *
      * May return null if there is no valid command for this OS.
      *
      * The base class returns a value that works in most of situations. If more specialized behavior is needed,

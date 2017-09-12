@@ -46,7 +46,7 @@ import java.io.File;
  * Since 1.2.2, the OSMetricDefinition implementation comes with support for maintaining metric definition state across
  * successive collections. This is useful when the calculation of a value require access to previous state, as it is
  * the case for rates. More details in OSMetricDefinitionBase javadoc. TODO: consider migrating this mechanism to more
- * generic layers, such as MetricDefinitionBase.
+ * generic layers, such as MetricDefinitionBase. This way we have a built-in way of calculating rates.
  *
  * @see OSMetricDefinitionBase
  * @see OSSourceBase
