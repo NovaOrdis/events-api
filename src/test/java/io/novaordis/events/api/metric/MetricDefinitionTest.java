@@ -149,7 +149,7 @@ public abstract class MetricDefinitionTest {
         catch(MetricDefinitionException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("no known parser can understand"));
+            assertTrue(msg.contains("no metric definition parser can understand"));
         }
     }
 

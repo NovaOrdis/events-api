@@ -101,9 +101,8 @@ public class MetricDefinitionParser {
         // ... then give up
         //
 
-
         throw new MetricDefinitionException(
-                "no known parser can understand \"" + metricSourceAndMetricDefinitionRepresentation + "\"");
+                "no metric definition parser can understand \"" + metricSourceAndMetricDefinitionRepresentation + "\"");
     }
 
     // Attributes ------------------------------------------------------------------------------------------------------
