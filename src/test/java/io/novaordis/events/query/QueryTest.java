@@ -17,8 +17,11 @@
 package io.novaordis.events.query;
 
 import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.TimedEvent;
 import org.junit.Test;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
@@ -42,6 +45,8 @@ public abstract class QueryTest {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private static final SimpleDateFormat TEST_FORMAT = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -142,6 +147,28 @@ public abstract class QueryTest {
         assertNotNull(q);
 
         assertTrue(q.isCaseSensitive());
+
+        assertTrue(args.isEmpty());
+    }
+
+    @Test
+    public void fromArguments_TimeQuery() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("--from", "09/22/17 12:00:00"));
+
+        Query q = Query.fromArguments(args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertNotNull(q);
+
+        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
+        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
+        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
+
+        assertFalse(q.selects(e));
+        assertTrue(q.selects(e2));
+        assertTrue(q.selects(e3));
     }
 
     // selects() and filter() ------------------------------------------------------------------------------------------

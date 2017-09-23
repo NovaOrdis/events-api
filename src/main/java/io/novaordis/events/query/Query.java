@@ -46,11 +46,11 @@ public interface Query {
      *
      * If no query is identified, the method returns null.
      *
-     * @param args a mutable list.
+     * @param mutableArgumentList a mutable list.
      */
-    static Query fromArguments(List<String> args, int from) throws QueryException {
+    static Query fromArguments(List<String> mutableArgumentList, int from) throws QueryException {
 
-        if (args.isEmpty()) {
+        if (mutableArgumentList.isEmpty()) {
 
             return null;
         }
@@ -61,9 +61,9 @@ public interface Query {
 
         MixedQuery mixedQuery = new MixedQuery();
 
-        for(int i = from; i < args.size(); i ++) {
+        for(int i = from; i < mutableArgumentList.size(); i ++) {
 
-            String token = args.remove(i--);
+            String token = mutableArgumentList.remove(i--);
 
             mixedQuery.addLiteral(token);
         }
