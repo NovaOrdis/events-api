@@ -31,6 +31,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
 import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -147,6 +148,30 @@ public class MixedQueryTest extends QueryTest {
         assertEquals("somethingelse", fields.get(0).getValue());
 
         assertTrue(q.getKeywordQueries().isEmpty());
+    }
+
+    @Test
+    public void addLiteral_TimeQuery_From() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addLiteral(TimeQuery.FROM_KEYWORD);
+
+        List<TimeQuery> tqs = q.getTimeQueries();
+        assertEquals(1, tqs.size());
+        TimeQuery tq = tqs.get(0);
+
+        fail("Return here");
+    }
+
+    @Test
+    public void addLiteral_TimeQuery_To() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addLiteral(TimeQuery.TO_KEYWORD);
+
+        fail("return here");
     }
 
     // selects() -------------------------------------------------------------------------------------------------------

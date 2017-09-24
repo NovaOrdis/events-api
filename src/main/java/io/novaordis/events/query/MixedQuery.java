@@ -42,6 +42,7 @@ public class MixedQuery extends QueryBase {
     private List<KeywordQuery> keywordQueries;
     private boolean keywordMatchingCaseSensitive;
     private List<FieldQuery> fieldQueries;
+    private List<TimeQuery> timeQueries;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -52,6 +53,7 @@ public class MixedQuery extends QueryBase {
 
         this.keywordQueries = new ArrayList<>();
         this.fieldQueries = new ArrayList<>();
+        this.timeQueries = new ArrayList<>();
         this.keywordMatchingCaseSensitive = false;
     }
 
@@ -99,8 +101,16 @@ public class MixedQuery extends QueryBase {
         }
         else if (literal.contains(":")) {
 
-            FieldQuery q = new FieldQuery(literal);
-            fieldQueries.add(q);
+            if (literal.startsWith(TimeQuery.FROM_KEYWORD) || literal.startsWith(TimeQuery.TO_KEYWORD)) {
+
+                TimeQuery q = new TimeQuery(literal);
+                timeQueries.add(q);
+            }
+            else {
+
+                FieldQuery q = new FieldQuery(literal);
+                fieldQueries.add(q);
+            }
         }
         else {
 
@@ -142,6 +152,15 @@ public class MixedQuery extends QueryBase {
 
         return fieldQueries;
     }
+
+    /**
+     * @return the internal storage so handle with care
+     */
+    public List<TimeQuery> getTimeQueries() {
+
+        return timeQueries;
+    }
+
 
     @Override
     public String toString() {

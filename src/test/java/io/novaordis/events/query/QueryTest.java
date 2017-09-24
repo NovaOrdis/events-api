@@ -152,9 +152,31 @@ public abstract class QueryTest {
     }
 
     @Test
-    public void fromArguments_TimeQuery() throws Exception {
+    public void fromArguments_TimeQuery_From_SeparatedFromTimestamp() throws Exception {
 
-        List<String> args = new ArrayList<>(Arrays.asList("--from", "09/22/17 12:00:00"));
+        List<String> args = new ArrayList<>(Collections.singletonList("from:01/01/16 12:00:00"));
+
+        Query q = Query.fromArguments(args, 0);
+
+        assertTrue(args.isEmpty());
+
+        TimeQuery tq = (TimeQuery)q;
+
+        assertNotNull(tq);
+
+        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
+        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
+        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
+
+        assertFalse(q.selects(e));
+        assertTrue(q.selects(e2));
+        assertTrue(q.selects(e3));
+    }
+
+    @Test
+    public void fromArguments_TimeQuery_From_AdjacentToTimestamp() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList("from:", "01/01/16 12:00:00"));
 
         Query q = Query.fromArguments(args, 0);
 
@@ -169,6 +191,18 @@ public abstract class QueryTest {
         assertFalse(q.selects(e));
         assertTrue(q.selects(e2));
         assertTrue(q.selects(e3));
+    }
+
+    @Test
+    public void fromArguments_TimeQuery_To_SeparatedFromTimestamp() throws Exception {
+
+        fail("return here");
+    }
+
+    @Test
+    public void fromArguments_TimeQuery_To_AdjacentToTimestamp() throws Exception {
+
+        fail("return here");
     }
 
     // selects() and filter() ------------------------------------------------------------------------------------------

@@ -70,15 +70,21 @@ public interface Query {
 
         List<FieldQuery> fieldQueries = mixedQuery.getFieldQueries();
         List<KeywordQuery> keywordQueries = mixedQuery.getKeywordQueries();
+        List<TimeQuery> timeQueries = mixedQuery.getTimeQueries();
 
-        if (fieldQueries.size() == 0 && keywordQueries.size() == 1) {
+        if (fieldQueries.size() == 0 && timeQueries.size() == 0 && keywordQueries.size() == 1) {
 
             return keywordQueries.get(0);
         }
 
-        if (fieldQueries.size() == 1 && keywordQueries.size() == 0) {
+        if (fieldQueries.size() == 1 && timeQueries.size() == 0 && keywordQueries.size() == 0 ) {
 
             return fieldQueries.get(0);
+        }
+
+        if (fieldQueries.size() == 0 && keywordQueries.size() == 0 && timeQueries.size() == 1) {
+
+            return timeQueries.get(0);
         }
 
         return mixedQuery;
