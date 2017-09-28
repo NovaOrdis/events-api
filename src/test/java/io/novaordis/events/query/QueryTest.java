@@ -16,16 +16,17 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.events.api.event.GenericTimedEvent;
-import io.novaordis.events.api.event.TimedEvent;
-import org.junit.Test;
-
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.Test;
+
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.TimedEvent;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -160,9 +161,7 @@ public abstract class QueryTest {
 
         assertTrue(args.isEmpty());
 
-        TimeQuery tq = (TimeQuery)q;
-
-        assertNotNull(tq);
+        assertNotNull(q);
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -196,13 +195,41 @@ public abstract class QueryTest {
     @Test
     public void fromArguments_TimeQuery_To_SeparatedFromTimestamp() throws Exception {
 
-        fail("return here");
+        List<String> args = new ArrayList<>(Collections.singletonList("to:01/01/16 12:00:00"));
+
+        Query q = Query.fromArguments(args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertNotNull(q);
+
+        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
+        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
+        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
+
+        assertTrue(q.selects(e));
+        assertTrue(q.selects(e2));
+        assertFalse(q.selects(e3));
     }
 
     @Test
     public void fromArguments_TimeQuery_To_AdjacentToTimestamp() throws Exception {
 
-        fail("return here");
+        List<String> args = new ArrayList<>(Arrays.asList("to:", "01/01/16 12:00:00"));
+
+        Query q = Query.fromArguments(args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertNotNull(q);
+
+        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
+        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
+        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
+
+        assertTrue(q.selects(e));
+        assertTrue(q.selects(e2));
+        assertFalse(q.selects(e3));
     }
 
     // selects() and filter() ------------------------------------------------------------------------------------------

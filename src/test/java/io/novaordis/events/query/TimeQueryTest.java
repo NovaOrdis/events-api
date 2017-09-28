@@ -16,11 +16,17 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.events.api.event.GenericTimedEvent;
+import java.text.SimpleDateFormat;
+
 import org.junit.Test;
 
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
+import io.novaordis.events.api.event.GenericTimedEvent;
+
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertFalse;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -76,21 +82,159 @@ public class TimeQueryTest extends QueryTest {
     }
 
     @Test
-    public void constructor_Keyword_From() throws Exception {
+    public void constructor_Keyword_From_SubsequentArgumentArrives_ValidTimestamp() throws Exception {
 
         TimeQuery q = new TimeQuery("from:");
 
+        assertNull(q.getTimestamp());
 
+        assertTrue(q.offerArgument("12/01/16 01:01:01"));
 
-        fail("return here");
+        //
+        // should be a noop
+        //
+        q.validate();
+
+        assertTrue(q.isFrom());
+        assertFalse(q.isTo());
+
+        assertEquals(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime(),
+                q.getTimestamp().longValue());
     }
 
     @Test
-    public void constructor_Keyword_To() throws Exception {
+    public void constructor_Keyword_From_SubsequentArgumentArrives_InvalidTimestamp() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:");
+
+        assertNull(q.getTimestamp());
+
+        try {
+
+            q.offerArgument("blah");
+
+            fail("should throw exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unknown timestamp format or invalid timestamp"));
+            assertTrue(msg.contains("'blah'"));
+        }
+    }
+
+    @Test
+    public void constructor_Keyword_From_SubsequentArgumentDoesNotArrive() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:");
+
+        try {
+
+            q.validate();
+
+            fail("should have thrown exception");
+
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("missing timestamp"));
+        }
+    }
+
+    @Test
+    public void constructor_Keyword_From_InvalidTimestamp() throws Exception {
+
+        try {
+
+            new TimeQuery("from:something that does not make sense");
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unknown timestamp format or invalid timestamp"));
+            assertTrue(msg.contains("something that does not make sense"));
+        }
+    }
+
+    @Test
+    public void constructor_Keyword_To_SubsequentArgumentArrives_ValidTimestamp() throws Exception {
 
         TimeQuery q = new TimeQuery("to:");
 
-        fail("return here");
+        assertNull(q.getTimestamp());
+
+        assertTrue(q.offerArgument("12/01/16 01:01:01"));
+
+        //
+        // should be a noop
+        //
+        q.validate();
+
+        assertFalse(q.isFrom());
+        assertTrue(q.isTo());
+
+        assertEquals(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime(),
+                q.getTimestamp().longValue());
+    }
+
+    @Test
+    public void constructor_Keyword_To_SubsequentArgumentArrives_InvalidTimestamp() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:");
+
+        assertNull(q.getTimestamp());
+
+        try {
+
+            q.offerArgument("blah");
+
+            fail("should throw exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unknown timestamp format or invalid timestamp"));
+            assertTrue(msg.contains("'blah'"));
+        }
+    }
+
+    @Test
+    public void constructor_Keyword_To_SubsequentArgumentDoesNotArrive() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:");
+
+        try {
+
+            q.validate();
+
+            fail("should have thrown exception");
+
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("missing timestamp"));
+        }
+    }
+
+    @Test
+    public void constructor_Keyword_To_InvalidTimestamp() throws Exception {
+
+        try {
+
+            new TimeQuery("to:something that does not make sense");
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unknown timestamp format or invalid timestamp"));
+            assertTrue(msg.contains("something that does not make sense"));
+        }
     }
 
     // setTimestamp_String() -------------------------------------------------------------------------------------------
@@ -159,43 +303,111 @@ public class TimeQueryTest extends QueryTest {
     // business tests --------------------------------------------------------------------------------------------------
 
     @Test
+    public void selects_from_NonTimedEvents() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
+
+        //
+        // we don't select non-timed events, as we don't have the information necessary to make a decision
+        //
+        assertFalse(q.selects(new GenericEvent()));
+    }
+
+    @Test
+    public void selects_from_TimedEventsCarryingNullTime() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
+
+        GenericTimedEvent te = new GenericTimedEvent((Long)null);
+
+        assertFalse(q.selects(te));
+    }
+
+    @Test
     public void selects_from_EventBeforeTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
+
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:00").getTime());
+
+        assertFalse(q.selects(te));
     }
 
     @Test
     public void selects_from_EventRightOnTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
 
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime());
+
+        assertTrue(q.selects(te));
     }
 
     @Test
     public void selects_from_EventAfterTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
 
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:02").getTime());
+
+        assertTrue(q.selects(te));
+    }
+
+    @Test
+    public void selects_to_NonTimedEvents() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
+
+        //
+        // we don't select non-timed events, as we don't have the information necessary to make a decision
+        //
+        assertFalse(q.selects(new GenericEvent()));
+    }
+
+    @Test
+    public void selects_to_TimedEventsCarryingNullTime() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
+
+        GenericTimedEvent te = new GenericTimedEvent((Long)null);
+
+        assertFalse(q.selects(te));
     }
 
     @Test
     public void selects_to_EventBeforeTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
+
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:00").getTime());
+
+        assertTrue(q.selects(te));
     }
 
     @Test
     public void selects_to_EventRightOnTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
 
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime());
+
+        assertTrue(q.selects(te));
     }
 
     @Test
     public void selects_to_EventAfterTimestamp() throws Exception {
 
-        fail("return here");
+        TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
 
+        GenericTimedEvent te = new GenericTimedEvent(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:02").getTime());
+
+        assertFalse(q.selects(te));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

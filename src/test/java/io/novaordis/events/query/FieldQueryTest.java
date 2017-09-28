@@ -16,15 +16,16 @@
 
 package io.novaordis.events.query;
 
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+
+import org.junit.Test;
+
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
 import io.novaordis.events.api.event.StringProperty;
-import org.junit.Test;
-
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -204,6 +205,16 @@ public class FieldQueryTest extends QueryTest {
         e.setStringProperty("test1", null);
 
         assertFalse(q.selects(e));
+    }
+
+    // offerArgument ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void offerArgument() throws Exception {
+
+        FieldQuery q = new FieldQuery("something:somethingelse");
+
+        assertFalse(q.offerArgument("blah"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,16 +16,18 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.events.api.event.GenericEvent;
-import io.novaordis.events.api.event.GenericTimedEvent;
-import io.novaordis.events.api.event.StringProperty;
-import org.junit.Test;
-
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
+
+import org.junit.Test;
+
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
+import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.StringProperty;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -118,6 +120,8 @@ public class MixedQueryTest extends QueryTest {
 
         assertEquals(1, keywords.size());
         assertEquals("something", keywords.get(0).getKeyword());
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(keywords.get(0), q.getQueryInitializationOrder().get(0));
 
         GenericTimedEvent e = new GenericTimedEvent();
 
@@ -146,6 +150,8 @@ public class MixedQueryTest extends QueryTest {
         assertEquals(1, fields.size());
         assertEquals("something", fields.get(0).getFieldName());
         assertEquals("somethingelse", fields.get(0).getValue());
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(fields.get(0), q.getQueryInitializationOrder().get(0));
 
         assertTrue(q.getKeywordQueries().isEmpty());
     }
@@ -157,11 +163,37 @@ public class MixedQueryTest extends QueryTest {
 
         q.addLiteral(TimeQuery.FROM_KEYWORD);
 
-        List<TimeQuery> tqs = q.getTimeQueries();
-        assertEquals(1, tqs.size());
-        TimeQuery tq = tqs.get(0);
+        List<TimeQuery> timeQueries = q.getTimeQueries();
+        assertEquals(1, timeQueries.size());
+        TimeQuery tq = timeQueries.get(0);
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(tq, q.getQueryInitializationOrder().get(0));
 
-        fail("Return here");
+        try {
+
+            q.validate();
+
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("missing timestamp"));
+        }
+
+        q.addLiteral("12/01/16 12:00:00");
+
+        List<TimeQuery> timeQueries2 = q.getTimeQueries();
+        assertEquals(1, timeQueries2.size());
+        TimeQuery tq2 = timeQueries2.get(0);
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(tq2, q.getQueryInitializationOrder().get(0));
+        assertTrue(tq.isFrom());
+        assertEquals(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
+                tq.getTimestamp().longValue());
+
+        q.validate();
     }
 
     @Test
@@ -171,7 +203,37 @@ public class MixedQueryTest extends QueryTest {
 
         q.addLiteral(TimeQuery.TO_KEYWORD);
 
-        fail("return here");
+        List<TimeQuery> timeQueries = q.getTimeQueries();
+        assertEquals(1, timeQueries.size());
+        TimeQuery tq = timeQueries.get(0);
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(tq, q.getQueryInitializationOrder().get(0));
+
+        try {
+
+            q.validate();
+
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("missing timestamp"));
+        }
+
+        q.addLiteral("12/01/16 12:00:00");
+
+        List<TimeQuery> timeQueries2 = q.getTimeQueries();
+        assertEquals(1, timeQueries2.size());
+        TimeQuery tq2 = timeQueries2.get(0);
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(tq2, q.getQueryInitializationOrder().get(0));
+        assertTrue(tq.isTo());
+        assertEquals(
+                new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
+                tq.getTimestamp().longValue());
+
+        q.validate();
     }
 
     // selects() -------------------------------------------------------------------------------------------------------
@@ -255,6 +317,43 @@ public class MixedQueryTest extends QueryTest {
         e4.setStringProperty("color", "blue");
 
         assertTrue(q.selects(e4));
+    }
+
+    // offerArgument ---------------------------------------------------------------------------------------------------
+
+    @Test
+    public void offerArgument() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        assertFalse(q.offerArgument("something"));
+    }
+
+    // validate() ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void validate() throws Exception {
+
+        FieldQuery f = new FieldQuery("something:somethingelse");
+        assertFalse(f.wasValidated());
+
+        KeywordQuery k = new KeywordQuery("something");
+        assertFalse(k.wasValidated());
+
+        TimeQuery t = new TimeQuery("from:12/01/16 12:00:00");
+        assertFalse(t.wasValidated());
+
+        MixedQuery q = new MixedQuery();
+
+        q.addQuery(t);
+        q.addQuery(k);
+        q.addQuery(f);
+
+        q.validate();
+
+        assertTrue(f.wasValidated());
+        assertTrue(t.wasValidated());
+        assertTrue(k.wasValidated());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

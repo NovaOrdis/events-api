@@ -16,15 +16,17 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.utilities.time.Timestamp;
-import io.novaordis.utilities.time.TimestampImpl;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.TimedEvent;
+import io.novaordis.utilities.time.Timestamp;
+import io.novaordis.utilities.time.TimestampImpl;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -100,10 +102,50 @@ public class TimeQuery extends QueryBase {
 
     // QueryBase overrides ---------------------------------------------------------------------------------------------
 
+    /**
+     * TimeQueries do not select non-timed events, or time events with a null timestamp, as they don't have the
+     * information necessary to make a decision.
+     */
     @Override
     public boolean selects(Event e) {
 
-        throw new RuntimeException("selects() NOT YET IMPLEMENTED");
+        if (e == null) {
+
+            throw new IllegalArgumentException("null event");
+        }
+
+        if (!e.isTimed()) {
+
+            return false;
+        }
+
+        TimedEvent te = (TimedEvent)e;
+
+        Long eventTime = te.getTime();
+
+        if (eventTime == null) {
+
+            return false;
+        }
+
+        //
+        // timestamp cannot be null, if it is, we'll get NPE which will indicate our own implementation error
+        //
+
+        long queryTime = timestamp.getTime();
+
+        if (from) {
+
+            return eventTime >= queryTime;
+        }
+        else if (to) {
+
+            return eventTime <= queryTime;
+        }
+        else {
+
+            throw new IllegalArgumentException(this + " was not property initialized");
+        }
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -151,7 +193,7 @@ public class TimeQuery extends QueryBase {
 
         if (timestamp == null) {
 
-            throw new QueryException("unknown timestamp format: '" + ts + "'");
+            throw new QueryException("unknown timestamp format or invalid timestamp: '" + ts + "'");
         }
     }
 
@@ -179,6 +221,16 @@ public class TimeQuery extends QueryBase {
     public SimpleDateFormat getFormat() {
 
         return format;
+    }
+
+    public boolean isFrom() {
+
+        return from;
+    }
+
+    public boolean isTo() {
+
+        return to;
     }
 
     @Override
@@ -222,7 +274,42 @@ public class TimeQuery extends QueryBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    @Override
+    boolean offerArgument(String literal) throws QueryException {
+
+        if (timestamp == null) {
+
+            //
+            // we are expecting a timestamp
+            //
+
+            setTimestamp(literal);
+
+            //
+            // timestamp was correctly parsed, thus accepted
+            //
+
+            return true;
+        }
+
+        return false;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected void validate(boolean validated) throws QueryException {
+
+        //
+        // makes sure we've been fed a timestamp
+        //
+
+        if (timestamp == null) {
+
+            throw new QueryException("missing timestamp");
+
+        }
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

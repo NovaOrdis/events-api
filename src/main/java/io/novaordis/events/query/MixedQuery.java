@@ -16,12 +16,12 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
 
 /**
  * A query comprising structured (event property definitions) and unstructured (keywords, regular expressions) text.
@@ -39,10 +39,18 @@ public class MixedQuery extends QueryBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    // only add via addQuery()
     private List<KeywordQuery> keywordQueries;
+
     private boolean keywordMatchingCaseSensitive;
+
+    // only add via addQuery()
     private List<FieldQuery> fieldQueries;
+
+    // only add via addQuery()
     private List<TimeQuery> timeQueries;
+
+    private List<Query> queryInitializationOrder;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -51,6 +59,7 @@ public class MixedQuery extends QueryBase {
      */
     public MixedQuery() throws QueryException {
 
+        this.queryInitializationOrder = new ArrayList<>();
         this.keywordQueries = new ArrayList<>();
         this.fieldQueries = new ArrayList<>();
         this.timeQueries = new ArrayList<>();
@@ -95,27 +104,48 @@ public class MixedQuery extends QueryBase {
             throw new IllegalArgumentException("null literal");
         }
 
+        //
+        // offer it in the reverse order in which the queries were added, the latest query has the highest changes
+        // of recognizing the argument
+        //
+
+        for(int i = queryInitializationOrder.size() - 1; i >= 0; i --) {
+
+            QueryBase q = (QueryBase)queryInitializationOrder.get(i);
+
+            if (q.offerArgument(literal)) {
+
+                //
+                // the argument must not be offered to other queries, get out of the loop
+                //
+
+                return;
+            }
+        }
+
         if (CASE_SENSITIVE_MODIFIER_LITERAL.equals(literal)) {
 
             keywordMatchingCaseSensitive = true;
+            return;
         }
-        else if (literal.contains(":")) {
+
+        if (literal.contains(":")) {
 
             if (literal.startsWith(TimeQuery.FROM_KEYWORD) || literal.startsWith(TimeQuery.TO_KEYWORD)) {
 
                 TimeQuery q = new TimeQuery(literal);
-                timeQueries.add(q);
+                addQuery(q);
             }
             else {
 
                 FieldQuery q = new FieldQuery(literal);
-                fieldQueries.add(q);
+                addQuery(q);
             }
         }
         else {
 
             KeywordQuery q = new KeywordQuery(literal);
-            keywordQueries.add(q);
+            addQuery(q);
         }
     }
 
@@ -161,7 +191,6 @@ public class MixedQuery extends QueryBase {
         return timeQueries;
     }
 
-
     @Override
     public String toString() {
 
@@ -197,7 +226,69 @@ public class MixedQuery extends QueryBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    void addQuery(Query q) {
+
+        if (q instanceof FieldQuery) {
+
+            fieldQueries.add((FieldQuery)q);
+        }
+        else if (q instanceof KeywordQuery) {
+
+            keywordQueries.add((KeywordQuery)q);
+        }
+        else if (q instanceof TimeQuery) {
+
+            timeQueries.add((TimeQuery)q);
+        }
+        else {
+
+            throw new IllegalArgumentException("unknown query type " + q);
+        }
+
+        queryInitializationOrder.add(q);
+    }
+
+    /**
+     * @return the internal storage, handle with care.
+     */
+    List<Query> getQueryInitializationOrder() {
+
+        return queryInitializationOrder;
+    }
+
+    @Override
+    boolean offerArgument(String literal) {
+
+        //
+        // we don't look at individual arguments at this level, they must be offered to the lower level queries
+        //
+
+        return false;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Validates all delegate queries.
+     */
+    @Override
+    protected void validate(boolean validated) throws QueryException {
+
+        for(KeywordQuery k: keywordQueries) {
+
+            k.validate();
+        }
+
+        for(FieldQuery f: fieldQueries) {
+
+            f.validate();
+        }
+
+        for(TimeQuery t : timeQueries) {
+
+            t.validate();
+        }
+    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

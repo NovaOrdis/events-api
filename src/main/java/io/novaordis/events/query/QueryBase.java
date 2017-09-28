@@ -16,11 +16,11 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -33,6 +33,8 @@ public abstract class QueryBase implements Query {
     // Static ----------------------------------------------------------------------------------------------------------
 
     // Attributes ------------------------------------------------------------------------------------------------------
+
+    private boolean validated;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -83,7 +85,44 @@ public abstract class QueryBase implements Query {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
+    /**
+     * Used by the factory in case of multi-word queries to offer subsequent arguments to the query. The method must
+     * return true if the argument is presumably accepted and must NOT be offered to other queries, or false otherwise.
+     *
+     * @exception QueryException when the argument being handled is expected, mandatory, but it is invalid.
+     */
+    abstract boolean offerArgument(String literal) throws QueryException;
+
+    /**
+     * Gives a chance to a query instance that may be configured by successive arguments to complain if it did not
+     * receive its mandatory arguments. This method should be invoked on all queries at the end of the argument
+     * processing cycle.
+     *
+     * @throws QueryException if mandatory configuration arguments are missing or validation fails in some other way.
+     */
+    void validate() throws QueryException {
+
+        validate(validated);
+
+        //
+        // the invocation returned without throwing an exception, hence we are valid
+        //
+        validated = true;
+    }
+
+    boolean wasValidated() {
+
+        return validated;
+    }
+
     // Protected -------------------------------------------------------------------------------------------------------
+
+    /**
+     * Called on the implementations to do the actual validation.
+     *
+     * @param validated whether the query was already validated
+     */
+    protected abstract void validate(boolean validated) throws QueryException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 
