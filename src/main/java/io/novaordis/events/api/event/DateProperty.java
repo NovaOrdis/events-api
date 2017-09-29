@@ -16,11 +16,11 @@
 
 package io.novaordis.events.api.event;
 
-import io.novaordis.events.api.measure.MeasureUnit;
-
 import java.text.DateFormat;
 import java.text.SimpleDateFormat;
 import java.util.Date;
+
+import io.novaordis.events.api.measure.MeasureUnit;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -30,9 +30,18 @@ public class DateProperty extends PropertyBase {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    public static final DateFormat DEFAULT_DATE_FORMAT = new SimpleDateFormat("yy/MM/dd HH:mm:ss");
+    public static final String DEFAULT_DATE_FORMAT_STRING = "yy/MM/dd HH:mm:ss";
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    /**
+     * We must build a SimpleDateFormat instance every time we need it instead of relying on a shared static instance
+     * because SimpleDateFormat is not thread safe.
+     */
+    public static SimpleDateFormat getDefaultDateFormat() {
+
+        return new SimpleDateFormat(DEFAULT_DATE_FORMAT_STRING);
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
@@ -51,7 +60,7 @@ public class DateProperty extends PropertyBase {
     public DateProperty(String name, Date value, MeasureUnit mu) {
 
         super(name, value, mu);
-        setFormat(DEFAULT_DATE_FORMAT);
+        setFormat(getDefaultDateFormat());
     }
 
     // Property implementation -----------------------------------------------------------------------------------------

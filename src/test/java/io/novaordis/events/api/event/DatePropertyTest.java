@@ -16,11 +16,11 @@
 
 package io.novaordis.events.api.event;
 
+import java.util.Date;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.Date;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.fail;
@@ -74,7 +74,7 @@ public class DatePropertyTest extends PropertyTest {
         long value = 1010101L;
         DateProperty dp = new DateProperty("test-name", new Date(value));
 
-        String expected = DateProperty.DEFAULT_DATE_FORMAT.format(value);
+        String expected = DateProperty.getDefaultDateFormat().format(value);
         String externalized = dp.externalizeValue();
 
         assertEquals(expected, externalized);
