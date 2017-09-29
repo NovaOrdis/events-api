@@ -51,7 +51,7 @@ public class TimeQueryTest extends QueryTest {
     // constructors ----------------------------------------------------------------------------------------------------
 
     @Test
-    public void constructor_Null() throws Exception {
+    public void constructor_KeywordAndPossibleValueString_Null() throws Exception {
 
         try {
 
@@ -66,7 +66,7 @@ public class TimeQueryTest extends QueryTest {
     }
 
     @Test
-    public void constructor_UnknownTimeQueryKeyword() throws Exception {
+    public void constructor_KeywordAndPossibleValueString_UnknownTimeQueryKeyword() throws Exception {
 
         try {
 
@@ -82,7 +82,8 @@ public class TimeQueryTest extends QueryTest {
     }
 
     @Test
-    public void constructor_Keyword_From_SubsequentArgumentArrives_ValidTimestamp() throws Exception {
+    public void constructor_Keyword_From_SubsequentArgumentArrives_ValidTimestamp()
+            throws Exception {
 
         TimeQuery q = new TimeQuery("from:");
 
@@ -234,6 +235,30 @@ public class TimeQueryTest extends QueryTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("unknown timestamp format or invalid timestamp"));
             assertTrue(msg.contains("something that does not make sense"));
+        }
+    }
+
+    @Test
+    public void constructor_Components() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:", 1L);
+
+        assertTrue(q.isTo());
+        assertEquals(1L, q.getTimestamp().longValue());
+    }
+
+    @Test
+    public void constructor_Components_InvalidKeyword() throws Exception {
+
+        try {
+
+            new TimeQuery("to", 1L);
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("unknown time query keyword"));
         }
     }
 

@@ -191,6 +191,28 @@ public class MixedQuery extends QueryBase {
         return timeQueries;
     }
 
+    public void addQuery(Query q) {
+
+        if (q instanceof FieldQuery) {
+
+            fieldQueries.add((FieldQuery)q);
+        }
+        else if (q instanceof KeywordQuery) {
+
+            keywordQueries.add((KeywordQuery)q);
+        }
+        else if (q instanceof TimeQuery) {
+
+            timeQueries.add((TimeQuery)q);
+        }
+        else {
+
+            throw new IllegalArgumentException("unknown query type " + q);
+        }
+
+        queryInitializationOrder.add(q);
+    }
+
     @Override
     public String toString() {
 
@@ -225,28 +247,6 @@ public class MixedQuery extends QueryBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    void addQuery(Query q) {
-
-        if (q instanceof FieldQuery) {
-
-            fieldQueries.add((FieldQuery)q);
-        }
-        else if (q instanceof KeywordQuery) {
-
-            keywordQueries.add((KeywordQuery)q);
-        }
-        else if (q instanceof TimeQuery) {
-
-            timeQueries.add((TimeQuery)q);
-        }
-        else {
-
-            throw new IllegalArgumentException("unknown query type " + q);
-        }
-
-        queryInitializationOrder.add(q);
-    }
 
     /**
      * @return the internal storage, handle with care.

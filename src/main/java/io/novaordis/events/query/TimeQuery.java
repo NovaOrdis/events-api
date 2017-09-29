@@ -44,6 +44,10 @@ public class TimeQuery extends QueryBase {
     //
     // listed in the descending order of preference
     //
+
+    //
+    // TODO refactor, not thread safe
+    //
     public static final SimpleDateFormat[] SUPPORTED_FORMATS = {
 
             new SimpleDateFormat("MM/dd/yy HH:mm:ss")
@@ -98,6 +102,12 @@ public class TimeQuery extends QueryBase {
 
             setTimestamp(timestampAsString);
         }
+    }
+
+    public TimeQuery(String keyword, Long timestamp) throws QueryException {
+
+        this(keyword);
+        setTimestamp(timestamp);
     }
 
     // QueryBase overrides ---------------------------------------------------------------------------------------------

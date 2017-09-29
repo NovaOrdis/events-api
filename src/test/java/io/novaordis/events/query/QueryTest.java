@@ -334,6 +334,26 @@ public abstract class QueryTest {
         }
     }
 
+    // special cases ---------------------------------------------------------------------------------------------------
+
+    /**
+     * We simulate the case when the time query keyword "from" conflicts with a field named "from".
+     *
+     * See Events API TODO Ce3RTy
+     */
+    // @Test
+    public void timedEventContainsAFieldNamedFrom() throws Exception {
+
+        GenericTimedEvent e = new GenericTimedEvent(10L);
+        e.setStringProperty("from", "San Francisco");
+
+        MixedQuery q = new MixedQuery();
+        q.addQuery(new TimeQuery("from:", 9L));
+        q.addQuery(new FieldQuery("from", "Los Angeles"));
+
+        fail("return here");
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

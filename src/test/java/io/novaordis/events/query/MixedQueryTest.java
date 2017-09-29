@@ -319,6 +319,71 @@ public class MixedQueryTest extends QueryTest {
         assertTrue(q.selects(e4));
     }
 
+    /**
+     * Events API TODO B8Pny4
+     */
+    // @Test
+    public void selects_KeywordsAndTimeQueries() throws Exception {
+
+        fail("return here");
+    }
+
+    /**
+     * Events API TODO B8Pny4
+     */
+    // @Test
+    public void selects_FieldAndTimeQueries() throws Exception {
+
+        fail("return here");
+    }
+
+    // addQuery() ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void addQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        FieldQuery f = new FieldQuery("something", "somethingelse");
+
+        q.addQuery(f);
+
+        assertEquals(1, q.getFieldQueries().size());
+        assertEquals(f, q.getFieldQueries().get(0));
+        assertEquals(0, q.getKeywordQueries().size());
+        assertEquals(0, q.getTimeQueries().size());
+        assertEquals(1, q.getQueryInitializationOrder().size());
+        assertEquals(f, q.getQueryInitializationOrder().get(0));
+
+        KeywordQuery k = new KeywordQuery("something");
+
+        q.addQuery(k);
+
+        assertEquals(1, q.getFieldQueries().size());
+        assertEquals(f, q.getFieldQueries().get(0));
+        assertEquals(1, q.getKeywordQueries().size());
+        assertEquals(k, q.getKeywordQueries().get(0));
+        assertEquals(0, q.getTimeQueries().size());
+        assertEquals(2, q.getQueryInitializationOrder().size());
+        assertEquals(f, q.getQueryInitializationOrder().get(0));
+        assertEquals(k, q.getQueryInitializationOrder().get(1));
+
+        TimeQuery t = new TimeQuery("from:", 1L);
+
+        q.addQuery(t);
+
+        assertEquals(1, q.getFieldQueries().size());
+        assertEquals(f, q.getFieldQueries().get(0));
+        assertEquals(1, q.getKeywordQueries().size());
+        assertEquals(k, q.getKeywordQueries().get(0));
+        assertEquals(1, q.getTimeQueries().size());
+        assertEquals(t, q.getTimeQueries().get(0));
+        assertEquals(3, q.getQueryInitializationOrder().size());
+        assertEquals(f, q.getQueryInitializationOrder().get(0));
+        assertEquals(k, q.getQueryInitializationOrder().get(1));
+        assertEquals(t, q.getQueryInitializationOrder().get(2));
+    }
+
     // offerArgument ---------------------------------------------------------------------------------------------------
 
     @Test
