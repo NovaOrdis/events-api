@@ -16,9 +16,9 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
 
 /**
  * A query is a combination of free format and structured text that is interpreted by the events runtime to filter a
@@ -67,6 +67,8 @@ public interface Query {
 
             mixedQuery.addLiteral(token);
         }
+
+        mixedQuery.validate();
 
         List<FieldQuery> fieldQueries = mixedQuery.getFieldQueries();
         List<KeywordQuery> keywordQueries = mixedQuery.getKeywordQueries();

@@ -71,6 +71,7 @@ public abstract class QueryTest {
         assertNotNull(q);
         assertEquals("blue", q.getKeyword());
         assertFalse(q.isCaseSensitive());
+        assertTrue(q.wasValidated());
     }
 
     @Test
@@ -81,9 +82,14 @@ public abstract class QueryTest {
         assertNotNull(q);
 
         assertTrue(q.getFieldQueries().isEmpty());
+
         assertEquals(2, q.getKeywordQueries().size());
+
         assertEquals("blue", q.getKeywordQueries().get(0).getKeyword());
         assertEquals("red", q.getKeywordQueries().get(1).getKeyword());
+
+        assertTrue(q.getKeywordQueries().get(0).wasValidated());
+        assertTrue(q.getKeywordQueries().get(1).wasValidated());
     }
 
     @Test
@@ -91,9 +97,11 @@ public abstract class QueryTest {
 
         FieldQuery q = (FieldQuery)Query.fromArguments(
                 new ArrayList<>(Collections.singletonList("some-field:some-value")), 0);
+
         assertNotNull(q);
         assertEquals("some-field", q.getFieldName());
         assertEquals("some-value", q.getValue());
+        assertTrue(q.wasValidated());
     }
 
     @Test
@@ -104,11 +112,16 @@ public abstract class QueryTest {
         assertNotNull(q);
 
         assertTrue(q.getKeywordQueries().isEmpty());
+
         assertEquals(2, q.getFieldQueries().size());
+
         assertEquals("something", q.getFieldQueries().get(0).getFieldName());
         assertEquals("blue", q.getFieldQueries().get(0).getValue());
+        assertTrue(q.getFieldQueries().get(0).wasValidated());
+
         assertEquals("color", q.getFieldQueries().get(1).getFieldName());
         assertEquals("red", q.getFieldQueries().get(1).getValue());
+        assertTrue(q.getFieldQueries().get(1).wasValidated());
     }
 
     @Test
@@ -120,10 +133,12 @@ public abstract class QueryTest {
 
         assertEquals(1, q.getKeywordQueries().size());
         assertEquals("blue", q.getKeywordQueries().get(0).getKeyword());
+        assertTrue(q.getKeywordQueries().get(0).wasValidated());
 
         assertEquals(1, q.getFieldQueries().size());
         assertEquals("color", q.getFieldQueries().get(0).getFieldName());
         assertEquals("red", q.getFieldQueries().get(0).getValue());
+        assertTrue(q.getFieldQueries().get(0).wasValidated());
     }
 
     @Test
@@ -134,6 +149,7 @@ public abstract class QueryTest {
         KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
 
         assertNotNull(q);
+        assertTrue(q.wasValidated());
 
         assertTrue(q.isCaseSensitive());
     }
@@ -163,6 +179,8 @@ public abstract class QueryTest {
 
         assertNotNull(q);
 
+        assertTrue(((QueryBase)q).wasValidated());
+
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
         TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
@@ -182,6 +200,8 @@ public abstract class QueryTest {
         assertTrue(args.isEmpty());
 
         assertNotNull(q);
+
+        assertTrue(((QueryBase) q).wasValidated());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -203,6 +223,8 @@ public abstract class QueryTest {
 
         assertNotNull(q);
 
+        assertTrue(((QueryBase) q).wasValidated());
+
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
         TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
@@ -222,6 +244,8 @@ public abstract class QueryTest {
         assertTrue(args.isEmpty());
 
         assertNotNull(q);
+
+        assertTrue(((QueryBase) q).wasValidated());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
