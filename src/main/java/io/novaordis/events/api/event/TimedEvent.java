@@ -28,7 +28,7 @@ public interface TimedEvent extends Event {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
-    String TIMESTAMP_PROPERTY_NAME = "timestamp";
+    String TIME_PROPERTY_NAME = "time";
 
     // Static ----------------------------------------------------------------------------------------------------------
 

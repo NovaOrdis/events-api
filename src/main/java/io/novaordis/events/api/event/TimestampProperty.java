@@ -38,7 +38,7 @@ public class TimestampProperty extends PropertyBase {
 
     public TimestampProperty(Long time) {
 
-        this(TimedEvent.TIMESTAMP_PROPERTY_NAME, time, null);
+        this(TimedEvent.TIME_PROPERTY_NAME, time, null);
     }
 
     public TimestampProperty(String name, Long time) {

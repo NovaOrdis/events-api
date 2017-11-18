@@ -111,7 +111,7 @@ public abstract class TimedEventTest extends EventTest {
         assertNull(te.getTimestamp());
         assertNull(te.getTime());
 
-        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIME_PROPERTY_NAME);
 
         assertNotNull(p);
         assertNull(p.getValue());
@@ -125,7 +125,7 @@ public abstract class TimedEventTest extends EventTest {
 
         TimedEvent te = getEventToTest(125L);
 
-        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p = (TimestampProperty)te.getProperty(TimedEvent.TIME_PROPERTY_NAME);
 
         assertNotNull(p);
 
@@ -147,7 +147,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p = (TimestampProperty)e.getProperty(0);
         assertNull(p.getValue());
 
-        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertNull(p2.getValue());
 
         //
@@ -182,7 +182,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p4 = (TimestampProperty)e.getProperty(0);
         assertNull(p4.getValue());
 
-        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertNull(p5.getValue());
 
         //
@@ -219,7 +219,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p7 = (TimestampProperty)e.getProperty(0);
         assertEquals(7L, p7.getValue());
 
-        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertEquals(7L, p8.getValue());
 
         //
@@ -256,7 +256,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p = (TimestampProperty)e.getProperty(0);
         assertEquals(8L, p.getValue());
 
-        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p2 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertEquals(8L, p2.getValue());
 
         //
@@ -291,7 +291,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p4 = (TimestampProperty)e.getProperty(0);
         assertEquals(8L, p4.getValue());
 
-        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p5 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertEquals(8L, p5.getValue());
 
         //
@@ -328,7 +328,7 @@ public abstract class TimedEventTest extends EventTest {
         TimestampProperty p7 = (TimestampProperty)e.getProperty(0);
         assertEquals(80L, p7.getValue());
 
-        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIMESTAMP_PROPERTY_NAME);
+        TimestampProperty p8 = (TimestampProperty)e.getProperty(TimedEvent.TIME_PROPERTY_NAME);
         assertEquals(80L, p8.getValue());
 
         //

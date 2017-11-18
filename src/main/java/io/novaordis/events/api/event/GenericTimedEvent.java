@@ -181,7 +181,7 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     @Override
     public Property getProperty(String name) {
 
-        if (TimedEvent.TIMESTAMP_PROPERTY_NAME.equals(name)) {
+        if (TimedEvent.TIME_PROPERTY_NAME.equals(name)) {
 
             return new TimestampProperty(getTime());
         }

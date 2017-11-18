@@ -43,7 +43,7 @@ public class TimestampPropertyTest extends PropertyTest {
 
         TimestampProperty p = getPropertyToTest("test");
 
-        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, p.getName());
+        assertEquals(TimedEvent.TIME_PROPERTY_NAME, p.getName());
     }
 
     @Test
@@ -52,7 +52,7 @@ public class TimestampPropertyTest extends PropertyTest {
         Property p = getPropertyToTest("hj46hHT3");
         String s = p.externalizeType();
         assertNotNull(s);
-        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, s);
+        assertEquals(TimedEvent.TIME_PROPERTY_NAME, s);
     }
 
     @Test
@@ -61,7 +61,7 @@ public class TimestampPropertyTest extends PropertyTest {
 
         PropertyBase p = getPropertyToTest("some name");
 
-        assertEquals(TimedEvent.TIMESTAMP_PROPERTY_NAME, p.getName());
+        assertEquals(TimedEvent.TIME_PROPERTY_NAME, p.getName());
 
         p.setName("another name");
 
