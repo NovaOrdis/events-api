@@ -47,7 +47,7 @@ public class LineEventTest extends GenericEventTest {
 
         assertEquals(1L, e.getLineNumber().longValue());
 
-        e.setProperty(new LongProperty(Event.LINE_NUMBER_PROPERTY_NAME, 7L));
+        e.setProperty(new LongProperty(Event.LINE_PROPERTY_NAME, 7L));
 
         assertEquals(7L, e.getLineNumber().longValue());
     }

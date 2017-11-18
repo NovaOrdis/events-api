@@ -533,7 +533,7 @@ public class GenericEvent implements Event {
     @Override
     public Long getLineNumber() {
 
-        Property p = getProperty(Event.LINE_NUMBER_PROPERTY_NAME);
+        Property p = getProperty(Event.LINE_PROPERTY_NAME);
         if (p == null) {
 
             return null;
@@ -541,7 +541,7 @@ public class GenericEvent implements Event {
 
         if (!(p instanceof LongProperty)) {
 
-            log.warn("\"" + Event.LINE_NUMBER_PROPERTY_NAME + "\" exists, but it is not a Long: " + p.getValue());
+            log.warn("\"" + Event.LINE_PROPERTY_NAME + "\" exists, but it is not a Long: " + p.getValue());
             return null;
         }
 
@@ -554,11 +554,11 @@ public class GenericEvent implements Event {
 
         if (lineNumber == null) {
 
-            removeLongProperty(Event.LINE_NUMBER_PROPERTY_NAME);
+            removeLongProperty(Event.LINE_PROPERTY_NAME);
         }
         else {
 
-            setLongProperty(Event.LINE_NUMBER_PROPERTY_NAME, lineNumber);
+            setLongProperty(Event.LINE_PROPERTY_NAME, lineNumber);
         }
     }
 

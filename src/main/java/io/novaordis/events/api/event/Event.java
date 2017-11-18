@@ -30,9 +30,11 @@ public interface Event {
     // Constants -------------------------------------------------------------------------------------------------------
 
     //
-    // where it makes sense, it is maintained as a LongProperty
+    // The line number the event was associated with, if it comes from a log. Where it makes sense, it is maintained as
+    // a LongProperty
     //
-    String LINE_NUMBER_PROPERTY_NAME = "line-number";
+
+    String LINE_PROPERTY_NAME = "line";
 
     //
     // if it makes sense, the whole event is maintained in its raw (unparsed) format, as a StringProperty. Some

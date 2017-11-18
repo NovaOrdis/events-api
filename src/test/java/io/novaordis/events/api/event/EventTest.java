@@ -584,7 +584,7 @@ public abstract class EventTest {
 
         assertNull(e.getLineNumber());
 
-        e.setProperty(new LongProperty(Event.LINE_NUMBER_PROPERTY_NAME, 7L));
+        e.setProperty(new LongProperty(Event.LINE_PROPERTY_NAME, 7L));
 
         assertEquals(7L, e.getLineNumber().longValue());
     }
@@ -594,7 +594,7 @@ public abstract class EventTest {
 
         Event e = getEventToTest();
 
-        e.setProperty(new StringProperty(Event.LINE_NUMBER_PROPERTY_NAME, "not a long value"));
+        e.setProperty(new StringProperty(Event.LINE_PROPERTY_NAME, "not a long value"));
 
         assertNull(e.getLineNumber());
     }
