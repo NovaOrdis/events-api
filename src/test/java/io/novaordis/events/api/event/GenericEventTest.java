@@ -16,11 +16,12 @@
 
 package io.novaordis.events.api.event;
 
-import io.novaordis.events.api.measure.MockMeasureUnit;
-import org.junit.Test;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.junit.Test;
+
+import io.novaordis.events.api.measure.MockMeasureUnit;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -479,6 +480,70 @@ public class GenericEventTest extends EventTest {
 
             assertTrue(originalProperties.get(0).equals(properties.get(0)));
         }
+    }
+
+    // appendRawLine() -------------------------------------------------------------------------------------------------
+
+    @Test
+    public void appendRawLine_NoPriorRawRepresentation() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        assertNull(e.getRawRepresentation());
+
+        e.appendRawLine("something");
+
+        assertEquals("something", e.getRawRepresentation());
+    }
+
+    @Test
+    public void appendRawLine_RawRepresentationPropertyExistsButItHasNullContent() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        e.setProperty(new StringProperty(Event.RAW_PROPERTY_NAME));
+
+        assertNull(e.getStringProperty(Event.RAW_PROPERTY_NAME).getString());
+
+        e.appendRawLine("something");
+
+        assertEquals("something", e.getRawRepresentation());
+    }
+
+    @Test
+    public void appendRawLine_PriorSingleLineRawRepresentation() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        assertNull(e.getRawRepresentation());
+
+        e.appendRawLine("something");
+
+        assertEquals("something", e.getRawRepresentation());
+
+        e.appendRawLine("something else");
+
+        assertEquals("something\nsomething else", e.getRawRepresentation());
+    }
+
+    @Test
+    public void appendRawLine_PriorMultiLineRawRepresentation() throws Exception {
+
+        GenericEvent e = getEventToTest();
+
+        assertNull(e.getRawRepresentation());
+
+        e.appendRawLine("something");
+
+        assertEquals("something", e.getRawRepresentation());
+
+        e.appendRawLine("something else");
+
+        assertEquals("something\nsomething else", e.getRawRepresentation());
+
+        e.appendRawLine("something else entirely");
+
+        assertEquals("something\nsomething else\nsomething else entirely", e.getRawRepresentation());
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -16,13 +16,14 @@
 
 package io.novaordis.events.api.event;
 
-import io.novaordis.events.api.measure.MeasureUnit;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
+
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import io.novaordis.events.api.measure.MeasureUnit;
 
 /**
  * A generic event, contains an arbitrary number of properties.
@@ -625,6 +626,41 @@ public class GenericEvent implements Event {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
+
+    /**
+     * API for subclasses to update their internal raw representation, for both the case of a single-line event
+     * and a multi-line event.
+     */
+    protected void appendRawLine(String line) {
+
+        StringProperty rawRepresentation = getStringProperty(RAW_PROPERTY_NAME);
+
+        if (rawRepresentation == null) {
+
+            rawRepresentation = new StringProperty(RAW_PROPERTY_NAME, line);
+            setProperty(rawRepresentation);
+        }
+        else {
+
+            String raw = rawRepresentation.getString();
+
+            if (raw == null) {
+
+                //
+                // this is unusual, but we work around it by using the existing property instance and setting the
+                // value
+                //
+
+                rawRepresentation.setValue(line);
+            }
+            else {
+
+                raw += "\n";
+                raw += line;
+                rawRepresentation.setValue(raw);
+            }
+        }
+    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 
