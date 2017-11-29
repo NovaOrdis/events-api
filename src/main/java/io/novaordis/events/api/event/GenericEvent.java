@@ -598,40 +598,12 @@ public class GenericEvent implements Event {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    // Convenience accessors/mutators ----------------------------------------------------------------------------------
-
-    public void setLongProperty(String name, long value, MeasureUnit mu) {
-
-        setProperty(new LongProperty(name, value, mu));
-    }
-
-    public void setIntegerProperty(String name, int value, MeasureUnit mu) {
-
-        setProperty(new IntegerProperty(name, value, mu));
-    }
-
-    public BooleanProperty setBooleanProperty(String name, boolean value) {
-
-        return (BooleanProperty)setProperty(new BooleanProperty(name, value));
-    }
-
-    public BooleanProperty removeBooleanProperty(String name) {
-
-        return (BooleanProperty)removeProperty(name, Boolean.class);
-    }
-
-    public <T> void setListProperty(String name, List<T> value) {
-
-        setProperty(new ListProperty<>(name, value));
-    }
-
-    // Package protected -----------------------------------------------------------------------------------------------
-
     /**
      * API for subclasses to update their internal raw representation, for both the case of a single-line event
-     * and a multi-line event.
+     * and a multi-line event. The first invocation sets the raw line representation, successive invocations append
+     * successive lines to it.
      */
-    protected void appendRawLine(String line) {
+    public void appendRawLine(String line) {
 
         StringProperty rawRepresentation = getStringProperty(RAW_PROPERTY_NAME);
 
@@ -661,6 +633,35 @@ public class GenericEvent implements Event {
             }
         }
     }
+
+    // Convenience accessors/mutators ----------------------------------------------------------------------------------
+
+    public void setLongProperty(String name, long value, MeasureUnit mu) {
+
+        setProperty(new LongProperty(name, value, mu));
+    }
+
+    public void setIntegerProperty(String name, int value, MeasureUnit mu) {
+
+        setProperty(new IntegerProperty(name, value, mu));
+    }
+
+    public BooleanProperty setBooleanProperty(String name, boolean value) {
+
+        return (BooleanProperty)setProperty(new BooleanProperty(name, value));
+    }
+
+    public BooleanProperty removeBooleanProperty(String name) {
+
+        return (BooleanProperty)removeProperty(name, Boolean.class);
+    }
+
+    public <T> void setListProperty(String name, List<T> value) {
+
+        setProperty(new ListProperty<>(name, value));
+    }
+
+    // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
