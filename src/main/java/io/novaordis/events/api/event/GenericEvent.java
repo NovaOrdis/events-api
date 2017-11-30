@@ -430,6 +430,20 @@ public class GenericEvent implements Event {
     }
 
     @Override
+    public BooleanProperty setBooleanProperty(String name, boolean value) {
+
+        return (BooleanProperty)setProperty(new BooleanProperty(name, value));
+    }
+
+    @Override
+    public BooleanProperty removeBooleanProperty(String name) {
+
+        return (BooleanProperty)removeProperty(name, Boolean.class);
+    }
+
+    // MapProperty Accessors/Mutators ----------------------------------------------------------------------------------
+
+    @Override
     public MapProperty getMapProperty(String name) {
 
         Property p = getProperty(name);
@@ -644,16 +658,6 @@ public class GenericEvent implements Event {
     public void setIntegerProperty(String name, int value, MeasureUnit mu) {
 
         setProperty(new IntegerProperty(name, value, mu));
-    }
-
-    public BooleanProperty setBooleanProperty(String name, boolean value) {
-
-        return (BooleanProperty)setProperty(new BooleanProperty(name, value));
-    }
-
-    public BooleanProperty removeBooleanProperty(String name) {
-
-        return (BooleanProperty)removeProperty(name, Boolean.class);
     }
 
     public <T> void setListProperty(String name, List<T> value) {

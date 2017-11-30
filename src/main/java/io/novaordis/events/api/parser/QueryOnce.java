@@ -16,6 +16,9 @@
 
 package io.novaordis.events.api.parser;
 
+import io.novaordis.events.api.event.BooleanProperty;
+import io.novaordis.events.api.event.Event;
+
 /**
  * "Query Once" is a pattern (essentially a hack) that is used to work around the fact that event runtimes that use
  * the query while parsing DO NOT need to apply the query again when processing the events, because the events resulted
@@ -40,6 +43,35 @@ public class QueryOnce {
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
+
+    public static void set(Event e) {
+
+        e.setBooleanProperty("query-once", true);
+    }
+
+    public static boolean isQueryOnce(Event e) {
+
+        BooleanProperty p = e.getBooleanProperty("query-once");
+
+        if (p == null) {
+
+            return false;
+        }
+
+        Boolean b = p.getBoolean();
+
+        if (b == null) {
+
+            return false;
+        }
+
+        return b;
+    }
+
+    public static void clear(Event e) {
+
+        e.removeBooleanProperty("query-once");
+    }
 
     // Attributes ------------------------------------------------------------------------------------------------------
 

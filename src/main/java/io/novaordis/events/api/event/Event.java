@@ -263,6 +263,21 @@ public interface Event {
     BooleanProperty getBooleanProperty(String booleanPropertyName);
 
     /**
+     * @return the current BooleanProperty that is being replaced by FloatProperty passed as argument, if it exists,
+     * or null otherwise.
+     */
+    BooleanProperty setBooleanProperty(String name, boolean value);
+
+    /**
+     * Remove the BooleanProperty with the given name, if it exists.
+     *
+     * @return the BooleanProperty that was removed, or null if no such property exists.
+     */
+    BooleanProperty removeBooleanProperty(String name);
+
+    // MapProperty Accessors/Mutators ----------------------------------------------------------------------------------
+
+    /**
      * Query the event and return the Map property with the given name.
      *
      * @return the corresponding MapProperty or null if there is no such MapProperty. Note that the method will

@@ -16,12 +16,12 @@
 
 package io.novaordis.events.api.event;
 
+import java.util.List;
+import java.util.Map;
+
 import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-
-import java.util.List;
-import java.util.Map;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -138,6 +138,8 @@ public abstract class EventTest {
         assertEquals("value2", m2.get("key2"));
     }
 
+    // StringProperty tests --------------------------------------------------------------------------------------------
+
     @Test
     public void getStringProperty_NoSuchProperty() throws Exception {
 
@@ -168,6 +170,8 @@ public abstract class EventTest {
         assertEquals(sp, event.getStringProperty("test-property"));
         assertEquals(sp, event.getProperty("test-property"));
     }
+
+    // LongProperty tests ----------------------------------------------------------------------------------------------
 
     @Test
     public void getLongProperty_NoSuchProperty() throws Exception {
@@ -200,6 +204,8 @@ public abstract class EventTest {
         assertEquals(lp, event.getProperty("test-property"));
     }
 
+    // IntegerProperty tests -------------------------------------------------------------------------------------------
+
     @Test
     public void getIntegerProperty_NoSuchProperty() throws Exception {
 
@@ -230,6 +236,8 @@ public abstract class EventTest {
         assertEquals(ip, event.getIntegerProperty("test-property"));
         assertEquals(ip, event.getProperty("test-property"));
     }
+
+    // FloatProperty tests ---------------------------------------------------------------------------------------------
 
     @Test
     public void getFloatProperty_NoSuchProperty() throws Exception {
@@ -287,6 +295,67 @@ public abstract class EventTest {
 
         assertNull(event.getFloatProperty("test-property"));
     }
+
+    // BooleanProperty tests -------------------------------------------------------------------------------------------
+
+    @Test
+    public void getBooleanProperty_NoSuchProperty() throws Exception {
+
+        Event event = getEventToTest();
+        assertNull(event.getBooleanProperty("no-such-boolean-property"));
+    }
+
+    @Test
+    public void getBooleanProperty_PropertyExistsButNotABoolean() throws Exception {
+
+        Event event = getEventToTest();
+
+        StringProperty sp = new StringProperty("test-property", "test-value");
+        assertNull(event.setProperty(sp));
+
+        assertNull(event.getBooleanProperty("test-property"));
+        assertEquals(sp, event.getProperty("test-property"));
+    }
+
+    @Test
+    public void getBooleanProperty() throws Exception {
+
+        Event event = getEventToTest();
+
+        BooleanProperty p = new BooleanProperty("test-property", true);
+
+        assertNull(event.setProperty(p));
+
+        BooleanProperty p2 = event.getBooleanProperty("test-property");
+
+        assertEquals(p, p2);
+        assertEquals(p, event.getProperty("test-property"));
+
+        assertTrue(p2.getBoolean().booleanValue());
+
+        BooleanProperty p3 = event.setBooleanProperty("test-property", false);
+
+        assertTrue(p3.getBoolean());
+
+        BooleanProperty p4 = event.getBooleanProperty("test-property");
+
+        assertFalse(p4.getBoolean());
+    }
+
+    @Test
+    public void removeBooleanProperty() throws Exception {
+
+        Event event = getEventToTest();
+
+        assertNull(event.setBooleanProperty("test-property", true));
+
+        BooleanProperty p = event.removeBooleanProperty("test-property");
+        assertTrue(p.getBoolean());
+
+        assertNull(event.getBooleanProperty("test-property"));
+    }
+
+    // MapProperty tests -----------------------------------------------------------------------------------------------
 
     @Test
     public void getMapProperty_NoSuchProperty() throws Exception {
