@@ -48,7 +48,7 @@ public class QueryOnceTest {
 
         assertFalse(QueryOnce.isQueryOnce(e));
 
-        QueryOnce.set(e);
+        QueryOnce.set(e, true);
 
         assertTrue(QueryOnce.isQueryOnce(e));
 
@@ -56,6 +56,23 @@ public class QueryOnceTest {
 
         assertFalse(QueryOnce.isQueryOnce(e));
     }
+
+    @Test
+    public void setFalse() throws Exception {
+
+        GenericEvent e = new GenericEvent();
+
+        assertFalse(QueryOnce.isQueryOnce(e));
+
+        QueryOnce.set(e, true);
+
+        assertTrue(QueryOnce.isQueryOnce(e));
+
+        QueryOnce.set(e, false);
+
+        assertFalse(QueryOnce.isQueryOnce(e));
+    }
+
 
     // Package protected -----------------------------------------------------------------------------------------------
 

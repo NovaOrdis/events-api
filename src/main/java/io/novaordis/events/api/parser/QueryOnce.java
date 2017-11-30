@@ -44,9 +44,16 @@ public class QueryOnce {
 
     // Static ----------------------------------------------------------------------------------------------------------
 
-    public static void set(Event e) {
+    public static void set(Event e, boolean queryOnce) {
 
-        e.setBooleanProperty("query-once", true);
+        if (!queryOnce) {
+
+            e.removeBooleanProperty("query-once");
+        }
+        else {
+
+            e.setBooleanProperty("query-once", true);
+        }
     }
 
     public static boolean isQueryOnce(Event e) {
