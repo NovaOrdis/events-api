@@ -235,7 +235,7 @@ public class FieldQueryTest extends QueryTest {
         GenericEvent e = new GenericEvent();
         e.setStringProperty("name", "blue 1");
         FieldQuery q = new FieldQuery("name", "green");
-        
+
         assertFalse(q.selects(e));
     }
 
