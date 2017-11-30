@@ -16,14 +16,18 @@
 
 package io.novaordis.events.query;
 
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
+
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.Property;
 
 /**
- * "Field query" and "property query" terms can be used interchangeably, a field query matches when a property with
- * the given name has the value specified by the query.
+ * A field query attempts to match the value of a certain field (property) against a regular expression. Only String
+ * properties are matched currently, anything else will not match. "Field query" and "property query" are terms can be
+ * used interchangeably.
  *
- * The current implementation requires exact matches, including capitalization. This may be extended in the future.
+ * https://kb.novaordis.com/index.php/Events-api_Concepts#Field_Query
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 7/19/17
@@ -37,14 +41,17 @@ public class FieldQuery extends QueryBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String propertyName;
-    private String propertyValue;
+    private String regularExpression;
+    private Pattern pattern;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public FieldQuery(String propertyName, String propertyValue) {
+    public FieldQuery(String propertyName, String regularExpression) {
 
         this.propertyName = propertyName;
-        this.propertyValue = propertyValue;
+
+        setRegularExpression(regularExpression);
+
     }
 
     public FieldQuery(String literal) throws QueryException {
@@ -68,12 +75,14 @@ public class FieldQuery extends QueryBase {
             throw new QueryException("not a valid FieldQuery literal, empty field name: \"" + literal + "\"");
         }
 
-        this.propertyValue = literal.substring(i + 1).trim();
+        String re = literal.substring(i + 1).trim();
 
-        if (propertyValue.isEmpty()) {
+        if (re.isEmpty()) {
 
-            throw new QueryException("not a valid FieldQuery literal, empty field value: \"" + literal + "\"");
+            throw new QueryException("not a valid FieldQuery literal, empty regular expression");
         }
+
+        setRegularExpression(re);
     }
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -86,7 +95,7 @@ public class FieldQuery extends QueryBase {
             throw new IllegalArgumentException("null event");
         }
 
-        if (propertyValue == null) {
+        if (regularExpression == null) {
 
             //
             // we don't match against null values
@@ -97,7 +106,32 @@ public class FieldQuery extends QueryBase {
 
         Property p = e.getProperty(propertyName);
 
-        return p != null && propertyValue.equals(p.getValue());
+        if (p == null) {
+
+            return false;
+        }
+
+        Object value = p.getValue();
+
+        if (value == null) {
+
+            return false;
+        }
+
+        //
+        // for the time being we don't apply regular expression to values other than strings. This is not because of
+        // a very thought out reason, just because we want to keep the code simple and we did not have a good use case.
+        // If such a case arises, we'll refactor
+        //
+
+        if (!(value instanceof String)) {
+
+            return false;
+        }
+
+        Matcher m = pattern.matcher((String)value);
+
+        return m.find();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -112,15 +146,37 @@ public class FieldQuery extends QueryBase {
         return propertyName;
     }
 
+    public String getRegularExpression() {
+
+        return regularExpression;
+    }
+
+    public void setRegularExpression(String regex) {
+
+        if (regex == null) {
+
+            throw new IllegalArgumentException("null regular expression");
+        }
+
+        if (regex.isEmpty()) {
+
+            throw new IllegalArgumentException("empty regular expression");
+        }
+
+        this.regularExpression = regex;
+
+        this.pattern = Pattern.compile(regularExpression);
+    }
+
     public Object getValue() {
 
-        return propertyValue;
+        return regularExpression;
     }
 
     @Override
     public String toString() {
 
-        return propertyName + ":" + propertyValue;
+        return propertyName + ":" + regularExpression;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -103,7 +103,8 @@ public class FieldQueryTest extends QueryTest {
         FieldQuery q = new FieldQuery("test1:test2");
 
         assertEquals("test1", q.getPropertyName());
-        assertEquals("test2", q.getValue());
+        assertEquals("test1", q.getFieldName());
+        assertEquals("test2", q.getRegularExpression());
     }
 
     @Test
@@ -147,7 +148,7 @@ public class FieldQueryTest extends QueryTest {
         catch(QueryException e) {
 
             String msg = e.getMessage();
-            assertTrue(msg.contains("not a valid FieldQuery literal, empty field value"));
+            assertTrue(msg.contains("not a valid FieldQuery literal, empty regular expression"));
         }
     }
 
@@ -199,12 +200,35 @@ public class FieldQueryTest extends QueryTest {
     @Test
     public void selects_NullValue() throws Exception {
 
-        FieldQuery q = new FieldQuery("test1", null);
+        FieldQuery q = new FieldQuery("test1", "test");
 
         GenericTimedEvent e = new GenericTimedEvent();
         e.setStringProperty("test1", null);
 
         assertFalse(q.selects(e));
+    }
+
+    @Test
+    public void selects_NotAStringProperty() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "1");
+
+        GenericTimedEvent e = new GenericTimedEvent();
+        e.setIntegerProperty("test", 1);
+
+        // we don't select, even if the string representation matches
+        assertFalse(q.selects(e));
+    }
+
+    @Test
+    public void selects_RegularExpression() throws Exception {
+
+        FieldQuery q = new FieldQuery("name", "blue");
+
+        GenericEvent e = new GenericEvent();
+        e.setStringProperty("name", "blue 1");
+
+        assertTrue(q.selects(e));
     }
 
     // offerArgument ---------------------------------------------------------------------------------------------------
@@ -215,6 +239,58 @@ public class FieldQueryTest extends QueryTest {
         FieldQuery q = new FieldQuery("something:somethingelse");
 
         assertFalse(q.offerArgument("blah"));
+    }
+
+    // setRegularExpression() ------------------------------------------------------------------------------------------
+
+    @Test
+    public void setRegularExpression_Null() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "test");
+
+        try {
+
+            q.setRegularExpression(null);
+
+            fail("should throw exception");
+        }
+        catch (IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("null regular expression"));
+        }
+    }
+
+    @Test
+    public void setRegularExpression_Empty() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "test");
+
+        try {
+
+            q.setRegularExpression("");
+
+            fail("should throw exception");
+        }
+        catch (IllegalArgumentException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("empty regular expression"));
+        }
+    }
+
+    @Test
+    public void setRegularExpression() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "test");
+
+        q.setRegularExpression("^something.*else$");
+
+        assertEquals("^something.*else$", q.getRegularExpression());
+
+        Event e = new GenericEvent(Collections.singletonList(new StringProperty("test", "something blah blah else")));
+
+        assertTrue(q.selects(e));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
