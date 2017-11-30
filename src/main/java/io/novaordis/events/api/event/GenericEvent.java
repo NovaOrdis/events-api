@@ -17,6 +17,7 @@
 package io.novaordis.events.api.event;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
@@ -73,6 +74,19 @@ public class GenericEvent implements Event {
     public GenericEvent(List<Property> properties) {
 
         this(null, properties);
+    }
+
+    /**
+     * @param properties the order matters, and it will be preserved as the event is processed downstream. The
+     *                   implementation makes an internal shallow copy. Note that TimestampProperties are not allowed
+     *                   among these properties, to eliminate confusion. If there's a need to specify a
+     *                   TimestampProperty, use a TimedEvent instead.
+     *
+     * @exception IllegalArgumentException if a TimestampProperty is found.
+     */
+    public GenericEvent(Property... properties) {
+
+        this(null, Arrays.asList(properties));
     }
 
     /**

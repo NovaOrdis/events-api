@@ -46,6 +46,24 @@ public class TimeQueryTest extends QueryTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void negate_ProducesADifferentInstance() throws Exception {
+
+        try {
+
+            getQueryToTest().negate();
+
+            fail("if you see this, it means that TimeQuery.negate() was implemented, and you will need to delete TimeQueryTest.negate_ProducesADifferentInstance() override");
+        }
+        catch(RuntimeException e) {
+
+            assertTrue(e.getMessage().contains("NOT YET IMPLEMENTED"));
+        }
+    }
+
     // Tests -----------------------------------------------------------------------------------------------------------
 
     // constructors ----------------------------------------------------------------------------------------------------
@@ -94,7 +112,7 @@ public class TimeQueryTest extends QueryTest {
         //
         // should be a noop
         //
-        q.validate();
+        q.compile();
 
         assertTrue(q.isFrom());
         assertFalse(q.isTo());
@@ -132,7 +150,7 @@ public class TimeQueryTest extends QueryTest {
 
         try {
 
-            q.validate();
+            q.compile();
 
             fail("should have thrown exception");
 
@@ -172,7 +190,7 @@ public class TimeQueryTest extends QueryTest {
         //
         // should be a noop
         //
-        q.validate();
+        q.compile();
 
         assertFalse(q.isFrom());
         assertTrue(q.isTo());
@@ -210,7 +228,7 @@ public class TimeQueryTest extends QueryTest {
 
         try {
 
-            q.validate();
+            q.compile();
 
             fail("should have thrown exception");
 

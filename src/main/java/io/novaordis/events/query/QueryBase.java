@@ -34,8 +34,6 @@ public abstract class QueryBase extends ExpressionElementBase implements Query {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private boolean validated;
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -85,36 +83,7 @@ public abstract class QueryBase extends ExpressionElementBase implements Query {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    /**
-     * Gives a chance to a query instance that may be configured by successive arguments to complain if it did not
-     * receive its mandatory arguments. This method should be invoked on all queries at the end of the argument
-     * processing cycle.
-     *
-     * @throws QueryException if mandatory configuration arguments are missing or validation fails in some other way.
-     */
-    void validate() throws QueryException {
-
-        validate(validated);
-
-        //
-        // the invocation returned without throwing an exception, hence we are valid
-        //
-        validated = true;
-    }
-
-    boolean wasValidated() {
-
-        return validated;
-    }
-
     // Protected -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Called on the implementations to do the actual validation.
-     *
-     * @param validated whether the query was already validated
-     */
-    protected abstract void validate(boolean validated) throws QueryException;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

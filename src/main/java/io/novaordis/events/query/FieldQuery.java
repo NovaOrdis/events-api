@@ -54,14 +54,17 @@ public class FieldQuery extends QueryBase {
 
     private Pattern pattern;
 
+    private boolean negate;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public FieldQuery(String propertyName, String regularExpressionLiteral) {
 
         this.propertyName = propertyName;
 
-        setRegularExpressionLiteral(regularExpressionLiteral);
+        this.negate = false;
 
+        setRegularExpressionLiteral(regularExpressionLiteral);
     }
 
     public FieldQuery(String literal) throws QueryException {
@@ -95,10 +98,30 @@ public class FieldQuery extends QueryBase {
         setRegularExpressionLiteral(re);
     }
 
+    /**
+     * Used internally to clone.
+     */
+    private FieldQuery() {
+    }
+
+    // QueryBase overrides ---------------------------------------------------------------------------------------------
+
+    @Override
+    public FieldQuery negate() throws QueryException {
+
+        FieldQuery negatedCopy = new FieldQuery();
+        negatedCopy.propertyName = this.propertyName;
+        negatedCopy.setRegularExpressionLiteral(this.regularExpressionLiteral);
+        negatedCopy.negate = !this.negate;
+        return negatedCopy;
+    }
+
     // Query implementation --------------------------------------------------------------------------------------------
 
     @Override
     public boolean selects(Event e) {
+
+        boolean selected;
 
         if (e == null) {
 
@@ -107,49 +130,62 @@ public class FieldQuery extends QueryBase {
 
         if (QueryOnce.isQueryOnce(e)) {
 
-            return true;
+            selected = true;
         }
-
-        if (regularExpressionLiteral == null) {
+        else if (regularExpressionLiteral == null) {
 
             //
             // we don't match against null values
             //
 
-            return false;
+            selected = false;
+        }
+        else {
+
+            Property p = e.getProperty(propertyName);
+
+            if (p == null) {
+
+                selected = false;
+            }
+            else {
+
+                Object value = p.getValue();
+
+                if (value == null) {
+
+                    selected = false;
+                }
+                else {
+
+                    //
+                    // for the time being we don't apply regular expression to values other than strings. This is not
+                    // because of a very thought out reason, just because we want to keep the code simple and we did not
+                    // have a good use case. If such a case arises, we'll refactor
+                    //
+
+                    if (!(value instanceof String)) {
+
+                        selected = false;
+                    }
+                    else {
+
+                        Matcher m = pattern.matcher((String) value);
+
+                        selected = m.find();
+                    }
+                }
+            }
         }
 
-        Property p = e.getProperty(propertyName);
+        if (negate) {
 
-        if (p == null) {
-
-            return false;
+            return !selected;
         }
+        else {
 
-        Object value = p.getValue();
-
-        if (value == null) {
-
-            return false;
+            return selected;
         }
-
-        //
-        // for the time being we don't apply regular expression to values other than strings. This is not because of
-        // a very thought out reason, just because we want to keep the code simple and we did not have a good use case.
-        // If such a case arises, we'll refactor
-        //
-
-        if (!(value instanceof String)) {
-
-            return false;
-        }
-
-        Matcher m = pattern.matcher((String)value);
-
-        //noinspection UnnecessaryLocalVariable
-        boolean found = m.find();
-
-        return found;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -215,20 +251,12 @@ public class FieldQuery extends QueryBase {
     @Override
     public String toString() {
 
-        return propertyName + ":" + regularExpressionLiteral;
+        return propertyName + ":" + (negate ? "NOT ": "") + regularExpressionLiteral;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected void validate(boolean validated) throws QueryException {
-
-        //
-        // noop for the time being
-        //
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

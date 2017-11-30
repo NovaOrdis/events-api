@@ -62,6 +62,12 @@ public class MatchAll extends ExpressionElementBase implements Query {
         return events;
     }
 
+    @Override
+    public Query negate() throws QueryException {
+
+        return new MatchNone();
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -25,7 +25,9 @@ import java.util.List;
 import org.junit.Test;
 
 import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
+import io.novaordis.events.api.event.StringProperty;
 import io.novaordis.events.api.event.TimedEvent;
 import io.novaordis.events.api.parser.QueryOnce;
 
@@ -72,25 +74,23 @@ public abstract class QueryTest extends ExpressionElementTest {
         assertNotNull(q);
         assertEquals("blue", q.getKeyword());
         assertFalse(q.isCaseSensitive());
-        assertTrue(q.wasValidated());
+        assertTrue(q.isCompiled());
     }
 
     @Test
     public void fromArguments_TwoKeywordQueries() throws Exception {
 
-        MixedQuery q = (MixedQuery)Query.fromArguments(new ArrayList<>(Arrays.asList("blue", "red")), 0);
+        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("blue", "red")), 0);
 
         assertNotNull(q);
 
-        assertTrue(q.getFieldQueries().isEmpty());
+        Event blue = new GenericEvent(new StringProperty("color", "this is a blue car"));
+        Event red = new GenericEvent(new StringProperty("color", "this is a red car"));
+        Event green = new GenericEvent(new StringProperty("color", "this is a green car"));
 
-        assertEquals(2, q.getKeywordQueries().size());
-
-        assertEquals("blue", q.getKeywordQueries().get(0).getKeyword());
-        assertEquals("red", q.getKeywordQueries().get(1).getKeyword());
-
-        assertTrue(q.getKeywordQueries().get(0).wasValidated());
-        assertTrue(q.getKeywordQueries().get(1).wasValidated());
+        assertTrue(q.selects(blue));
+        assertTrue(q.selects(red));
+        assertFalse(q.selects(green));
     }
 
     @Test
@@ -102,44 +102,47 @@ public abstract class QueryTest extends ExpressionElementTest {
         assertNotNull(q);
         assertEquals("some-field", q.getFieldName());
         assertEquals("some-value", q.getValue());
-        assertTrue(q.wasValidated());
+        assertTrue(q.isCompiled());
     }
 
     @Test
     public void fromArguments_TwoFieldQueries() throws Exception {
 
-        MixedQuery q = (MixedQuery)Query.fromArguments(new ArrayList<>(Arrays.asList("something:blue", "color:red")), 0);
+        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("size:small", "color:red")), 0);
 
         assertNotNull(q);
 
-        assertTrue(q.getKeywordQueries().isEmpty());
+        Event smallRed = new GenericEvent(new StringProperty("size", "small"), new StringProperty("color", "red"));
+        Event smallBlue = new GenericEvent(new StringProperty("size", "small"), new StringProperty("color", "blue"));
+        Event bigRed = new GenericEvent(new StringProperty("size", "big"), new StringProperty("color", "red"));
+        Event bigBlue = new GenericEvent(new StringProperty("size", "big"), new StringProperty("color", "blue"));
 
-        assertEquals(2, q.getFieldQueries().size());
-
-        assertEquals("something", q.getFieldQueries().get(0).getFieldName());
-        assertEquals("blue", q.getFieldQueries().get(0).getValue());
-        assertTrue(q.getFieldQueries().get(0).wasValidated());
-
-        assertEquals("color", q.getFieldQueries().get(1).getFieldName());
-        assertEquals("red", q.getFieldQueries().get(1).getValue());
-        assertTrue(q.getFieldQueries().get(1).wasValidated());
+        assertTrue(q.selects(smallRed));
+        assertTrue(q.selects(smallBlue));
+        assertTrue(q.selects(bigRed));
+        assertFalse(q.selects(bigBlue));
     }
 
     @Test
     public void fromArguments_MixedQuery() throws Exception {
 
-        MixedQuery q = (MixedQuery)Query.fromArguments(new ArrayList<>(Arrays.asList("blue", "color:red")), 0);
+        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("car", "color:red")), 0);
 
         assertNotNull(q);
 
-        assertEquals(1, q.getKeywordQueries().size());
-        assertEquals("blue", q.getKeywordQueries().get(0).getKeyword());
-        assertTrue(q.getKeywordQueries().get(0).wasValidated());
+        Event redCar = new GenericEvent(
+                new StringProperty("color", "red"), new StringProperty("description", "this is a car"));
+        Event blueCar = new GenericEvent(
+                new StringProperty("color", "blue"), new StringProperty("description", "this is a car"));
+        Event redPlane = new GenericEvent(
+                new StringProperty("color", "red"), new StringProperty("description", "this is a plane"));
+        Event bluePlane = new GenericEvent(
+                new StringProperty("color", "blue"), new StringProperty("description", "this is a plane"));
 
-        assertEquals(1, q.getFieldQueries().size());
-        assertEquals("color", q.getFieldQueries().get(0).getFieldName());
-        assertEquals("red", q.getFieldQueries().get(0).getValue());
-        assertTrue(q.getFieldQueries().get(0).wasValidated());
+        assertTrue(q.selects(redCar));
+        assertTrue(q.selects(blueCar));
+        assertTrue(q.selects(redPlane));
+        assertFalse(q.selects(bluePlane));
     }
 
     @Test
@@ -150,7 +153,7 @@ public abstract class QueryTest extends ExpressionElementTest {
         KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
 
         assertNotNull(q);
-        assertTrue(q.wasValidated());
+        assertTrue(q.isCompiled());
 
         assertTrue(q.isCaseSensitive());
     }
@@ -180,7 +183,7 @@ public abstract class QueryTest extends ExpressionElementTest {
 
         assertNotNull(q);
 
-        assertTrue(((QueryBase)q).wasValidated());
+        assertTrue(((QueryBase)q).isCompiled());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -202,7 +205,7 @@ public abstract class QueryTest extends ExpressionElementTest {
 
         assertNotNull(q);
 
-        assertTrue(((QueryBase) q).wasValidated());
+        assertTrue(((QueryBase) q).isCompiled());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -224,7 +227,7 @@ public abstract class QueryTest extends ExpressionElementTest {
 
         assertNotNull(q);
 
-        assertTrue(((QueryBase) q).wasValidated());
+        assertTrue(((QueryBase) q).isCompiled());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -246,7 +249,7 @@ public abstract class QueryTest extends ExpressionElementTest {
 
         assertNotNull(q);
 
-        assertTrue(((QueryBase) q).wasValidated());
+        assertTrue(((QueryBase) q).isCompiled());
 
         TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
         TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
@@ -414,8 +417,8 @@ public abstract class QueryTest extends ExpressionElementTest {
         e.setStringProperty("from", "San Francisco");
 
         MixedQuery q = new MixedQuery();
-        q.addQuery(new TimeQuery("from:", 9L));
-        q.addQuery(new FieldQuery("from", "Los Angeles"));
+//        q.addExpressionElement(new TimeQuery("from:", 9L));
+//        q.addExpressionElement(new FieldQuery("from", "Los Angeles"));
 
         fail("return here");
     }

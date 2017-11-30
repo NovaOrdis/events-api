@@ -39,5 +39,27 @@ public interface ExpressionElement {
      */
     boolean offerLexicalToken(String literal) throws QueryException;
 
+    /**
+     * Build a new instance of this expression element with an opposite semantics: the new expression element will
+     * negate this element's logical expression.
+     *
+     * @return a new instance with an inverse semantics. May return null, if the negation of this element cancels the
+     * element (for example negating NOT produces null).
+     *
+     * @exception QueryException when the element cannot be negated.
+     */
+    ExpressionElement negate() throws QueryException;
+
+    /**
+     * Processes the external representation of the element and produced a compiled (optimized) representation. At this
+     * stage, we give a chance to a query instance that may be configured by successive arguments to complain if it did
+     * not receive its mandatory arguments. This method should be invoked on all queries at the end of the argument
+     * processing cycle.
+     *
+     * @throws QueryException if mandatory configuration arguments are missing or validation fails in some other way.
+     */
+    void compile() throws QueryException;
+
+    boolean isCompiled();
 
 }

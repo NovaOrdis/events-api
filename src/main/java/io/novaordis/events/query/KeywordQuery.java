@@ -57,6 +57,14 @@ public class KeywordQuery extends QueryBase {
         this.caseSensitive = false;
     }
 
+    // QueryBase overrides ---------------------------------------------------------------------------------------------
+
+    @Override
+    public KeywordQuery negate() throws QueryException {
+
+        throw new RuntimeException("negate() NOT YET IMPLEMENTED");
+    }
+
     // Query implementation --------------------------------------------------------------------------------------------
 
     @Override
@@ -123,14 +131,6 @@ public class KeywordQuery extends QueryBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected void validate(boolean validated) throws QueryException {
-
-        //
-        // noop for the time being
-        //
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -49,6 +49,24 @@ public class KeywordQueryTest extends QueryTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void negate_ProducesADifferentInstance() throws Exception {
+
+        try {
+
+            getQueryToTest().negate();
+
+            fail("if you see this, it means that KeywordQuery.negate() was implemented, and you will need to delete KeywordQueryTest.negate_ProducesADifferentInstance() override");
+        }
+        catch(RuntimeException e) {
+
+            assertTrue(e.getMessage().contains("NOT YET IMPLEMENTED"));
+        }
+    }
+
     // Tests -----------------------------------------------------------------------------------------------------------
 
     // Query.fromArguments() -------------------------------------------------------------------------------------------

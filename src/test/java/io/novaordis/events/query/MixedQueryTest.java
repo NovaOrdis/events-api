@@ -32,6 +32,7 @@ import io.novaordis.events.api.event.StringProperty;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertNotNull;
+import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -51,29 +52,60 @@ public class MixedQueryTest extends QueryTest {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void negate_ProducesADifferentInstance() throws Exception {
+
+        try {
+
+            new MixedQuery().negate();
+
+            fail("If you see this, remove MixedQueryTest.negate_ProducesADifferentInstance() and activate the superclass override");
+        }
+        catch(RuntimeException e) {
+
+            assertEquals("negate() NOT YET IMPLEMENTED", e.getMessage());
+        }
+    }
+
     // Tests -----------------------------------------------------------------------------------------------------------
 
     @Test
     public void fromArguments() throws Exception {
 
         List<String> args = new ArrayList<>(Arrays.asList("red", "blue"));
+
         MixedQuery q = (MixedQuery)Query.fromArguments(args, 0);
 
         assertNotNull(q);
 
-        List<KeywordQuery> keywords = q.getKeywordQueries();
-
-        assertEquals(2, keywords.size());
-        assertEquals("red", keywords.get(0).getKeyword());
-        assertEquals("blue", keywords.get(1).getKeyword());
-
         assertTrue(args.isEmpty());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+
+        Query[] orQueries = q.getOrQueries();
+        assertEquals(2, orQueries.length);
+        assertEquals("red", ((KeywordQuery)orQueries[0]).getKeyword());
+        assertEquals("blue", ((KeywordQuery)orQueries[1]).getKeyword());
+
+        Event red = new GenericEvent(new StringProperty("label", "this is something red in color"));
+        Event blue = new GenericEvent(new StringProperty("label", "this is something blue in color"));
+        Event green = new GenericEvent(new StringProperty("label", "this is something green in color"));
+
+        assertTrue(q.selects(red));
+        assertTrue(q.selects(blue));
+        assertFalse(q.selects(green));
     }
 
     @Test
     public void fromArguments_FieldQuery() throws Exception {
 
         List<String> args = new ArrayList<>(Collections.singletonList("something:SomethingElse"));
+
         FieldQuery q = (FieldQuery)Query.fromArguments(args, 0);
 
         assertNotNull(q);
@@ -88,40 +120,47 @@ public class MixedQueryTest extends QueryTest {
     public void fromArguments_FieldQueryAndKeywordQuery() throws Exception {
 
         List<String> args = new ArrayList<>(Arrays.asList("red", "something:SomethingElse", "blue"));
+
         MixedQuery q = (MixedQuery)Query.fromArguments(args, 0);
 
         assertNotNull(q);
 
-        List<KeywordQuery> keywords = q.getKeywordQueries();
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
 
-        assertEquals(2, keywords.size());
-        assertEquals("red", keywords.get(0).getKeyword());
-        assertEquals("blue", keywords.get(1).getKeyword());
+        Query[] orQueries = q.getOrQueries();
+        assertEquals(3, orQueries.length);
 
-        List<FieldQuery> fields = q.getFieldQueries();
+        assertEquals("red", ((KeywordQuery) orQueries[0]).getKeyword());
 
-        assertEquals(1, fields.size());
-        assertEquals("something", fields.get(0).getFieldName());
-        assertEquals("SomethingElse", fields.get(0).getValue());
+        assertEquals("something", ((FieldQuery) orQueries[1]).getFieldName());
+        assertEquals("SomethingElse", ((FieldQuery) orQueries[1]).getValue());
+
+        assertEquals("blue", ((KeywordQuery) orQueries[2]).getKeyword());
 
         assertTrue(args.isEmpty());
     }
 
-    // addExpressionElementLiteral() ----------------------------------------------------------------------------------------------------
+    // addExpressionElementLiteral() -----------------------------------------------------------------------------------
 
     @Test
-    public void addLiteral_KeywordQuery() throws Exception {
+    public void addExpressionElementLiteral_KeywordQuery() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
         q.addExpressionElementLiteral("something");
 
-        List<KeywordQuery> keywords = q.getKeywordQueries();
+        assertFalse(q.isCompiled());
 
-        assertEquals(1, keywords.size());
-        assertEquals("something", keywords.get(0).getKeyword());
-        assertEquals(1, q.getExpression().size());
-        assertEquals(keywords.get(0), q.getExpression().get(0));
+        q.compile();
+
+        assertFalse(q.isNullQuery());
+        KeywordQuery k = (KeywordQuery)q.getSoleQuery();
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
+        assertEquals("something", k.getKeyword());
 
         GenericTimedEvent e = new GenericTimedEvent();
 
@@ -134,44 +173,45 @@ public class MixedQueryTest extends QueryTest {
         e2.setStringProperty("test-key", "blah blah blah");
 
         assertFalse(q.selects(e2));
-
-        assertTrue(q.getFieldQueries().isEmpty());
     }
 
     @Test
-    public void addLiteral_FieldQuery() throws Exception {
+    public void addExpressionElementLiteral_FieldQuery() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
         q.addExpressionElementLiteral("something:somethingelse");
 
-        List<FieldQuery> fields = q.getFieldQueries();
+        assertFalse(q.isCompiled());
 
-        assertEquals(1, fields.size());
-        assertEquals("something", fields.get(0).getFieldName());
-        assertEquals("somethingelse", fields.get(0).getValue());
-        assertEquals(1, q.getExpression().size());
-        assertEquals(fields.get(0), q.getExpression().get(0));
+        q.compile();
 
-        assertTrue(q.getKeywordQueries().isEmpty());
+        assertFalse(q.isNullQuery());
+        FieldQuery f = (FieldQuery)q.getSoleQuery();
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
+        assertEquals("something", f.getFieldName());
+        assertEquals("somethingelse", f.getValue());
     }
 
     @Test
-    public void addLiteral_TimeQuery_From() throws Exception {
+    public void addExpressionElementLiteral_TimeQuery_From() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
         q.addExpressionElementLiteral(TimeQuery.FROM_KEYWORD);
 
-        List<TimeQuery> timeQueries = q.getTimeQueries();
-        assertEquals(1, timeQueries.size());
-        TimeQuery tq = timeQueries.get(0);
-        assertEquals(1, q.getExpression().size());
-        assertEquals(tq, q.getExpression().get(0));
+        assertFalse(q.isCompiled());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
 
         try {
 
-            q.validate();
+            q.compile();
 
             fail("should have thrown exception");
         }
@@ -183,35 +223,43 @@ public class MixedQueryTest extends QueryTest {
 
         q.addExpressionElementLiteral("12/01/16 12:00:00");
 
-        List<TimeQuery> timeQueries2 = q.getTimeQueries();
-        assertEquals(1, timeQueries2.size());
-        TimeQuery tq2 = timeQueries2.get(0);
-        assertEquals(1, q.getExpression().size());
-        assertEquals(tq2, q.getExpression().get(0));
+        assertFalse(q.isCompiled());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
+        q.compile();
+
+        assertFalse(q.isNullQuery());
+        TimeQuery tq = (TimeQuery)q.getSoleQuery();
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
         assertTrue(tq.isFrom());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
                 tq.getTimestamp().longValue());
-
-        q.validate();
     }
 
     @Test
-    public void addLiteral_TimeQuery_To() throws Exception {
+    public void addExpressionElementLiteral_TimeQuery_To() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
         q.addExpressionElementLiteral(TimeQuery.TO_KEYWORD);
 
-        List<TimeQuery> timeQueries = q.getTimeQueries();
-        assertEquals(1, timeQueries.size());
-        TimeQuery tq = timeQueries.get(0);
-        assertEquals(1, q.getExpression().size());
-        assertEquals(tq, q.getExpression().get(0));
+        assertFalse(q.isCompiled());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
 
         try {
 
-            q.validate();
+            q.compile();
 
             fail("should have thrown exception");
         }
@@ -223,25 +271,77 @@ public class MixedQueryTest extends QueryTest {
 
         q.addExpressionElementLiteral("12/01/16 12:00:00");
 
-        List<TimeQuery> timeQueries2 = q.getTimeQueries();
-        assertEquals(1, timeQueries2.size());
-        TimeQuery tq2 = timeQueries2.get(0);
-        assertEquals(1, q.getExpression().size());
-        assertEquals(tq2, q.getExpression().get(0));
+        assertFalse(q.isCompiled());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
+        q.compile();
+
+        assertFalse(q.isNullQuery());
+        TimeQuery tq = (TimeQuery)q.getSoleQuery();
+        assertNull(q.getAndQueries());
+        assertNull(q.getOrQueries());
+
         assertTrue(tq.isTo());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
                 tq.getTimestamp().longValue());
+    }
 
-        q.validate();
+    @Test
+    public void addExpressionElementLiteral_QueryWasCompiled() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("something:somethingelse");
+
+        q.compile();
+
+        try {
+
+            q.addExpressionElementLiteral("other:value");
+
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("the query was compiled and cannot be modified anymore"));
+        }
     }
 
     // selects() -------------------------------------------------------------------------------------------------------
 
     @Test
+    public void selects_QueryNotCompiled() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        assertFalse(q.isCompiled());
+
+        try {
+
+            q.selects(new GenericTimedEvent());
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("query not compiled"));
+        }
+    }
+
+    @Test
     public void selects_noArgumentsIsNullQuery() throws Exception {
 
         MixedQuery q = new MixedQuery();
+
+        q.compile();
+
         assertTrue(q.selects(new GenericTimedEvent()));
     }
 
@@ -251,6 +351,8 @@ public class MixedQueryTest extends QueryTest {
         MixedQuery q = new MixedQuery();
 
         q.addExpressionElementLiteral("blah");
+
+        q.compile();
 
         assertFalse(q.isKeywordMatchingCaseSensitive());
 
@@ -279,6 +381,8 @@ public class MixedQueryTest extends QueryTest {
 
         q.addExpressionElementLiteral("color:blue");
 
+        q.compile();
+
         GenericTimedEvent e = new GenericTimedEvent(7L, Collections.singletonList(new StringProperty("color", "blue")));
         assertTrue(q.selects(e));
 
@@ -293,6 +397,8 @@ public class MixedQueryTest extends QueryTest {
 
         q.addExpressionElementLiteral("blah");
         q.addExpressionElementLiteral("color:blue");
+
+        q.compile();
 
         GenericTimedEvent e = new GenericTimedEvent();
         e.setStringProperty("something", "something else");
@@ -337,51 +443,22 @@ public class MixedQueryTest extends QueryTest {
         fail("return here");
     }
 
-    // addQuery() ------------------------------------------------------------------------------------------------------
-
     @Test
-    public void addQuery() throws Exception {
+    public void selects_ExpressionQuery() throws Exception {
 
-        MixedQuery q = new MixedQuery();
+        List<String> args = new ArrayList<>(Arrays.asList("test:blue", "and", "not", "test:green"));
 
-        FieldQuery f = new FieldQuery("something", "somethingelse");
+        Query q = Query.fromArguments(args, 0);
 
-        q.addQuery(f);
+        assertNotNull(q);
 
-        assertEquals(1, q.getFieldQueries().size());
-        assertEquals(f, q.getFieldQueries().get(0));
-        assertEquals(0, q.getKeywordQueries().size());
-        assertEquals(0, q.getTimeQueries().size());
-        assertEquals(1, q.getExpression().size());
-        assertEquals(f, q.getExpression().get(0));
+        Event e = new GenericEvent(new StringProperty("test", "blue"));
 
-        KeywordQuery k = new KeywordQuery("something");
+        assertTrue(q.selects(e));
 
-        q.addQuery(k);
+        Event e2 = new GenericEvent(new StringProperty("test", "green, blue"));
 
-        assertEquals(1, q.getFieldQueries().size());
-        assertEquals(f, q.getFieldQueries().get(0));
-        assertEquals(1, q.getKeywordQueries().size());
-        assertEquals(k, q.getKeywordQueries().get(0));
-        assertEquals(0, q.getTimeQueries().size());
-        assertEquals(2, q.getExpression().size());
-        assertEquals(f, q.getExpression().get(0));
-        assertEquals(k, q.getExpression().get(1));
-
-        TimeQuery t = new TimeQuery("from:", 1L);
-
-        q.addQuery(t);
-
-        assertEquals(1, q.getFieldQueries().size());
-        assertEquals(f, q.getFieldQueries().get(0));
-        assertEquals(1, q.getKeywordQueries().size());
-        assertEquals(k, q.getKeywordQueries().get(0));
-        assertEquals(1, q.getTimeQueries().size());
-        assertEquals(t, q.getTimeQueries().get(0));
-        assertEquals(3, q.getExpression().size());
-        assertEquals(f, q.getExpression().get(0));
-        assertEquals(k, q.getExpression().get(1));
-        assertEquals(t, q.getExpression().get(2));
+        assertFalse(q.selects(e2));
     }
 
     // offerLexicalToken -----------------------------------------------------------------------------------------------
@@ -394,31 +471,224 @@ public class MixedQueryTest extends QueryTest {
         assertFalse(q.offerLexicalToken("something"));
     }
 
-    // validate() ------------------------------------------------------------------------------------------------------
+    // compile() -------------------------------------------------------------------------------------------------------
 
     @Test
-    public void validate() throws Exception {
-
-        FieldQuery f = new FieldQuery("something:somethingelse");
-        assertFalse(f.wasValidated());
-
-        KeywordQuery k = new KeywordQuery("something");
-        assertFalse(k.wasValidated());
-
-        TimeQuery t = new TimeQuery("from:12/01/16 12:00:00");
-        assertFalse(t.wasValidated());
+    public void compile() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
-        q.addQuery(t);
-        q.addQuery(k);
-        q.addQuery(f);
+        assertFalse(q.isCompiled());
 
-        q.validate();
+        q.addExpressionElementLiteral("something:somethingelse");
+        assertFalse(q.isCompiled());
 
-        assertTrue(f.wasValidated());
-        assertTrue(t.wasValidated());
-        assertTrue(k.wasValidated());
+        q.addExpressionElementLiteral("something");
+        assertFalse(q.isCompiled());
+
+        q.addExpressionElementLiteral("from:12/01/16 12:00:00");
+        assertFalse(q.isCompiled());
+
+        q.compile();
+
+        assertTrue(q.isCompiled());
+    }
+
+    @Test
+    public void compile_NothingToNegate() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        assertFalse(q.isCompiled());
+
+        try {
+
+            q.compile();
+
+            fail("should have thrown exception");
+
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("the query expression contains an incomplete negation"));
+        }
+    }
+
+    @Test
+    public void compile_Negation() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        q.addExpressionElementLiteral("test:blue");
+
+        assertFalse(q.isCompiled());
+
+        q.compile();
+
+        assertTrue(q.isCompiled());
+
+        Event blue = new GenericEvent(new StringProperty("test", "blue"));
+
+        assertFalse(q.selects(blue));
+
+        Event red = new GenericEvent(new StringProperty("test", "red"));
+
+        assertTrue(q.selects(red));
+    }
+
+    @Test
+    public void compile_Negation_TwoElements() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("test:blue");
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        q.addExpressionElementLiteral("test:red");
+
+        assertFalse(q.isCompiled());
+
+        q.compile();
+
+        assertTrue(q.isCompiled());
+
+        assertFalse(q.isNullQuery());
+        assertNull(q.getSoleQuery());
+        assertNull(q.getAndQueries());
+
+        Query[] orQueries = q.getOrQueries();
+
+        assertEquals(2, orQueries.length);
+
+        FieldQuery q2 = (FieldQuery)orQueries[1];
+
+        Event blue = new GenericEvent(new StringProperty("test", "blue"));
+
+        assertTrue(q2.selects(blue));
+
+        Event red = new GenericEvent(new StringProperty("test", "red"));
+
+        assertFalse(q2.selects(red));
+    }
+
+    @Test
+    public void compile_Double_Negation() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        q.addExpressionElementLiteral("test:blue");
+
+        assertFalse(q.isCompiled());
+
+        q.compile();
+
+        assertTrue(q.isCompiled());
+
+        Event blue = new GenericEvent(new StringProperty("test", "blue"));
+
+        assertTrue(q.selects(blue));
+
+        Event red = new GenericEvent(new StringProperty("test", "red"));
+
+        assertFalse(q.selects(red));
+    }
+
+    @Test
+    public void compile_NegateANonNegatableElement() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral(Operator.NOT.name());
+
+        q.addExpressionElementLiteral(Operator.AND.name());
+
+        assertFalse(q.isCompiled());
+
+        try {
+
+            q.compile();
+
+            fail("should have thrown exception");
+
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid query expression syntax:"));
+            assertTrue(msg.contains("negation followed by AND"));
+        }
+    }
+
+    // simplify() ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void simplify_NotCompiled() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        try {
+
+            q.simplify();
+
+            fail("should have thrown exception");
+        }
+        catch (IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("query not compiled yet"));
+        }
+    }
+
+    @Test
+    public void simplify_NullQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.compile();
+
+        Query q2 = q.simplify();
+
+        assertTrue(q2 instanceof NullQuery);
+    }
+
+    @Test
+    public void simplify_OneSubQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+        q.addExpressionElementLiteral("test:blue");
+        q.compile();
+
+        FieldQuery q2 = (FieldQuery)q.simplify();
+
+        assertEquals("test", q2.getFieldName());
+        assertEquals("blue", q2.getValue());
+    }
+
+    @Test
+    public void simplify_MultipleSubQueries() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+        q.addExpressionElementLiteral("test:blue");
+        q.addExpressionElementLiteral("test:red");
+
+        q.compile();
+
+        Query sq = q.simplify();
+
+        //
+        // can't simplify
+        //
+        assertEquals(sq, q);
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
@@ -430,6 +700,7 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
         q.addExpressionElementLiteral("test-field-name:test-value");
+        q.compile();
         return q;
     }
 

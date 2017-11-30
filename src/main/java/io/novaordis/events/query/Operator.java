@@ -28,7 +28,14 @@ public enum Operator implements ExpressionElement {
 
     AND,
     OR,
-    NOT;
+    NOT {
+
+        @Override
+        public Operator negate() throws QueryException {
+
+            return null;
+        }
+    };
 
     // Static ----------------------------------------------------------------------------------------------------------
 
@@ -66,6 +73,26 @@ public enum Operator implements ExpressionElement {
     public boolean offerLexicalToken(String literal) throws QueryException {
 
         return false;
+    }
+
+    @Override
+    public Operator negate() throws QueryException {
+
+        throw new QueryException("invalid query expression syntax: negation followed by " + this);
+    }
+
+    @Override
+    public void compile() throws QueryException {
+
+        //
+        // noop;
+        //
+    }
+
+    @Override
+    public boolean isCompiled() {
+
+        return true;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

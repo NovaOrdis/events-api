@@ -17,8 +17,6 @@
 package io.novaordis.events.query;
 
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Iterator;
 import java.util.List;
 
 import io.novaordis.events.api.event.Event;
@@ -41,24 +39,20 @@ public class MixedQuery extends QueryBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    //
-    // only add via addQuery()
-    //
-    private List<KeywordQuery> keywordQueries;
-
     private boolean keywordMatchingCaseSensitive;
 
     //
-    // only add via addQuery()
+    // the transient expression to compile; once compiled, this instance becomes null and the query cannot be modified
     //
-    private List<FieldQuery> fieldQueries;
+    private List<ExpressionElement> transientExpression;
 
-    //
-    // only add via addQuery()
-    //
-    private List<TimeQuery> timeQueries;
+    private boolean nullQuery;
 
-    private List<ExpressionElement> expression;
+    private Query soleQuery;
+
+    private Query[] andQueries;
+
+    private Query[] orQueries;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -67,11 +61,153 @@ public class MixedQuery extends QueryBase {
      */
     public MixedQuery() throws QueryException {
 
-        this.expression = new ArrayList<>();
-        this.keywordQueries = new ArrayList<>();
-        this.fieldQueries = new ArrayList<>();
-        this.timeQueries = new ArrayList<>();
+        this.transientExpression = new ArrayList<>();
         this.keywordMatchingCaseSensitive = false;
+    }
+
+    // QueryBase overrides ---------------------------------------------------------------------------------------------
+
+    @Override
+    public MixedQuery negate() throws QueryException {
+
+        throw new RuntimeException("negate() NOT YET IMPLEMENTED");
+    }
+
+    /**
+     * TODO this is a very crude implementation, must be refactored and improved, both in efficiency and in use case
+     * coverage.
+     */
+    @Override
+    public void compile() throws QueryException {
+
+        //
+        // apply negation
+        //
+
+        for(int i = 0; i < transientExpression.size(); i ++) {
+
+            ExpressionElement crt = transientExpression.get(i);
+
+            if (Operator.NOT.equals(crt)) {
+
+                if (i == transientExpression.size() - 1) {
+
+                    throw new QueryException("the query expression contains an incomplete negation");
+                }
+
+                //
+                // negate the next element and coalesce
+                //
+
+                transientExpression.remove(i);
+
+                ExpressionElement negation = transientExpression.get(i).negate();
+
+                if (negation == null) {
+
+                    transientExpression.remove(i);
+                }
+                else {
+
+                    transientExpression.set(i, negation);
+                }
+            }
+        }
+
+        //
+        // recursively compile
+        //
+
+        for(ExpressionElement e: transientExpression) {
+
+            e.compile();
+        }
+
+        //
+        // assign case sensitiveness to individual keyword queries
+        //
+
+        if (keywordMatchingCaseSensitive) {
+
+            //noinspection Convert2streamapi
+            for(ExpressionElement e: transientExpression) {
+
+                if (e instanceof KeywordQuery) {
+
+                    ((KeywordQuery)e).setCaseSensitive(true);
+                }
+            }
+        }
+
+        //
+        // final processing
+        //
+
+        int size = transientExpression.size();
+
+        if (size == 0) {
+
+            this.nullQuery = true;
+
+        }
+        else if (size == 1) {
+
+            this.soleQuery = (Query) transientExpression.get(0);
+
+        }
+        else {
+
+            //
+            // TODO hack, must be refactored
+            //
+
+            List<Query> queries = new ArrayList<>();
+
+            boolean and = false;
+
+            for (ExpressionElement e : transientExpression) {
+
+                if (Operator.AND.equals(e)) {
+
+                    and = true;
+                }
+                else if (Operator.OR.equals(e)) {
+
+                    if (and) {
+
+                        throw new RuntimeException("NOT YET IMPLEMENTED: cannot combine AND and OR yet");
+                    }
+                }
+                else {
+
+                    queries.add((Query) e);
+                }
+            }
+
+            if (and) {
+
+                andQueries = new Query[queries.size()];
+                queries.toArray(andQueries);
+            }
+            else {
+
+                orQueries = new Query[queries.size()];
+                queries.toArray(orQueries);
+            }
+        }
+
+        //
+        // we can't modify the query anymore
+        //
+
+        transientExpression = null;
+
+    }
+
+    @Override
+    public boolean isCompiled() {
+
+        return transientExpression == null;
     }
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -84,28 +220,71 @@ public class MixedQuery extends QueryBase {
             throw new IllegalArgumentException("null event");
         }
 
-        for(KeywordQuery kq: keywordQueries) {
+        if (!isCompiled()) {
 
-            if (kq.selects(e)) {
-
-                return true;
-            }
+            throw new IllegalStateException("query not compiled");
         }
 
-        for(FieldQuery fq : fieldQueries) {
+        if (nullQuery) {
 
-            if (fq.selects(e)) {
-
-                return true;
-            }
+            return true;
         }
 
-        return keywordQueries.isEmpty() && fieldQueries.isEmpty();
+        if (soleQuery != null) {
+
+            return soleQuery.selects(e);
+        }
+
+        if (orQueries != null) {
+
+            //
+            // at least one must succeed, in order
+            //
+
+            for(Query q: orQueries) {
+
+                boolean selected = q.selects(e);
+
+                if (selected) {
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (andQueries != null) {
+
+            //
+            // all must succeed in order
+            //
+
+            for(Query q: andQueries) {
+
+                boolean selected = q.selects(e);
+
+                if (!selected) {
+
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+        throw new IllegalStateException("invalid state: no null query, no sole query, no and queries and no or queries");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     public void addExpressionElementLiteral(String literal) throws QueryException {
+
+        if (transientExpression == null) {
+
+            throw new QueryException("the query was compiled and cannot be modified anymore");
+        }
 
         if (literal == null) {
 
@@ -116,9 +295,9 @@ public class MixedQuery extends QueryBase {
         // offer the lexical token to the last expression element that was added, to give it a chance to consume it
         //
 
-        if (!expression.isEmpty()) {
+        if (!transientExpression.isEmpty()) {
 
-            ExpressionElement ee = expression.get(expression.size() - 1);
+            ExpressionElement ee = transientExpression.get(transientExpression.size() - 1);
 
             if (ee.offerLexicalToken(literal)) {
 
@@ -140,47 +319,26 @@ public class MixedQuery extends QueryBase {
 
         if ((o = Operator.fromLiteral(literal)) != null) {
 
-            addOperator(o);
+            transientExpression.add(o);
         }
         else if (literal.contains(":")) {
 
             if (literal.startsWith(TimeQuery.FROM_KEYWORD) || literal.startsWith(TimeQuery.TO_KEYWORD)) {
 
                 TimeQuery q = new TimeQuery(literal);
-                addQuery(q);
+                transientExpression.add(q);
             }
             else {
 
                 FieldQuery q = new FieldQuery(literal);
-                addQuery(q);
+                transientExpression.add(q);
             }
         }
         else {
 
             KeywordQuery q = new KeywordQuery(literal);
-            addQuery(q);
+            transientExpression.add(q);
         }
-    }
-
-    /**
-     * @return a copy of the internal storage
-     */
-    public List<KeywordQuery> getKeywordQueries() {
-
-        if (keywordQueries.isEmpty()) {
-
-            return Collections.emptyList();
-        }
-
-        ArrayList<KeywordQuery> result = new ArrayList<>();
-
-        for(KeywordQuery k: keywordQueries) {
-
-            k.setCaseSensitive(isKeywordMatchingCaseSensitive());
-            result.add(k);
-        }
-
-        return result;
     }
 
     public boolean isKeywordMatchingCaseSensitive() {
@@ -189,116 +347,89 @@ public class MixedQuery extends QueryBase {
     }
 
     /**
-     * @return the internal storage so handle with care
+     * "Simplifies" - returns the only sub-query, or itself if that is not possible
      */
-    public List<FieldQuery> getFieldQueries() {
+    public Query simplify() {
 
-        return fieldQueries;
-    }
+        if (transientExpression != null) {
 
-    /**
-     * @return the internal storage so handle with care
-     */
-    public List<TimeQuery> getTimeQueries() {
-
-        return timeQueries;
-    }
-
-    public void addQuery(Query q) {
-
-        if (q instanceof FieldQuery) {
-
-            fieldQueries.add((FieldQuery)q);
-        }
-        else if (q instanceof KeywordQuery) {
-
-            keywordQueries.add((KeywordQuery)q);
-        }
-        else if (q instanceof TimeQuery) {
-
-            timeQueries.add((TimeQuery)q);
-        }
-        else {
-
-            throw new IllegalArgumentException("unknown query type " + q);
+            throw new IllegalStateException("query not compiled yet");
         }
 
-        expression.add(q);
-    }
+        if (nullQuery) {
 
-    public void addOperator(Operator o) {
+            return new NullQuery();
+        }
 
-        expression.add(o);
+        if (soleQuery != null) {
+
+            return soleQuery;
+        }
+
+        return this;
     }
 
     @Override
     public String toString() {
 
-        String s = "";
+        if (nullQuery) {
 
-        for(Iterator<KeywordQuery> i = keywordQueries.iterator(); i.hasNext(); ) {
+            return "NULL query";
+        }
+        else if (soleQuery != null) {
 
-            s += "\"" + i.next().toString()  + "\"";
+            return soleQuery.toString();
+        }
+        else {
 
-            if (i.hasNext()) {
+//            String s = "";
+//
+//            for (int i = 0; i < expression.size(); i++) {
+//
+//                s += expression.get(i);
+//
+//                if (i < expression.size() - 1) {
+//
+//                    s += " ";
+//                }
+//            }
+//
+//            return s;
 
-                s += ", ";
-            }
+            return "TBD";
         }
 
-        if (!fieldQueries.isEmpty() && !s.isEmpty()) {
-
-            s += ", ";
-        }
-
-        for(Iterator<FieldQuery> i = fieldQueries.iterator(); i.hasNext(); ) {
-
-            s += "\"" + i.next().toString()  + "\"";
-
-            if (i.hasNext()) {
-
-                s += ", ";
-            }
-        }
-
-        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    /**
-     * The query expression in the format (order) in which was parsed from arguments.
-     *
-     * @return the internal storage, handle with care.
-     */
-    List<ExpressionElement> getExpression() {
+    boolean isNullQuery() {
 
-        return expression;
+        return nullQuery;
+    }
+
+    Query getSoleQuery() {
+
+        return soleQuery;
+    }
+
+    /**
+     * May return null.
+     */
+    Query[] getAndQueries() {
+
+        return andQueries;
+    }
+
+    /**
+     * May return null.
+     */
+    Query[] getOrQueries() {
+
+        return orQueries;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    /**
-     * Validates all delegate queries.
-     */
-    @Override
-    protected void validate(boolean validated) throws QueryException {
-
-        for(KeywordQuery k: keywordQueries) {
-
-            k.validate();
-        }
-
-        for(FieldQuery f: fieldQueries) {
-
-            f.validate();
-        }
-
-        for(TimeQuery t : timeQueries) {
-
-            t.validate();
-        }
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 

@@ -63,6 +63,12 @@ public class MatchNone extends ExpressionElementBase implements Query {
         return Collections.emptyList();
     }
 
+    @Override
+    public Query negate() throws QueryException {
+
+        return new MatchAll();
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -20,6 +20,8 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNull;
+import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.fail;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -36,6 +38,17 @@ public class OperatorTest extends ExpressionElementTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void negate_ProducesADifferentInstance() throws Exception {
+
+        //
+        // does not apply
+        //
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
@@ -82,6 +95,46 @@ public class OperatorTest extends ExpressionElementTest {
     protected Operator getExpressionElementToTest() throws Exception {
 
         return Operator.AND;
+    }
+
+    // negate() --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void negate_NOT() throws Exception {
+
+        assertNull(Operator.NOT.negate());
+    }
+
+    @Test
+    public void negate_AND() throws Exception {
+
+        try {
+
+            Operator.AND.negate();
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid query expression syntax:"));
+            assertTrue(msg.contains("negation followed by AND"));
+        }
+    }
+
+    @Test
+    public void negate_OR() throws Exception {
+
+        try {
+
+            Operator.OR.negate();
+            fail("should have thrown exception");
+        }
+        catch(QueryException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("invalid query expression syntax:"));
+            assertTrue(msg.contains("negation followed by OR"));
+        }
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

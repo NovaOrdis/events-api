@@ -377,6 +377,28 @@ public class FieldQueryTest extends QueryTest {
         assertFalse(q.selects(e));
     }
 
+    // negate() --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void negate() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "blue");
+
+        FieldQuery q2 = q.negate();
+
+        assertFalse(q.equals(q2));
+
+        Event blue = new GenericEvent(new StringProperty("test", "blue"));
+
+        assertTrue(q.selects(blue));
+        assertFalse(q2.selects(blue));
+
+        Event red = new GenericEvent(new StringProperty("test", "red"));
+
+        assertFalse(q.selects(red));
+        assertTrue(q2.selects(red));
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

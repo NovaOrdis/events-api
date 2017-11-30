@@ -38,6 +38,8 @@ public abstract class ExpressionElementTest {
 
     // Tests -----------------------------------------------------------------------------------------------------------
 
+    // offerLexicalToken() ---------------------------------------------------------------------------------------------
+
     @Test
     public void offerLexicalToken_NotAccepted() throws Exception {
 
@@ -52,10 +54,41 @@ public abstract class ExpressionElementTest {
         assertFalse(e.offerLexicalToken("this-surely-will-be-rejected-as-it-does-not-make-sense-to-any-query"));
     }
 
+    // negate() --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void negate_ProducesADifferentInstance() throws Exception {
+
+        ExpressionElement e = getExpressionElementToTest();
+
+        ExpressionElement negated = e.negate();
+
+        //
+        // make sure the instances are different - some specific elements may need to override this test
+        //
+
+        assertFalse(e.equals(negated));
+    }
+
+    // compile() -------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void compile() throws Exception {
+
+        ExpressionElement e = getExpressionElementToTest();
+
+        e.compile();
+
+        // no exceptions
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
 
+    /**
+     * @return an elements that compiles correctly.
+     */
     protected abstract ExpressionElement getExpressionElementToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------

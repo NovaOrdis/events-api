@@ -43,6 +43,26 @@ public abstract class ExpressionElementBase implements ExpressionElement {
         return false;
     }
 
+    /**
+     * Base implementation, valid in most cases.
+     *
+     * Override to refine.
+     */
+    @Override
+    public void compile() throws QueryException {
+    }
+
+    /**
+     * Base implementation, valid in most cases.
+     *
+     * Override to refine.
+     */
+    @Override
+    public boolean isCompiled() {
+
+        return true;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

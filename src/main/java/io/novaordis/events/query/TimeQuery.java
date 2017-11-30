@@ -64,6 +64,8 @@ public class TimeQuery extends QueryBase {
     private Timestamp timestamp;
     private SimpleDateFormat format;
 
+    private boolean compiled = false;
+
     // Constructors ----------------------------------------------------------------------------------------------------
 
     public TimeQuery(String keywordAndPossiblyValue) throws QueryException {
@@ -133,6 +135,36 @@ public class TimeQuery extends QueryBase {
 
         return false;
     }
+
+    @Override
+    public TimeQuery negate() throws QueryException {
+
+        throw new RuntimeException("negate() NOT YET IMPLEMENTED");
+    }
+
+    @Override
+    public void compile() throws QueryException {
+
+        //
+        // makes sure we've been fed a timestamp
+        //
+
+        if (timestamp == null) {
+
+            throw new QueryException("missing timestamp");
+
+        }
+
+        compiled = true;
+    }
+
+    @Override
+    public boolean isCompiled() {
+
+        return compiled;
+    }
+
+    // Query implementation --------------------------------------------------------------------------------------------
 
     /**
      * TimeQueries do not select non-timed events, or time events with a null timestamp, as they don't have the
@@ -312,20 +344,6 @@ public class TimeQuery extends QueryBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
-
-    @Override
-    protected void validate(boolean validated) throws QueryException {
-
-        //
-        // makes sure we've been fed a timestamp
-        //
-
-        if (timestamp == null) {
-
-            throw new QueryException("missing timestamp");
-
-        }
-    }
 
     // Private ---------------------------------------------------------------------------------------------------------
 
