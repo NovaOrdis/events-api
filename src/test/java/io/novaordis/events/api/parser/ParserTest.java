@@ -16,11 +16,12 @@
 
 package io.novaordis.events.api.parser;
 
-import io.novaordis.events.api.event.EndOfStreamEvent;
-import io.novaordis.events.api.event.Event;
+import java.util.List;
+
 import org.junit.Test;
 
-import java.util.List;
+import io.novaordis.events.api.event.EndOfStreamEvent;
+import io.novaordis.events.api.event.Event;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -81,7 +82,7 @@ public abstract class ParserTest {
 
         try {
 
-            p.parse("something");
+            p.parse("something", null);
             fail("Should thrown exception");
         }
         catch(IllegalStateException e) {
@@ -98,11 +99,11 @@ public abstract class ParserTest {
 
         assertEquals(0L, p.getLineNumber());
 
-        p.parse("something");
+        p.parse("something", null);
 
         assertEquals(1L, p.getLineNumber());
 
-        p.parse("something else");
+        p.parse("something else", null);
 
         assertEquals(2L, p.getLineNumber());
 

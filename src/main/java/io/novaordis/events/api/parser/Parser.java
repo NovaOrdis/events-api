@@ -16,10 +16,11 @@
 
 package io.novaordis.events.api.parser;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.utilities.parsing.ParsingException;
-
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.query.Query;
+import io.novaordis.utilities.parsing.ParsingException;
 
 /**
  * A parser that expects events to span multiple lines of text stream, as it is the case with garbage collection
@@ -51,21 +52,17 @@ public interface Parser {
      * the current line may contain the end of an event that started on a previous line, multiple events, or the
      * beginning of an event that may or may not continue on the next lines.
      *
+     * The implementations must count lines, so they can answer getLineNumber()
+     *
      * The invocation may return an empty list, but never null.
+     *
+     * @param query the query, if available, is provided to the parser for performance reasons: for example, if the
+     *              query contains a time limit, the parser may use this information to parse the time stamp first and
+     *              drop the rest of the processing if the time stamp does not match the query. May be null.
      *
      * @exception IllegalStateException if invoked on a closed parser.
      */
-    List<Event> parse(String line) throws ParsingException;
-
-//    /**
-//     * TODO there was just a single situation when we needed this, and we could handle it in implementation, so we
-//     * decided to back off the change. If we ever need this again, we'll reconsider.
-//     *
-//     * @return all events accumulated so far, without closing the parser.
-//     *
-//     * @see Parser#close()
-//     */
-//    List<Event> flush() throws ParsingException;
+    List<Event> parse(String line, Query query) throws ParsingException;
 
     /**
      * Processes the remaining accumulated state and closes the parser. A parser that was closed cannot be re-used,

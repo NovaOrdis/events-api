@@ -16,14 +16,15 @@
 
 package io.novaordis.events.api.parser;
 
-import io.novaordis.events.api.event.EndOfStreamEvent;
-import io.novaordis.events.api.event.Event;
-import io.novaordis.utilities.parsing.ParsingException;
-
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
+
+import io.novaordis.events.api.event.EndOfStreamEvent;
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.query.Query;
+import io.novaordis.utilities.parsing.ParsingException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -51,7 +52,7 @@ public abstract class ParserBase implements Parser {
     // Parser implementation -------------------------------------------------------------------------------------------
 
     @Override
-    public List<Event> parse(String line) throws ParsingException {
+    public List<Event> parse(String line, Query query) throws ParsingException {
 
         if (closed) {
 
