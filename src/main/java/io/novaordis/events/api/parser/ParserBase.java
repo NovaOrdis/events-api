@@ -59,7 +59,7 @@ public abstract class ParserBase implements Parser {
             throw new IllegalStateException(this + " is closed");
         }
 
-        return parse(lineNumber.incrementAndGet(), line);
+        return parse(lineNumber.incrementAndGet(), line, query);
     }
 
     @Override
@@ -122,9 +122,13 @@ public abstract class ParserBase implements Parser {
      *
      * The method will never be invoked on a closed parser instance.
      *
+     * @param query the query, if available, is provided to the parser for performance reasons: for example, if the
+     *              query contains a time limit, the parser may use this information to parse the time stamp first and
+     *              drop the rest of the processing if the time stamp does not match the query. May be null.
+     *
      * @param lineNumber the line number, as managed by superclass.
      */
-    protected abstract List<Event> parse(long lineNumber, String line) throws ParsingException;
+    protected abstract List<Event> parse(long lineNumber, String line, Query query) throws ParsingException;
 
     /**
      * Process the remaining accumulated state. The super close() will actually close the parser and issue the

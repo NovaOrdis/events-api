@@ -16,11 +16,12 @@
 
 package io.novaordis.events.api.parser;
 
-import io.novaordis.events.api.event.Event;
-import io.novaordis.utilities.parsing.ParsingException;
-
 import java.util.Collections;
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
+import io.novaordis.events.query.Query;
+import io.novaordis.utilities.parsing.ParsingException;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -39,7 +40,7 @@ public class MockParser extends ParserBase {
     // ParserBase overrides --------------------------------------------------------------------------------------------
 
     @Override
-    protected List<Event> parse(long lineNumber, String line) throws ParsingException {
+    protected List<Event> parse(long lineNumber, String line, Query query) throws ParsingException {
 
         return Collections.emptyList();
     }
