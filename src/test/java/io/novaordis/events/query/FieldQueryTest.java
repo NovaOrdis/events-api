@@ -221,15 +221,69 @@ public class FieldQueryTest extends QueryTest {
     }
 
     @Test
-    public void selects_RegularExpression() throws Exception {
-
-        FieldQuery q = new FieldQuery("name", "blue");
+    public void selects_RegularExpression_SingleLine() throws Exception {
 
         GenericEvent e = new GenericEvent();
         e.setStringProperty("name", "blue 1");
+        FieldQuery q = new FieldQuery("name", "blue");
+        assertTrue(q.selects(e));
+    }
+
+    @Test
+    public void selects_RegularExpression_SingleLine_NoMatch() throws Exception {
+
+        GenericEvent e = new GenericEvent();
+        e.setStringProperty("name", "blue 1");
+        FieldQuery q = new FieldQuery("name", "green");
+        
+        assertFalse(q.selects(e));
+    }
+
+    @Test
+    public void selects_RegularExpression_MultiLineTarget() throws Exception {
+
+        String content =
+                "\tat sun.misc.Unsafe.park(Native Method)\n" +
+                "\t- parking to wait for  <0x00000000c19a4178> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)\n" +
+                "\tat java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)\n" +
+                "\tat java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)\n" +
+                "\tat java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)\n" +
+                "\tat java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)\n" +
+                "\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)\n" +
+                "\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n" +
+                "\tat java.lang.Thread.run(Thread.java:745)";
+
+        GenericEvent e = new GenericEvent();
+        e.setStringProperty("stack", content);
+
+        FieldQuery q = new FieldQuery("stack", "take(.*)");
 
         assertTrue(q.selects(e));
     }
+
+    @Test
+    public void selects_RegularExpression_MultiLineTarget_NoMatch() throws Exception {
+
+        String content =
+                "\tat sun.misc.Unsafe.park(Native Method)\n" +
+                        "\t- parking to wait for  <0x00000000c19a4178> (a java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject)\n" +
+                        "\tat java.util.concurrent.locks.LockSupport.park(LockSupport.java:175)\n" +
+                        "\tat java.util.concurrent.locks.AbstractQueuedSynchronizer$ConditionObject.await(AbstractQueuedSynchronizer.java:2039)\n" +
+                        "\tat java.util.concurrent.LinkedBlockingQueue.take(LinkedBlockingQueue.java:442)\n" +
+                        "\tat java.util.concurrent.ThreadPoolExecutor.getTask(ThreadPoolExecutor.java:1067)\n" +
+                        "\tat java.util.concurrent.ThreadPoolExecutor.runWorker(ThreadPoolExecutor.java:1127)\n" +
+                        "\tat java.util.concurrent.ThreadPoolExecutor$Worker.run(ThreadPoolExecutor.java:617)\n" +
+                        "\tat java.lang.Thread.run(Thread.java:745)";
+
+        GenericEvent e = new GenericEvent();
+        e.setStringProperty("stack", content);
+
+        FieldQuery q = new FieldQuery("stack", "noSuchMethod(.*)");
+
+        assertFalse(q.selects(e));
+    }
+
+
 
     // offerArgument ---------------------------------------------------------------------------------------------------
 
