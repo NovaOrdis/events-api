@@ -16,10 +16,11 @@
 
 package io.novaordis.events.query;
 
+import org.junit.Test;
+
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
-import org.junit.Test;
 
 import static org.junit.Assert.assertFalse;
 
@@ -38,6 +39,23 @@ public class MatchNoneTest extends QueryTest {
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Overrides -------------------------------------------------------------------------------------------------------
+
+    // Query Once ------------------------------------------------------------------------------------------------------
+
+    @Test
+    @Override
+    public void selects_queryOnce() throws Exception {
+
+        // noop, does not apply
+    }
+
+    @Test
+    public void filter_queryOnce() throws Exception {
+
+        // noop, does not apply
+    }
 
     // Tests -----------------------------------------------------------------------------------------------------------
 

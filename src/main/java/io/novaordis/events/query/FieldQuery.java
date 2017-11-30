@@ -21,6 +21,7 @@ import java.util.regex.Pattern;
 
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.parser.QueryOnce;
 
 /**
  * A field query attempts to match the value of a certain field (property) against a regular expression. Only String
@@ -93,6 +94,11 @@ public class FieldQuery extends QueryBase {
         if (e == null) {
 
             throw new IllegalArgumentException("null event");
+        }
+
+        if (QueryOnce.isQueryOnce(e)) {
+
+            return true;
         }
 
         if (regularExpression == null) {

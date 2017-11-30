@@ -25,6 +25,7 @@ import org.slf4j.LoggerFactory;
 
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.TimedEvent;
+import io.novaordis.events.api.parser.QueryOnce;
 import io.novaordis.utilities.time.Timestamp;
 import io.novaordis.utilities.time.TimestampImpl;
 
@@ -122,6 +123,11 @@ public class TimeQuery extends QueryBase {
         if (e == null) {
 
             throw new IllegalArgumentException("null event");
+        }
+
+        if (QueryOnce.isQueryOnce(e)) {
+
+            return true;
         }
 
         if (!e.isTimed()) {

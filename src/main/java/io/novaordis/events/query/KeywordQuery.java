@@ -18,6 +18,7 @@ package io.novaordis.events.query;
 
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.Property;
+import io.novaordis.events.api.parser.QueryOnce;
 
 /**
  * A keyword query matches the keyword against the content of all properties of an event. If there is at least one
@@ -64,6 +65,11 @@ public class KeywordQuery extends QueryBase {
         if (e == null) {
 
             throw new IllegalArgumentException("null event");
+        }
+
+        if (QueryOnce.isQueryOnce(e)) {
+
+            return true;
         }
 
         for(Property p: e.getProperties()) {

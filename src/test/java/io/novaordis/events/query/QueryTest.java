@@ -27,6 +27,7 @@ import org.junit.Test;
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.GenericTimedEvent;
 import io.novaordis.events.api.event.TimedEvent;
+import io.novaordis.events.api.parser.QueryOnce;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -332,6 +333,55 @@ public abstract class QueryTest {
         if (expected > 0) {
             assertEquals(e, filtered.get(0));
         }
+    }
+
+    // Query Once ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void selects_queryOnce() throws Exception {
+
+        Query q = getQueryToTest();
+
+        Event e = getEventThatDoesNotMatchQuery();
+
+        QueryOnce.set(e, true);
+
+        //
+        // this is a side effect of the QueryOnce, once an event was declared as "matching", it'll match even if it doesn't
+        //
+        assertTrue(q.selects(e));
+
+        Event e2 = getEventThatMatchesQuery();
+
+        QueryOnce.set(e2, true);
+
+        assertTrue(q.selects(e2));
+    }
+
+    @Test
+    public void filter_queryOnce() throws Exception {
+
+        Query q = getQueryToTest();
+
+        Event e = getEventThatDoesNotMatchQuery();
+
+        QueryOnce.set(e, true);
+
+        Event e2 = getEventThatMatchesQuery();
+
+        QueryOnce.set(e2, true);
+
+        //
+        // this is a side effect of the QueryOnce, once an event was declared as "matching", it'll match even if it doesn't
+        //
+
+        List<Event> events = Arrays.asList(e, e2);
+
+        List<Event> events2 = q.filter(events);
+
+        assertEquals(2, events2.size());
+        assertEquals(e, events2.get(0));
+        assertEquals(e2, events2.get(1));
     }
 
     // special cases ---------------------------------------------------------------------------------------------------

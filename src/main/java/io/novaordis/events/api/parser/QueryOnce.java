@@ -33,6 +33,9 @@ import io.novaordis.events.api.event.Event;
  *
  * All API interaction must be conducted via this class, so the hack can be refactored easier, later.
  *
+ * One major limitation of the mechanism is that we assume implicitly that the query used for parsing is the same
+ * as the query used for querying, which may not be always true.
+ *
  * Also see https://kb.novaordis.com/index.php/Events-api_Concepts#Query_Once
  *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
