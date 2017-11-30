@@ -107,21 +107,21 @@ public class MixedQueryTest extends QueryTest {
         assertTrue(args.isEmpty());
     }
 
-    // addLiteral() ----------------------------------------------------------------------------------------------------
+    // addExpressionElementLiteral() ----------------------------------------------------------------------------------------------------
 
     @Test
     public void addLiteral_KeywordQuery() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral("something");
+        q.addExpressionElementLiteral("something");
 
         List<KeywordQuery> keywords = q.getKeywordQueries();
 
         assertEquals(1, keywords.size());
         assertEquals("something", keywords.get(0).getKeyword());
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(keywords.get(0), q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(keywords.get(0), q.getExpression().get(0));
 
         GenericTimedEvent e = new GenericTimedEvent();
 
@@ -143,15 +143,15 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral("something:somethingelse");
+        q.addExpressionElementLiteral("something:somethingelse");
 
         List<FieldQuery> fields = q.getFieldQueries();
 
         assertEquals(1, fields.size());
         assertEquals("something", fields.get(0).getFieldName());
         assertEquals("somethingelse", fields.get(0).getValue());
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(fields.get(0), q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(fields.get(0), q.getExpression().get(0));
 
         assertTrue(q.getKeywordQueries().isEmpty());
     }
@@ -161,13 +161,13 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral(TimeQuery.FROM_KEYWORD);
+        q.addExpressionElementLiteral(TimeQuery.FROM_KEYWORD);
 
         List<TimeQuery> timeQueries = q.getTimeQueries();
         assertEquals(1, timeQueries.size());
         TimeQuery tq = timeQueries.get(0);
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(tq, q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(tq, q.getExpression().get(0));
 
         try {
 
@@ -181,13 +181,13 @@ public class MixedQueryTest extends QueryTest {
             assertTrue(msg.contains("missing timestamp"));
         }
 
-        q.addLiteral("12/01/16 12:00:00");
+        q.addExpressionElementLiteral("12/01/16 12:00:00");
 
         List<TimeQuery> timeQueries2 = q.getTimeQueries();
         assertEquals(1, timeQueries2.size());
         TimeQuery tq2 = timeQueries2.get(0);
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(tq2, q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(tq2, q.getExpression().get(0));
         assertTrue(tq.isFrom());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
@@ -201,13 +201,13 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral(TimeQuery.TO_KEYWORD);
+        q.addExpressionElementLiteral(TimeQuery.TO_KEYWORD);
 
         List<TimeQuery> timeQueries = q.getTimeQueries();
         assertEquals(1, timeQueries.size());
         TimeQuery tq = timeQueries.get(0);
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(tq, q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(tq, q.getExpression().get(0));
 
         try {
 
@@ -221,13 +221,13 @@ public class MixedQueryTest extends QueryTest {
             assertTrue(msg.contains("missing timestamp"));
         }
 
-        q.addLiteral("12/01/16 12:00:00");
+        q.addExpressionElementLiteral("12/01/16 12:00:00");
 
         List<TimeQuery> timeQueries2 = q.getTimeQueries();
         assertEquals(1, timeQueries2.size());
         TimeQuery tq2 = timeQueries2.get(0);
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(tq2, q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(tq2, q.getExpression().get(0));
         assertTrue(tq.isTo());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
@@ -250,7 +250,7 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral("blah");
+        q.addExpressionElementLiteral("blah");
 
         assertFalse(q.isKeywordMatchingCaseSensitive());
 
@@ -277,7 +277,7 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral("color:blue");
+        q.addExpressionElementLiteral("color:blue");
 
         GenericTimedEvent e = new GenericTimedEvent(7L, Collections.singletonList(new StringProperty("color", "blue")));
         assertTrue(q.selects(e));
@@ -291,8 +291,8 @@ public class MixedQueryTest extends QueryTest {
 
         MixedQuery q = new MixedQuery();
 
-        q.addLiteral("blah");
-        q.addLiteral("color:blue");
+        q.addExpressionElementLiteral("blah");
+        q.addExpressionElementLiteral("color:blue");
 
         GenericTimedEvent e = new GenericTimedEvent();
         e.setStringProperty("something", "something else");
@@ -352,8 +352,8 @@ public class MixedQueryTest extends QueryTest {
         assertEquals(f, q.getFieldQueries().get(0));
         assertEquals(0, q.getKeywordQueries().size());
         assertEquals(0, q.getTimeQueries().size());
-        assertEquals(1, q.getQueryInitializationOrder().size());
-        assertEquals(f, q.getQueryInitializationOrder().get(0));
+        assertEquals(1, q.getExpression().size());
+        assertEquals(f, q.getExpression().get(0));
 
         KeywordQuery k = new KeywordQuery("something");
 
@@ -364,9 +364,9 @@ public class MixedQueryTest extends QueryTest {
         assertEquals(1, q.getKeywordQueries().size());
         assertEquals(k, q.getKeywordQueries().get(0));
         assertEquals(0, q.getTimeQueries().size());
-        assertEquals(2, q.getQueryInitializationOrder().size());
-        assertEquals(f, q.getQueryInitializationOrder().get(0));
-        assertEquals(k, q.getQueryInitializationOrder().get(1));
+        assertEquals(2, q.getExpression().size());
+        assertEquals(f, q.getExpression().get(0));
+        assertEquals(k, q.getExpression().get(1));
 
         TimeQuery t = new TimeQuery("from:", 1L);
 
@@ -378,20 +378,20 @@ public class MixedQueryTest extends QueryTest {
         assertEquals(k, q.getKeywordQueries().get(0));
         assertEquals(1, q.getTimeQueries().size());
         assertEquals(t, q.getTimeQueries().get(0));
-        assertEquals(3, q.getQueryInitializationOrder().size());
-        assertEquals(f, q.getQueryInitializationOrder().get(0));
-        assertEquals(k, q.getQueryInitializationOrder().get(1));
-        assertEquals(t, q.getQueryInitializationOrder().get(2));
+        assertEquals(3, q.getExpression().size());
+        assertEquals(f, q.getExpression().get(0));
+        assertEquals(k, q.getExpression().get(1));
+        assertEquals(t, q.getExpression().get(2));
     }
 
-    // offerArgument ---------------------------------------------------------------------------------------------------
+    // offerLexicalToken -----------------------------------------------------------------------------------------------
 
     @Test
-    public void offerArgument() throws Exception {
+    public void offerLexicalToken() throws Exception {
 
         MixedQuery q = new MixedQuery();
 
-        assertFalse(q.offerArgument("something"));
+        assertFalse(q.offerLexicalToken("something"));
     }
 
     // validate() ------------------------------------------------------------------------------------------------------
@@ -429,7 +429,7 @@ public class MixedQueryTest extends QueryTest {
     protected Query getQueryToTest() throws Exception {
 
         MixedQuery q = new MixedQuery();
-        q.addLiteral("test-field-name:test-value");
+        q.addExpressionElementLiteral("test-field-name:test-value");
         return q;
     }
 

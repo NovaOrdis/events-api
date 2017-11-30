@@ -104,7 +104,7 @@ public class FieldQueryTest extends QueryTest {
 
         assertEquals("test1", q.getPropertyName());
         assertEquals("test1", q.getFieldName());
-        assertEquals("test2", q.getRegularExpression());
+        assertEquals("test2", q.getRegularExpressionLiteral());
     }
 
     @Test
@@ -283,28 +283,26 @@ public class FieldQueryTest extends QueryTest {
         assertFalse(q.selects(e));
     }
 
-
-
-    // offerArgument ---------------------------------------------------------------------------------------------------
+    // offerLexicalToken -----------------------------------------------------------------------------------------------
 
     @Test
-    public void offerArgument() throws Exception {
+    public void offerLexicalToken() throws Exception {
 
         FieldQuery q = new FieldQuery("something:somethingelse");
 
-        assertFalse(q.offerArgument("blah"));
+        assertFalse(q.offerLexicalToken("blah"));
     }
 
-    // setRegularExpression() ------------------------------------------------------------------------------------------
+    // setRegularExpressionLiteral() -----------------------------------------------------------------------------------
 
     @Test
-    public void setRegularExpression_Null() throws Exception {
+    public void setRegularExpressionLiteral_Null() throws Exception {
 
         FieldQuery q = new FieldQuery("test", "test");
 
         try {
 
-            q.setRegularExpression(null);
+            q.setRegularExpressionLiteral(null);
 
             fail("should throw exception");
         }
@@ -316,13 +314,13 @@ public class FieldQueryTest extends QueryTest {
     }
 
     @Test
-    public void setRegularExpression_Empty() throws Exception {
+    public void setRegularExpressionLiteral_Empty() throws Exception {
 
         FieldQuery q = new FieldQuery("test", "test");
 
         try {
 
-            q.setRegularExpression("");
+            q.setRegularExpressionLiteral("");
 
             fail("should throw exception");
         }
@@ -334,17 +332,49 @@ public class FieldQueryTest extends QueryTest {
     }
 
     @Test
-    public void setRegularExpression() throws Exception {
+    public void setRegularExpressionLiteral() throws Exception {
 
         FieldQuery q = new FieldQuery("test", "test");
 
-        q.setRegularExpression("^something.*else$");
+        q.setRegularExpressionLiteral("^something.*else$");
 
-        assertEquals("^something.*else$", q.getRegularExpression());
+        assertEquals("^something.*else$", q.getRegularExpressionLiteral());
 
         Event e = new GenericEvent(Collections.singletonList(new StringProperty("test", "something blah blah else")));
 
         assertTrue(q.selects(e));
+    }
+
+    @Test
+    public void setRegularExpressionLiteral_Metacharacter_Parantheses_Match() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "initial");
+
+        q.setRegularExpressionLiteral("some-function(.*)");
+
+        assertEquals("some-function(.*)", q.getRegularExpressionLiteral());
+        assertEquals("some-function\\(.*\\)", q.getJavaRegex());
+
+        Event e = new GenericEvent(Collections.singletonList(
+                new StringProperty("test", "MyClass.some-function(blah);")));
+
+        assertTrue(q.selects(e));
+    }
+
+    @Test
+    public void setRegularExpressionLiteral_Metacharacter_Parantheses_NoMatch() throws Exception {
+
+        FieldQuery q = new FieldQuery("test", "initial");
+
+        q.setRegularExpressionLiteral("some-function(.*)");
+
+        assertEquals("some-function(.*)", q.getRegularExpressionLiteral());
+        assertEquals("some-function\\(.*\\)", q.getJavaRegex());
+
+        Event e = new GenericEvent(Collections.singletonList(
+                new StringProperty("test", "MyClass.some-function(blah")));
+
+        assertFalse(q.selects(e));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

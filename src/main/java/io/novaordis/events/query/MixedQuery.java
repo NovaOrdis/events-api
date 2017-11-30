@@ -28,6 +28,8 @@ import io.novaordis.events.api.event.Event;
  *
  * Example: "blah blah <property-name>:'something'"
  *
+ * TODO: temporary implementation, waiting to be refactored
+ *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
@@ -39,18 +41,24 @@ public class MixedQuery extends QueryBase {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
+    //
     // only add via addQuery()
+    //
     private List<KeywordQuery> keywordQueries;
 
     private boolean keywordMatchingCaseSensitive;
 
+    //
     // only add via addQuery()
+    //
     private List<FieldQuery> fieldQueries;
 
+    //
     // only add via addQuery()
+    //
     private List<TimeQuery> timeQueries;
 
-    private List<Query> queryInitializationOrder;
+    private List<ExpressionElement> expression;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
@@ -59,7 +67,7 @@ public class MixedQuery extends QueryBase {
      */
     public MixedQuery() throws QueryException {
 
-        this.queryInitializationOrder = new ArrayList<>();
+        this.expression = new ArrayList<>();
         this.keywordQueries = new ArrayList<>();
         this.fieldQueries = new ArrayList<>();
         this.timeQueries = new ArrayList<>();
@@ -97,7 +105,7 @@ public class MixedQuery extends QueryBase {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
-    public void addLiteral(String literal) throws QueryException {
+    public void addExpressionElementLiteral(String literal) throws QueryException {
 
         if (literal == null) {
 
@@ -105,18 +113,17 @@ public class MixedQuery extends QueryBase {
         }
 
         //
-        // offer it in the reverse order in which the queries were added, the latest query has the highest changes
-        // of recognizing the argument
+        // offer the lexical token to the last expression element that was added, to give it a chance to consume it
         //
 
-        for(int i = queryInitializationOrder.size() - 1; i >= 0; i --) {
+        if (!expression.isEmpty()) {
 
-            QueryBase q = (QueryBase)queryInitializationOrder.get(i);
+            ExpressionElement ee = expression.get(expression.size() - 1);
 
-            if (q.offerArgument(literal)) {
+            if (ee.offerLexicalToken(literal)) {
 
                 //
-                // the argument must not be offered to other queries, get out of the loop
+                // we're done with this lexical element, get out
                 //
 
                 return;
@@ -129,7 +136,13 @@ public class MixedQuery extends QueryBase {
             return;
         }
 
-        if (literal.contains(":")) {
+        Operator o;
+
+        if ((o = Operator.fromLiteral(literal)) != null) {
+
+            addOperator(o);
+        }
+        else if (literal.contains(":")) {
 
             if (literal.startsWith(TimeQuery.FROM_KEYWORD) || literal.startsWith(TimeQuery.TO_KEYWORD)) {
 
@@ -210,7 +223,12 @@ public class MixedQuery extends QueryBase {
             throw new IllegalArgumentException("unknown query type " + q);
         }
 
-        queryInitializationOrder.add(q);
+        expression.add(q);
+    }
+
+    public void addOperator(Operator o) {
+
+        expression.add(o);
     }
 
     @Override
@@ -249,21 +267,13 @@ public class MixedQuery extends QueryBase {
     // Package protected -----------------------------------------------------------------------------------------------
 
     /**
+     * The query expression in the format (order) in which was parsed from arguments.
+     *
      * @return the internal storage, handle with care.
      */
-    List<Query> getQueryInitializationOrder() {
+    List<ExpressionElement> getExpression() {
 
-        return queryInitializationOrder;
-    }
-
-    @Override
-    boolean offerArgument(String literal) {
-
-        //
-        // we don't look at individual arguments at this level, they must be offered to the lower level queries
-        //
-
-        return false;
+        return expression;
     }
 
     // Protected -------------------------------------------------------------------------------------------------------

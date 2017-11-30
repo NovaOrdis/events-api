@@ -143,14 +143,14 @@ public class KeywordQueryTest extends QueryTest {
         }
     }
 
-    // offerArgument ---------------------------------------------------------------------------------------------------
+    // offerLexicalToken -----------------------------------------------------------------------------------------------
 
     @Test
-    public void offerArgument() throws Exception {
+    public void offerLexicalToken() throws Exception {
 
         KeywordQuery q = new KeywordQuery("something");
 
-        assertFalse(q.offerArgument("somethingelse"));
+        assertFalse(q.offerLexicalToken("somethingelse"));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

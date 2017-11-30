@@ -40,7 +40,7 @@ import static org.junit.Assert.fail;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public abstract class QueryTest {
+public abstract class QueryTest extends ExpressionElementTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -257,6 +257,22 @@ public abstract class QueryTest {
         assertFalse(q.selects(e3));
     }
 
+    @Test
+    public void fromArgument_Expression() throws Exception {
+
+        List<String> args = new ArrayList<>(Arrays.asList(
+                "stack:mssql",
+                "and",
+                "not",
+                "stack:Object.wait("));
+
+        Query q = Query.fromArguments(args, 0);
+
+        assertTrue(args.isEmpty());
+
+        assertNotNull(q);
+    }
+
     // selects() and filter() ------------------------------------------------------------------------------------------
 
     @Test
@@ -407,6 +423,12 @@ public abstract class QueryTest {
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    @Override
+    protected ExpressionElement getExpressionElementToTest() throws Exception {
+
+        return getQueryToTest();
+    }
 
     protected abstract Query getQueryToTest() throws Exception;
 

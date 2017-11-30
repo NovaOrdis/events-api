@@ -42,16 +42,25 @@ public class FieldQuery extends QueryBase {
     // Attributes ------------------------------------------------------------------------------------------------------
 
     private String propertyName;
-    private String regularExpression;
+
+    //
+    // this is the original regular expression literal as it provided on the command line. The metacharacters are
+    // represented using the application's conventions, not Java regular expression conventions. For example, the
+    // parantheses are represented as (, not as \(.
+    //
+    private String regularExpressionLiteral;
+
+    private String javaRegex;
+
     private Pattern pattern;
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    public FieldQuery(String propertyName, String regularExpression) {
+    public FieldQuery(String propertyName, String regularExpressionLiteral) {
 
         this.propertyName = propertyName;
 
-        setRegularExpression(regularExpression);
+        setRegularExpressionLiteral(regularExpressionLiteral);
 
     }
 
@@ -83,7 +92,7 @@ public class FieldQuery extends QueryBase {
             throw new QueryException("not a valid FieldQuery literal, empty regular expression");
         }
 
-        setRegularExpression(re);
+        setRegularExpressionLiteral(re);
     }
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -101,7 +110,7 @@ public class FieldQuery extends QueryBase {
             return true;
         }
 
-        if (regularExpression == null) {
+        if (regularExpressionLiteral == null) {
 
             //
             // we don't match against null values
@@ -137,7 +146,10 @@ public class FieldQuery extends QueryBase {
 
         Matcher m = pattern.matcher((String)value);
 
-        return m.find();
+        //noinspection UnnecessaryLocalVariable
+        boolean found = m.find();
+
+        return found;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -152,12 +164,22 @@ public class FieldQuery extends QueryBase {
         return propertyName;
     }
 
-    public String getRegularExpression() {
+    /**
+     * @return the original regular expression literal as it provided on the command line. The metacharacters are
+     * represented using the application's conventions, not Java regular expression conventions. For example, the
+     * parantheses are represented as (, not as \(.
+     */
+    public String getRegularExpressionLiteral() {
 
-        return regularExpression;
+        return regularExpressionLiteral;
     }
 
-    public void setRegularExpression(String regex) {
+    /**
+     * @param regex the original regular expression literal as it provided on the command line. The metacharacters are
+     * represented using the application's conventions, not Java regular expression conventions. For example, the
+     * parantheses are represented as (, not as \(.
+     */
+    public void setRegularExpressionLiteral(String regex) {
 
         if (regex == null) {
 
@@ -169,33 +191,34 @@ public class FieldQuery extends QueryBase {
             throw new IllegalArgumentException("empty regular expression");
         }
 
-        this.regularExpression = regex;
+        this.regularExpressionLiteral = regex;
 
-        this.pattern = Pattern.compile(regularExpression);
+        //
+        // convert our metacharacters to Java metacharacters
+        //
+
+        this.javaRegex = Regexp.convertMetaCharacters(regularExpressionLiteral);
+
+        this.pattern = Pattern.compile(javaRegex);
+    }
+
+    public String getJavaRegex() {
+
+        return javaRegex;
     }
 
     public Object getValue() {
 
-        return regularExpression;
+        return regularExpressionLiteral;
     }
 
     @Override
     public String toString() {
 
-        return propertyName + ":" + regularExpression;
+        return propertyName + ":" + regularExpressionLiteral;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    boolean offerArgument(String literal) {
-
-        //
-        // we don't look at individual arguments at this level, yet
-        //
-
-        return false;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

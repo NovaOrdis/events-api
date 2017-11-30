@@ -16,19 +16,15 @@
 
 package io.novaordis.events.query;
 
-import java.util.List;
+import org.junit.Test;
 
-import io.novaordis.events.api.event.Event;
+import static org.junit.Assert.assertEquals;
 
 /**
- * A query that selects all events.
- *
- * Equivalent with NullQuery.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/2/17
+ * @since 11/30/17
  */
-public class MatchAll extends ExpressionElementBase implements Query {
+public class RegexpTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,31 +34,17 @@ public class MatchAll extends ExpressionElementBase implements Query {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Query implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean selects(Event e) {
-
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
-    @Override
-    public List<Event> filter(List<Event> events) {
-
-        if (events == null) {
-
-            throw new IllegalArgumentException("null event list");
-        }
-
-        return events;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void convertMetaCharacters() throws Exception {
+
+        String s = Regexp.convertMetaCharacters("something with (parantheses)");
+
+        assertEquals("something with \\(parantheses\\)", s);
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 

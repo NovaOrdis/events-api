@@ -122,16 +122,6 @@ public class KeywordQuery extends QueryBase {
 
     // Package protected -----------------------------------------------------------------------------------------------
 
-    @Override
-    boolean offerArgument(String literal) {
-
-        //
-        // we don't look at individual arguments at this level, yet
-        //
-
-        return false;
-    }
-
     // Protected -------------------------------------------------------------------------------------------------------
 
     @Override

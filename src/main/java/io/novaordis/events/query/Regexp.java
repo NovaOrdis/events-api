@@ -16,51 +16,34 @@
 
 package io.novaordis.events.query;
 
-import java.util.List;
-
-import io.novaordis.events.api.event.Event;
-
 /**
- * A query that selects all events.
- *
- * Equivalent with NullQuery.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/2/17
+ * @since 11/30/17
  */
-public class MatchAll extends ExpressionElementBase implements Query {
+public class Regexp {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
     // Static ----------------------------------------------------------------------------------------------------------
 
+    /**
+     * Convert "our" meta-characters to Java regexp meta-characters.
+     *
+     * Conversions:
+     *
+     * ( is converted to \\(
+     * ) is converted to \\)
+     *
+     *
+     */
+    public static String convertMetaCharacters(String ourRegexp) {
+
+        return ourRegexp.replace("(", "\\(").replace(")", "\\)");
+    }
+
     // Attributes ------------------------------------------------------------------------------------------------------
 
     // Constructors ----------------------------------------------------------------------------------------------------
-
-    // Query implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean selects(Event e) {
-
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
-    @Override
-    public List<Event> filter(List<Event> events) {
-
-        if (events == null) {
-
-            throw new IllegalArgumentException("null event list");
-        }
-
-        return events;
-    }
 
     // Public ----------------------------------------------------------------------------------------------------------
 

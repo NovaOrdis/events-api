@@ -16,19 +16,11 @@
 
 package io.novaordis.events.query;
 
-import java.util.List;
-
-import io.novaordis.events.api.event.Event;
-
 /**
- * A query that selects all events.
- *
- * Equivalent with NullQuery.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/2/17
+ * @since 11/30/17
  */
-public class MatchAll extends ExpressionElementBase implements Query {
+public abstract class ExpressionElementBase implements ExpressionElement {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,28 +30,17 @@ public class MatchAll extends ExpressionElementBase implements Query {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Query implementation --------------------------------------------------------------------------------------------
+    // ExpressionElement implementation --------------------------------------------------------------------------------
 
+    /**
+     * Base implementation, valid in most cases.
+     *
+     * Override to refine.
+     */
     @Override
-    public boolean selects(Event e) {
+    public boolean offerLexicalToken(String literal) throws QueryException {
 
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
-    @Override
-    public List<Event> filter(List<Event> events) {
-
-        if (events == null) {
-
-            throw new IllegalArgumentException("null event list");
-        }
-
-        return events;
+        return false;
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

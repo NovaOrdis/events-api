@@ -113,6 +113,27 @@ public class TimeQuery extends QueryBase {
 
     // QueryBase overrides ---------------------------------------------------------------------------------------------
 
+    @Override
+    public boolean offerLexicalToken(String literal) throws QueryException {
+
+        if (timestamp == null) {
+
+            //
+            // we are expecting a timestamp
+            //
+
+            setTimestamp(literal);
+
+            //
+            // timestamp was correctly parsed, thus accepted
+            //
+
+            return true;
+        }
+
+        return false;
+    }
+
     /**
      * TimeQueries do not select non-timed events, or time events with a null timestamp, as they don't have the
      * information necessary to make a decision.
@@ -289,27 +310,6 @@ public class TimeQuery extends QueryBase {
     }
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    @Override
-    boolean offerArgument(String literal) throws QueryException {
-
-        if (timestamp == null) {
-
-            //
-            // we are expecting a timestamp
-            //
-
-            setTimestamp(literal);
-
-            //
-            // timestamp was correctly parsed, thus accepted
-            //
-
-            return true;
-        }
-
-        return false;
-    }
 
     // Protected -------------------------------------------------------------------------------------------------------
 

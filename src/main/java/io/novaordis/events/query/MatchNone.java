@@ -16,10 +16,10 @@
 
 package io.novaordis.events.query;
 
-import io.novaordis.events.api.event.Event;
-
 import java.util.Collections;
 import java.util.List;
+
+import io.novaordis.events.api.event.Event;
 
 /**
  * A query that selects no event.
@@ -29,7 +29,7 @@ import java.util.List;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public class MatchNone implements Query {
+public class MatchNone extends ExpressionElementBase implements Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
 

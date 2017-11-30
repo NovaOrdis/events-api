@@ -30,7 +30,7 @@ import io.novaordis.events.api.event.Event;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 6/2/17
  */
-public interface Query {
+public interface Query extends ExpressionElement {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -63,9 +63,9 @@ public interface Query {
 
         for(int i = from; i < mutableArgumentList.size(); i ++) {
 
-            String token = mutableArgumentList.remove(i--);
+            String lexicalToken = mutableArgumentList.remove(i--);
 
-            mixedQuery.addLiteral(token);
+            mixedQuery.addExpressionElementLiteral(lexicalToken);
         }
 
         mixedQuery.validate();

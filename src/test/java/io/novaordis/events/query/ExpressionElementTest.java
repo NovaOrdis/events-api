@@ -16,19 +16,15 @@
 
 package io.novaordis.events.query;
 
-import java.util.List;
+import org.junit.Test;
 
-import io.novaordis.events.api.event.Event;
+import static org.junit.Assert.assertFalse;
 
 /**
- * A query that selects all events.
- *
- * Equivalent with NullQuery.
- *
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
- * @since 6/2/17
+ * @since 11/30/17
  */
-public class MatchAll extends ExpressionElementBase implements Query {
+public abstract class ExpressionElementTest {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -38,35 +34,29 @@ public class MatchAll extends ExpressionElementBase implements Query {
 
     // Constructors ----------------------------------------------------------------------------------------------------
 
-    // Query implementation --------------------------------------------------------------------------------------------
-
-    @Override
-    public boolean selects(Event e) {
-
-        if (e == null) {
-
-            throw new IllegalArgumentException("null event");
-        }
-
-        return true;
-    }
-
-    @Override
-    public List<Event> filter(List<Event> events) {
-
-        if (events == null) {
-
-            throw new IllegalArgumentException("null event list");
-        }
-
-        return events;
-    }
-
     // Public ----------------------------------------------------------------------------------------------------------
+
+    // Tests -----------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void offerLexicalToken_NotAccepted() throws Exception {
+
+        //
+        // Offer a lexical token that will surely be rejected in most cases.
+        //
+        // Override if you need more refined behavior.
+        //
+
+        ExpressionElement e = getExpressionElementToTest();
+
+        assertFalse(e.offerLexicalToken("this-surely-will-be-rejected-as-it-does-not-make-sense-to-any-query"));
+    }
 
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------
+
+    protected abstract ExpressionElement getExpressionElementToTest() throws Exception;
 
     // Private ---------------------------------------------------------------------------------------------------------
 

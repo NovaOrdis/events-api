@@ -26,7 +26,7 @@ import io.novaordis.events.api.event.Event;
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
  * @since 8/1/17
  */
-public abstract class QueryBase implements Query {
+public abstract class QueryBase extends ExpressionElementBase implements Query {
 
     // Constants -------------------------------------------------------------------------------------------------------
 
@@ -84,14 +84,6 @@ public abstract class QueryBase implements Query {
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------
-
-    /**
-     * Used by the factory in case of multi-word queries to offer subsequent arguments to the query. The method must
-     * return true if the argument is presumably accepted and must NOT be offered to other queries, or false otherwise.
-     *
-     * @exception QueryException when the argument being handled is expected, mandatory, but it is invalid.
-     */
-    abstract boolean offerArgument(String literal) throws QueryException;
 
     /**
      * Gives a chance to a query instance that may be configured by successive arguments to complain if it did not

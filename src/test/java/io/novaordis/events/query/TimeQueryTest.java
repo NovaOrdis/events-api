@@ -89,7 +89,7 @@ public class TimeQueryTest extends QueryTest {
 
         assertNull(q.getTimestamp());
 
-        assertTrue(q.offerArgument("12/01/16 01:01:01"));
+        assertTrue(q.offerLexicalToken("12/01/16 01:01:01"));
 
         //
         // should be a noop
@@ -113,7 +113,7 @@ public class TimeQueryTest extends QueryTest {
 
         try {
 
-            q.offerArgument("blah");
+            q.offerLexicalToken("blah");
 
             fail("should throw exception");
         }
@@ -167,7 +167,7 @@ public class TimeQueryTest extends QueryTest {
 
         assertNull(q.getTimestamp());
 
-        assertTrue(q.offerArgument("12/01/16 01:01:01"));
+        assertTrue(q.offerLexicalToken("12/01/16 01:01:01"));
 
         //
         // should be a noop
@@ -191,7 +191,7 @@ public class TimeQueryTest extends QueryTest {
 
         try {
 
-            q.offerArgument("blah");
+            q.offerLexicalToken("blah");
 
             fail("should throw exception");
         }
