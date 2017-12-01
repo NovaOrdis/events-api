@@ -361,9 +361,9 @@ public class TimeQueryTest extends QueryTest {
         TimeQuery q = new TimeQuery("from:12/01/16 01:01:01");
 
         //
-        // we don't select non-timed events, as we don't have the information necessary to make a decision
+        // we select non-timed events, as our timed query is equivalent with a "null query"
         //
-        assertFalse(q.selects(new GenericEvent()));
+        assertTrue(q.selects(new GenericEvent()));
     }
 
     @Test
@@ -373,7 +373,11 @@ public class TimeQueryTest extends QueryTest {
 
         GenericTimedEvent te = new GenericTimedEvent((Long)null);
 
-        assertFalse(q.selects(te));
+        //
+        // we select null-timed events, as our timed query is equivalent with a "null query"
+        //
+
+        assertTrue(q.selects(te));
     }
 
     @Test
@@ -415,9 +419,10 @@ public class TimeQueryTest extends QueryTest {
         TimeQuery q = new TimeQuery("to:12/01/16 01:01:01");
 
         //
-        // we don't select non-timed events, as we don't have the information necessary to make a decision
+        // we select non-timed events, as our timed query is equivalent with a "null query"
         //
-        assertFalse(q.selects(new GenericEvent()));
+
+        assertTrue(q.selects(new GenericEvent()));
     }
 
     @Test
@@ -427,7 +432,11 @@ public class TimeQueryTest extends QueryTest {
 
         GenericTimedEvent te = new GenericTimedEvent((Long)null);
 
-        assertFalse(q.selects(te));
+        //
+        // we select null-timed events, as our timed query is equivalent with a "null query"
+        //
+
+        assertTrue(q.selects(te));
     }
 
     @Test

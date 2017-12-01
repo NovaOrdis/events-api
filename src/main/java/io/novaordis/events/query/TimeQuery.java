@@ -195,8 +195,11 @@ public class TimeQuery extends QueryBase {
     // Query implementation --------------------------------------------------------------------------------------------
 
     /**
-     * TimeQueries do not select non-timed events, or time events with a null timestamp, as they don't have the
-     * information necessary to make a decision.
+     * In case of non-timed events, or timed events with null timestamps (less usual), a timed query is logically
+     * equivalent with a "null query", in that the query does not have the information required to query the event.
+     * In consequence, the query will select all non-timed events.
+     *
+     * @see NullQuery
      */
     @Override
     public boolean selects(Event e) {
@@ -213,14 +216,14 @@ public class TimeQuery extends QueryBase {
 
         if (!e.isTimed()) {
 
-            return false;
+            return true;
         }
 
         TimedEvent te = (TimedEvent) e;
 
         Long eventTime = te.getTime();
 
-        return eventTime != null && selects(eventTime);
+        return eventTime == null || selects(eventTime);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
