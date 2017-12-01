@@ -324,6 +324,9 @@ public class TimeQueryTest extends QueryTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("unknown timestamp format"));
             assertTrue(msg.contains("I am sure there's no such supported timestamp format"));
+            assertTrue(msg.contains("supported formats:"));
+            assertTrue(msg.contains(TimeQuery.SUPPORTED_FORMATS[0].toPattern()));
+            assertTrue(msg.contains(TimeQuery.SUPPORTED_FORMATS[1].toPattern()));
         }
     }
 

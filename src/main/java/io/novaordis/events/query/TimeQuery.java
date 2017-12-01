@@ -271,7 +271,18 @@ public class TimeQuery extends QueryBase {
 
         if (time == null) {
 
-            throw new QueryException("unknown timestamp format or invalid timestamp: '" + ts + "'");
+            String msg = "unknown timestamp format or invalid timestamp: '" + ts + "', supported formats: ";
+
+            for (int i = 0; i < SUPPORTED_FORMATS.length; i ++) {
+
+                msg += SUPPORTED_FORMATS[0].toPattern();
+
+                if (i < SUPPORTED_FORMATS.length - 1) {
+
+                    msg += ", ";
+                }
+            }
+            throw new QueryException(msg);
         }
     }
 
