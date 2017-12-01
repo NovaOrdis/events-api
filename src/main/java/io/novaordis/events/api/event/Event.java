@@ -315,21 +315,40 @@ public interface Event {
     void setLineNumber(Long lineNumber);
 
     /**
-     * Return the preferred representation, as presented by the event. This method is usually overridden by subclasses.
-     * May return null.
+     * Return the event's preferred representation or null if the event has no preferred representation.
+     *
+     * If an event type has a preferred representation it wants displayed, it must override this method.
+     *
+     * If the event wants to indicated that nothing should be displayed, it must return the empty string (""). In this
+     * case, the upper layer is informed that nothing should be displayed for this event, but no other alternative
+     * representation should be sought.
+     *
+     * The event is responsible with managing new lines: if it prefers to be represented as an empty line, it must
+     * return "\n", and if it wants to be represented on a dedicated line, it must end the string with "\n". Multiple
+     * "\n" characters indicate a multi-line preferred representation.
      */
     String getPreferredRepresentation(String fieldSeparator);
 
     /**
-     * Return the header line of the preferred representation, as presented by the event. This method is usually
-     * overridden by subclasses. May return null.
+     * Return the event's preferred header representation or null if the event has no preferred header representation.
+     *
+     * If an event type has a preferred header representation it wants displayed, it must override this method.
+     *
+     * If the event wants to indicated that nothing should be displayed as header, it must return the empty string ("").
+     * In this case, the upper layer is informed that no header should be displayed for this event, and no other
+     * alternative representation should be sought.
+     *
+     * The event is responsible with managing new lines: if it prefers and empty line as a header, it must return "\n",
+     * and if it needs a dedicated line, it must end the string with "\n". Multiple "\n" characters indicate a
+     * multi-line preferred header.
      */
     String getPreferredRepresentationHeader(String fieldSeparator);
 
     /**
      * Return the raw representation of the event: if it makes sense, the whole event is maintained in its raw
      * (unparsed) format, as a StringProperty. Some implementations may decide this is inefficient, so this method
-     * may return null. The representation may also contain multiple lines.
+     * may return null. The representation may also contain multiple lines. It is not expected for the raw
+     * representation to include a trailing new line, the calling layer will manage that.
      */
     String getRawRepresentation();
 
