@@ -79,6 +79,19 @@ public abstract class QueryBase extends ExpressionElementBase implements Query {
         }
     }
 
+    /**
+     * Most queries don't have a time component, so they select all.
+     */
+    @Override
+    public boolean selects(long timestamp) {
+
+        //
+        // default behavior - no time component, we match everything
+        //
+
+        return true;
+    }
+
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Package protected -----------------------------------------------------------------------------------------------

@@ -217,8 +217,6 @@ public class MixedQuery extends QueryBase {
         return transientExpression == null;
     }
 
-    // Query implementation --------------------------------------------------------------------------------------------
-
     @Override
     public boolean selects(Event e) {
 
@@ -291,6 +289,14 @@ public class MixedQuery extends QueryBase {
         }
 
         throw new IllegalStateException("invalid state: no null query, no sole query, no and queries and no or queries");
+    }
+
+    // Query implementation --------------------------------------------------------------------------------------------
+
+    @Override
+    public boolean selects(long timestamp) {
+
+        throw new RuntimeException("selects(time) NOT YET IMPLEMENTED");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

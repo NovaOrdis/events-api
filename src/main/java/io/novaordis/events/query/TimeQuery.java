@@ -170,6 +170,12 @@ public class TimeQuery extends QueryBase {
         return compiled;
     }
 
+    @Override
+    public boolean selects(long timestamp) {
+
+        throw new RuntimeException("selects(time) NOT YET IMPLEMENTED");
+    }
+
     // Query implementation --------------------------------------------------------------------------------------------
 
     /**

@@ -52,6 +52,12 @@ public class MatchAll extends ExpressionElementBase implements Query {
     }
 
     @Override
+    public boolean selects(long timestamp) {
+
+        return true;
+    }
+
+    @Override
     public List<Event> filter(List<Event> events) {
 
         if (events == null) {

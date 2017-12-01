@@ -161,6 +161,19 @@ public class KeywordQueryTest extends QueryTest {
         }
     }
 
+    // selects() time // selects() -------------------------------------------------------------------------------------
+
+    @Test
+    public void selects_Time_All() throws Exception {
+
+        KeywordQuery q = getQueryToTest();
+
+        assertTrue(q.selects(-1L));
+        assertTrue(q.selects(0L));
+        assertTrue(q.selects(1L));
+        assertTrue(q.selects(Long.MAX_VALUE));
+    }
+
     // offerLexicalToken -----------------------------------------------------------------------------------------------
 
     @Test

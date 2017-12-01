@@ -53,6 +53,12 @@ public class MatchNone extends ExpressionElementBase implements Query {
     }
 
     @Override
+    public boolean selects(long timestamp) {
+
+        return false;
+    }
+
+    @Override
     public List<Event> filter(List<Event> events) {
 
         if (events == null) {

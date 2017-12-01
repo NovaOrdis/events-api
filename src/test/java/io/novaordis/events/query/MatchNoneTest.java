@@ -67,6 +67,17 @@ public class MatchNoneTest extends QueryTest {
         assertFalse(q.selects(new GenericTimedEvent()));
     }
 
+    @Test
+    public void selects_Time_None() {
+
+        MatchNone q = new MatchNone();
+
+        assertFalse(q.selects(-1L));
+        assertFalse(q.selects(0L));
+        assertFalse(q.selects(1L));
+        assertFalse(q.selects(Long.MAX_VALUE));
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

@@ -86,6 +86,12 @@ public interface Query extends ExpressionElement {
     boolean selects(Event e);
 
     /**
+     * @return true if the given timestamp falls within the valid time window expressed by this query, false otherwise.
+     * If the query has no time component, the invocation returns true for any timestamp.
+     */
+    boolean selects(long timestamp);
+
+    /**
      * Throw away events that do not match the query and only allow those that match in the final result. Convenience
      * complementary method for selects(): if selects(e) returns true, then filtering a list that contains e will leave
      * e in the result.

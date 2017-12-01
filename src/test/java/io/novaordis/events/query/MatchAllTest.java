@@ -67,6 +67,17 @@ public class MatchAllTest extends QueryTest {
         assertTrue(q.selects(new GenericTimedEvent()));
     }
 
+    @Test
+    public void selects_Time_All() {
+
+        MatchAll q = new MatchAll();
+
+        assertTrue(q.selects(-1L));
+        assertTrue(q.selects(0L));
+        assertTrue(q.selects(1L));
+        assertTrue(q.selects(Long.MAX_VALUE));
+    }
+
     // Package protected -----------------------------------------------------------------------------------------------
 
     // Protected -------------------------------------------------------------------------------------------------------

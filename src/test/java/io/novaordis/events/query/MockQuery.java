@@ -70,6 +70,11 @@ public class MockQuery implements Query {
     }
 
     @Override
+    public boolean selects(long timestamp) {
+        throw new RuntimeException("selects() NOT YET IMPLEMENTED");
+    }
+
+    @Override
     public List<Event> filter(List<Event> events) {
         throw new RuntimeException("filter() NOT YET IMPLEMENTED");
     }
