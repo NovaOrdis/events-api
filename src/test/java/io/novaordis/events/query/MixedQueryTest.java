@@ -28,6 +28,7 @@ import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
 import io.novaordis.events.api.event.StringProperty;
+import io.novaordis.events.api.parser.QueryOnce;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
@@ -689,6 +690,46 @@ public class MixedQueryTest extends QueryTest {
         // can't simplify
         //
         assertEquals(sq, q);
+    }
+
+    // Query Once ------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void selects_QueryOnce_MixedQuerySpecific() throws Exception {
+
+        //
+        // make sure that a mixed query clears a "queried once" event as early as possible, so we won't get into
+        // complications related to component queries and hierarchical events
+        //
+
+        MixedQuery q = new MixedQuery();
+
+        q.compile();
+
+        MockQuery mq = new MockQuery();
+
+        mq.breakSelects();
+
+        q.setSoleQuery(mq);
+
+        GenericEvent e = new GenericEvent();
+
+        try {
+
+            q.selects(e);
+
+            fail("should have thrown exception");
+        }
+        catch(RuntimeException ex) {
+
+            String msg = ex.getMessage();
+            assertTrue(msg.contains("SYNTHETIC"));
+        }
+
+        QueryOnce.set(e, true);
+
+        assertTrue(q.selects(e));
+
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

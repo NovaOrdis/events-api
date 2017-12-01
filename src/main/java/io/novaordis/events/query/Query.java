@@ -75,6 +75,9 @@ public interface Query extends ExpressionElement {
 
     // Public ----------------------------------------------------------------------------------------------------------
 
+    @Override
+    Query negate() throws QueryException;;
+
     /**
      * @return true if the event is selected by (matches) the query, false otherwise.
      *

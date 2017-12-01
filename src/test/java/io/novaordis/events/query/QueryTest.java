@@ -357,28 +357,28 @@ public abstract class QueryTest extends ExpressionElementTest {
     // Query Once ------------------------------------------------------------------------------------------------------
 
     @Test
-    public void selects_queryOnce() throws Exception {
+    public void selects_QueryOnce() throws Exception {
 
         Query q = getQueryToTest();
 
-        Event e = getEventThatDoesNotMatchQuery();
+        Event doesNotMatch = getEventThatDoesNotMatchQuery();
 
-        QueryOnce.set(e, true);
+        QueryOnce.set(doesNotMatch, true);
 
         //
         // this is a side effect of the QueryOnce, once an event was declared as "matching", it'll match even if it doesn't
         //
-        assertTrue(q.selects(e));
+        assertTrue(q.selects(doesNotMatch));
 
-        Event e2 = getEventThatMatchesQuery();
+        Event doesMatch = getEventThatMatchesQuery();
 
-        QueryOnce.set(e2, true);
+        QueryOnce.set(doesMatch, true);
 
-        assertTrue(q.selects(e2));
+        assertTrue(q.selects(doesMatch));
     }
 
     @Test
-    public void filter_queryOnce() throws Exception {
+    public void filter_QueryOnce() throws Exception {
 
         Query q = getQueryToTest();
 
@@ -401,6 +401,40 @@ public abstract class QueryTest extends ExpressionElementTest {
         assertEquals(2, events2.size());
         assertEquals(e, events2.get(0));
         assertEquals(e2, events2.get(1));
+    }
+
+    // negate() --------------------------------------------------------------------------------------------------------
+
+    @Test
+    public void negate_EventThatDoesMatchQueryMustNotMatchNegatedQuery() throws Exception {
+
+        Query q = getQueryToTest();
+
+        Event doesMatch = getEventThatMatchesQuery();
+
+        //
+        // the event must not match the negated query
+        //
+
+        Query negated = q.negate();
+
+        assertFalse(negated.selects(doesMatch));
+    }
+
+    @Test
+    public void negate_EventThatDoesNotMatchQueryMustMatchNegatedQuery() throws Exception {
+
+        Query q = getQueryToTest();
+
+        Event doesNotMatch = getEventThatDoesNotMatchQuery();
+
+        //
+        // the event must match the negated query
+        //
+
+        Query negated = q.negate();
+
+        assertTrue(negated.selects(doesNotMatch));
     }
 
     // special cases ---------------------------------------------------------------------------------------------------

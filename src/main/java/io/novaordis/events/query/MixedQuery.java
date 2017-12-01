@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import io.novaordis.events.api.event.Event;
+import io.novaordis.events.api.parser.QueryOnce;
 
 /**
  * A query comprising structured (event property definitions) and unstructured (keywords, regular expressions) text.
@@ -152,7 +153,7 @@ public class MixedQuery extends QueryBase {
         }
         else if (size == 1) {
 
-            this.soleQuery = (Query) transientExpression.get(0);
+            setSoleQuery((Query) transientExpression.get(0));
 
         }
         else {
@@ -223,6 +224,15 @@ public class MixedQuery extends QueryBase {
         if (!isCompiled()) {
 
             throw new IllegalStateException("query not compiled");
+        }
+
+        if (QueryOnce.isQueryOnce(e)) {
+
+            //
+            // QueryOnce-marked events are cleared as soon as possible
+            //
+
+            return true;
         }
 
         if (nullQuery) {
@@ -411,6 +421,19 @@ public class MixedQuery extends QueryBase {
     Query getSoleQuery() {
 
         return soleQuery;
+    }
+
+    /**
+     * Testing.
+     */
+    void setSoleQuery(Query query) {
+
+        this.soleQuery = query;
+
+        if (query != null) {
+
+            this.nullQuery = false;
+        }
     }
 
     /**

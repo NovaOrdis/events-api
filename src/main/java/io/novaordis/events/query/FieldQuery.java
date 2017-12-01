@@ -121,8 +121,6 @@ public class FieldQuery extends QueryBase {
     @Override
     public boolean selects(Event e) {
 
-        boolean selected;
-
         if (e == null) {
 
             throw new IllegalArgumentException("null event");
@@ -130,9 +128,16 @@ public class FieldQuery extends QueryBase {
 
         if (QueryOnce.isQueryOnce(e)) {
 
-            selected = true;
+            //
+            // QueryOnce-marked events are cleared as soon as possible
+            //
+
+            return true;
         }
-        else if (regularExpressionLiteral == null) {
+
+        boolean selected;
+
+        if (regularExpressionLiteral == null) {
 
             //
             // we don't match against null values

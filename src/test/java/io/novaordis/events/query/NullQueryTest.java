@@ -46,13 +46,13 @@ public class NullQueryTest extends QueryTest {
 
     @Test
     @Override
-    public void selects_queryOnce() throws Exception {
+    public void selects_QueryOnce() throws Exception {
 
         // noop, does not apply
     }
 
     @Test
-    public void filter_queryOnce() throws Exception {
+    public void filter_QueryOnce() throws Exception {
 
         // noop, does not apply
     }
