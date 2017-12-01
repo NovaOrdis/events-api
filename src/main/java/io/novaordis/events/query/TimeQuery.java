@@ -275,7 +275,7 @@ public class TimeQuery extends QueryBase {
 
             for (int i = 0; i < SUPPORTED_FORMATS.length; i ++) {
 
-                msg += SUPPORTED_FORMATS[0].toPattern();
+                msg += "'" + SUPPORTED_FORMATS[i].toPattern() + "'";
 
                 if (i < SUPPORTED_FORMATS.length - 1) {
 
