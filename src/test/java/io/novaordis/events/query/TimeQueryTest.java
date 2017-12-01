@@ -105,7 +105,7 @@ public class TimeQueryTest extends QueryTest {
 
         TimeQuery q = new TimeQuery("from:");
 
-        assertNull(q.getTimestamp());
+        assertNull(q.getTime());
 
         assertTrue(q.offerLexicalToken("12/01/16 01:01:01"));
 
@@ -119,7 +119,7 @@ public class TimeQueryTest extends QueryTest {
 
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime(),
-                q.getTimestamp().longValue());
+                q.getTime().longValue());
     }
 
     @Test
@@ -127,7 +127,7 @@ public class TimeQueryTest extends QueryTest {
 
         TimeQuery q = new TimeQuery("from:");
 
-        assertNull(q.getTimestamp());
+        assertNull(q.getTime());
 
         try {
 
@@ -183,7 +183,7 @@ public class TimeQueryTest extends QueryTest {
 
         TimeQuery q = new TimeQuery("to:");
 
-        assertNull(q.getTimestamp());
+        assertNull(q.getTime());
 
         assertTrue(q.offerLexicalToken("12/01/16 01:01:01"));
 
@@ -197,7 +197,7 @@ public class TimeQueryTest extends QueryTest {
 
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:01").getTime(),
-                q.getTimestamp().longValue());
+                q.getTime().longValue());
     }
 
     @Test
@@ -205,7 +205,7 @@ public class TimeQueryTest extends QueryTest {
 
         TimeQuery q = new TimeQuery("to:");
 
-        assertNull(q.getTimestamp());
+        assertNull(q.getTime());
 
         try {
 
@@ -262,7 +262,7 @@ public class TimeQueryTest extends QueryTest {
         TimeQuery q = new TimeQuery("to:", 1L);
 
         assertTrue(q.isTo());
-        assertEquals(1L, q.getTimestamp().longValue());
+        assertEquals(1L, q.getTime().longValue());
     }
 
     @Test
@@ -278,6 +278,16 @@ public class TimeQueryTest extends QueryTest {
             String msg = e.getMessage();
             assertTrue(msg.contains("unknown time query keyword"));
         }
+    }
+
+    @Test
+    public void constructor_MillisecondPrecision() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:12/01/17 11:22:33,444");
+
+        long timestamp = q.getTime();
+
+        assertEquals(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 11:22:33,444").getTime(), timestamp);
     }
 
     // setTimestamp_String() -------------------------------------------------------------------------------------------
@@ -326,9 +336,9 @@ public class TimeQueryTest extends QueryTest {
 
         q.setTimestamp(timestamp);
 
-        assertEquals(timestamp, TimeQuery.SUPPORTED_FORMATS[0].format(q.getTimestamp()));
+        assertEquals(timestamp, TimeQuery.SUPPORTED_FORMATS[1].format(q.getTime()));
 
-        assertEquals(TimeQuery.SUPPORTED_FORMATS[0], q.getFormat());
+        assertEquals(TimeQuery.SUPPORTED_FORMATS[1], q.getFormat());
     }
 
     // setTimestamp_Long() ---------------------------------------------------------------------------------------------
@@ -340,7 +350,7 @@ public class TimeQueryTest extends QueryTest {
 
         q.setTimestamp(777L);
 
-        assertEquals(777L, q.getTimestamp().longValue());
+        assertEquals(777L, q.getTime().longValue());
     }
 
     // business tests --------------------------------------------------------------------------------------------------
@@ -451,6 +461,49 @@ public class TimeQueryTest extends QueryTest {
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 01:01:02").getTime());
 
         assertFalse(q.selects(te));
+    }
+
+    // selects() time --------------------------------------------------------------------------------------------------
+
+
+    @Test
+    public void selects_Time_NullTimestamp() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:");
+
+        assertNull(q.getTime());
+
+        try {
+
+            q.selects(10L);
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("not initialized, null timestamp"));
+        }
+    }
+
+    @Test
+    public void selects_Time_From() throws Exception {
+
+        TimeQuery q = new TimeQuery("from:", 10L);
+
+        assertFalse(q.selects(9L));
+        assertTrue(q.selects(10L));
+        assertTrue(q.selects(11L));
+    }
+
+    @Test
+    public void selects_Time_To() throws Exception {
+
+        TimeQuery q = new TimeQuery("to:", 10L);
+
+        assertTrue(q.selects(9L));
+        assertTrue(q.selects(10L));
+        assertFalse(q.selects(11L));
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

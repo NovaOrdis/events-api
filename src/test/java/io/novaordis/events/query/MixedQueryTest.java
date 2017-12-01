@@ -241,7 +241,7 @@ public class MixedQueryTest extends QueryTest {
         assertTrue(tq.isFrom());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
-                tq.getTimestamp().longValue());
+                tq.getTime().longValue());
     }
 
     @Test
@@ -289,7 +289,7 @@ public class MixedQueryTest extends QueryTest {
         assertTrue(tq.isTo());
         assertEquals(
                 new SimpleDateFormat("MM/dd/yy HH:mm:ss").parse("12/01/16 12:00:00").getTime(),
-                tq.getTimestamp().longValue());
+                tq.getTime().longValue());
     }
 
     @Test
@@ -462,6 +462,165 @@ public class MixedQueryTest extends QueryTest {
         assertFalse(q.selects(e2));
     }
 
+    // selects() time --------------------------------------------------------------------------------------------------
+
+    @Test
+    public void selects_Time_QueryNotCompiled() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        assertFalse(q.isCompiled());
+
+        try {
+
+            q.selects(1000L);
+
+            fail("should have thrown exception");
+        }
+        catch(IllegalStateException e) {
+
+            String msg = e.getMessage();
+            assertTrue(msg.contains("query not compiled"));
+        }
+    }
+
+    @Test
+    public void selects_Time_NullQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.compile();
+
+        assertTrue(q.isNullQuery());
+
+        assertTrue(q.selects(Long.MIN_VALUE));
+        assertTrue(q.selects(-1L));
+        assertTrue(q.selects(0L));
+        assertTrue(q.selects(1L));
+        assertTrue(q.selects(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void selects_Time_SoleQuery_TimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("from:12/01/17 10:00:00,001");
+
+        q.compile();
+
+        assertTrue(q.getSoleQuery() instanceof TimeQuery);
+
+        assertFalse(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,000").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,001").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,002").getTime()));
+    }
+
+    @Test
+    public void selects_Time_SoleQuery_NonTimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("color:red");
+
+        q.compile();
+
+        assertFalse(q.getSoleQuery() instanceof TimeQuery);
+
+        assertTrue(q.selects(Long.MIN_VALUE));
+        assertTrue(q.selects(-1L));
+        assertTrue(q.selects(0L));
+        assertTrue(q.selects(1L));
+        assertTrue(q.selects(System.currentTimeMillis()));
+        assertTrue(q.selects(Long.MAX_VALUE));
+    }
+
+    @Test
+    public void selects_Time_TimeQuery_AND_TimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("from:12/01/17 10:00:00,001");
+        q.addExpressionElementLiteral("and");
+        q.addExpressionElementLiteral("to:12/01/17 10:00:00,003");
+
+        q.compile();
+
+        Query[] queries = q.getAndQueries();
+        assertEquals(2, queries.length);
+        assertTrue(queries[0] instanceof TimeQuery);
+        assertTrue(queries[1] instanceof TimeQuery);
+
+        assertFalse(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,000").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,001").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,002").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,003").getTime()));
+        assertFalse(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,004").getTime()));
+    }
+
+    @Test
+    public void selects_Time_TimeQuery_AND_NonTimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("from:12/01/17 10:00:00,001");
+        q.addExpressionElementLiteral("and");
+        q.addExpressionElementLiteral("color:red");
+
+        q.compile();
+
+        Query[] queries = q.getAndQueries();
+        assertEquals(2, queries.length);
+        assertTrue(queries[0] instanceof TimeQuery);
+        assertTrue(queries[1] instanceof FieldQuery);
+
+        assertFalse(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,000").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,001").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,002").getTime()));
+    }
+
+    @Test
+    public void selects_Time_OR_TimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("to:12/01/17 10:00:00,001");
+        q.addExpressionElementLiteral("from:12/01/17 10:00:00,003");
+
+        q.compile();
+
+        Query[] queries = q.getOrQueries();
+        assertEquals(2, queries.length);
+        assertTrue(queries[0] instanceof TimeQuery);
+        assertTrue(queries[1] instanceof TimeQuery);
+
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,000").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,001").getTime()));
+        assertFalse(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,002").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,003").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,004").getTime()));
+    }
+
+    @Test
+    public void selects_Time_OR_NonTimeQuery() throws Exception {
+
+        MixedQuery q = new MixedQuery();
+
+        q.addExpressionElementLiteral("from:12/01/17 10:00:00,001");
+        q.addExpressionElementLiteral("color:red");
+
+        q.compile();
+
+        Query[] queries = q.getOrQueries();
+        assertEquals(2, queries.length);
+        assertTrue(queries[0] instanceof TimeQuery);
+        assertTrue(queries[1] instanceof FieldQuery);
+
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,000").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,001").getTime()));
+        assertTrue(q.selects(new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS").parse("12/01/17 10:00:00,002").getTime()));
+    }
+
     // offerLexicalToken -----------------------------------------------------------------------------------------------
 
     @Test
@@ -630,7 +789,7 @@ public class MixedQueryTest extends QueryTest {
         }
     }
 
-    // simplify() ------------------------------------------------------------------------------------------------------
+    // contract() ------------------------------------------------------------------------------------------------------
 
     @Test
     public void simplify_NotCompiled() throws Exception {
@@ -639,7 +798,7 @@ public class MixedQueryTest extends QueryTest {
 
         try {
 
-            q.simplify();
+            q.contract();
 
             fail("should have thrown exception");
         }
@@ -657,7 +816,7 @@ public class MixedQueryTest extends QueryTest {
 
         q.compile();
 
-        Query q2 = q.simplify();
+        Query q2 = q.contract();
 
         assertTrue(q2 instanceof NullQuery);
     }
@@ -669,7 +828,7 @@ public class MixedQueryTest extends QueryTest {
         q.addExpressionElementLiteral("test:blue");
         q.compile();
 
-        FieldQuery q2 = (FieldQuery)q.simplify();
+        FieldQuery q2 = (FieldQuery)q.contract();
 
         assertEquals("test", q2.getFieldName());
         assertEquals("blue", q2.getValue());
@@ -684,10 +843,10 @@ public class MixedQueryTest extends QueryTest {
 
         q.compile();
 
-        Query sq = q.simplify();
+        Query sq = q.contract();
 
         //
-        // can't simplify
+        // can't contract
         //
         assertEquals(sq, q);
     }

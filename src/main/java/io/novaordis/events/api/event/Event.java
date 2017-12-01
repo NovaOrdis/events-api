@@ -48,7 +48,7 @@ public interface Event {
 
     /**
      * @return true for timed events (whose timestamps can then be accessed via
-     * TimedEvent.getTimestamp()/TimedEvent.getTime() invocations) and false for non-timed events.
+     * TimedEvent.getTime()/TimedEvent.getTime() invocations) and false for non-timed events.
      */
     boolean isTimed();
 

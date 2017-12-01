@@ -26,8 +26,6 @@ import org.slf4j.LoggerFactory;
 import io.novaordis.events.api.event.Event;
 import io.novaordis.events.api.event.TimedEvent;
 import io.novaordis.events.api.parser.QueryOnce;
-import io.novaordis.utilities.time.Timestamp;
-import io.novaordis.utilities.time.TimestampImpl;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -51,7 +49,8 @@ public class TimeQuery extends QueryBase {
     //
     public static final SimpleDateFormat[] SUPPORTED_FORMATS = {
 
-            new SimpleDateFormat("MM/dd/yy HH:mm:ss")
+            new SimpleDateFormat("MM/dd/yy HH:mm:ss,SSS"),
+            new SimpleDateFormat("MM/dd/yy HH:mm:ss"),
     };
 
     // Static ----------------------------------------------------------------------------------------------------------
@@ -61,7 +60,8 @@ public class TimeQuery extends QueryBase {
     private boolean from;
     private boolean to;
 
-    private Timestamp timestamp;
+    private Long time;
+
     private SimpleDateFormat format;
 
     private boolean compiled = false;
@@ -107,7 +107,7 @@ public class TimeQuery extends QueryBase {
         }
     }
 
-    public TimeQuery(String keyword, Long timestamp) throws QueryException {
+    public TimeQuery(String keyword, long timestamp) throws QueryException {
 
         this(keyword);
         setTimestamp(timestamp);
@@ -118,7 +118,7 @@ public class TimeQuery extends QueryBase {
     @Override
     public boolean offerLexicalToken(String literal) throws QueryException {
 
-        if (timestamp == null) {
+        if (time == null) {
 
             //
             // we are expecting a timestamp
@@ -155,7 +155,7 @@ public class TimeQuery extends QueryBase {
         // makes sure we've been fed a timestamp
         //
 
-        if (timestamp == null) {
+        if (time == null) {
 
             throw new QueryException("missing timestamp");
 
@@ -171,9 +171,25 @@ public class TimeQuery extends QueryBase {
     }
 
     @Override
-    public boolean selects(long timestamp) {
+    public boolean selects(long ts) {
 
-        throw new RuntimeException("selects(time) NOT YET IMPLEMENTED");
+        if (time == null) {
+
+            throw new IllegalStateException(this + " not initialized, null timestamp");
+        }
+
+        if (from) {
+
+            return ts >= time;
+        }
+        else if (to) {
+
+            return ts <= time;
+        }
+        else {
+
+            throw new IllegalArgumentException(this + " was not property initialized");
+        }
     }
 
     // Query implementation --------------------------------------------------------------------------------------------
@@ -200,33 +216,11 @@ public class TimeQuery extends QueryBase {
             return false;
         }
 
-        TimedEvent te = (TimedEvent)e;
+        TimedEvent te = (TimedEvent) e;
 
         Long eventTime = te.getTime();
 
-        if (eventTime == null) {
-
-            return false;
-        }
-
-        //
-        // timestamp cannot be null, if it is, we'll get NPE which will indicate our own implementation error
-        //
-
-        long queryTime = timestamp.getTime();
-
-        if (from) {
-
-            return eventTime >= queryTime;
-        }
-        else if (to) {
-
-            return eventTime <= queryTime;
-        }
-        else {
-
-            throw new IllegalArgumentException(this + " was not property initialized");
-        }
+        return eventTime != null && selects(eventTime);
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -238,7 +232,7 @@ public class TimeQuery extends QueryBase {
             throw new IllegalArgumentException("null timestamp");
         }
 
-        this.timestamp = null;
+        this.time = null;
 
         //
         // try all supported formats and only fail if none is found
@@ -249,7 +243,7 @@ public class TimeQuery extends QueryBase {
 
                 Date d = f.parse(ts);
 
-                this.timestamp = new TimestampImpl(d.getTime());
+                this.time = d.getTime();
 
                 //
                 // first match is preferred
@@ -272,7 +266,7 @@ public class TimeQuery extends QueryBase {
             }
         }
 
-        if (timestamp == null) {
+        if (time == null) {
 
             throw new QueryException("unknown timestamp format or invalid timestamp: '" + ts + "'");
         }
@@ -280,20 +274,15 @@ public class TimeQuery extends QueryBase {
 
     public void setTimestamp(long posixTimeMs) throws QueryException {
 
-        this.timestamp = new TimestampImpl(posixTimeMs);
+        this.time = posixTimeMs;
     }
 
     /**
      * @return the timestamp as POSIX time expressed in millisecond, or null if it was not set
      */
-    public Long getTimestamp() {
+    public Long getTime() {
 
-        if (timestamp == null) {
-
-            return null;
-        }
-
-        return timestamp.getTime();
+        return time;
     }
 
     /**
@@ -336,17 +325,17 @@ public class TimeQuery extends QueryBase {
 
         if (format == null) {
 
-            ts = "" + this.timestamp;
+            ts = "" + this.time;
         }
         else {
 
-            if (timestamp == null) {
+            if (time == null) {
 
                 ts = " UNINITIALIZED";
             }
             else {
 
-                ts = format.format(timestamp.getTime());
+                ts = format.format(time);
             }
         }
 

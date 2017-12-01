@@ -70,7 +70,7 @@ public interface Query extends ExpressionElement {
 
         mixedQuery.compile();
 
-        return mixedQuery.simplify();
+        return mixedQuery.contract();
     }
 
     // Public ----------------------------------------------------------------------------------------------------------

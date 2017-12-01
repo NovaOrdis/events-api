@@ -16,25 +16,18 @@
 
 package io.novaordis.events.query;
 
-import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 
 import org.junit.Test;
 
 import io.novaordis.events.api.event.Event;
-import io.novaordis.events.api.event.GenericEvent;
 import io.novaordis.events.api.event.GenericTimedEvent;
-import io.novaordis.events.api.event.StringProperty;
-import io.novaordis.events.api.event.TimedEvent;
 import io.novaordis.events.api.parser.QueryOnce;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
-import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertNull;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 
@@ -50,231 +43,11 @@ public abstract class QueryTest extends ExpressionElementTest {
 
     // Attributes ------------------------------------------------------------------------------------------------------
 
-    private static final SimpleDateFormat TEST_FORMAT = new SimpleDateFormat("MM/dd/yy HH:mm:ss");
-
     // Constructors ----------------------------------------------------------------------------------------------------
 
     // Public ----------------------------------------------------------------------------------------------------------
 
     // Tests -----------------------------------------------------------------------------------------------------------
-
-    // fromArguments() -------------------------------------------------------------------------------------------------
-
-    @Test
-    public void fromArguments_NoArguments() throws Exception {
-
-        Query q = Query.fromArguments(Collections.emptyList(), 0);
-        assertNull(q);
-    }
-
-    @Test
-    public void fromArguments_SingleKeywordQuery() throws Exception {
-
-        KeywordQuery q = (KeywordQuery)Query.fromArguments(new ArrayList<>(Collections.singletonList("blue")), 0);
-        assertNotNull(q);
-        assertEquals("blue", q.getKeyword());
-        assertFalse(q.isCaseSensitive());
-        assertTrue(q.isCompiled());
-    }
-
-    @Test
-    public void fromArguments_TwoKeywordQueries() throws Exception {
-
-        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("blue", "red")), 0);
-
-        assertNotNull(q);
-
-        Event blue = new GenericEvent(new StringProperty("color", "this is a blue car"));
-        Event red = new GenericEvent(new StringProperty("color", "this is a red car"));
-        Event green = new GenericEvent(new StringProperty("color", "this is a green car"));
-
-        assertTrue(q.selects(blue));
-        assertTrue(q.selects(red));
-        assertFalse(q.selects(green));
-    }
-
-    @Test
-    public void fromArguments_SingleFieldQuery() throws Exception {
-
-        FieldQuery q = (FieldQuery)Query.fromArguments(
-                new ArrayList<>(Collections.singletonList("some-field:some-value")), 0);
-
-        assertNotNull(q);
-        assertEquals("some-field", q.getFieldName());
-        assertEquals("some-value", q.getValue());
-        assertTrue(q.isCompiled());
-    }
-
-    @Test
-    public void fromArguments_TwoFieldQueries() throws Exception {
-
-        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("size:small", "color:red")), 0);
-
-        assertNotNull(q);
-
-        Event smallRed = new GenericEvent(new StringProperty("size", "small"), new StringProperty("color", "red"));
-        Event smallBlue = new GenericEvent(new StringProperty("size", "small"), new StringProperty("color", "blue"));
-        Event bigRed = new GenericEvent(new StringProperty("size", "big"), new StringProperty("color", "red"));
-        Event bigBlue = new GenericEvent(new StringProperty("size", "big"), new StringProperty("color", "blue"));
-
-        assertTrue(q.selects(smallRed));
-        assertTrue(q.selects(smallBlue));
-        assertTrue(q.selects(bigRed));
-        assertFalse(q.selects(bigBlue));
-    }
-
-    @Test
-    public void fromArguments_MixedQuery() throws Exception {
-
-        Query q = Query.fromArguments(new ArrayList<>(Arrays.asList("car", "color:red")), 0);
-
-        assertNotNull(q);
-
-        Event redCar = new GenericEvent(
-                new StringProperty("color", "red"), new StringProperty("description", "this is a car"));
-        Event blueCar = new GenericEvent(
-                new StringProperty("color", "blue"), new StringProperty("description", "this is a car"));
-        Event redPlane = new GenericEvent(
-                new StringProperty("color", "red"), new StringProperty("description", "this is a plane"));
-        Event bluePlane = new GenericEvent(
-                new StringProperty("color", "blue"), new StringProperty("description", "this is a plane"));
-
-        assertTrue(q.selects(redCar));
-        assertTrue(q.selects(blueCar));
-        assertTrue(q.selects(redPlane));
-        assertFalse(q.selects(bluePlane));
-    }
-
-    @Test
-    public void fromArguments_CaseSensitive() throws Exception {
-
-        List<String> args = new ArrayList<>(Arrays.asList("--case-sensitive", "red"));
-
-        KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
-
-        assertNotNull(q);
-        assertTrue(q.isCompiled());
-
-        assertTrue(q.isCaseSensitive());
-    }
-
-    @Test
-    public void fromArguments_CaseSensitive2() throws Exception {
-
-        List<String> args = new ArrayList<>(Arrays.asList("red", "--case-sensitive"));
-
-        KeywordQuery q = (KeywordQuery)Query.fromArguments(args, 0);
-
-        assertNotNull(q);
-
-        assertTrue(q.isCaseSensitive());
-
-        assertTrue(args.isEmpty());
-    }
-
-    @Test
-    public void fromArguments_TimeQuery_From_SeparatedFromTimestamp() throws Exception {
-
-        List<String> args = new ArrayList<>(Collections.singletonList("from:01/01/16 12:00:00"));
-
-        Query q = Query.fromArguments(args, 0);
-
-        assertTrue(args.isEmpty());
-
-        assertNotNull(q);
-
-        assertTrue(((QueryBase)q).isCompiled());
-
-        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
-        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
-        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
-
-        assertFalse(q.selects(e));
-        assertTrue(q.selects(e2));
-        assertTrue(q.selects(e3));
-    }
-
-    @Test
-    public void fromArguments_TimeQuery_From_AdjacentToTimestamp() throws Exception {
-
-        List<String> args = new ArrayList<>(Arrays.asList("from:", "01/01/16 12:00:00"));
-
-        Query q = Query.fromArguments(args, 0);
-
-        assertTrue(args.isEmpty());
-
-        assertNotNull(q);
-
-        assertTrue(((QueryBase) q).isCompiled());
-
-        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
-        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
-        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
-
-        assertFalse(q.selects(e));
-        assertTrue(q.selects(e2));
-        assertTrue(q.selects(e3));
-    }
-
-    @Test
-    public void fromArguments_TimeQuery_To_SeparatedFromTimestamp() throws Exception {
-
-        List<String> args = new ArrayList<>(Collections.singletonList("to:01/01/16 12:00:00"));
-
-        Query q = Query.fromArguments(args, 0);
-
-        assertTrue(args.isEmpty());
-
-        assertNotNull(q);
-
-        assertTrue(((QueryBase) q).isCompiled());
-
-        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
-        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
-        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
-
-        assertTrue(q.selects(e));
-        assertTrue(q.selects(e2));
-        assertFalse(q.selects(e3));
-    }
-
-    @Test
-    public void fromArguments_TimeQuery_To_AdjacentToTimestamp() throws Exception {
-
-        List<String> args = new ArrayList<>(Arrays.asList("to:", "01/01/16 12:00:00"));
-
-        Query q = Query.fromArguments(args, 0);
-
-        assertTrue(args.isEmpty());
-
-        assertNotNull(q);
-
-        assertTrue(((QueryBase) q).isCompiled());
-
-        TimedEvent e = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 11:59:59").getTime());
-        TimedEvent e2 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:00").getTime());
-        TimedEvent e3 = new GenericTimedEvent(TEST_FORMAT.parse("01/01/16 12:00:01").getTime());
-
-        assertTrue(q.selects(e));
-        assertTrue(q.selects(e2));
-        assertFalse(q.selects(e3));
-    }
-
-    @Test
-    public void fromArgument_Expression() throws Exception {
-
-        List<String> args = new ArrayList<>(Arrays.asList(
-                "stack:mssql",
-                "and",
-                "not",
-                "stack:Object.wait("));
-
-        Query q = Query.fromArguments(args, 0);
-
-        assertTrue(args.isEmpty());
-
-        assertNotNull(q);
-    }
 
     // selects() and filter() ------------------------------------------------------------------------------------------
 

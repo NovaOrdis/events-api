@@ -296,7 +296,61 @@ public class MixedQuery extends QueryBase {
     @Override
     public boolean selects(long timestamp) {
 
-        throw new RuntimeException("selects(time) NOT YET IMPLEMENTED");
+        if (!isCompiled()) {
+
+            throw new IllegalStateException("query not compiled");
+        }
+
+        if (nullQuery) {
+
+            return true;
+        }
+
+        if (soleQuery != null) {
+
+            return soleQuery.selects(timestamp);
+        }
+
+        if (orQueries != null) {
+
+            //
+            // at least one must succeed, in order
+            //
+
+            for(Query q: orQueries) {
+
+                boolean selected = q.selects(timestamp);
+
+                if (selected) {
+
+                    return true;
+                }
+            }
+
+            return false;
+        }
+
+        if (andQueries != null) {
+
+            //
+            // all must succeed in order
+            //
+
+            for(Query q: andQueries) {
+
+                boolean selected = q.selects(timestamp);
+
+                if (!selected) {
+
+                    return false;
+                }
+            }
+
+            return true;
+
+        }
+
+        throw new IllegalStateException("invalid state: no null query, no sole query, no and queries and no or queries");
     }
 
     // Public ----------------------------------------------------------------------------------------------------------
@@ -369,9 +423,9 @@ public class MixedQuery extends QueryBase {
     }
 
     /**
-     * "Simplifies" - returns the only sub-query, or itself if that is not possible
+     * "Contracts" the query - returns the only sub-query, or itself if that is not possible
      */
-    public Query simplify() {
+    public Query contract() {
 
         if (transientExpression != null) {
 
@@ -394,33 +448,50 @@ public class MixedQuery extends QueryBase {
     @Override
     public String toString() {
 
+        String s;
+
         if (nullQuery) {
 
-            return "NULL query";
+            s = "NULL query";
         }
         else if (soleQuery != null) {
 
-            return soleQuery.toString();
+            s = soleQuery.toString();
+        }
+        else if (andQueries != null) {
+
+            s = "";
+
+            for(int i = 0; i < andQueries.length; i ++) {
+
+                s += andQueries[i];
+
+                if (i < andQueries.length - 1) {
+
+                    s += " AND ";
+                }
+            }
+        }
+        else if (orQueries != null) {
+
+            s = "";
+
+            for(int i = 0; i < orQueries.length; i ++) {
+
+                s += orQueries[i];
+
+                if (i < orQueries.length - 1) {
+
+                    s += " OR ";
+                }
+            }
         }
         else {
 
-//            String s = "";
-//
-//            for (int i = 0; i < expression.size(); i++) {
-//
-//                s += expression.get(i);
-//
-//                if (i < expression.size() - 1) {
-//
-//                    s += " ";
-//                }
-//            }
-//
-//            return s;
-
-            return "TBD";
+            s = "?";
         }
 
+        return s;
     }
 
     // Package protected -----------------------------------------------------------------------------------------------

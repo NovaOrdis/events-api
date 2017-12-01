@@ -16,11 +16,12 @@
 
 package io.novaordis.events.api.event;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.List;
+
 import io.novaordis.utilities.time.Timestamp;
 import io.novaordis.utilities.time.TimestampImpl;
-
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  * @author Ovidiu Feodorov <ovidiu@novaordis.com>
@@ -70,6 +71,11 @@ public class GenericTimedEvent extends GenericEvent implements TimedEvent {
     public GenericTimedEvent(List<Property> properties) {
 
         this(null, insureTimestampPropertyExists(properties));
+    }
+
+    public GenericTimedEvent(long timestampUTC, Property... properties) {
+
+        this(timestampUTC, Arrays.asList(properties));
     }
 
     public GenericTimedEvent(long timestampUTC, List<Property> properties) {
