@@ -403,40 +403,6 @@ public abstract class QueryTest extends ExpressionElementTest {
         assertEquals(e2, events2.get(1));
     }
 
-    // negate() --------------------------------------------------------------------------------------------------------
-
-    @Test
-    public void negate_EventThatDoesMatchQueryMustNotMatchNegatedQuery() throws Exception {
-
-        Query q = getQueryToTest();
-
-        Event doesMatch = getEventThatMatchesQuery();
-
-        //
-        // the event must not match the negated query
-        //
-
-        Query negated = q.negate();
-
-        assertFalse(negated.selects(doesMatch));
-    }
-
-    @Test
-    public void negate_EventThatDoesNotMatchQueryMustMatchNegatedQuery() throws Exception {
-
-        Query q = getQueryToTest();
-
-        Event doesNotMatch = getEventThatDoesNotMatchQuery();
-
-        //
-        // the event must match the negated query
-        //
-
-        Query negated = q.negate();
-
-        assertTrue(negated.selects(doesNotMatch));
-    }
-
     // special cases ---------------------------------------------------------------------------------------------------
 
     /**

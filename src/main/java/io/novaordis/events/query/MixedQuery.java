@@ -71,6 +71,12 @@ public class MixedQuery extends QueryBase {
     @Override
     public MixedQuery negate() throws QueryException {
 
+        //
+        // TODO: Negating a query is a problematic concept to implement. Instead of negating the query, evaluate it and
+        // then negate the result. Get rid of negation the first time I need to implement negate() on any remaining
+        // queries.
+        //
+
         throw new RuntimeException("negate() NOT YET IMPLEMENTED");
     }
 

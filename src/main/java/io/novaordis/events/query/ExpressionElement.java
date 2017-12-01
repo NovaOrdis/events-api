@@ -46,6 +46,10 @@ public interface ExpressionElement {
      * @return a new instance with an inverse semantics. May return null, if the negation of this element cancels the
      * element (for example negating NOT produces null).
      *
+     *  TODO: Negating a query is a problematic concept to implement. Instead of negating the query, evaluate it and
+     *  then negate the result. Get rid of negation the first time I need to implement negate() on any remaining
+     *  queries.
+     *
      * @exception QueryException when the element cannot be negated.
      */
     ExpressionElement negate() throws QueryException;

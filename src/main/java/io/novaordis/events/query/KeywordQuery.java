@@ -59,13 +59,19 @@ public class KeywordQuery extends QueryBase {
 
     // QueryBase overrides ---------------------------------------------------------------------------------------------
 
+    // Query implementation --------------------------------------------------------------------------------------------
+
     @Override
-    public KeywordQuery negate() throws QueryException {
+    public Query negate() throws QueryException {
+
+        //
+        // TODO: Negating a query is a problematic concept to implement. Instead of negating the query, evaluate it and
+        // then negate the result. Get rid of negation the first time I need to implement negate() on any remaining
+        // queries.
+        //
 
         throw new RuntimeException("negate() NOT YET IMPLEMENTED");
     }
-
-    // Query implementation --------------------------------------------------------------------------------------------
 
     @Override
     public boolean selects(Event e) {
