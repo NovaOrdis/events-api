@@ -1,4 +1,4 @@
 # Events API
 
-https://kb.novaordis.com/index.php/Events_API
+https://kb.novaordis.com/index.php/Events-api_Concepts
  
